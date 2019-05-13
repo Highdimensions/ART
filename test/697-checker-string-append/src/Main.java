@@ -357,38 +357,57 @@ public class Main {
         assertEquals("\u0131test\u0131", $noinline$appendStringAndString("\u0131", "test\u0131"));
     }
 
-    /// CHECK-START: java.lang.String Main.$noinline$appendSLILC(java.lang.String, long, int, long, char) instruction_simplifier (before)
+    /// CHECK-START: java.lang.String Main.$noinline$appendSLILCAB(java.lang.String, long, int, long, char, char[], java.lang.StringBuilder) instruction_simplifier (before)
     /// CHECK-NOT:              StringBuilderAppend
 
-    /// CHECK-START: java.lang.String Main.$noinline$appendSLILC(java.lang.String, long, int, long, char) instruction_simplifier (after)
+    /// CHECK-START: java.lang.String Main.$noinline$appendSLILCAB(java.lang.String, long, int, long, char, char[], java.lang.StringBuilder) instruction_simplifier (after)
     /// CHECK:                  StringBuilderAppend
-    public static String $noinline$appendSLILC(String s,
-                                               long l1,
-                                               int i,
-                                               long l2,
-                                               char c) {
+    public static String $noinline$appendSLILCAB(String s,
+                                                 long l1,
+                                                 int i,
+                                                 long l2,
+                                                 char c,
+                                                 char[] a,
+                                                 StringBuilder b) {
         return new StringBuilder().append(s)
                                   .append(l1)
                                   .append(i)
                                   .append(l2)
-                                  .append(c).toString();
+                                  .append(c)
+                                  .append(a)
+                                  .append(b).toString();
     }
 
     public static void testMiscelaneous() {
-        assertEquals("x17-1q",
-                     $noinline$appendSLILC("x", 1L, 7, -1L, 'q'));
-        assertEquals("null17-1q",
-                     $noinline$appendSLILC(null, 1L, 7, -1L, 'q'));
-        assertEquals("x\u013117-1q",
-                     $noinline$appendSLILC("x\u0131", 1L, 7, -1L, 'q'));
-        assertEquals("x427-1q",
-                     $noinline$appendSLILC("x", 42L, 7, -1L, 'q'));
-        assertEquals("x1-42-1q",
-                     $noinline$appendSLILC("x", 1L, -42, -1L, 'q'));
-        assertEquals("x17424242q",
-                     $noinline$appendSLILC("x", 1L, 7, 424242L, 'q'));
-        assertEquals("x17-1\u0131",
-                     $noinline$appendSLILC("x", 1L, 7, -1L, '\u0131'));
+        StringBuilder sb1 = new StringBuilder("SB1");
+        StringBuilder sb2 = new StringBuilder("SB2\u0131");
+        char[] arr1 = { 'a', 'b', 'c' };
+        char[] arr2 = { 'x', 'y', 'z', '\u0131' };
+        assertEquals("x17-1qabcSB1",
+                     $noinline$appendSLILCAB("x", 1L, 7, -1L, 'q', arr1, sb1));
+        assertEquals("null17-1qabcSB1",
+                     $noinline$appendSLILCAB(null, 1L, 7, -1L, 'q', arr1, sb1));
+        assertEquals("x\u013117-1qabcSB1",
+                     $noinline$appendSLILCAB("x\u0131", 1L, 7, -1L, 'q', arr1, sb1));
+        assertEquals("x427-1qabcSB1",
+                     $noinline$appendSLILCAB("x", 42L, 7, -1L, 'q', arr1, sb1));
+        assertEquals("x1-42-1qabcSB1",
+                     $noinline$appendSLILCAB("x", 1L, -42, -1L, 'q', arr1, sb1));
+        assertEquals("x17424242qabcSB1",
+                     $noinline$appendSLILCAB("x", 1L, 7, 424242L, 'q', arr1, sb1));
+        assertEquals("x17-1\u0131abcSB1",
+                     $noinline$appendSLILCAB("x", 1L, 7, -1L, '\u0131', arr1, sb1));
+        assertEquals("x17-1qxyz\u0131SB1",
+                     $noinline$appendSLILCAB("x", 1L, 7, -1L, 'q', arr2, sb1));
+        assertEquals("x17-1qabcnull",
+                     $noinline$appendSLILCAB("x", 1L, 7, -1L, 'q', arr1, null));
+        assertEquals("x17-1qabcSB2\u0131",
+                     $noinline$appendSLILCAB("x", 1L, 7, -1L, 'q', arr1, sb2));
+        try {
+            $noinline$appendSLILCAB("x", 1L, 7, -1L, 'q', null, sb1);
+            throw new AssertionError();
+        } catch (NullPointerException expected) {
+        }
     }
 
     public static String $inline$testInlineInner(StringBuilder sb, String s, int i) {
