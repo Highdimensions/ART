@@ -240,6 +240,9 @@ class RegType {
 
   ALWAYS_INLINE static inline Assignability AssignabilityFrom(Kind lhs, Kind rhs);
 
+  // Is this type in the same nest group as another class?
+  bool HasSameNestHost(const RegType& other) const REQUIRES_SHARED(Locks::mutator_lock_);
+
   // Are these RegTypes the same?
   bool Equals(const RegType& other) const { return GetId() == other.GetId(); }
 

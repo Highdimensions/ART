@@ -5490,7 +5490,11 @@ ObjPtr<mirror::Class> ClassLinker::CreateProxyClass(ScopedObjectAccessAlreadyRun
 void ClassLinker::CreateProxyConstructor(Handle<mirror::Class> klass, ArtMethod* out) {
   // Create constructor for Proxy that must initialize the method.
   ObjPtr<mirror::Class> proxy_class = GetClassRoot<mirror::Proxy>(this);
-  CHECK_EQ(proxy_class->NumDirectMethods(), 21u);
+  // TODO: When enabling com.android.tools.r8.emitNestAnnotationsInDex for Class (as part of
+  // https://android-review.git.corp.google.com/c/platform/build/soong/+/2295058) the value below
+  // must be updated from 21u to 15u due to decrease in synthetic methods.
+  CHECK_EQ(proxy_class->NumDirectMethods(), 15u);
+  // CHECK_EQ(proxy_class->NumDirectMethods(), 21u);
 
   // Find the <init>(InvocationHandler)V method. The exact method offset varies depending
   // on which front-end compiler was used to build the libcore DEX files.
@@ -6327,6 +6331,9 @@ bool ClassLinker::LinkClass(Thread* self,
   CHECK_EQ(ClassStatus::kLoaded, klass->GetStatus());
 
   if (!LinkSuperClass(klass)) {
+    return false;
+  }
+  if (!LinkNestHost(klass)) {
     return false;
   }
   ArtMethod* imt_data[ImTable::kSize];
@@ -9898,6 +9905,53 @@ bool ClassLinker::VerifyRecordClass(Handle<mirror::Class> klass, ObjPtr<mirror::
 
   // Set kClassFlagRecord.
   klass->SetRecordClass();
+  return true;
+}
+
+bool ClassLinker::LinkNestHost(Handle<mirror::Class> h_klass) {
+  if (h_klass->IsPrimitive()) {
+    return true;
+  }
+  if (h_klass->IsArrayClass()) {
+    return true;
+  }
+
+  Thread* const self = Thread::Current();
+  StackHandleScope<1> hs(self);
+  Handle<mirror::Class> h_host(hs.NewHandle(annotations::GetNestHost(h_klass)));
+
+  if (h_host == nullptr) {
+    // If the host class could not be loaded, the leave it unset. This is expected to happen in
+    // dex2oat when the host class has a superclass or interface that is not available. Any other
+    // exception should be propagated.
+    ObjPtr<mirror::Throwable> throwable = self->GetException();
+    if (throwable != nullptr &&
+        throwable->InstanceOf(
+            Runtime::Current()->GetPreAllocatedNoClassDefFoundError()->GetClass())) {
+      self->ClearException();
+    }
+    return !self->IsExceptionPending();
+  }
+
+  if (h_klass.Get() == h_host.Get()) {
+    return true;
+  }
+
+  if (!h_klass->IsInSamePackage(h_host.Get())) {
+    return true;
+  }
+
+  // Ensure that h_host doesn't have a host itself
+  ObjPtr<mirror::Class> arch_host = annotations::GetNestHost(h_host);
+  if (arch_host != nullptr && arch_host != h_host.Get()) {
+    return true;
+  }
+
+  if (!annotations::HasNestMember(h_host, h_klass)) {
+    return true;
+  }
+
+  h_klass->SetNestHost(h_host.Get());
   return true;
 }
 

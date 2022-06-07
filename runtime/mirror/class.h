@@ -1392,6 +1392,20 @@ class EXPORT MANAGED Class final : public Object {
   // See b/259501764.
   bool CheckIsVisibleWithTargetSdk(Thread* self) REQUIRES_SHARED(Locks::mutator_lock_);
 
+  // Checks if a class has the same nest host as another one. This is the
+  // criteria for establishing that two classes belong to the same nest group
+  // and therefore should have access to each other's private fields and
+  // methods.
+  bool HasSameNestHost(ObjPtr<mirror::Class> other) REQUIRES_SHARED(Locks::mutator_lock_);
+
+  template <VerifyObjectFlags kVerifyFlags = kDefaultVerifyFlags,
+            ReadBarrierOption kReadBarrierOption = kWithReadBarrier>
+  ALWAYS_INLINE ObjPtr<Class> GetNestHost() REQUIRES_SHARED(Locks::mutator_lock_);
+
+  void SetNestHost(ObjPtr<Class> new_nest_host) REQUIRES_SHARED(Locks::mutator_lock_);
+
+  bool HasNestHost() REQUIRES_SHARED(Locks::mutator_lock_);
+
  private:
   template <typename T, VerifyObjectFlags kVerifyFlags, typename Visitor>
   void FixupNativePointer(
@@ -1587,6 +1601,15 @@ class EXPORT MANAGED Class final : public Object {
 
   // The offset of the first declared virtual methods in the methods_ array.
   uint16_t virtual_methods_offset_;
+
+  // The nest host class, or null if this is not a nested type.
+  HeapReference<Class> nest_host_;
+
+  // TODO: ?
+  // initiating class loader list
+  // NOTE: for classes with low serialNumber, these are unused, and the
+  // values are kept in a table in gDvm.
+  // InitiatingLoaderList initiating_loader_list_;
 
   // The following data exist in real class objects.
   // Embedded Vtable length, for class object that's instantiable, fixed size.

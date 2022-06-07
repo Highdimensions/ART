@@ -1,0 +1,2 @@
+Tests that members of a nest group can have access to the private field and
+methods of all group members. See JEP-181.

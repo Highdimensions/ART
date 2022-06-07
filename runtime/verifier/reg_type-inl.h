@@ -122,6 +122,20 @@ inline RegType::Assignability RegType::AssignabilityFrom(Kind lhs, Kind rhs) {
   return kAssignabilityTable[lhs][rhs];
 }
 
+inline bool RegType::HasSameNestHost(const RegType& other) const {
+  DCHECK(IsReferenceTypes());
+  DCHECK(!IsNull());
+  if (Equals(other)) {
+    return true;  // Trivial accessibility.
+  } else {
+    if (!IsUnresolvedTypes() && !other.IsUnresolvedTypes()) {
+      return GetClass()->HasSameNestHost(other.GetClass());
+    } else {
+      return false;  // More complicated test not possible on unresolved types, be conservative.
+    }
+  }
+}
+
 inline void* RegType::operator new(size_t size, ArenaAllocator* allocator) {
   return allocator->Alloc(size, kArenaAllocMisc);
 }

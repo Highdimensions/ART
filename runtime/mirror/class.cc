@@ -2343,6 +2343,39 @@ ArtMethod* Class::FindAccessibleInterfaceMethod(ArtMethod* implementation_method
   return nullptr;
 }
 
+bool Class::HasSameNestHost(ObjPtr<mirror::Class> other) REQUIRES_SHARED(Locks::mutator_lock_) {
+  if (this == other) {
+    // A class is in the same nest group as itself.
+    return true;
+  }
+  if (IsPrimitive() || other->IsPrimitive()) {
+    // Primitives do not form nest groups.
+    return false;
+  }
+  if (IsArrayClass() || other->IsArrayClass()) {
+    // Arrays do not form nest groups.
+    return false;
+  }
+
+  // Get the nest host for each class. The host was resolved when the classes were loaded. All
+  // checks for the correctness of the host information in the dex file were performed at that time
+  // of linking - in ClassLinker::LinkNestHost. A nullptr host means that the class is its own host.
+  ObjPtr<mirror::Class> host = GetNestHost();
+  if (host == nullptr) {
+    host = this;
+  }
+  ObjPtr<mirror::Class> host_of_other = other->GetNestHost();
+  if (host_of_other == nullptr) {
+    host_of_other = other;
+  }
+
+  if (host != host_of_other) {
+    // Hosts differ, so they must be part of different groups.
+    return false;
+  }
+
+  return true;
+}
 
 }  // namespace mirror
 }  // namespace art
