@@ -1,0 +1,6 @@
+{
+  "run-param": {
+    // TODO: Support this option in `regen-test-files` and/or in ArtRunTest (in TradeFed).
+    "runtime-option": ["-XX:LargeObjectSpace=disabled"]
+  }
+}

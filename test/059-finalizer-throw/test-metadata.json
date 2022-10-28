@@ -1,0 +1,8 @@
+{
+  "run-param": {
+    // The test logs error messages which is expected, discard them.
+    // TODO: Support these options in `regen-test-files` and/or in ArtRunTest (in TradeFed).
+    "android_log_tags": "*:f",
+    "external_log_tags": "true"
+  }
+}

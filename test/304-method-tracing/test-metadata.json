@@ -1,0 +1,7 @@
+{
+  "run-param": {
+    // Runs the test with method tracing enabled.
+    // TODO: Support this option in `regen-test-files` and/or in ArtRunTest (in TradeFed).
+    "runtime-option": ["-Xmethod-trace", "-Xmethod-trace-file:${DEX_LOCATION}/trace.bin"]
+  }
+}

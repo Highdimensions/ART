@@ -1,0 +1,7 @@
+{
+  "run-param": {
+    // Use a smaller heap so it's easier to potentially fill up.
+    // TODO: Support this option in `regen-test-files` and/or in ArtRunTest (in TradeFed).
+    "runtime-option": ["-Xmx2m"]
+  }
+}

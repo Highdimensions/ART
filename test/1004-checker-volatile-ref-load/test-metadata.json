@@ -1,10 +1,6 @@
 {
-  "build-param": {
-    "experimental": "var-handles",
-    "jvm-supported": "false"
-  },
   "run-param": {
-    // Limit the Java heap to 16MiB to force more GCs.
+    // Limit the managed heap to 16 MiB to force more garbage collections.
     // TODO: Support this option in `regen-test-files` and/or in ArtRunTest (in TradeFed).
     "runtime-option": ["-Xmx16m"]
   }

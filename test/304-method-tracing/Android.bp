@@ -18,9 +18,18 @@ java_test {
     test_config_template: ":art-run-test-target-template",
     srcs: ["src/**/*.java"],
     data: [
+        ":art-run-test-304-method-tracing-test-metadata",
         ":art-run-test-304-method-tracing-expected-stdout",
         ":art-run-test-304-method-tracing-expected-stderr",
     ],
+}
+
+// Test metadata.
+genrule {
+    name: "art-run-test-304-method-tracing-test-metadata",
+    out: ["art-run-test-304-method-tracing-test-metadata.txt"],
+    srcs: ["test-metadata.txt"],
+    cmd: "cp -f $(in) $(out)",
 }
 
 // Test's expected standard output.

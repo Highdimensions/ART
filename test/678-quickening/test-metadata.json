@@ -1,0 +1,7 @@
+{
+  "run-param": {
+    // Run without an app image to prevent the class NotLoaded to be loaded at startup.
+    // TODO: Support this option in `regen-test-files` and/or in ArtRunTest (in TradeFed).
+    "app-image": "false"
+  }
+}

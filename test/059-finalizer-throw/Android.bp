@@ -18,9 +18,18 @@ java_test {
     test_config_template: ":art-run-test-target-template",
     srcs: ["src/**/*.java"],
     data: [
+        ":art-run-test-059-finalizer-throw-test-metadata",
         ":art-run-test-059-finalizer-throw-expected-stdout",
         ":art-run-test-059-finalizer-throw-expected-stderr",
     ],
+}
+
+// Test metadata.
+genrule {
+    name: "art-run-test-059-finalizer-throw-test-metadata",
+    out: ["art-run-test-059-finalizer-throw-test-metadata.txt"],
+    srcs: ["test-metadata.txt"],
+    cmd: "cp -f $(in) $(out)",
 }
 
 // Test's expected standard output.

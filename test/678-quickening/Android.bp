@@ -18,9 +18,18 @@ java_test {
     test_config_template: ":art-run-test-target-template",
     srcs: ["src-art/**/*.java"],
     data: [
+        ":art-run-test-678-quickening-test-metadata",
         ":art-run-test-678-quickening-expected-stdout",
         ":art-run-test-678-quickening-expected-stderr",
     ],
+}
+
+// Test metadata.
+genrule {
+    name: "art-run-test-678-quickening-test-metadata",
+    out: ["art-run-test-678-quickening-test-metadata.txt"],
+    srcs: ["test-metadata.txt"],
+    cmd: "cp -f $(in) $(out)",
 }
 
 // Test's expected standard output.

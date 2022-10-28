@@ -1,0 +1,7 @@
+{
+  "run-param": {
+    // As this is a performance test we always use the non-debug build.
+    // TODO: Support this option in `regen-test-files` and/or in ArtRunTest (in TradeFed).
+    "lib": "libart.so"
+  }
+}
