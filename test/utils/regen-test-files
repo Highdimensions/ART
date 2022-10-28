@@ -462,6 +462,7 @@ class Generator:
 
     run_test_path = os.path.join(self.art_test_dir, run_test)
     bp_file = os.path.join(run_test_path, "Android.bp")
+    metadata_file = os.path.join(run_test_path, "test-metadata.json")
 
     # Optional test metadata (JSON file).
     metadata = self.get_test_metadata(run_test)
@@ -478,6 +479,23 @@ class Generator:
         test_config_template = "art-run-test-target-template"
     else:
       test_config_template = "art-run-test-target-no-test-suite-tag-template"
+
+    # Package test metadata, if any.
+    test_metadata_file_output = ""
+    test_metadata_rules = ""
+    if os.path.exists(metadata_file):
+      test_metadata_file_output = f"""
+              ":{run_test_module_name}-test-metadata\","""
+      test_metadata_rules = f"""\
+
+      // Test metadata.
+      genrule {{
+          name: "{run_test_module_name}-test-metadata",
+          out: ["{run_test_module_name}-test-metadata.txt"],
+          srcs: ["test-metadata.txt"],
+          cmd: "cp -f $(in) $(out)",
+      }}
+      """
 
     # Define `test_suites`, if present in the test's metadata.
     test_suites = ""
@@ -523,12 +541,12 @@ class Generator:
           defaults: ["art-run-test-defaults"],
           test_config_template: ":{test_config_template}",
           srcs: ["{source_dir}/**/*.java"],
-          data: [
+          data: [{test_metadata_file_output}
               ":{run_test_module_name}-expected-stdout",
               ":{run_test_module_name}-expected-stderr",
           ],{test_suites}{include_src}
       }}
-
+      {test_metadata_rules}
       // Test's expected standard output.
       genrule {{
           name: "{run_test_module_name}-expected-stdout",

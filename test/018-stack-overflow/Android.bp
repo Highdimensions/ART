@@ -18,10 +18,19 @@ java_test {
     test_config_template: ":art-run-test-target-cts-template",
     srcs: ["src/**/*.java"],
     data: [
+        ":art-run-test-018-stack-overflow-test-metadata",
         ":art-run-test-018-stack-overflow-expected-stdout",
         ":art-run-test-018-stack-overflow-expected-stderr",
     ],
     test_suites: ["cts"],
+}
+
+// Test metadata.
+genrule {
+    name: "art-run-test-018-stack-overflow-test-metadata",
+    out: ["art-run-test-018-stack-overflow-test-metadata.txt"],
+    srcs: ["test-metadata.txt"],
+    cmd: "cp -f $(in) $(out)",
 }
 
 // Test's expected standard output.

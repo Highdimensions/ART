@@ -18,9 +18,18 @@ java_test {
     test_config_template: ":art-run-test-target-no-test-suite-tag-template",
     srcs: ["src/**/*.java"],
     data: [
+        ":art-run-test-1339-dead-reference-safe-test-metadata",
         ":art-run-test-1339-dead-reference-safe-expected-stdout",
         ":art-run-test-1339-dead-reference-safe-expected-stderr",
     ],
+}
+
+// Test metadata.
+genrule {
+    name: "art-run-test-1339-dead-reference-safe-test-metadata",
+    out: ["art-run-test-1339-dead-reference-safe-test-metadata.txt"],
+    srcs: ["test-metadata.txt"],
+    cmd: "cp -f $(in) $(out)",
 }
 
 // Test's expected standard output.
