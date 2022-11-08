@@ -349,7 +349,7 @@ class Generator:
     # or equal to 28), so we can ignore build scripts that just
     # request support for this feature.)
     experimental_var_handles = {"experimental": "var-handles"}
-    jvm_supported_false = {"jvm-supported": "false"}
+    jvm_supported_false = {"jvm-supported": False}
     if (build_param == experimental_var_handles or
         build_param == jvm_supported_false or
         build_param == experimental_var_handles | jvm_supported_false):
