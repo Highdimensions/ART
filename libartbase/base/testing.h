@@ -40,11 +40,12 @@ std::vector<std::string> GetLibCoreDexFileNames(const std::string& prefix,
 std::vector<std::string> GetLibCoreDexFileNames(const std::string& prefix, bool core_only = false);
 
 // Gets the on-device locations of the libcore dex files for given modules.
-std::vector<std::string> GetLibCoreDexLocations(const std::vector<std::string>& modules);
+std::vector<std::string> GetLibCoreDexLocations(const std::string& prefix,
+                                                const std::vector<std::string>& modules);
 
 // Gets the on-device locations of the libcore dex files.
 // If `core_only` is true, only returns the filenames of CORE_IMG_JARS in Android.common_path.mk.
-std::vector<std::string> GetLibCoreDexLocations(bool core_only = false);
+std::vector<std::string> GetLibCoreDexLocations(const std::string& prefix, bool core_only = false);
 
 }  // namespace testing
 }  // namespace art

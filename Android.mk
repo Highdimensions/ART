@@ -276,6 +276,53 @@ build-art: build-art-target
 .PHONY: build-art-target
 build-art-target: $(TARGET_OUT_EXECUTABLES)/art $(ART_TARGET_DEPENDENCIES) $(TARGET_CORE_IMG_OUTS)
 
+TARGET_BOOT_IMAGE_DIR := $(PRODUCT_OUT)/apex/art_boot_images
+TARGET_BOOT_IMAGE_SYSTEM_DIR := $(PRODUCT_OUT)/system/apex/art_boot_images
+TARGET_ART_APEX_SYSTEM := $(PRODUCT_OUT)/system/apex/com.android.art
+TARGET_BOOT_IMAGE_PROFILE := $(TARGET_ART_APEX_SYSTEM).testing/etc/boot-image.prof
+
+# For simulator, build a target boot image on the host.
+.PHONY: build-art-simulator
+build-art-simulator: $(HOST_OUT)/bin/generate-boot-image64 $(HOST_OUT_EXECUTABLES)/dex2oatd \
+		$(HOST_OUT)/bin/profmand
+	# Note: The target boot image needs to be in a trusted system directory to be used by the
+	# zygote or if -Xonly-use-system-oat-files is passed to the runtime.
+	rm -rf $(TARGET_BOOT_IMAGE_SYSTEM_DIR)
+	mkdir -p $(TARGET_ART_APEX_SYSTEM)/javalib
+	mkdir -p $(TARGET_BOOT_IMAGE_SYSTEM_DIR)/javalib
+	mkdir -p $(TARGET_ART_APEX_SYSTEM).testing/etc
+	# Copy the core boot jars to the expected directory for generate-boot-image. This should match
+	# the number of jars listed in TARGET_CORE_IMG_JARS.
+	$(if $(filter-out 5,$(words $(TARGET_CORE_IMG_JARS))),$(error number of boot jars has changed))
+	cp $(word 1,$(TARGET_CORE_IMG_DEX_FILES)) \
+	  $(TARGET_ART_APEX_SYSTEM)/javalib/$(word 1,$(TARGET_CORE_IMG_JARS)).jar
+	cp $(word 2,$(TARGET_CORE_IMG_DEX_FILES)) \
+	  $(TARGET_ART_APEX_SYSTEM)/javalib/$(word 2,$(TARGET_CORE_IMG_JARS)).jar
+	cp $(word 3,$(TARGET_CORE_IMG_DEX_FILES)) \
+	  $(TARGET_ART_APEX_SYSTEM)/javalib/$(word 3,$(TARGET_CORE_IMG_JARS)).jar
+	cp $(word 4,$(TARGET_CORE_IMG_DEX_FILES)) \
+	  $(TARGET_ART_APEX_SYSTEM)/javalib/$(word 4,$(TARGET_CORE_IMG_JARS)).jar
+	cp $(word 5,$(TARGET_CORE_IMG_DEX_FILES)) \
+	  $(TARGET_ART_APEX_SYSTEM)/javalib/$(word 5,$(TARGET_CORE_IMG_JARS)).jar
+	# Generate a profile from the core boot jars.
+	$(HOST_OUT)/bin/profmand \
+	  --output-profile-type=boot \
+	  --create-profile-from=$(PRODUCT_DEX_PREOPT_BOOT_IMAGE_PROFILE_LOCATION) \
+	  $(foreach jar,$(TARGET_CORE_IMG_DEX_FILES),--apk=$(jar)) \
+	  $(foreach jar,$(TARGET_CORE_IMG_DEX_LOCATIONS),--dex-location=$(jar)) \
+	  --reference-profile-file=$(TARGET_BOOT_IMAGE_PROFILE)
+	# Generate a target boot image using the host dex2oat. Note: a boot image using a profile is
+	# required for certain run tests to pass.
+	$(HOST_OUT)/bin/generate-boot-image64 \
+	  --output-dir=$(TARGET_BOOT_IMAGE_SYSTEM_DIR)/javalib \
+	  --compiler-filter=speed-profile \
+	  --use-profile=true \
+	  --profile-file=$(TARGET_BOOT_IMAGE_PROFILE) \
+	  --dex2oat-bin=$(HOST_OUT_EXECUTABLES)/dex2oatd \
+	  --android-root=$(TARGET_OUT) \
+	  --core-only=true \
+	  --instruction-set=$(TARGET_ARCH)
+
 PRIVATE_ART_APEX_DEPENDENCY_FILES := \
   bin/dalvikvm32 \
   bin/dalvikvm64 \
@@ -459,10 +506,10 @@ standalone-apex-files: deapexer \
 	$(call extract-from-apex,$(STATSD_APEX),\
 	  $(PRIVATE_STATSD_APEX_DEPENDENCY_LIBS))
 	$(call extract-from-apex,$(TZDATA_APEX),)
-	rm -rf $(PRODUCT_OUT)/apex/art_boot_images && \
-	  mkdir -p $(PRODUCT_OUT)/apex/art_boot_images/javalib && \
+	rm -rf $(TARGET_BOOT_IMAGE_DIR) && \
+	  mkdir -p $(TARGET_BOOT_IMAGE_DIR)/javalib && \
 	  $(HOST_OUT)/bin/generate-boot-image64 \
-	    --output-dir=$(PRODUCT_OUT)/apex/art_boot_images/javalib \
+	    --output-dir=$(TARGET_BOOT_IMAGE_DIR)/javalib \
 	    --compiler-filter=speed \
 	    --use-profile=false \
 	    --dex2oat-bin=$(HOST_OUT)/bin/dex2oat64 \

@@ -74,13 +74,14 @@ std::vector<std::string> GetLibCoreDexFileNames(const std::string& prefix, bool 
   return GetLibCoreDexFileNames(prefix, modules);
 }
 
-std::vector<std::string> GetLibCoreDexLocations(const std::vector<std::string>& modules) {
-  return GetLibCoreDexFileNames(/*prefix=*/"", modules);
+std::vector<std::string> GetLibCoreDexLocations(const std::string& prefix,
+                                                const std::vector<std::string>& modules) {
+  return GetLibCoreDexFileNames(prefix, modules);
 }
 
-std::vector<std::string> GetLibCoreDexLocations(bool core_only) {
+std::vector<std::string> GetLibCoreDexLocations(const std::string& prefix, bool core_only) {
   std::vector<std::string> modules = GetLibCoreModuleNames(core_only);
-  return GetLibCoreDexLocations(modules);
+  return GetLibCoreDexLocations(prefix, modules);
 }
 
 }  // namespace testing

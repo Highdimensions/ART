@@ -133,7 +133,8 @@ int GenerateBootImage(const Options& options) {
 
   std::vector<std::string> dex_files =
       GetLibCoreDexFileNames(options.android_root, options.core_only);
-  std::vector<std::string> dex_locations = GetLibCoreDexLocations(options.core_only);
+  std::vector<std::string> dex_locations = GetLibCoreDexLocations(options.android_root,
+                                                                  options.core_only);
   args.push_back("--runtime-arg");
   args.push_back("-Xbootclasspath:" + Join(dex_files, ":"));
   args.push_back("--runtime-arg");
