@@ -552,8 +552,8 @@ cc_defaults {
                 true: [
                     "arch/arm64/context_arm64.cc",
                     "arch/arm64/entrypoints_init_arm64.cc",
-                    "arch/arm64/jni_entrypoints_arm64.S",
-                    "arch/arm64/quick_entrypoints_arm64.S",
+                    ":jni_entrypoints_arm64_to_x86_64",
+                    ":quick_entrypoints_arm64_to_x86_64",
                 ],
                 default: [
                     "arch/x86_64/context_x86_64.cc",
@@ -642,6 +642,64 @@ cc_defaults {
         "libartd-runtime_deps",
         "libartd-compiler_deps",
     ],
+}
+
+//
+// Compile the following entrypoint files as normal but don't link them yet.
+//
+
+cc_object {
+    name: "cc_object_jni_entrypoints_arm64.S",
+    host_supported: false,
+    defaults: [
+        "art_debug_defaults",
+        "libart_common_defaults",
+        "libartd-runtime_deps",
+    ],
+    srcs: ["arch/arm64/jni_entrypoints_arm64.S"],
+}
+
+cc_object {
+    name: "cc_object_quick_entrypoints_arm64.S",
+    host_supported: false,
+    defaults: [
+        "art_debug_defaults",
+        "libart_common_defaults",
+        "libartd-runtime_deps",
+    ],
+    srcs: ["arch/arm64/quick_entrypoints_arm64.S"],
+}
+
+//
+// If ART_USE_SIMULATOR is defined then the compiled Arm64 entrypoint file is transformed into an
+// x86_64 format ELF file that still contains Arm64 code. This allows it to be linked to the x86_64
+// libart and its Arm64 code later simulated using the ART simulator.
+//
+
+cc_genrule {
+    name: "jni_entrypoints_arm64_to_x86_64",
+    host_supported: true,
+    out: ["jni_entrypoints_x86_64.o"],
+    tools: [
+        "transform_arm64_to_x86_64",
+        "llvm-objcopy",
+    ],
+    cmd: "$(location transform_arm64_to_x86_64) " +
+         "--objcopy $(location llvm-objcopy) " +
+         "$(out)",
+}
+
+cc_genrule {
+    name: "quick_entrypoints_arm64_to_x86_64",
+    host_supported: true,
+    out: ["quick_entrypoints_x86_64.o"],
+    tools: [
+        "transform_arm64_to_x86_64",
+        "llvm-objcopy",
+    ],
+    cmd: "$(location transform_arm64_to_x86_64) " +
+         "--objcopy $(location llvm-objcopy) " +
+         "$(out)",
 }
 
 // A defaults to link libunwindstack statically with necessary dependencies,
