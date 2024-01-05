@@ -140,6 +140,7 @@ cc_defaults {
         // `libart-runtime` doesn't depend on all `libart-compiler` headers, it only requires
         // `jit_create` to initialize the JIT compiler.
         "libart-compiler_jit_headers",
+        "libart_simulator_headers",
     ],
     export_header_lib_headers: [
         "libart_headers",
@@ -167,6 +168,7 @@ cc_defaults {
     ],
     shared_libs: [
         "libartbase",
+        "libart-simulator-container",
         "libdexfile#impl",
         "libprofile",
     ],
@@ -183,6 +185,7 @@ cc_defaults {
     ],
     shared_libs: [
         "libartbased",
+        "libartd-simulator-container",
         "libdexfiled#impl",
         "libprofiled",
     ],
@@ -743,6 +746,7 @@ cc_defaults {
     ],
     whole_static_libs: [
         "libartpalette",
+        "libart-simulator-container",
         "libbase",
         "liblog",
         "liblz4",

@@ -1637,5 +1637,29 @@
                   "2042-reference-processing"],
         "env_vars": {"ART_USE_RESTRICTED_MODE": "true"},
         "description": ["Test failures when using the restricted mode for simulator."]
+    },
+    {
+        "tests": ["044-proxy",
+                  "046-reflect",
+                  "178-app-image-native-method",
+                  "693-vdex-inmem-loader-evict",
+                  "1914-get-local-instance",
+                  "1939-proxy-frames",
+                  "1945-proxy-method-arguments"],
+        "env_vars": {"ART_USE_SIMULATOR": "true"},
+        "description": ["TODO: Investigate reasons for these failures of the ART simulator."]
+    },
+    {
+        "tests": ["2042-reference-processing",
+                  "2043-reference-pauses"],
+        "env_vars": {"ART_USE_SIMULATOR": "true"},
+        "description": ["Intermittent timeout failures on the ART simulator due to the overheads",
+                        "in simulation."]
+    },
+    {
+        "tests": ["151-OpenFileLimit"],
+        "env_vars": {"ART_USE_SIMULATOR": "true"},
+        "description": ["The simulator requires a temporary file to be opened when creating a new",
+                        "simulator/thread."]
     }
 ]

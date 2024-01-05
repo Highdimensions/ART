@@ -28,25 +28,40 @@ cc_library_headers {
     name: "libart_simulator_headers",
     host_supported: true,
     export_include_dirs: ["include"],
+    min_sdk_version: "S",
+    apex_available: [
+        "com.android.art",
+        "com.android.art.debug",
+    ],
 }
 
-cc_defaults {
+art_cc_defaults {
     name: "libart_simulator_defaults",
     host_supported: true,
-    device_supported: false,
 
     defaults: ["art_defaults"],
     srcs: [
         "code_simulator.cc",
-        "code_simulator_arm64.cc",
     ],
+    codegen: {
+        arm64: {
+            srcs: [
+                "code_simulator_arm64.cc",
+            ],
+        },
+    },
     shared_libs: [
         "libbase",
         "liblog",
     ],
     cflags: ["-DVIXL_INCLUDE_SIMULATOR_AARCH64"],
 
-    header_libs: ["libart_simulator_headers"],
+    header_libs: [
+        "jni_platform_headers",
+        "libdexfile_all_headers",
+        "libart_headers",
+        "libart_simulator_headers",
+    ],
 }
 
 art_cc_library {
@@ -58,6 +73,10 @@ art_cc_library {
     ],
     static_libs: [
         "libvixl",
+    ],
+    apex_available: [
+        "com.android.art",
+        "com.android.art.debug",
     ],
 }
 
@@ -74,6 +93,9 @@ art_cc_library {
     static_libs: [
         "libvixld",
     ],
+    apex_available: [
+        "com.android.art.debug",
+    ],
 }
 
 cc_defaults {
@@ -83,6 +105,9 @@ cc_defaults {
     defaults: ["art_defaults"],
     srcs: [
         "code_simulator_container.cc",
+    ],
+    shared_libs: [
+        "libbase",
     ],
     header_libs: [
         "libart_simulator_headers",
@@ -95,15 +120,28 @@ cc_defaults {
     export_include_dirs: ["."], // TODO: Consider a proper separation.
 }
 
-art_cc_library_static {
+art_cc_library {
     name: "libart-simulator-container",
     defaults: ["libart_simulator_container_defaults"],
+    shared_libs: [
+        "libartbase",
+    ],
+    apex_available: [
+        "com.android.art",
+        "com.android.art.debug",
+    ],
 }
 
-art_cc_library_static {
+art_cc_library {
     name: "libartd-simulator-container",
     defaults: [
         "art_debug_defaults",
         "libart_simulator_container_defaults",
+    ],
+    shared_libs: [
+        "libartbased",
+    ],
+    apex_available: [
+        "com.android.art.debug",
     ],
 }

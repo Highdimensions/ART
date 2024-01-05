@@ -95,6 +95,7 @@ def parse_args(argv):
   argp.add_argument("--secondary-class-loader-context", default="")
   argp.add_argument("--secondary-compilation", default=True, action=opt_bool)
   argp.add_argument("--simpleperf", action="store_true")
+  argp.add_argument("--simulator", action="store_true")
   argp.add_argument("--sync", action="store_true")
   argp.add_argument("--testlib", default=[], action="append")
   argp.add_argument("--timeout", default=0, type=int)
@@ -153,28 +154,40 @@ def get_apex_bootclasspath_impl(bpath_prefix: str):
 
 
 # Gets a -Xbootclasspath paths with the apex modules.
-def get_apex_bootclasspath(host: bool):
+def get_apex_bootclasspath(host: bool, simulator: bool):
   bpath_prefix = ""
 
-  if host:
+  if simulator:
+    bpath_prefix = os.environ["ANDROID_PRODUCT_OUT"] + "/system"
+  elif host:
     bpath_prefix = os.environ["ANDROID_HOST_OUT"]
 
   return get_apex_bootclasspath_impl(bpath_prefix)
 
 
 # Gets a -Xbootclasspath-location paths with the apex modules.
-def get_apex_bootclasspath_locations(host: bool):
+def get_apex_bootclasspath_locations(host: bool, simulator: bool):
   bpath_location_prefix = ""
+  out_path = ""
 
-  if host:
+  # For target, no prefix is needed.
+  if simulator:
+    out_path = os.environ["ANDROID_PRODUCT_OUT"] + "/system"
+  elif host:
+    out_path = os.environ["ANDROID_HOST_OUT"]
+
+  # out_path contains the absolute path, including ANDROID_BUILD_TOP, but the
+  # bootclasspath is expected to be a relative path from ANDROID_BUILD_TOP,
+  # therefore remove it from the location prefix.
+  if host or simulator:
     ANDROID_BUILD_TOP=os.environ["ANDROID_BUILD_TOP"]
-    ANDROID_HOST_OUT=os.environ["ANDROID_HOST_OUT"]
-    if ANDROID_HOST_OUT[0:len(ANDROID_BUILD_TOP)+1] == f"{ANDROID_BUILD_TOP}/":
-      bpath_location_prefix=ANDROID_HOST_OUT[len(ANDROID_BUILD_TOP)+1:]
+    if out_path[0:len(ANDROID_BUILD_TOP)+1] == f"{ANDROID_BUILD_TOP}/":
+      bpath_location_prefix=out_path[len(ANDROID_BUILD_TOP)+1:]
     else:
-      print(f"ANDROID_BUILD_TOP/ is not a prefix of ANDROID_HOST_OUT"\
+      out_path_env = "ANDROID_PRODUCT_OUT" if simulator else "ANDROID_HOST_OUT"
+      print(f"ANDROID_BUILD_TOP/ is not a prefix of {out_path_env}"\
             "\nANDROID_BUILD_TOP={ANDROID_BUILD_TOP}"\
-            "\nANDROID_HOST_OUT={ANDROID_HOST_OUT}")
+            "\n{out_path_env}={out_path}")
       sys.exit(1)
 
   return get_apex_bootclasspath_impl(bpath_location_prefix)
@@ -319,6 +332,7 @@ def default_run(ctx, args, **kwargs):
   ANDROID_FLAGS += (" -Xcompiler-option --runtime-arg -Xcompiler-option "
                     "-XX:SlowDebug=true")
   COMPILER_FLAGS = "  --runtime-arg -XX:SlowDebug=true"
+  SIMULATOR = args.simulator
 
   # Let the compiler and runtime know that we are running tests.
   COMPILE_FLAGS += " --compile-art-test"
@@ -422,6 +436,13 @@ def default_run(ctx, args, **kwargs):
   if args.vdex_arg:
     arg = args.vdex_arg
     VDEX_ARGS += f" {arg}"
+  if SIMULATOR:
+    HOST = True
+    ANDROID_PRODUCT_OUT = os.environ.get("ANDROID_PRODUCT_OUT")
+    ANDROID_ROOT = f"{ANDROID_PRODUCT_OUT}/system"
+    ANDROID_RUNTIME_ROOT = f"{ANDROID_PRODUCT_OUT}/apex/com.android.runtime.debug"
+    # Simulation has some overhead so give an extra 50 mins.
+    TIME_OUT_EXTRA += 3000
 
 # HACK: Force the use of `signal_dumper` on host.
   if HOST or ON_VM:
@@ -589,8 +610,8 @@ def default_run(ctx, args, **kwargs):
     ctx.run(tee(cmdline), expected_exit_code=args.expected_exit_code)
     return
 
-  b_path = get_apex_bootclasspath(HOST)
-  b_path_locations = get_apex_bootclasspath_locations(HOST)
+  b_path = get_apex_bootclasspath(HOST, SIMULATOR)
+  b_path_locations = get_apex_bootclasspath_locations(HOST, SIMULATOR)
 
   BCPEX = ""
   if isfile(f"{TEST_NAME}-bcpex.jar"):
@@ -685,7 +706,9 @@ def default_run(ctx, args, **kwargs):
       "/", "@")
   assert len(VDEX_NAME) <= max_filename_size, "Dex location path too long"
 
-  if HOST:
+  if SIMULATOR:
+    ANDROID_ART_BIN_DIR = f"{ANDROID_HOST_OUT}/bin"
+  elif HOST:
     # On host, run binaries (`dex2oat(d)`, `dalvikvm`, `profman`) from the `bin`
     # directory under the "Android Root" (usually `out/host/linux-x86`).
     #
@@ -704,6 +727,10 @@ def default_run(ctx, args, **kwargs):
     FLAGS += " -Xmetrics-write-to-statsd:false"
 
   profman_cmdline = "true"
+  if SIMULATOR:
+    # TODO(Simulator): get rid of hard-coded isa.
+    ISA = "arm64"
+
   dex2oat_cmdline = "true"
   vdex_cmdline = "true"
   dm_cmdline = "true"
@@ -1061,7 +1088,13 @@ def default_run(ctx, args, **kwargs):
 
   else:
     # Host run.
-    LD_LIBRARY_PATH = f"{ANDROID_ROOT}/{LIBRARY_DIRECTORY}:{ANDROID_ROOT}/{TEST_DIRECTORY}"
+    if SIMULATOR:
+      # In simulator mode host native libraries should be used.
+      PATH_PREFIX = ANDROID_HOST_OUT
+    else:
+      PATH_PREFIX = ANDROID_ROOT
+
+    LD_LIBRARY_PATH = f"{PATH_PREFIX}/{LIBRARY_DIRECTORY}:{PATH_PREFIX}/{TEST_DIRECTORY}"
 
     ctx.export(
       ANDROID_PRINTF_LOG = "brief",

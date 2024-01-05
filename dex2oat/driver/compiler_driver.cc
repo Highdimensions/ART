@@ -282,19 +282,29 @@ CompilerDriver::~CompilerDriver() {
 }
 
 
-#define CREATE_TRAMPOLINE(type, abi, offset)                                            \
-    if (Is64BitInstructionSet(GetCompilerOptions().GetInstructionSet())) {              \
-      return CreateTrampoline64(GetCompilerOptions().GetInstructionSet(),               \
+#define CREATE_TRAMPOLINE_IMPL(isa, type, abi, offset)                                  \
+    if (Is64BitInstructionSet((isa))) {                                                 \
+      return CreateTrampoline64((isa),                                                  \
                                 abi,                                                    \
                                 type ## _ENTRYPOINT_OFFSET(PointerSize::k64, offset));  \
     } else {                                                                            \
-      return CreateTrampoline32(GetCompilerOptions().GetInstructionSet(),               \
+      return CreateTrampoline32((isa),                                                  \
                                 abi,                                                    \
                                 type ## _ENTRYPOINT_OFFSET(PointerSize::k32, offset));  \
     }
 
-std::unique_ptr<const std::vector<uint8_t>> CompilerDriver::CreateJniDlsymLookupTrampoline() const {
-  CREATE_TRAMPOLINE(JNI, kJniAbi, pDlsymLookup)
+#define CREATE_TRAMPOLINE(type, abi, offset)                                            \
+    CREATE_TRAMPOLINE_IMPL(GetCompilerOptions().GetInstructionSet(), type, abi, offset)
+
+std::unique_ptr<const std::vector<uint8_t>>
+    CompilerDriver::CreateJniDlsymLookupTrampoline() const {
+#ifdef ART_USE_SIMULATOR
+  // In simulator mode the dlsymLookup trampoline is executed in native ISA, not quick code isa.
+  InstructionSet trampoline_isa = kRuntimeISA;
+#else
+  InstructionSet trampoline_isa = GetCompilerOptions().GetInstructionSet();
+#endif
+  CREATE_TRAMPOLINE_IMPL(trampoline_isa, JNI, kJniAbi, pDlsymLookup)
 }
 
 std::unique_ptr<const std::vector<uint8_t>>

@@ -56,6 +56,10 @@ class AndroidLocalUnwinder;
 
 namespace art HIDDEN {
 
+#ifdef ART_USE_SIMULATOR
+class CodeSimulator;
+#endif
+
 namespace gc {
 namespace accounting {
 template<class T> class AtomicStack;
@@ -237,7 +241,11 @@ static constexpr StackType kNativeStackType = StackType::kHardware;
 // The type of stack used when executing quick code, i.e.: compiled dex code and quick entrypoints.
 // For simulator builds this is the kSimulated stack and for non-simulator builds this is the
 // kHardware stack.
+#ifdef ART_USE_SIMULATOR
+static constexpr StackType kQuickStackType = StackType::kSimulated;
+#else
 static constexpr StackType kQuickStackType = StackType::kHardware;
+#endif
 
 // See Thread.tlsPtr_.active_suspend1_barriers below for explanation.
 struct WrappedSuspend1Barrier {
@@ -334,6 +342,10 @@ class EXPORT Thread {
   // (lowest memory). The higher portion of the memory is protected against reads and the lower is
   // available for use while throwing the StackOverflow exception.
   ALWAYS_INLINE static size_t GetStackOverflowProtectedSize();
+
+#ifdef ART_USE_SIMULATOR
+  CodeSimulator* GetSimExecutor() const;
+#endif
 
   // On a runnable thread, check for pending thread suspension request and handle if pending.
   void AllowThreadSuspension() REQUIRES_SHARED(Locks::mutator_lock_);
@@ -1813,6 +1825,11 @@ class EXPORT Thread {
       REQUIRES(Locks::runtime_shutdown_lock_);
   void InitCardTable();
   void InitCpu();
+
+#ifdef ART_USE_SIMULATOR
+  void CreateSimExecutor(size_t stack_size);
+#endif
+
   void CleanupCpu();
   void InitTlsEntryPoints();
   void InitTid();
@@ -2238,7 +2255,15 @@ class EXPORT Thread {
                                method_trace_buffer_curr_entry(nullptr),
                                thread_exit_flags(nullptr),
                                last_no_thread_suspension_cause(nullptr),
+#ifdef ART_USE_SIMULATOR
+                               last_no_transaction_checks_cause(nullptr),
+                               sim_executor(nullptr),
+                               sim_stack_end(nullptr),
+                               sim_stack_begin(nullptr),
+                               sim_stack_size(0) {
+#else
                                last_no_transaction_checks_cause(nullptr) {
+#endif
       std::fill(held_mutexes, held_mutexes + kLockLevelCount, nullptr);
     }
 
@@ -2422,6 +2447,18 @@ class EXPORT Thread {
     // If the thread is asserting that there should be no transaction checks,
     // what is causing that assertion (debug builds only).
     const char* last_no_transaction_checks_cause;
+
+#ifdef ART_USE_SIMULATOR
+    // Each thread has its own simulator executor with a full sim CPU context: registers,
+    // stack, etc.
+    CodeSimulator* sim_executor;
+
+    // Same semantics as for the relevant stack variables (see the diagram near class Thread), but
+    // for simulator's stack.
+    uint8_t* sim_stack_end;
+    uint8_t* sim_stack_begin;
+    size_t sim_stack_size;
+#endif
   } tlsPtr_;
 
   // Small thread-local cache to be used from the interpreter.

@@ -316,9 +316,11 @@ build-art-simulator-boot-image: $(HOST_OUT_EXECUTABLES)/generate-boot-image64 \
 	  --core-only=true \
 	  --instruction-set=$(TARGET_ARCH)
 
-# For simulator, build a target profile and boot image on the host.
+# For simulator, build a target profile, boot image and the libartd-simulator library on the host.
+# libartd-simulator should not be linked to any other library as it will be dynamically linked at
+# runtime.
 .PHONY: build-art-simulator
-build-art-simulator: build-art-simulator-profile build-art-simulator-boot-image
+build-art-simulator: build-art-simulator-profile build-art-simulator-boot-image libartd-simulator
 
 PRIVATE_ART_APEX_DEPENDENCY_FILES := \
   bin/dalvikvm32 \
