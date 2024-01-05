@@ -139,13 +139,24 @@ class EntrypointsOrderTest : public CommonArtTest {
         Thread, tlsPtr_, thread_exit_flags, last_no_thread_suspension_cause, sizeof(void*));
     EXPECT_OFFSET_DIFFP(Thread, tlsPtr_, last_no_thread_suspension_cause,
                         last_no_transaction_checks_cause, sizeof(void*));
+#ifdef ART_USE_SIMULATOR
+    EXPECT_OFFSET_DIFFP(Thread, tlsPtr_, thread_exit_flags, sim_executor, sizeof(void*));
+    EXPECT_OFFSET_DIFFP(Thread, tlsPtr_, sim_executor, sim_stack_end, sizeof(void*));
+    EXPECT_OFFSET_DIFFP(Thread, tlsPtr_, sim_stack_end, sim_stack_begin, sizeof(void*));
+    EXPECT_OFFSET_DIFFP(Thread, tlsPtr_, sim_stack_begin, sim_stack_size, sizeof(void*));
+#endif
     // The first field after tlsPtr_ is forced to a 16 byte alignment so it might have some space.
     auto offset_tlsptr_end = OFFSETOF_MEMBER(Thread, tlsPtr_) +
         sizeof(decltype(reinterpret_cast<Thread*>(16)->tlsPtr_));
+#ifdef ART_USE_SIMULATOR
+    CHECKED(offset_tlsptr_end - OFFSETOF_MEMBER(Thread, tlsPtr_.sim_stack_size) == sizeof(size_t),
+            "sim_stack_size last field");
+#else
     CHECKED(
         offset_tlsptr_end - OFFSETOF_MEMBER(Thread, tlsPtr_.last_no_transaction_checks_cause) ==
             sizeof(void*),
         "last_no_transaction_checks_cause last field");
+#endif
   }
 
   void CheckJniEntryPoints() {

@@ -609,6 +609,33 @@ inline void Thread::SetStackSize<StackType::kHardware>(size_t new_stack_size) {
   tlsPtr_.stack_size = new_stack_size;
 }
 
+#if ART_USE_SIMULATOR
+template <>
+inline uint8_t* Thread::GetStackEnd<StackType::kSimulated>() const {
+  return tlsPtr_.sim_stack_end;
+}
+template <>
+inline void Thread::SetStackEnd<StackType::kSimulated>(uint8_t* new_stack_end) {
+  tlsPtr_.sim_stack_end = new_stack_end;
+}
+template <>
+inline uint8_t* Thread::GetStackBegin<StackType::kSimulated>() const {
+  return tlsPtr_.sim_stack_begin;
+}
+template <>
+inline void Thread::SetStackBegin<StackType::kSimulated>(uint8_t* new_stack_begin) {
+  tlsPtr_.sim_stack_begin = new_stack_begin;
+}
+template <>
+inline size_t Thread::GetStackSize<StackType::kSimulated>() const {
+  return tlsPtr_.sim_stack_size;
+}
+template <>
+inline void Thread::SetStackSize<StackType::kSimulated>(size_t new_stack_size) {
+  tlsPtr_.sim_stack_size = new_stack_size;
+}
+#endif
+
 inline uint8_t* Thread::GetStackEndForInterpreter(bool implicit_overflow_check) const {
   uint8_t* end = GetStackEnd<kNativeStackType>() + (implicit_overflow_check
       ? GetStackOverflowReservedBytes(kRuntimeQuickCodeISA)

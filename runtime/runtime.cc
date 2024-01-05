@@ -188,6 +188,9 @@
 namespace apex = com::android::apex;
 
 #endif
+#ifdef ART_USE_SIMULATOR
+#include "code_simulator_container.h"
+#endif
 
 // Static asserts to check the values of generated assembly-support macros.
 #define ASM_DEFINE(NAME, EXPR) static_assert((NAME) == (EXPR), "Unexpected value of " #NAME);
@@ -1790,6 +1793,13 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
                         (gUseUserfaultfd ? BackgroundGcOption(gc::kCollectorTypeCMCBackground) :
                                            runtime_options.GetOrDefault(Opt::BackgroundGc));
 
+  // TODO(Simulator): Remove/adjust when hybrid mode is gone.
+#ifdef ART_USE_SIMULATOR
+  if (SimulatorMode()) {
+    instruction_set_ = kRuntimeQuickCodeISA;
+  }
+#endif
+
   heap_ = new gc::Heap(runtime_options.GetOrDefault(Opt::MemoryInitialSize),
                        runtime_options.GetOrDefault(Opt::HeapGrowthLimit),
                        runtime_options.GetOrDefault(Opt::HeapMinFree),
@@ -1976,6 +1986,12 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   // Add the JniEnv handler.
   // TODO Refactor this stuff.
   java_vm_->AddEnvironmentHook(JNIEnvExt::GetEnvHandler);
+
+#ifdef ART_USE_SIMULATOR
+  if (SimulatorMode()) {
+    simulator_container_.reset(new CodeSimulatorContainer(kRuntimeQuickCodeISA));
+  }
+#endif
 
   Thread::Startup();
 
