@@ -1792,6 +1792,14 @@ ENTRY art_quick_generic_jni_trampoline
     // Check for error (class init check or locking for synchronized native method can throw).
     cbz x0, .Lexception_in_native
 
+#ifdef ART_USE_SIMULATOR
+    // x0 as first argument - code pointer.
+    mov x1, sp
+    mov x2, xSELF
+    // Call to a placeholder function, simulator will intercept it and process both the native
+    // call and a call to artQuickGenericJniEndTrampoline.
+    CALL_SYMBOL artArm64SimulatorGenericJNIPlaceholder
+#else   // ART_USE_SIMULATOR
     // Save the code pointer
     mov xIP0, x0
 
@@ -1823,6 +1831,7 @@ ENTRY art_quick_generic_jni_trampoline
     fmov x2, d0     // d0 will contain floating point result, but needs to go into x2
 
     CALL_SYMBOL artQuickGenericJniEndTrampoline
+#endif  // ART_USE_SIMULATOR
 
     // Pending exceptions possible.
     ldr x2, [xSELF, THREAD_EXCEPTION_OFFSET]

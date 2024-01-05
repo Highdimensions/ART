@@ -18,16 +18,30 @@
 #define ART_SIMULATOR_INCLUDE_CODE_SIMULATOR_H_
 
 #include "arch/instruction_set.h"
+#include "runtime.h"
 
 namespace art {
 
-class CodeSimulator {
- public:
-  CodeSimulator() {}
-  virtual ~CodeSimulator() {}
-  // Returns a null pointer if a simulator cannot be found for target_isa.
-  static CodeSimulator* CreateCodeSimulator(InstructionSet target_isa);
+class ArtMethod;
+union JValue;
+class Thread;
 
+//
+// Classes in this file model simulator executors - a per thread entities with their own contexts:
+// simulated stack, registers, etc.
+//
+
+// This class implements a basic simulator executor which is capable of executing sequences
+// of simulated ISA instructions. It is not aware of ART runtime so it can manage only trivial
+// ART methods.
+//
+// Currently only used by code generator tests.
+class BasicCodeSimulator {
+ public:
+  BasicCodeSimulator() {}
+  virtual ~BasicCodeSimulator() {}
+
+  // Starts simulating instructions of a target isa from a buffer.
   virtual void RunFrom(intptr_t code_buffer) = 0;
 
   // Get return value according to C ABI.
@@ -36,10 +50,44 @@ class CodeSimulator {
   virtual int64_t GetCReturnInt64() const = 0;
 
  private:
+  DISALLOW_COPY_AND_ASSIGN(BasicCodeSimulator);
+};
+
+// Returns a null pointer if a simulator cannot be found for target_isa.
+extern "C" BasicCodeSimulator* CreateBasicCodeSimulator(InstructionSet target_isa,
+                                                        size_t stack_size);
+
+#ifdef ART_USE_SIMULATOR
+
+// This class implements a ART runtime aware simulator executor which can execute all* quick ABI
+// code: is aware of ART entrypoints, ABI/ISA transitions, etc.
+class CodeSimulator {
+ public:
+  CodeSimulator() {}
+  virtual ~CodeSimulator() {}
+
+  // Invokes (starts to simulate) a method; this should follow the semantics of
+  // art_quick_invoke_stub.
+  virtual void Invoke(ArtMethod* method,
+                      uint32_t* args,
+                      uint32_t args_size,
+                      Thread* self,
+                      JValue* result,
+                      const char* shorty,
+                      bool isStatic) REQUIRES_SHARED(Locks::mutator_lock_) = 0;
+
+  // Get the current stack pointer from the simulator.
+  virtual int64_t GetStackPointer() = 0;
+  // Get the stack base from the simulator.
+  virtual uint8_t* GetStackBaseInternal() = 0;
+
+ private:
   DISALLOW_COPY_AND_ASSIGN(CodeSimulator);
 };
 
-extern "C" CodeSimulator* CreateCodeSimulator(InstructionSet target_isa);
+extern "C" CodeSimulator* CreateCodeSimulator(InstructionSet target_isa, size_t stack_size);
+
+#endif
 
 }  // namespace art
 
