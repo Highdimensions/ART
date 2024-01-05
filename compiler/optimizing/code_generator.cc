@@ -1590,6 +1590,7 @@ bool CodeGenerator::CanMoveNullCheckToUser(HNullCheck* null_check) {
 void CodeGenerator::MaybeRecordImplicitNullCheck(HInstruction* instr) {
   HNullCheck* null_check = instr->GetImplicitNullCheck();
   if (null_check != nullptr) {
+    DCHECK(compiler_options_.GetImplicitNullChecks());
     RecordPcInfo(null_check);
   }
 }
