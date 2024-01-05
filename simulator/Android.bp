@@ -89,6 +89,8 @@ cc_defaults {
         "libbase_headers",
         "libart_headers",
         "art_libartbase_headers",
+        "jni_platform_headers",
+        "libdexfile_all_headers",
     ],
     export_include_dirs: ["."], // TODO: Consider a proper separation.
 }
