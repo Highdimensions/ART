@@ -469,6 +469,8 @@ class ReleaseChecker:
     self._checker.check_native_library('libsigchain')
     self._checker.check_prefer64_library('libartservice')
     self._checker.check_prefer64_library('libarttools')
+    # Only on ARM/ARM64
+    self._checker.check_optional_native_library('libart-simulator-container')
 
     # Check internal Java libraries for ART.
     self._checker.check_java_library('service-art')
@@ -550,6 +552,9 @@ class DebugChecker:
     self._checker.check_native_library('libperfetto_hprofd')
     self._checker.check_native_library('libprofiled')
     self._checker.check_prefer64_library('libartserviced')
+    # Only on ARM/ARM64
+    self._checker.check_optional_native_library('libartd-simulator-container')
+    self._checker.check_optional_native_library('libartd-simulator')
 
     # Check internal libraries for Managed Core Library.
     self._checker.check_native_library('libopenjdkd')

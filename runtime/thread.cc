@@ -125,6 +125,11 @@
 #include <sys/syscall.h>
 #endif  // ART_USE_FUTEXES
 
+#ifdef ART_USE_SIMULATOR
+#include "code_simulator.h"
+#include "code_simulator_container.h"
+#endif
+
 #pragma clang diagnostic push
 #pragma clang diagnostic error "-Wconversion"
 
@@ -177,6 +182,18 @@ void Thread::SetIsGcMarkingAndUpdateEntrypoints(bool is_marking) {
   tls32_.is_gc_marking = is_marking;
   UpdateReadBarrierEntrypoints(&tlsPtr_.quick_entrypoints, /* is_active= */ is_marking);
 }
+
+#ifdef ART_USE_SIMULATOR
+void Thread::CreateSimExecutor(size_t stack_size) {
+  tlsPtr_.sim_executor =
+      Runtime::Current()->GetCodeSimulatorContainer()->CreateExecutor(stack_size);
+}
+
+CodeSimulator* Thread::GetSimExecutor() const {
+  DCHECK(tlsPtr_.sim_executor != nullptr);
+  return tlsPtr_.sim_executor;
+}
+#endif  // ART_USE_SIMULATOR
 
 void Thread::InitTlsEntryPoints() {
   ScopedTrace trace("InitTlsEntryPoints");
@@ -745,6 +762,13 @@ NO_INLINE uint8_t* Thread::FindStackTop<StackType::kHardware>() {
   return reinterpret_cast<uint8_t*>(
       AlignDown(__builtin_frame_address(0), gPageSize));
 }
+#ifdef ART_USE_SIMULATOR
+template <>
+NO_INLINE uint8_t* Thread::FindStackTop<StackType::kSimulated>() {
+  return reinterpret_cast<uint8_t*>(
+      AlignDown(reinterpret_cast<uint8_t*>(GetSimExecutor()->GetStackPointer()), gPageSize));
+}
+#endif
 
 // Install a protected region in the stack.  This is used to trigger a SIGSEGV if a stack
 // overflow is detected.  It is located right below the stack_begin_.
@@ -755,11 +779,20 @@ void Thread::InstallImplicitProtection() {
   // Page containing current top of stack.
   uint8_t* stack_top = FindStackTop<stack_type>();
 
+  // Is it a fatal error if we initially fail to protect the stack? Note: it is possible that the
+  // native stack is not mapped into memory when initially trying to protect it.
+  bool fatal_on_error = false;
+  if constexpr (stack_type == StackType::kSimulated) {
+    // The simulated stack is mapped into memory upon creation therefore it is an error if we fail
+    // to protect it.
+    fatal_on_error = true;
+  }
+
   // Try to directly protect the stack.
   VLOG(threads) << "installing stack protected region at " << std::hex <<
         static_cast<void*>(pregion) << " to " <<
         static_cast<void*>(pregion + GetStackOverflowProtectedSize() - 1);
-  if (ProtectStack<stack_type>(/* fatal_on_error= */ false)) {
+  if (ProtectStack<stack_type>(fatal_on_error)) {
     // Tell the kernel that we won't be needing these pages any more.
     // NB. madvise will probably write zeroes into the memory (on linux it does).
     size_t unwanted_size =
@@ -1041,6 +1074,20 @@ bool Thread::Init(ThreadList* thread_list, JavaVMExt* java_vm, JNIEnvExt* jni_en
     return false;
   }
   InitCpu();
+
+#ifdef ART_USE_SIMULATOR
+  if (Runtime::SimulatorMode()) {
+    // Use the same stack size for the simulator stack as the native stack.
+    CreateSimExecutor(read_stack_size);
+    uint8_t* stack_begin = GetSimExecutor()->GetStackBaseInternal() - read_stack_size;
+    if (!InitStack<StackType::kSimulated>(stack_begin,
+                                          read_stack_size,
+                                          read_guard_size)) {
+      return false;
+    }
+  }
+#endif
+
   InitTlsEntryPoints();
   RemoveSuspendTrigger();
   InitCardTable();
@@ -2740,6 +2787,16 @@ Thread::~Thread() {
   if (initialized) {
     CleanupCpu();
   }
+
+#ifdef ART_USE_SIMULATOR
+  if (Runtime::Current()->GetImplicitStackOverflowChecks()) {
+    UnprotectStack<StackType::kSimulated>();
+  }
+
+  if (tlsPtr_.sim_executor != nullptr) {
+    delete tlsPtr_.sim_executor;
+  }
+#endif
 
   SetCachedThreadName(nullptr);  // Deallocate name.
   delete tlsPtr_.deps_or_stack_trace_sample.stack_trace_sample;

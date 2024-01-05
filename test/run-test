@@ -367,6 +367,8 @@ if True:
                     help="Perform bisection bug search.")
   argp.add_argument("--temp-path", type=str,
                     help="Location where to execute the tests.")
+  argp.add_argument("--simulator", action='store_true',
+                    help="Enable the ART simulator.")
   argp.add_argument("test_name", nargs="?", default='-', type=str,
                     help="Name of the test to run.")
   argp.add_argument("test_args", nargs="*", default=None,
@@ -676,7 +678,15 @@ if True:
     else:
       pass  # defaults to using target BOOTCLASSPATH
   elif runtime == "art":
-    if not target_mode:
+    if args.simulator:
+      run_args += ["--simulator"]
+      run_args += [
+          f'--boot "{ANDROID_PRODUCT_OUT}/system/apex/art_boot_images/javalib/boot.art"'
+      ]
+
+      java_lp = f"{host_lib_root}/lib{suffix64}:{host_lib_root}/nativetest{suffix64}"
+      run_args += [f'--runtime-option "-Djava.library.path={java_lp}"']
+    elif not target_mode:
       host_arch_name = guess_host_arch_name()
       run_args += [
           f'--boot "{ANDROID_HOST_OUT}/apex/art_boot_images/javalib/boot.art"'
@@ -764,7 +774,10 @@ if True:
           run_checker = False
           cfg_output_dir = tmp_dir
 
-        if not target_mode:
+        if args.simulator:
+          # TODO(Simulator): remove the ISA hard-coding.
+          checker_args = "--arch=ARM64"
+        elif not target_mode:
           cfg_output_dir = tmp_dir
           checker_args = f"--arch={host_arch_name.upper()}"
         else:

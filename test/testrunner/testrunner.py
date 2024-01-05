@@ -231,7 +231,7 @@ def gather_test_info():
   global TOTAL_VARIANTS_SET
   # TODO: Avoid duplication of the variant names in different lists.
   VARIANT_TYPE_DICT['run'] = {'ndebug', 'debug'}
-  VARIANT_TYPE_DICT['target'] = {'target', 'host', 'jvm'}
+  VARIANT_TYPE_DICT['target'] = {'target', 'host', 'jvm', 'simulator'}
   VARIANT_TYPE_DICT['trace'] = {'trace', 'ntrace', 'stream'}
   VARIANT_TYPE_DICT['image'] = {'picimage', 'no-image'}
   VARIANT_TYPE_DICT['debuggable'] = {'ndebuggable', 'debuggable'}
@@ -297,6 +297,8 @@ def setup_test_env():
 
   _user_input_variants['address_sizes_target'] = collections.defaultdict(set)
   if not _user_input_variants['address_sizes']:
+    # TODO(Simulator): remove the suffix hard-coding.
+    _user_input_variants['address_sizes_target']['simulator'].add('64')
     _user_input_variants['address_sizes_target']['target'].add(
         env.ART_PHONY_TEST_TARGET_SUFFIX)
     _user_input_variants['address_sizes_target']['host'].add(
@@ -488,6 +490,8 @@ def run_tests(tests):
 
       if target == 'host':
         args_test += ['--host']
+      elif target == 'simulator':
+        args_test += ['--host', '--simulator']
       elif target == 'jvm':
         args_test += ['--jvm']
 
