@@ -95,6 +95,7 @@ class ArenaPool;
 class ArtMethod;
 enum class CalleeSaveType: uint32_t;
 class ClassLinker;
+class CodeSimulatorContainer;
 class CompilerCallbacks;
 class Dex2oatImageTest;
 class DexFile;
@@ -559,6 +560,16 @@ class Runtime {
 
   EXPORT void SetInstructionSet(InstructionSet instruction_set);
   void ClearInstructionSet();
+
+#ifdef ART_USE_SIMULATOR
+  // Returns whether the runtime is in simulator mode - able to simulate code.
+  static inline bool SimulatorMode() {
+    DCHECK_NE(kSimulatedISA, InstructionSet::kNone);
+    Runtime* runtime = Current();
+    // Disable simulator for compiler.
+    return runtime != nullptr && !runtime->IsCompiler();
+  }
+#endif
 
   EXPORT void SetCalleeSaveMethod(ArtMethod* method, CalleeSaveType type);
   void ClearCalleeSaveMethods();
@@ -1137,6 +1148,10 @@ class Runtime {
   // For `artd` only.
   EXPORT static void AllowPageSizeAccess();
 
+#ifdef ART_USE_SIMULATOR
+  CodeSimulatorContainer* GetCodeSimulatorContainer() { return simulator_container_.get(); }
+#endif
+
  private:
   static void InitPlatformSignalHandlers();
 
@@ -1557,6 +1572,10 @@ class Runtime {
 
   // The info about the application code paths.
   AppInfo app_info_;
+
+#ifdef ART_USE_SIMULATOR
+  std::unique_ptr<CodeSimulatorContainer> simulator_container_;
+#endif
 
   // Note: See comments on GetFaultMessage.
   friend std::string GetFaultMessageForAbortLogging();

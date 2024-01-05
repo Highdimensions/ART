@@ -2196,6 +2196,28 @@ extern "C" uint64_t artQuickGenericJniEndTrampoline(Thread* self,
   return GenericJniMethodEnd(self, cookie, result, result_f, called);
 }
 
+// Return the address of quick stub code for invoking a method.
+extern "C" void art_quick_invoke_stub(ArtMethod*,
+                                      uint32_t*,
+                                      uint32_t,
+                                      Thread*,
+                                      JValue*,
+                                      const char*);
+extern "C" const void* GetQuickInvokeStub() {
+  return reinterpret_cast<const void*>(art_quick_invoke_stub);
+}
+
+// Return the address of quick stub code for invoking a static method.
+extern "C" void art_quick_invoke_static_stub(ArtMethod*,
+                                             uint32_t*,
+                                             uint32_t,
+                                             Thread*,
+                                             JValue*,
+                                             const char*);
+extern "C" const void* GetQuickInvokeStaticStub() {
+  return reinterpret_cast<const void*>(art_quick_invoke_static_stub);
+}
+
 // We use TwoWordReturn to optimize scalar returns. We use the hi value for code, and the lo value
 // for the method pointer.
 //

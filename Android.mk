@@ -281,10 +281,12 @@ TARGET_BOOT_IMAGE_SYSTEM_DIR := $(PRODUCT_OUT)/system/apex/art_boot_images
 TARGET_ART_APEX_SYSTEM := $(PRODUCT_OUT)/system/apex/com.android.art
 TARGET_BOOT_IMAGE_PROFILE := $(TARGET_ART_APEX_SYSTEM).testing/etc/boot-image.prof
 
-# For simulator, build a target boot image on the host.
+# For simulator, build a target boot image and the libartd-simulator library on the host.
+# libartd-simulator should not be linked to any other library as it will be dynamically linked at
+# runtime.
 .PHONY: build-art-simulator
 build-art-simulator: $(HOST_OUT)/bin/generate-boot-image64 $(HOST_OUT_EXECUTABLES)/dex2oatd \
-		$(HOST_OUT)/bin/profmand
+		$(HOST_OUT)/bin/profmand libartd-simulator
 	# Note: The target boot image needs to be in a trusted system directory to be used by the
 	# zygote or if -Xonly-use-system-oat-files is passed to the runtime.
 	rm -rf $(TARGET_BOOT_IMAGE_SYSTEM_DIR)
