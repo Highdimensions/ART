@@ -42,6 +42,75 @@
 // Implicit suspend check register.
 #define xSUSPEND x21
 
+#ifdef ART_USE_RESTRICTED_MODE
+// Load the absolute address of a symbol using the R_X86_64_PC64 (PC relative)
+// relocation type into the register "reg".
+//
+// Clobbers xIP1.
+//
+.macro LOAD_PC_REL_ADDRESS reg, symbol
+    // Load address of reloc_addr following R_X86_64_PC64 relocation type.
+    adr \reg, reloc_addr\@
+    ldr xIP1, reloc_addr\@
+    add \reg, \reg, xIP1
+
+    // Jump over the literal.
+    b .Lload_pc_rel_address_done\@
+
+    .global \symbol
+#ifdef ART_USE_SIMULATOR
+    // R_AARCH64_NONE will be replaced by R_X86_64_PC64 in simulator mode.
+    .reloc reloc_addr\@, R_AARCH64_NONE, \symbol
+#else
+    .reloc reloc_addr\@, R_AARCH64_PREL64, \symbol
+#endif    // ART_USE_SIMULATOR
+reloc_addr\@:
+    .dword 0x0000000000000000
+.Lload_pc_rel_address_done\@:
+.endm
+
+// Note: xIP0 and xIP1 will be clobbered and shouldn't ever be expected to retain values pre/post
+// branch to symbol as the Arm AAPCS prohibts it.
+
+// Call a symbol (e.g: "bl symbol").
+.macro CALL_SYMBOL symbol
+    LOAD_PC_REL_ADDRESS xIP0, \symbol
+    blr xIP0
+.endm
+
+// Branch to a symbol without link (e.g: "b symbol")
+.macro BRANCH_SYMBOL symbol
+    LOAD_PC_REL_ADDRESS xIP0, \symbol
+    br xIP0
+.endm
+
+// Branch to a symbol if register is not equal to zero (e.g: "cbz reg, symbol").
+.macro BRANCH_SYMBOL_CBZ reg, symbol
+    cbnz \reg, .Lbranch_not_zero\@
+    BRANCH_SYMBOL \symbol
+
+.Lbranch_not_zero\@:
+    nop
+.endm
+
+// Branch to a symbol if not equal (e.g: "b.ne symbol").
+.macro BRANCH_SYMBOL_NE symbol
+    b.eq .Lbranch_equal\@
+    BRANCH_SYMBOL \symbol
+
+.Lbranch_equal\@:
+    nop
+.endm
+
+// Branch to a symbol if not equal (e.g: "b.eq symbol").
+.macro BRANCH_SYMBOL_EQ symbol
+    b.ne .Lbranch_not_equal\@
+    BRANCH_SYMBOL \symbol
+
+.Lbranch_not_equal\@:
+    nop
+.endm
+#else
 .macro LOAD_PC_REL_ADDRESS reg, symbol
     adr \reg, \symbol
 .endm
@@ -65,6 +134,7 @@
 .macro BRANCH_SYMBOL_EQ symbol
     b.eq \symbol
 .endm
+#endif    // ART_USE_RESTRICTED_MODE
 
 .macro CFI_EXPRESSION_BREG n, b, offset
     .if (-0x40 <= (\offset)) && ((\offset) < 0x40)
@@ -227,14 +297,24 @@
     .cfi_adjust_cfa_offset -(ALL_ARGS_SIZE + \extra_space)
 .endm
 
+#ifdef ART_USE_RESTRICTED_MODE
+.macro LOAD_RUNTIME_INSTANCE reg
+    LOAD_PC_REL_ADDRESS \reg, _ZN3art7Runtime9instance_E
+
+    // _ZN3art7Runtime9instance_E is a pointer to the runtime instance so
+    // dereference it.
+    ldr \reg, [\reg, #0]
+.endm
+#else
 .macro LOAD_RUNTIME_INSTANCE reg
 #if __has_feature(hwaddress_sanitizer)
     adrp \reg, :pg_hi21_nc:_ZN3art7Runtime9instance_E
 #else
     adrp \reg, _ZN3art7Runtime9instance_E
-#endif
+#endif  // __has_feature(hwaddress_sanitizer) && __clang_major__ >= 10
     ldr \reg, [\reg, #:lo12:_ZN3art7Runtime9instance_E]
 .endm
+#endif  // ART_USE_RESTRICTED_MODE
 
 // Macro to refresh the Marking Register (W20).
 //
