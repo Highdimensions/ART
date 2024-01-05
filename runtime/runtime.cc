@@ -1892,6 +1892,12 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
       break;
   }
 
+#ifdef ART_USE_RESTRICTED_MODE
+  // TODO(Simulator): support signal handling and implicit checks.
+  implicit_suspend_checks_ = false;
+  implicit_null_checks_ = false;
+#endif  // ART_USE_RESTRICTED_MODE
+
   fault_manager.Init(!no_sig_chain_);
   if (!no_sig_chain_) {
     if (HandlesSignalsInCompiledCode()) {
