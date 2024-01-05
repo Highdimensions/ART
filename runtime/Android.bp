@@ -559,8 +559,8 @@ cc_defaults {
                 true: [
                     "arch/arm64/context_arm64.cc",
                     "arch/arm64/entrypoints_init_arm64.cc",
-                    "arch/arm64/jni_entrypoints_arm64.S",
-                    "arch/arm64/quick_entrypoints_arm64.S",
+                    ":jni_entrypoints_arm64_to_x86_64",
+                    ":quick_entrypoints_arm64_to_x86_64",
                 ],
                 default: [
                     "arch/x86_64/context_x86_64.cc",
@@ -649,6 +649,77 @@ cc_defaults {
         "libartd-runtime_deps",
         "libartd-compiler_deps",
     ],
+}
+
+//
+// Compile the following entrypoint files as normal but don't link them yet. These are always
+// compiled as Arm64 even during host builds as they will later be transformed into x86_64 format
+// ELF files. See *_arm64_to_x86_64 rules for reference.
+//
+
+cc_defaults {
+    name: "cc_object_simulator_defaults",
+    host_supported: true,
+    defaults: [
+        "art_debug_defaults",
+        "libart_common_defaults",
+        "libartd-runtime_deps",
+    ],
+    asflags: [
+        "--target=arm64-linux-android",
+        "-march=armv8-a",
+    ],
+    // Disable this module if not building for the simulator. This module uses the --target flag
+    // which is only allowed to be used when building for the simulator.
+    enabled: select(soong_config_variable("art_module", "art_use_simulator"), {
+        true: true,
+        default: false,
+    }),
+}
+
+cc_object {
+    name: "cc_object_jni_entrypoints_arm64.S",
+    defaults: ["cc_object_simulator_defaults"],
+    srcs: ["arch/arm64/jni_entrypoints_arm64.S"],
+}
+
+cc_object {
+    name: "cc_object_quick_entrypoints_arm64.S",
+    defaults: ["cc_object_simulator_defaults"],
+    srcs: ["arch/arm64/quick_entrypoints_arm64.S"],
+}
+
+//
+// If ART_USE_SIMULATOR is defined then the compiled Arm64 entrypoint file is transformed into an
+// x86_64 format ELF file that still contains Arm64 code. This allows it to be linked to the x86_64
+// libart and its Arm64 code later simulated using the ART simulator.
+//
+
+genrule_defaults {
+    name: "arm64_to_x86_64_defaults",
+    host_supported: true,
+    defaults: ["cc_object_simulator_defaults"],
+    tools: [
+        "transform_arm64_to_x86_64",
+        "llvm-objcopy",
+    ],
+    cmd: "$(location transform_arm64_to_x86_64) " +
+        "--objcopy $(location llvm-objcopy) " +
+        "$(in) $(out)",
+}
+
+cc_genrule {
+    name: "jni_entrypoints_arm64_to_x86_64",
+    defaults: ["arm64_to_x86_64_defaults"],
+    srcs: [":cc_object_jni_entrypoints_arm64.S"],
+    out: ["jni_entrypoints_x86_64.o"],
+}
+
+cc_genrule {
+    name: "quick_entrypoints_arm64_to_x86_64",
+    defaults: ["arm64_to_x86_64_defaults"],
+    srcs: [":cc_object_quick_entrypoints_arm64.S"],
+    out: ["quick_entrypoints_x86_64.o"],
 }
 
 // A defaults to link libunwindstack statically with necessary dependencies,
