@@ -183,6 +183,11 @@ if [[ $build_target == "yes" ]]; then
   # Although the simulator is run on the host, we reuse the target build to
   # build the target run tests on the host.
   if [[ -n "${ART_USE_SIMULATOR}" ]]; then
+    # Ensure the Arm64 entrypoint objects (which are transformed to x86_64 ELF files and then later
+    # linked into the x86_64 libart) are built before the main build.
+    entrypoint_objects=" cc_object_jni_entrypoints_arm64.S cc_object_quick_entrypoints_arm64.S"
+    build/soong/soong_ui.bash --make-mode $j_arg $extra_args $showcommands $entrypoint_objects
+
     # Build any simulator specific components, such as a target boot image, on
     # the host.
     make_command+=" build-art-simulator"
