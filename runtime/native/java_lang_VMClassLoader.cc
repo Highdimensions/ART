@@ -81,6 +81,13 @@ static jclass VMClassLoader_findLoadedClass(JNIEnv* env, jclass, jobject javaLoa
   if (name.c_str() == nullptr) {
     return nullptr;
   }
+
+  if (!IsValidBinaryClassName(name.c_str())) {
+    soa.Self()->ThrowNewExceptionF("Ljava/lang/ClassNotFoundException;",
+                                   "Invalid name: %s", name.c_str());
+    return nullptr;
+  }
+
   ClassLinker* cl = Runtime::Current()->GetClassLinker();
 
   // Compute hash once.
