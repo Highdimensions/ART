@@ -255,6 +255,7 @@ class LocationsBuilderRISCV64 : public HGraphVisitor {
   void HandleShift(HBinaryOperation* operation);
   void HandleFieldSet(HInstruction* instruction);
   void HandleFieldGet(HInstruction* instruction);
+  void HandleBitManipulations(HBinaryOperation* instruction);
 
   InvokeDexCallingConventionVisitorRISCV64 parameter_visitor_;
 
@@ -312,6 +313,7 @@ class InstructionCodeGeneratorRISCV64 : public InstructionCodeGenerator {
                       bool value_can_be_null,
                       WriteBarrierKind write_barrier_kind);
   void HandleFieldGet(HInstruction* instruction, const FieldInfo& field_info);
+  void HandleBitManipulations(HBinaryOperation* instruction);
 
   // Generate a heap reference load using one register `out`:
   //
