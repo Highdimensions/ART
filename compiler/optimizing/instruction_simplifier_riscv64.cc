@@ -97,8 +97,191 @@ class InstructionSimplifierRiscv64Visitor final : public HGraphVisitor {
     return replaced;
   }
 
+  bool TryReplaceShrAndWithBitExtract(HBinaryOperation* op) {
+    HInstruction* left = op->GetLeft();
+    HInstruction* right = op->GetRight();
+    DataType::Type result_type = op->GetType();
+
+    HInstruction* op_value = (!left->IsShr()) ? left : right;
+    if (!op_value->IsConstant()) {
+      return false;
+    } else if (!op_value->AsConstant()->IsOne()) {
+      return false;
+    }
+
+    HShr* shr = (left->IsShr()) ? left->AsShr() : right->AsShr();
+
+    HInstruction* shamt = shr->GetRight();
+    HInstruction* shr_op = shr->GetLeft();
+
+    HRiscv64BitExtract* bit_extract =
+        new (GetGraph()->GetAllocator()) HRiscv64BitExtract(result_type, shr_op, shamt);
+    op->GetBlock()->ReplaceAndRemoveInstructionWith(op, bit_extract);
+
+    if (!shr->HasUses()) {
+      shr->GetBlock()->RemoveInstruction(shr);
+    }
+
+    return true;
+  }
+
+  bool TryOptimizeBinaryOpWithConstWithBitManipulation(HBinaryOperation* op) {
+    DCHECK(op->IsOr() || op->IsXor() || op->IsAnd());
+    HInstruction* left = op->GetLeft();
+    HInstruction* right = op->GetRight();
+    DataType::Type result_type = op->GetType();
+
+    HInstruction* op_value;
+    uint64_t imm;
+    if (left->IsConstant()) {
+      imm = left->AsConstant()->GetValueAsUint64();
+      op_value = right;
+    } else {
+      imm = right->AsConstant()->GetValueAsUint64();
+      op_value = left;
+    }
+
+    int32_t power;
+    if (op->IsAnd()) {
+      if (!IsPowerOfTwo(~imm)) {
+        return false;
+      } else {
+        power = WhichPowerOf2(~imm);
+      }
+    } else if (!IsPowerOfTwo(imm)) {
+      return false;
+    } else {
+      power = WhichPowerOf2(imm);
+    }
+
+    HConstant* shamt = GetGraph()->GetConstant(DataType::Type::kInt32, power);
+
+    if (op->IsOr()) {
+      HRiscv64BitSet* bit_set =
+          new (GetGraph()->GetAllocator()) HRiscv64BitSet(result_type, op_value, shamt);
+      op->GetBlock()->ReplaceAndRemoveInstructionWith(op, bit_set);
+    }
+
+    if (op->IsXor()) {
+      HRiscv64BitInvert* bit_invert =
+          new (GetGraph()->GetAllocator()) HRiscv64BitInvert(result_type, op_value, shamt);
+      op->GetBlock()->ReplaceAndRemoveInstructionWith(op, bit_invert);
+    }
+
+    if (op->IsAnd()) {
+      HRiscv64BitClear* bit_clear =
+          new (GetGraph()->GetAllocator()) HRiscv64BitClear(result_type, op_value, shamt);
+      op->GetBlock()->ReplaceAndRemoveInstructionWith(op, bit_clear);
+    }
+
+    return true;
+  }
+
+  // Replace code looking like
+  //    SHR tmp, a, b
+  //    AND dst, 1, tmp
+  // with
+  //    Riscv64BitExtract dst, a, b
+  // Replace code looking like
+  //    SHL tmp, 1, b
+  //    OR dst, a, tmp
+  // with
+  //    Riscv64BitSet dst, a, b
+  // Replace code looking like
+  //    SHL tmp, 1, b
+  //    XOR dst, a, tmp
+  // with
+  //    Riscv64BitInvert dst, a, b
+  // Replace code looking like
+  //    SHL tmp, 1, b
+  //    NOT tmp, tmp
+  //    AND dst, a, tmp
+  // with
+  //    Riscv64BitClear dst, a, b
+  bool TryOptimizeWithBitManipulation(HBinaryOperation* op) {
+    DCHECK(op->IsAnd() || op->IsOr() || op->IsXor());
+    if (!op->HasUses()) {
+      return false;
+    }
+
+    HInstruction* left = op->GetLeft();
+    HInstruction* right = op->GetRight();
+    DataType::Type result_type = op->GetType();
+
+    if (left->IsShr() || right->IsShr()) {
+      return TryReplaceShrAndWithBitExtract(op);
+    }
+    if ((left->IsConstant() || right->IsConstant())) {
+      return TryOptimizeBinaryOpWithConstWithBitManipulation(op);
+    }
+
+    HShl* shl;
+    HNot* hnot = nullptr;
+    HInstruction* op_value;
+
+    if (left->IsNot() || right->IsNot()) {
+      hnot = (left->IsNot()) ? left->AsNot() : right->AsNot();
+      if (!hnot->GetInput()->IsShl()) {
+        return false;
+      }
+      shl = hnot->GetInput()->AsShl();
+      op_value = (!left->IsNot()) ? left : right;
+    } else {
+      if (!left->IsShl() && !right->IsShl()) {
+        return false;
+      }
+      if (left->IsShl()) {
+        shl = left->AsShl();
+        op_value = right;
+      } else {
+        shl = right->AsShl();
+        op_value = left;
+      }
+    }
+
+    HInstruction* shl_op = shl->GetLeft();
+    if (!shl_op->IsConstant()) {
+      return false;
+    } else if (!shl_op->AsConstant()->IsOne()) {
+      return false;
+    }
+    HInstruction* shamt = shl->GetRight();
+
+    if (op->IsOr()) {
+      HRiscv64BitSet* bit_set =
+          new (GetGraph()->GetAllocator()) HRiscv64BitSet(result_type, op_value, shamt);
+      op->GetBlock()->ReplaceAndRemoveInstructionWith(op, bit_set);
+    }
+
+    if (op->IsXor()) {
+      HRiscv64BitInvert* bit_invert =
+          new (GetGraph()->GetAllocator()) HRiscv64BitInvert(result_type, op_value, shamt);
+      op->GetBlock()->ReplaceAndRemoveInstructionWith(op, bit_invert);
+    }
+
+    if (op->IsAnd()) {
+      if (hnot == nullptr) {
+        return false;
+      }
+      HRiscv64BitClear* bit_clear =
+          new (GetGraph()->GetAllocator()) HRiscv64BitClear(result_type, op_value, shamt);
+      op->GetBlock()->ReplaceAndRemoveInstructionWith(op, bit_clear);
+      if (!hnot->HasUses()) {
+        hnot->GetBlock()->RemoveInstruction(hnot);
+      }
+    }
+
+    if (!shl->HasUses()) {
+      shl->GetBlock()->RemoveInstruction(shl);
+    }
+
+    return true;
+  }
+
   void VisitAnd(HAnd* inst) override {
-    if (TryMergeNegatedInput(inst)) {
+    if (TryOptimizeWithBitManipulation(inst)) {
+      RecordSimplification();
+    } else if (TryMergeNegatedInput(inst)) {
       RecordSimplification();
     }
   }
@@ -106,15 +289,25 @@ class InstructionSimplifierRiscv64Visitor final : public HGraphVisitor {
   void VisitOr(HOr* inst) override {
     if (TryMergeNegatedInput(inst)) {
       RecordSimplification();
+    } else if (TryOptimizeWithBitManipulation(inst)) {
+      RecordSimplification();
     }
   }
 
-  // Replace code looking like
-  //    SHL tmp, a, 1 or 2 or 3
-  //    ADD dst, tmp, b
-  // with
-  //    Riscv64ShiftAdd dst, a, b
+  void VisitXor(HXor* inst) override {
+    if (TryMergeNegatedInput(inst)) {
+      RecordSimplification();
+    } else if (TryOptimizeWithBitManipulation(inst)) {
+      RecordSimplification();
+    }
+  }
+
   void VisitShl(HShl* inst) override {
+    // Replace code looking like
+    //    SHL tmp, a, 1 or 2 or 3
+    //    ADD dst, tmp, b
+    // with
+    //    Riscv64ShiftAdd dst, a, b
     if (TryReplaceAddsWithShiftAdds(inst)) {
       RecordSimplification();
     }
@@ -122,12 +315,6 @@ class InstructionSimplifierRiscv64Visitor final : public HGraphVisitor {
 
   void VisitSub(HSub* inst) override {
     if (TryMergeWithAnd(inst)) {
-      RecordSimplification();
-    }
-  }
-
-  void VisitXor(HXor* inst) override {
-    if (TryMergeNegatedInput(inst)) {
       RecordSimplification();
     }
   }
