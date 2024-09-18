@@ -536,6 +536,19 @@ class SCOPED_CAPABILITY FakeMutexLock {
   DISALLOW_COPY_AND_ASSIGN(FakeMutexLock);
 };
 
+// Pretend to acquire a reader-writer mutex for checking purposes, without actually doing so. Use
+// with extreme caution when it is known the condition that the mutex would guard against cannot
+// arise.
+class SCOPED_CAPABILITY FakeReaderWriterMutexLock {
+ public:
+  explicit FakeReaderWriterMutexLock(ReaderWriterMutex& mu) ACQUIRE(mu) NO_THREAD_SAFETY_ANALYSIS {}
+
+  ~FakeReaderWriterMutexLock() RELEASE() NO_THREAD_SAFETY_ANALYSIS {}
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(FakeReaderWriterMutexLock);
+};
+
 // Scoped locker/unlocker for a ReaderWriterMutex that acquires read access to mu upon
 // construction and releases it upon destruction.
 class SCOPED_CAPABILITY ReaderMutexLock {
