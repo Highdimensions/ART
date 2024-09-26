@@ -313,6 +313,7 @@ art_cc_defaults {
         // symbols with `--exclude-libs` breaks art_standalone_sigchain_tests.
         "libsigchain",
     ],
+    stl: "c++_static",
 }
 
 art_cc_defaults {
@@ -1350,39 +1351,30 @@ java_library {
 }
 
 art_cc_test {
-    name: "ArtGtestsTargetInstallApex",
-    data: [
-        // We need the ART testing apex, which contains all gtest binaries.
-        // Note that due to build system and linker constraints the gtests must be in the apex.
-        ":com.android.art.testing",
-    ],
-    // It seems that only device-tests build can create a valid apex.
-    test_suites: [
-        "device-tests",
-    ],
-    test_config: "art-gtests-target-install-apex.xml",
-
-    // Support multilib variants (using different suffix per sub-architecture), which is needed on
-    // build targets with secondary architectures, as the packaging logic for some test suites
-    // flattens all test artifacts into a single `testcases` directory.
-    compile_multilib: "both",
-    multilib: {
-        lib32: {
-            suffix: "32",
-        },
-        lib64: {
-            suffix: "64",
-        },
-    },
-}
-
-art_cc_test {
     name: "ArtGtestsTargetChroot",
     data: [
-        // We need the ART testing apex, which contains all gtest binaries.
-        // Note that due to build system and linker constraints the gtests must be in the apex.
-        ":com.android.art.testing",
+        ":art-gtest-jars",
+        ":com.android.art.debug",
         ":generate-boot-image",
+    ],
+    data_bins: [
+        "art_cmdline_tests",
+        "art_compiler_tests",
+        "art_dex2oat_tests",
+        "art_dexanalyze_tests",
+        "art_dexdump_tests",
+        "art_dexlist_tests",
+        "art_dexoptanalyzer_tests",
+        "art_disassembler_tests",
+        "art_imgdiag_tests",
+        "art_libartbase_tests",
+        "art_libdexfile_tests",
+        "art_libdexfile_support_tests",
+        "art_libprofile_tests",
+        "art_oatdump_tests",
+        "art_profman_tests",
+        "art_runtime_tests",
+        "art_sigchain_tests",
     ],
     test_suites: ["general-tests"],
     test_config: "art-gtests-target-chroot.xml",
@@ -1399,7 +1391,11 @@ filegroup {
         ":art-gtest-jars-AbstractMethod",
         ":art-gtest-jars-AllFields",
         ":art-gtest-jars-ArrayClassWithUnresolvedComponent",
+        ":art-gtest-jars-ClassVerificationFuzzerFolder",
         ":art-gtest-jars-DefaultMethods",
+        ":art-gtest-jars-Dex2oatVdexPublicSdkDex",
+        ":art-gtest-jars-Dex2oatVdexTestDex",
+        ":art-gtest-jars-DexVerificationFuzzerFolder",
         ":art-gtest-jars-ErroneousA",
         ":art-gtest-jars-ErroneousB",
         ":art-gtest-jars-ErroneousInit",
@@ -1420,12 +1416,18 @@ filegroup {
         ":art-gtest-jars-IMTB",
         ":art-gtest-jars-Instrumentation",
         ":art-gtest-jars-Interfaces",
+        ":art-gtest-jars-LinkageTest",
         ":art-gtest-jars-Lookup",
         ":art-gtest-jars-Main",
+        ":art-gtest-jars-MainEmptyUncompressed",
+        ":art-gtest-jars-MainEmptyUncompressedAligned",
+        ":art-gtest-jars-MainStripped",
+        ":art-gtest-jars-MainUncompressedAligned",
         ":art-gtest-jars-ManyMethods",
         ":art-gtest-jars-MethodTypes",
         ":art-gtest-jars-MultiDex",
         ":art-gtest-jars-MultiDexModifiedSecondary",
+        ":art-gtest-jars-MultiDexUncompressedAligned",
         ":art-gtest-jars-MyClass",
         ":art-gtest-jars-MyClassNatives",
         ":art-gtest-jars-Nested",
@@ -1438,14 +1440,9 @@ filegroup {
         ":art-gtest-jars-Statics",
         ":art-gtest-jars-StaticsFromCode",
         ":art-gtest-jars-StringLiterals",
+        ":art-gtest-jars-SuperWithAccessChecks",
         ":art-gtest-jars-Transaction",
         ":art-gtest-jars-XandY",
-        ":art-gtest-jars-MainEmptyUncompressed",
-        ":art-gtest-jars-MainEmptyUncompressedAligned",
-        ":art-gtest-jars-MainStripped",
-        ":art-gtest-jars-MainUncompressedAligned",
-        ":art-gtest-jars-MultiDexUncompressedAligned",
-        ":art-gtest-jars-SuperWithAccessChecks",
         ":art-gtest-jars-VerifierDeps",
         ":art-gtest-jars-VerifierDepsMulti",
         ":art-gtest-jars-VerifySoftFailDuringClinit",
