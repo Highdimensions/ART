@@ -502,8 +502,11 @@ TEST_F(MonitorWaitCallbacksTest, WaitUnlocked) {
   ASSERT_FALSE(cb_.saw_wait_finished_);
   ASSERT_FALSE(cb_.saw_wait_start_);
   {
+    LOG(DEBUG) << "Getting current thread";
     Thread* self = Thread::Current();
+    LOG(DEBUG) << "Calling TransitionFromSuspendedToRunnable";
     self->TransitionFromSuspendedToRunnable();
+    LOG(DEBUG) << "Starting the runtime";
     bool started = runtime_->Start();
     ASSERT_TRUE(started);
     {
