@@ -30,9 +30,8 @@ logging.basicConfig(format='%(message)s')
 # Flavors of ART APEX package.
 FLAVOR_RELEASE = 'release'
 FLAVOR_DEBUG = 'debug'
-FLAVOR_TESTING = 'testing'
 FLAVOR_AUTO = 'auto'
-FLAVORS_ALL = [FLAVOR_RELEASE, FLAVOR_DEBUG, FLAVOR_TESTING, FLAVOR_AUTO]
+FLAVORS_ALL = [FLAVOR_RELEASE, FLAVOR_DEBUG, FLAVOR_AUTO]
 
 # Bitness options for APEX package
 BITNESS_32 = '32'
@@ -226,21 +225,6 @@ class Checker:
                   path, ', '.join(archs_per_bitness))
     return dirs
 
-  def check_art_test_executable(self, filename, multilib=None):
-    for dir in self.arch_dirs_for_path(ART_TEST_DIR, multilib):
-      test_path = '%s/%s' % (dir, filename)
-      self._expected_file_globs.add(test_path)
-      file_obj = self._provider.get(test_path)
-      if not file_obj:
-        self.fail('ART test binary missing: %s', test_path)
-      elif not file_obj.is_exec:
-        self.fail('%s is not executable', test_path)
-
-  def check_art_test_data(self, filename):
-    for dir in self.arch_dirs_for_path(ART_TEST_DIR):
-      if not self.check_file('%s/%s' % (dir, filename)):
-        return
-
   def check_single_library(self, filename):
     lib_path = 'lib/%s' % filename
     lib64_path = 'lib64/%s' % filename
@@ -258,11 +242,6 @@ class Checker:
 
   def ignore_path(self, path_glob):
     self._expected_file_globs.add(path_glob)
-
-  def check_optional_art_test_executable(self, filename):
-    for archs_per_bitness in self.possible_archs_per_bitness():
-      for arch in archs_per_bitness:
-        self.ignore_path('%s/%s/%s' % (ART_TEST_DIR, arch, filename))
 
   def check_no_superfluous_files(self):
     def recurse(dir_path):
@@ -570,103 +549,6 @@ class DebugChecker:
     # (There are currently no debug-only native libraries.)
 
 
-class TestingChecker:
-  def __init__(self, checker):
-    self._checker = checker
-
-  def __str__(self):
-    return 'Testing Checker'
-
-  def run(self):
-    # Check test directories.
-    self._checker.check_dir(ART_TEST_DIR)
-    for arch_dir in self._checker.arch_dirs_for_path(ART_TEST_DIR):
-      self._checker.check_dir(arch_dir)
-
-    # Check ART test binaries.
-    self._checker.check_art_test_executable('art_cmdline_tests')
-    self._checker.check_art_test_executable('art_compiler_tests')
-    self._checker.check_art_test_executable('art_dex2oat_tests')
-    self._checker.check_art_test_executable('art_dexanalyze_tests')
-    self._checker.check_art_test_executable('art_dexdump_tests')
-    self._checker.check_art_test_executable('art_dexlist_tests')
-    self._checker.check_art_test_executable('art_dexoptanalyzer_tests')
-    self._checker.check_art_test_executable('art_disassembler_tests')
-    self._checker.check_art_test_executable('art_imgdiag_tests')
-    self._checker.check_art_test_executable('art_libartbase_tests')
-    self._checker.check_art_test_executable('art_libdexfile_support_tests')
-    self._checker.check_art_test_executable('art_libdexfile_tests')
-    self._checker.check_art_test_executable('art_libprofile_tests')
-    self._checker.check_art_test_executable('art_oatdump_tests')
-    self._checker.check_art_test_executable('art_odrefresh_tests', MULTILIB_FIRST)
-    self._checker.check_art_test_executable('art_profman_tests')
-    self._checker.check_art_test_executable('art_runtime_tests')
-    self._checker.check_art_test_executable('art_sigchain_tests')
-
-    # Check ART test tools.
-    self._checker.check_executable('signal_dumper')
-
-    # Check ART jar files which are needed for gtests.
-    self._checker.check_art_test_data('art-gtest-jars-AbstractMethod.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ArrayClassWithUnresolvedComponent.dex')
-    self._checker.check_art_test_data('art-gtest-jars-MyClassNatives.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Main.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ProtoCompare.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Transaction.jar')
-    self._checker.check_art_test_data('art-gtest-jars-VerifierDepsMulti.dex')
-    self._checker.check_art_test_data('art-gtest-jars-Nested.jar')
-    self._checker.check_art_test_data('art-gtest-jars-MyClass.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ManyMethods.jar')
-    self._checker.check_art_test_data('art-gtest-jars-GetMethodSignature.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Lookup.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Instrumentation.jar')
-    self._checker.check_art_test_data('art-gtest-jars-MainUncompressedAligned.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ForClassLoaderD.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ForClassLoaderC.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ErroneousA.jar')
-    self._checker.check_art_test_data('art-gtest-jars-HiddenApiSignatures.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ForClassLoaderB.jar')
-    self._checker.check_art_test_data('art-gtest-jars-LinkageTest.dex')
-    self._checker.check_art_test_data('art-gtest-jars-MethodTypes.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ErroneousInit.jar')
-    self._checker.check_art_test_data('art-gtest-jars-VerifierDeps.dex')
-    self._checker.check_art_test_data('art-gtest-jars-StringLiterals.jar')
-    self._checker.check_art_test_data('art-gtest-jars-XandY.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ExceptionHandle.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ImageLayoutB.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Interfaces.jar')
-    self._checker.check_art_test_data('art-gtest-jars-IMTB.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Extension2.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Extension1.jar')
-    self._checker.check_art_test_data('art-gtest-jars-MainEmptyUncompressedAligned.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ErroneousB.jar')
-    self._checker.check_art_test_data('art-gtest-jars-MultiDexModifiedSecondary.jar')
-    self._checker.check_art_test_data('art-gtest-jars-NonStaticLeafMethods.jar')
-    self._checker.check_art_test_data('art-gtest-jars-DefaultMethods.jar')
-    self._checker.check_art_test_data('art-gtest-jars-MultiDexUncompressedAligned.jar')
-    self._checker.check_art_test_data('art-gtest-jars-StaticsFromCode.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ProfileTestMultiDex.jar')
-    self._checker.check_art_test_data('art-gtest-jars-VerifySoftFailDuringClinit.dex')
-    self._checker.check_art_test_data('art-gtest-jars-MainStripped.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ForClassLoaderA.jar')
-    self._checker.check_art_test_data('art-gtest-jars-StaticLeafMethods.jar')
-    self._checker.check_art_test_data('art-gtest-jars-MultiDex.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Packages.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ProtoCompare2.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Statics.jar')
-    self._checker.check_art_test_data('art-gtest-jars-AllFields.jar')
-    self._checker.check_art_test_data('art-gtest-jars-IMTA.jar')
-    self._checker.check_art_test_data('art-gtest-jars-ImageLayoutA.jar')
-    self._checker.check_art_test_data('art-gtest-jars-MainEmptyUncompressed.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Dex2oatVdexTestDex.jar')
-    self._checker.check_art_test_data('art-gtest-jars-Dex2oatVdexPublicSdkDex.dex')
-    self._checker.check_art_test_data('art-gtest-jars-SuperWithAccessChecks.dex')
-
-    # Fuzzer cases
-    self._checker.check_art_test_data('dex_verification_fuzzer_corpus.zip')
-    self._checker.check_art_test_data('class_verification_fuzzer_corpus.zip')
-
-
 class NoSuperfluousFilesChecker:
   def __init__(self, checker):
     self._checker = checker
@@ -797,8 +679,8 @@ def art_apex_test_main(test_args):
         logging.warning('  Detected %s flavor', flavor)
         break
     if test_args.flavor == FLAVOR_AUTO:
-      logging.error('  Could not detect APEX flavor, neither %s, %s nor %s for \'%s\'',
-                  FLAVOR_RELEASE, FLAVOR_DEBUG, FLAVOR_TESTING, test_args.apex)
+      logging.error('  Could not detect APEX flavor, neither %s nor %s for \'%s\'',
+                  FLAVOR_RELEASE, FLAVOR_DEBUG, test_args.apex)
       return 1
 
   apex_dir = test_args.apex
@@ -844,10 +726,8 @@ def art_apex_test_main(test_args):
     base_checker = MultilibChecker(apex_provider)
 
   checkers.append(ReleaseChecker(base_checker))
-  if test_args.flavor == FLAVOR_DEBUG or test_args.flavor == FLAVOR_TESTING:
+  if test_args.flavor == FLAVOR_DEBUG:
     checkers.append(DebugChecker(base_checker))
-  if test_args.flavor == FLAVOR_TESTING:
-    checkers.append(TestingChecker(base_checker))
 
   # This checker must be last.
   checkers.append(NoSuperfluousFilesChecker(base_checker))
@@ -894,8 +774,6 @@ def art_apex_test_default(test_parser):
   configs = [
     {'name': 'com.android.art.capex',         'flavor': FLAVOR_RELEASE},
     {'name': 'com.android.art.debug.capex',   'flavor': FLAVOR_DEBUG},
-    # Note: The Testing ART APEX is not a Compressed APEX.
-    {'name': 'com.android.art.testing.apex',  'flavor': FLAVOR_TESTING},
   ]
 
   for config in configs:

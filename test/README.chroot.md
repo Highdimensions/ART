@@ -140,11 +140,11 @@ Note that using this chroot-based approach requires root access to the device
     art/tools/run-gtests.sh -j4
     ```
     * Specific tests to run can be passed on the command line, specified by
-      their absolute paths beginning with `/apex/`:
+      their absolute paths beginning with `/data/`:
         ```bash
         art/tools/run-gtests.sh \
-          /apex/com.android.art/bin/art/arm64/art_cmdline_tests \
-          /apex/com.android.art/bin/art/arm64/art_dexdump_tests
+          /data/local/art-test-chroot/data/nativetest/art/x86/art_cmdline_tests/art_cmdline_tests \
+          /data/local/art-test-chroot/data/nativetest64/art/x86_64/art_dexdump_tests/art_dexdump_tests
         ```
     * Gtest options can be passed to each gtest by passing them after `--`; see
       the following examples.
@@ -152,19 +152,19 @@ Note that using this chroot-based approach requires root access to the device
           `--gtest_list_tests`:
             ```bash
             art/tools/run-gtests.sh \
-              /apex/com.android.art/bin/art/arm64/art_cmdline_tests \
+              /data/local/art-test-chroot/data/nativetest/art/x86/art_cmdline_tests/art_cmdline_tests \
               -- --gtest_list_tests
             ```
         * To filter the test cases to execute, use option `--gtest_filter`:
             ```bash
             art/tools/run-gtests.sh \
-              /apex/com.android.art/bin/art/arm64/art_cmdline_tests \
+              /data/local/art-test-chroot/data/nativetest/art/x86/art_cmdline_tests/art_cmdline_tests \
               -- --gtest_filter="*TestJdwp*"
             ```
         * To see all the options supported by a gtest, use option `--help`:
             ```bash
             art/tools/run-gtests.sh \
-              /apex/com.android.art/bin/art/arm64/art_cmdline_tests \
+              /data/local/art-test-chroot/data/nativetest/art/x86/art_cmdline_tests/art_cmdline_tests \
               -- --help
             ```
     * Note: Some test cases of `art_runtime_tests` defined in
