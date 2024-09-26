@@ -129,8 +129,7 @@ ifeq (,$(SANITIZE_HOST))
   ART_TEST_MODULES_COMMON += art_dex2oat_tests
 endif
 
-ART_TEST_MODULES_TARGET := $(ART_TEST_MODULES_COMMON) \
-    art_odrefresh_tests \
+ART_TEST_MODULES_TARGET := $(ART_TEST_MODULES_COMMON)
 
 ART_TEST_MODULES_HOST := $(ART_TEST_MODULES_COMMON) \
     art_libartpalette_tests \
@@ -287,7 +286,7 @@ endif
 endef  # define-art-gtest-rule-host
 
 ART_TEST_HOST_GTEST_DEPENDENCIES := $(HOST_I18N_DATA)
-ART_TEST_TARGET_GTEST_DEPENDENCIES := $(TESTING_ART_APEX)
+ART_TEST_TARGET_GTEST_DEPENDENCIES := $(DEBUG_ART_APEX)
 
 # Add the additional dependencies for the specified test
 # $(1): test name
@@ -295,6 +294,7 @@ define add-art-gtest-dependencies
   # Note that, both the primary and the secondary arches of the libs are built by depending
   # on the module name.
   gtest_deps := \
+    $(1) \
     $$(ART_GTEST_$(1)_TARGET_DEPS) \
     $(foreach file,$(ART_GTEST_$(1)_DEX_DEPS),$(ART_TEST_TARGET_GTEST_$(file)_DEX)) \
 
@@ -339,9 +339,9 @@ ifeq ($(ART_BUILD_TARGET),true)
   $(foreach name,$(ART_TARGET_GTEST_NAMES), $(eval $(call add-art-gtest-dependencies,$(name),)))
   ART_TEST_TARGET_GTEST_DEPENDENCIES += \
     com.android.i18n \
-    libjavacore.com.android.art.testing \
-    libopenjdkd.com.android.art.testing \
-    com.android.art.testing \
+    libjavacore.com.android.art.debug \
+    libopenjdkd.com.android.art.debug \
+    com.android.art.debug \
     com.android.conscrypt
 endif
 ifeq ($(ART_BUILD_HOST),true)
