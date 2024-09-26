@@ -22,10 +22,10 @@ if [[ $1 = -h ]]; then
   cat <<EOF
 Usage: $0 [<gtest>...] [--] [<gtest-option>...]
 
-Script to run gtests located in the ART (Testing) APEX.
+Script to run gtests against the ART (Debug) APEX.
 
 If called with arguments, only those tests are run, as specified by their
-absolute paths (starting with /apex). All gtests are run otherwise.
+absolute paths (starting with /data). All gtests are run otherwise.
 
 Options after \`--\` are passed verbatim to each gtest binary.
 EOF
@@ -70,9 +70,10 @@ run_in_chroot() {
 }
 
 if [[ ${#tests[@]} -eq 0 ]]; then
-  # Search for executables under the `bin/art` directory of the ART APEX.
+  # Search for executables (not shared libraries) under the
+  # `/data/nativetest{,64}/art` directory of the chroot.
   readarray -t tests <<<$(run_in_chroot \
-    find "$android_art_root/bin/art" -type f -perm /ugo+x | sort)
+    find /data/nativetest{,64}/art -type f -perm /ugo+x ! -name '*.so' | sort)
 fi
 
 maybe_get_fake_dex2oatbootclasspath() {
