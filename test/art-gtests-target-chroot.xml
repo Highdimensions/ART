@@ -27,6 +27,196 @@
         <option name="push-file" key="generate-boot-image" value="/data/local/tmp/art-test-chroot/data/local/tmp/generate-boot-image" />
     </target_preparer>
 
+    <!-- Push files for art_cmdline_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_cmdline_tests" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_cmdline_tests/art_cmdline_tests" />
+    </target_preparer>
+
+    <!-- Push files for art_compiler_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_compiler_tests"                 value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_compiler_tests/art_compiler_tests" />
+        <option name="push-file" key="art-gtest-jars-ExceptionHandle.jar" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_compiler_tests/art-gtest-jars-ExceptionHandle.jar" />
+        <option name="push-file" key="art-gtest-jars-Interfaces.jar"      value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_compiler_tests/art-gtest-jars-Interfaces.jar" />
+        <option name="push-file" key="art-gtest-jars-Main.jar"            value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_compiler_tests/art-gtest-jars-Main.jar" />
+        <option name="push-file" key="art-gtest-jars-MyClassNatives.jar"  value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_compiler_tests/art-gtest-jars-MyClassNatives.jar" />
+    </target_preparer>
+
+    <!-- Push files for art_dex2oat_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_dex2oat_tests"                                    value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art_dex2oat_tests" />
+        <option name="push-file" key="art-gtest-jars-AbstractMethod.jar"                    value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-AbstractMethod.jar" />
+        <option name="push-file" key="art-gtest-jars-ArrayClassWithUnresolvedComponent.dex" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-ArrayClassWithUnresolvedComponent.dex" />
+        <option name="push-file" key="art-gtest-jars-DefaultMethods.jar"                    value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-DefaultMethods.jar" />
+        <option name="push-file" key="art-gtest-jars-Dex2oatVdexPublicSdkDex.dex"           value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-Dex2oatVdexPublicSdkDex.dex" />
+        <option name="push-file" key="art-gtest-jars-Dex2oatVdexTestDex.jar"                value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-Dex2oatVdexTestDex.jar" />
+        <option name="push-file" key="art-gtest-jars-ImageLayoutA.jar"                      value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-ImageLayoutA.jar" />
+        <option name="push-file" key="art-gtest-jars-ImageLayoutB.jar"                      value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-ImageLayoutB.jar" />
+        <option name="push-file" key="art-gtest-jars-LinkageTest.dex"                       value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-LinkageTest.dex" />
+        <option name="push-file" key="art-gtest-jars-Main.jar"                              value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-Main.jar" />
+        <option name="push-file" key="art-gtest-jars-MainEmptyUncompressed.jar"             value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-MainEmptyUncompressed.jar" />
+        <option name="push-file" key="art-gtest-jars-MainEmptyUncompressedAligned.jar"      value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-MainEmptyUncompressedAligned.jar" />
+        <option name="push-file" key="art-gtest-jars-MainStripped.jar"                      value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-MainStripped.jar" />
+        <option name="push-file" key="art-gtest-jars-MainUncompressedAligned.jar"           value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-MainUncompressedAligned.jar" />
+        <option name="push-file" key="art-gtest-jars-ManyMethods.jar"                       value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-ManyMethods.jar" />
+        <option name="push-file" key="art-gtest-jars-MultiDex.jar"                          value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-MultiDex.jar" />
+        <option name="push-file" key="art-gtest-jars-MultiDexModifiedSecondary.jar"         value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-MultiDexModifiedSecondary.jar" />
+        <option name="push-file" key="art-gtest-jars-MyClassNatives.jar"                    value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-MyClassNatives.jar" />
+        <option name="push-file" key="art-gtest-jars-Nested.jar"                            value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-Nested.jar" />
+        <option name="push-file" key="art-gtest-jars-ProfileTestMultiDex.jar"               value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-ProfileTestMultiDex.jar" />
+        <option name="push-file" key="art-gtest-jars-Statics.jar"                           value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-Statics.jar" />
+        <option name="push-file" key="art-gtest-jars-StringLiterals.jar"                    value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-StringLiterals.jar" />
+        <option name="push-file" key="art-gtest-jars-SuperWithAccessChecks.dex"             value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-SuperWithAccessChecks.dex" />
+        <option name="push-file" key="art-gtest-jars-Transaction.jar"                       value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-Transaction.jar" />
+        <option name="push-file" key="art-gtest-jars-VerifierDeps.dex"                      value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-VerifierDeps.dex" />
+        <option name="push-file" key="art-gtest-jars-VerifierDepsMulti.dex"                 value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-VerifierDepsMulti.dex" />
+        <option name="push-file" key="art-gtest-jars-VerifySoftFailDuringClinit.dex"        value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dex2oat_tests/art-gtest-jars-VerifySoftFailDuringClinit.dex" />
+    </target_preparer>
+
+    <!-- Push files for art_dexanalyze_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_dexanalyze_tests"        value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexanalyze_tests/art_dexanalyze_tests" />
+        <option name="push-file" key="art-gtest-jars-MultiDex.jar" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexanalyze_tests/art-gtest-jars-MultiDex.jar" />
+    </target_preparer>
+
+    <!-- Push files for art_dexdump_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_dexdump_tests" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexdump_tests/art_dexdump_tests" />
+    </target_preparer>
+
+    <!-- Push files for art_dexlist_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_dexlist_tests" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexlist_tests/art_dexlist_tests" />
+    </target_preparer>
+
+    <!-- Push files for art_dexoptanalyzer_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_dexoptanalyzer_tests"                     value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexoptanalyzer_tests/art_dexoptanalyzer_tests" />
+        <option name="push-file" key="art-gtest-jars-LinkageTest.dex"               value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexoptanalyzer_tests/art-gtest-jars-LinkageTest.dex" />
+        <option name="push-file" key="art-gtest-jars-Main.jar"                      value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexoptanalyzer_tests/art-gtest-jars-Main.jar" />
+        <option name="push-file" key="art-gtest-jars-MainStripped.jar"              value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexoptanalyzer_tests/art-gtest-jars-MainStripped.jar" />
+        <option name="push-file" key="art-gtest-jars-MultiDex.jar"                  value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexoptanalyzer_tests/art-gtest-jars-MultiDex.jar" />
+        <option name="push-file" key="art-gtest-jars-MultiDexModifiedSecondary.jar" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexoptanalyzer_tests/art-gtest-jars-MultiDexModifiedSecondary.jar" />
+        <option name="push-file" key="art-gtest-jars-MyClassNatives.jar"            value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexoptanalyzer_tests/art-gtest-jars-MyClassNatives.jar" />
+        <option name="push-file" key="art-gtest-jars-Nested.jar"                    value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexoptanalyzer_tests/art-gtest-jars-Nested.jar" />
+        <option name="push-file" key="art-gtest-jars-VerifierDeps.dex"              value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexoptanalyzer_tests/art-gtest-jars-VerifierDeps.dex" />
+        <option name="push-file" key="art-gtest-jars-VerifierDepsMulti.dex"         value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_dexoptanalyzer_tests/art-gtest-jars-VerifierDepsMulti.dex" />
+    </target_preparer>
+
+    <!-- Push files for art_disassembler_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_disassembler_tests" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_disassembler_tests/art_disassembler_tests" />
+    </target_preparer>
+
+    <!-- Push files for art_imgdiag_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_imgdiag_tests" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_imgdiag_tests/art_imgdiag_tests" />
+    </target_preparer>
+
+    <!-- Push files for art_libartbase_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_libartbase_tests" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libartbase_tests/art_libartbase_tests" />
+    </target_preparer>
+
+    <!-- Push files for art_libdexfile_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_libdexfile_tests"                     value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libdexfile_tests/art_libdexfile_tests" />
+        <option name="push-file" key="art-gtest-jars-GetMethodSignature.jar"    value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libdexfile_tests/art-gtest-jars-GetMethodSignature.jar" />
+        <option name="push-file" key="art-gtest-jars-Lookup.jar"                value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libdexfile_tests/art-gtest-jars-Lookup.jar" />
+        <option name="push-file" key="art-gtest-jars-Main.jar"                  value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libdexfile_tests/art-gtest-jars-Main.jar" />
+        <option name="push-file" key="art-gtest-jars-MainEmptyUncompressed.jar" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libdexfile_tests/art-gtest-jars-MainEmptyUncompressed.jar" />
+        <option name="push-file" key="art-gtest-jars-MultiDex.jar"              value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libdexfile_tests/art-gtest-jars-MultiDex.jar" />
+        <option name="push-file" key="art-gtest-jars-Nested.jar"                value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libdexfile_tests/art-gtest-jars-Nested.jar" />
+        <option name="push-file" key="art-gtest-jars-VerifierDeps.dex"          value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libdexfile_tests/art-gtest-jars-VerifierDeps.dex" />
+    </target_preparer>
+
+    <!-- Push files for art_libdexfile_support_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_libdexfile_support_tests" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libdexfile_support_tests/art_libdexfile_support_tests" />
+    </target_preparer>
+
+    <!-- Push files for art_libprofile_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_libprofile_tests"                   value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libprofile_tests/art_libprofile_tests" />
+        <option name="push-file" key="art-gtest-jars-ManyMethods.jar"         value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libprofile_tests/art-gtest-jars-ManyMethods.jar" />
+        <option name="push-file" key="art-gtest-jars-MultiDex.jar"            value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libprofile_tests/art-gtest-jars-MultiDex.jar" />
+        <option name="push-file" key="art-gtest-jars-ProfileTestMultiDex.jar" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_libprofile_tests/art-gtest-jars-ProfileTestMultiDex.jar" />
+    </target_preparer>
+
+    <!-- Push files for art_oatdump_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_oatdump_tests"                      value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_oatdump_tests/art_oatdump_tests" />
+        <option name="push-file" key="art-gtest-jars-ProfileTestMultiDex.jar" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_oatdump_tests/art-gtest-jars-ProfileTestMultiDex.jar" />
+    </target_preparer>
+
+    <!-- Push files for art_profman_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_profman_tests"                      value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_profman_tests/art_profman_tests" />
+        <option name="push-file" key="art-gtest-jars-ProfileTestMultiDex.jar" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_profman_tests/art-gtest-jars-ProfileTestMultiDex.jar" />
+    </target_preparer>
+
+    <!-- Push files for art_runtime_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_runtime_tests"                              value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art_runtime_tests" />
+        <option name="push-file" key="art-gtest-jars-AllFields.jar"                   value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-AllFields.jar" />
+        <option name="push-file" key="class_verification_fuzzer_corpus.zip"           value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/class_verification_fuzzer_corpus.zip" />
+        <option name="push-file" key="dex_verification_fuzzer_corpus.zip"             value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/dex_verification_fuzzer_corpus.zip" />
+        <option name="push-file" key="art-gtest-jars-ErroneousA.jar"                  value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-ErroneousA.jar" />
+        <option name="push-file" key="art-gtest-jars-ErroneousB.jar"                  value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-ErroneousB.jar" />
+        <option name="push-file" key="art-gtest-jars-ErroneousInit.jar"               value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-ErroneousInit.jar" />
+        <option name="push-file" key="art-gtest-jars-Extension1.jar"                  value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-Extension1.jar" />
+        <option name="push-file" key="art-gtest-jars-Extension2.jar"                  value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-Extension2.jar" />
+        <option name="push-file" key="art-gtest-jars-ForClassLoaderA.jar"             value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-ForClassLoaderA.jar" />
+        <option name="push-file" key="art-gtest-jars-ForClassLoaderB.jar"             value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-ForClassLoaderB.jar" />
+        <option name="push-file" key="art-gtest-jars-ForClassLoaderC.jar"             value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-ForClassLoaderC.jar" />
+        <option name="push-file" key="art-gtest-jars-ForClassLoaderD.jar"             value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-ForClassLoaderD.jar" />
+        <option name="push-file" key="art-gtest-jars-HiddenApiSignatures.jar"         value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-HiddenApiSignatures.jar" />
+        <option name="push-file" key="art-gtest-jars-IMTA.jar"                        value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-IMTA.jar" />
+        <option name="push-file" key="art-gtest-jars-IMTB.jar"                        value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-IMTB.jar" />
+        <option name="push-file" key="art-gtest-jars-Instrumentation.jar"             value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-Instrumentation.jar" />
+        <option name="push-file" key="art-gtest-jars-Interfaces.jar"                  value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-Interfaces.jar" />
+        <option name="push-file" key="art-gtest-jars-Main.jar"                        value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-Main.jar" />
+        <option name="push-file" key="art-gtest-jars-MainStripped.jar"                value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-MainStripped.jar" />
+        <option name="push-file" key="art-gtest-jars-MainUncompressedAligned.jar"     value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-MainUncompressedAligned.jar" />
+        <option name="push-file" key="art-gtest-jars-MethodTypes.jar"                 value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-MethodTypes.jar" />
+        <option name="push-file" key="art-gtest-jars-MultiDex.jar"                    value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-MultiDex.jar" />
+        <option name="push-file" key="art-gtest-jars-MultiDexModifiedSecondary.jar"   value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-MultiDexModifiedSecondary.jar" />
+        <option name="push-file" key="art-gtest-jars-MultiDexUncompressedAligned.jar" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-MultiDexUncompressedAligned.jar" />
+        <option name="push-file" key="art-gtest-jars-MyClass.jar"                     value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-MyClass.jar" />
+        <option name="push-file" key="art-gtest-jars-MyClassNatives.jar"              value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-MyClassNatives.jar" />
+        <option name="push-file" key="art-gtest-jars-Nested.jar"                      value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-Nested.jar" />
+        <option name="push-file" key="art-gtest-jars-NonStaticLeafMethods.jar"        value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-NonStaticLeafMethods.jar" />
+        <option name="push-file" key="art-gtest-jars-Packages.jar"                    value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-Packages.jar" />
+        <option name="push-file" key="art-gtest-jars-ProfileTestMultiDex.jar"         value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-ProfileTestMultiDex.jar" />
+        <option name="push-file" key="art-gtest-jars-ProtoCompare.jar"                value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-ProtoCompare.jar" />
+        <option name="push-file" key="art-gtest-jars-ProtoCompare2.jar"               value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-ProtoCompare2.jar" />
+        <option name="push-file" key="art-gtest-jars-Statics.jar"                     value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-Statics.jar" />
+        <option name="push-file" key="art-gtest-jars-StaticsFromCode.jar"             value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-StaticsFromCode.jar" />
+        <option name="push-file" key="art-gtest-jars-StaticLeafMethods.jar"           value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-StaticLeafMethods.jar" />
+        <option name="push-file" key="art-gtest-jars-XandY.jar"                       value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_runtime_tests/art-gtest-jars-XandY.jar" />
+    </target_preparer>
+
+    <!-- Push files for art_sigchain_tests -->
+    <target_preparer class="com.android.compatibility.common.tradefed.targetprep.FilePusher">
+        <option name="cleanup" value="true" />
+        <option name="push-file" key="art_sigchain_tests" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests/art_sigchain_tests/art_sigchain_tests" />
+    </target_preparer>
+
     <target_preparer class="com.android.tradefed.targetprep.RunCommandTargetPreparer">
         <option name="throw-if-cmd-fail" value="true" />
         <option name="run-command" value="mkdir -p /data/local/tmp/art-test-chroot/data/local/tmp/art_boot_images" />
@@ -39,7 +229,7 @@
         <!-- TODO(b/147821328): These tests do not work since they need to write to /system -->
         <option name="exclude-filter" value="HiddenApiTest.DexDomain_System*:OatFileAssistantBaseTest.SystemFrameworkDir" />
         <option name="native-test-timeout" value="600000" />
-        <option name="native-test-device-path" value="/data/local/tmp/art-test-chroot/apex/com.android.art/bin/art" />
+        <option name="native-test-device-path" value="/data/local/tmp/art-test-chroot/data/local/tmp/art_gtests" />
     </test>
 
     <!-- When this test is run in a Mainline context (e.g. with `mts-tradefed`), only enable it if
