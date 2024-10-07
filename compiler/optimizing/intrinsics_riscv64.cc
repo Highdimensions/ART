@@ -17,6 +17,7 @@
 #include "intrinsics_riscv64.h"
 
 #include "code_generator_riscv64.h"
+#include "code_generator_utils.h"
 #include "intrinsic_objects.h"
 #include "intrinsics_utils.h"
 #include "optimizing/locations.h"
@@ -324,11 +325,16 @@ static void CreateIntIntToVoidLocations(ArenaAllocator* allocator, HInvoke* invo
   locations->SetInAt(1, Location::RequiresRegister());
 }
 
-static void CreateIntIntToIntSlowPathCallLocations(ArenaAllocator* allocator, HInvoke* invoke) {
+static void CreateUnsignedDivRemLocations(ArenaAllocator* allocator, HInvoke* invoke) {
   LocationSummary* locations =
       new (allocator) LocationSummary(invoke, LocationSummary::kCallOnSlowPath, kIntrinsified);
   locations->SetInAt(0, Location::RequiresRegister());
-  locations->SetInAt(1, Location::RequiresRegister());
+  HInstruction* operand = invoke->InputAt(1);
+  if (operand->IsConstant()) {
+    locations->SetInAt(1, Location::ConstantLocation(invoke->InputAt(1)));
+  } else {
+    locations->SetInAt(1, Location::RequiresRegister());
+  }
   // Force kOutputOverlap; see comments in IntrinsicSlowPath::EmitNativeCode.
   locations->SetOut(Location::RequiresRegister(), Location::kOutputOverlap);
 }
@@ -630,41 +636,74 @@ void IntrinsicCodeGeneratorRISCV64::VisitLongNumberOfTrailingZeros(HInvoke* invo
   EmitIntegralUnOp(invoke, [&](XRegister rd, XRegister rs1) { __ Ctz(rd, rs1); });
 }
 
-static void GenerateDivRemUnsigned(HInvoke* invoke, bool is_div, CodeGeneratorRISCV64* codegen) {
+void GenerateDivRemUnsigned(HInvoke* invoke, bool is_div, CodeGeneratorRISCV64* codegen) {
   LocationSummary* locations = invoke->GetLocations();
-  Riscv64Assembler* assembler = codegen->GetAssembler();
   DataType::Type type = invoke->GetType();
   DCHECK(type == DataType::Type::kInt32 || type == DataType::Type::kInt64);
 
-  XRegister dividend = locations->InAt(0).AsRegister<XRegister>();
-  XRegister divisor = locations->InAt(1).AsRegister<XRegister>();
   XRegister out = locations->Out().AsRegister<XRegister>();
+  XRegister dividend = locations->InAt(0).AsRegister<XRegister>();
+  Riscv64Assembler* assembler = codegen->GetAssembler();
 
   // Check if divisor is zero, bail to managed implementation to handle.
-  SlowPathCodeRISCV64* slow_path =
-      new (codegen->GetScopedAllocator()) IntrinsicSlowPathRISCV64(invoke);
-  codegen->AddSlowPath(slow_path);
-  __ Beqz(divisor, slow_path->GetEntryLabel());
+  // SlowPathCodeRISCV64* slow_path =
+  //     new (codegen->GetScopedAllocator()) IntrinsicSlowPathRISCV64(invoke);
+  // codegen->AddSlowPath(slow_path);
 
-  if (is_div) {
-    if (type == DataType::Type::kInt32) {
-      __ Divuw(out, dividend, divisor);
-    } else {
-      __ Divu(out, dividend, divisor);
+  if (locations->InAt(1).IsConstant()) {
+    Location input = locations->InAt(1);
+    InstructionCodeGeneratorRISCV64* instruction_codegen = codegen->GetInstructionVisitor();
+
+    uint64_t imm = input.GetConstant()->AsLongConstant()->GetValue();
+
+    // Check if divisor is zero, bail to managed implementation to handle.
+    SlowPathCodeRISCV64* slow_path =
+        new (codegen->GetScopedAllocator()) IntrinsicSlowPathRISCV64(invoke);
+    codegen->AddSlowPath(slow_path);
+
+    if (imm == 0) {
+      __ J(slow_path->GetEntryLabel());
     }
+
+    if (imm == 1) {
+      instruction_codegen->DivRemOneOrMinusOne(locations, type, is_div);
+    } else if (type == DataType::Type::kInt64) {
+      instruction_codegen->GenerateUnsignedInt64DivRemWithUnsignedConstant(
+          out, dividend, imm, 64, is_div);
+    } else {
+      instruction_codegen->GenerateUnsignedInt32DivRemWithUnsignedConstant(
+          out, dividend, static_cast<uint32_t>(imm), 32, is_div);
+    }
+
+    __ Bind(slow_path->GetExitLabel());
   } else {
-    if (type == DataType::Type::kInt32) {
-      __ Remuw(out, dividend, divisor);
-    } else {
-      __ Remu(out, dividend, divisor);
-    }
-  }
+    XRegister divisor = locations->InAt(1).AsRegister<XRegister>();
+    // Check if divisor is zero, bail to managed implementation to handle.
+    SlowPathCodeRISCV64* slow_path =
+        new (codegen->GetScopedAllocator()) IntrinsicSlowPathRISCV64(invoke);
+    codegen->AddSlowPath(slow_path);
+    __ Beqz(divisor, slow_path->GetEntryLabel());
 
-  __ Bind(slow_path->GetExitLabel());
+    if (is_div) {
+      if (type == DataType::Type::kInt32) {
+        __ Divuw(out, dividend, divisor);
+      } else {
+        __ Divu(out, dividend, divisor);
+      }
+    } else {
+      if (type == DataType::Type::kInt32) {
+        __ Remuw(out, dividend, divisor);
+      } else {
+        __ Remu(out, dividend, divisor);
+      }
+    }
+
+    __ Bind(slow_path->GetExitLabel());
+  }
 }
 
 void IntrinsicLocationsBuilderRISCV64::VisitIntegerDivideUnsigned(HInvoke* invoke) {
-  CreateIntIntToIntSlowPathCallLocations(allocator_, invoke);
+  CreateUnsignedDivRemLocations(allocator_, invoke);
 }
 
 void IntrinsicCodeGeneratorRISCV64::VisitIntegerDivideUnsigned(HInvoke* invoke) {
@@ -672,7 +711,7 @@ void IntrinsicCodeGeneratorRISCV64::VisitIntegerDivideUnsigned(HInvoke* invoke) 
 }
 
 void IntrinsicLocationsBuilderRISCV64::VisitLongDivideUnsigned(HInvoke* invoke) {
-  CreateIntIntToIntSlowPathCallLocations(allocator_, invoke);
+  CreateUnsignedDivRemLocations(allocator_, invoke);
 }
 
 void IntrinsicCodeGeneratorRISCV64::VisitLongDivideUnsigned(HInvoke* invoke) {
@@ -680,7 +719,7 @@ void IntrinsicCodeGeneratorRISCV64::VisitLongDivideUnsigned(HInvoke* invoke) {
 }
 
 void IntrinsicLocationsBuilderRISCV64::VisitIntegerRemainderUnsigned(HInvoke* invoke) {
-  CreateIntIntToIntSlowPathCallLocations(allocator_, invoke);
+  CreateUnsignedDivRemLocations(allocator_, invoke);
 }
 
 void IntrinsicCodeGeneratorRISCV64::VisitIntegerRemainderUnsigned(HInvoke* invoke) {
@@ -688,7 +727,7 @@ void IntrinsicCodeGeneratorRISCV64::VisitIntegerRemainderUnsigned(HInvoke* invok
 }
 
 void IntrinsicLocationsBuilderRISCV64::VisitLongRemainderUnsigned(HInvoke* invoke) {
-  CreateIntIntToIntSlowPathCallLocations(allocator_, invoke);
+  CreateUnsignedDivRemLocations(allocator_, invoke);
 }
 
 void IntrinsicCodeGeneratorRISCV64::VisitLongRemainderUnsigned(HInvoke* invoke) {

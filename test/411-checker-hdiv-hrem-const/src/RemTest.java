@@ -96,12 +96,12 @@ public class RemTest {
     expectEquals(1, $noinline$IntRemByMinus6(19));
     expectEquals(-1, $noinline$IntRemByMinus6(-19));
 
-    expectEquals(1, $noinline$UnsignedIntRem01(13));
-    expectEquals(1, $noinline$UnsignedIntRem02(13));
-    expectEquals(1, $noinline$UnsignedIntRem03(13));
-    expectEquals(1, $noinline$UnsignedIntRem04(13));
-    expectEquals(1, $noinline$UnsignedIntRem05(101));
-    expectEquals(11, $noinline$UnsignedIntRem06(101));
+    expectEquals(1, $noinline$PositiveIntRem01(13));
+    expectEquals(1, $noinline$PositiveIntRem02(13));
+    expectEquals(1, $noinline$PositiveIntRem03(13));
+    expectEquals(1, $noinline$PositiveIntRem04(13));
+    expectEquals(1, $noinline$PositiveIntRem05(101));
+    expectEquals(11, $noinline$PositiveIntRem06(101));
 
     expectEquals(-1, $noinline$SignedIntRem01(-13));
     expectEquals(-1, $noinline$SignedIntRem02(-13));
@@ -109,19 +109,59 @@ public class RemTest {
     expectEquals(1, $noinline$SignedIntRem04(-13, true));
     expectEquals(0, $noinline$SignedIntRem05(-12, 0,-13));
     expectEquals(-1, $noinline$SignedIntRem06(-13));
+
+    expectEquals(0, $noinline$IntUnsignedRemNearOverflowBoundary1(0));
+    expectEquals(0, $noinline$IntUnsignedRemNearOverflowBoundary1(Integer.parseUnsignedInt("4294967295")));
+    expectEquals(1, $noinline$IntUnsignedRemNearOverflowBoundary1(1));
+    expectEquals(0, $noinline$IntUnsignedRemNearOverflowBoundary2(0));
+    expectEquals(0, $noinline$IntUnsignedRemNearOverflowBoundary2(Integer.parseUnsignedInt("2147483648")));
+    expectEquals(1, $noinline$IntUnsignedRemNearOverflowBoundary2(1));
+    expectEquals(0, $noinline$IntUnsignedRemNearOverflowBoundary3(0));
+    expectEquals(0, $noinline$IntUnsignedRemNearOverflowBoundary3(Integer.parseUnsignedInt("3221225471")));
+    expectEquals(1, $noinline$IntUnsignedRemNearOverflowBoundary3(1));
+
+    expectEquals(0, $noinline$UnsignedIntRemBy3(0));
+    expectEquals(1, $noinline$UnsignedIntRemBy3(1));
+    expectEquals(0, $noinline$UnsignedIntRemBy3(3));
+    expectEquals(1, $noinline$UnsignedIntRemBy3(10));
+    expectEquals(0, $noinline$UnsignedIntRemBy3(Integer.parseUnsignedInt("4294967295")));
+    expectEquals(2, $noinline$UnsignedIntRemBy3(Integer.parseUnsignedInt("2147483648")));
+    expectEquals(2, $noinline$UnsignedIntRemBy3(Integer.parseUnsignedInt("3221225471")));
+
+    expectEquals(0, $noinline$UnsignedIntRemBy7(0));
+    expectEquals(1, $noinline$UnsignedIntRemBy7(1));
+    expectEquals(0, $noinline$UnsignedIntRemBy7(7));
+    expectEquals(3, $noinline$UnsignedIntRemBy7(10));
+    expectEquals(3, $noinline$UnsignedIntRemBy7(Integer.parseUnsignedInt("4294967295")));
+    expectEquals(2, $noinline$UnsignedIntRemBy7(Integer.parseUnsignedInt("2147483648")));
+    expectEquals(2, $noinline$UnsignedIntRemBy7(Integer.parseUnsignedInt("3221225471")));
+
+    expectEquals(0, $noinline$UnsignedIntRemBy1(0));
+    expectEquals(0, $noinline$UnsignedIntRemBy1(1));
+    expectEquals(0, $noinline$UnsignedIntRemBy1(10));
+    expectEquals(0, $noinline$UnsignedIntRemBy1(42));
+    expectEquals(0, $noinline$UnsignedIntRemBy1(Integer.parseUnsignedInt("4294967295")));
+    expectEquals(0, $noinline$UnsignedIntRemBy1(Integer.parseUnsignedInt("2147483648")));
+    expectEquals(0, $noinline$UnsignedIntRemBy1(Integer.parseUnsignedInt("3221225471")));
   }
 
-  // A test case to check that 'lsr' and 'asr' are combined into one 'asr'.
-  // For divisor 18 seen in an MP3 decoding workload there is no need
-  // to correct the result of get_high(dividend * magic). So there are no
-  // instructions between 'lsr' and 'asr'. In such a case they can be combined
-  // into one 'asr'.
+  // A test case to check that shift operations are optimized for remainder calculation
+  // with divisor 18. For divisor 18 seen in MP3 decoding workloads, there is no need
+  // to correct the result of high part multiplication by magic number, so shift
+  // operations can be combined for efficient remainder computation.
   //
   /// CHECK-START-ARM64: int RemTest.$noinline$IntRemBy18(int) disassembly (after)
   /// CHECK:                 asr x{{\d+}}, x{{\d+}}, #34
   /// CHECK-NEXT:            add w{{\d+}}, w{{\d+}}, w{{\d+}}, lsr #31
   /// CHECK-NEXT:            mov w{{\d+}}, #0x12
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$IntRemBy18(int) disassembly (after)
+  /// CHECK:                 srai {{\w+}}, {{\w+}}, 34
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$IntRemBy18(int v) {
     int r = v % 18;
     return r;
@@ -140,32 +180,42 @@ public class RemTest {
   /// CHECK:                 lsr x{{\d+}}, x{{\d+}}, #34
   /// CHECK-NEXT:            mov w{{\d+}}, #0x12
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$IntALenRemBy18(int[]) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 34
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$IntALenRemBy18(int[] arr) {
     int r = arr.length % 18;
     return r;
   }
 
-  // A test case to check that 'lsr' and 'asr' are combined into one 'asr'.
-  // Divisor -18 has the same property as divisor 18: no need to correct the
-  // result of get_high(dividend * magic). So there are no
-  // instructions between 'lsr' and 'asr'. In such a case they can be combined
-  // into one 'asr'.
+  // A test case to check that shift operations are optimized for remainder calculation
+  // with divisor -18. Divisor -18 has the same property as divisor 18: no need to correct
+  // the result of high part multiplication by magic number, so shift operations can be
+  // combined for efficient remainder computation.
   //
   /// CHECK-START-ARM64: int RemTest.$noinline$IntRemByMinus18(int) disassembly (after)
   /// CHECK:                 asr x{{\d+}}, x{{\d+}}, #34
   /// CHECK-NEXT:            add w{{\d+}}, w{{\d+}}, w{{\d+}}, lsr #31
   /// CHECK-NEXT:            mov w{{\d+}}, #0xffffffee
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$IntRemByMinus18(int) disassembly (after)
+  /// CHECK:                 srai {{\w+}}, {{\w+}}, 34
+  /// CHECK:                 srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$IntRemByMinus18(int v) {
     int r = v % -18;
     return r;
   }
 
-  // A test case to check that 'lsr' and 'add' are combined into one 'adds'.
-  // For divisor 7 seen in the core library the result of get_high(dividend * magic)
-  // must be corrected by the 'add' instruction.
-  //
-  // The test case also checks 'add' and 'add_shift' are optimized into 'adds' and 'cinc'.
+  // A test case to check that shift and add operations are optimized for remainder
+  // calculation with divisor 7. For divisor 7 seen in the core library, the result
+  // of high part multiplication by magic number must be corrected by addition.
   //
   /// CHECK-START-ARM64: int RemTest.$noinline$IntRemBy7(int) disassembly (after)
   /// CHECK:                 adds x{{\d+}}, x{{\d+}}, x{{\d+}}, lsl #32
@@ -173,6 +223,13 @@ public class RemTest {
   /// CHECK-NEXT:            cinc w{{\d+}}, w{{\d+}}, mi
   /// CHECK-NEXT:            mov w{{\d+}}, #0x7
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$IntRemBy7(int) disassembly (after)
+  /// CHECK:                 srai {{\w+}}, {{\w+}}, 34
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$IntRemBy7(int v) {
     int r = v % 7;
     return r;
@@ -192,16 +249,23 @@ public class RemTest {
   /// CHECK:                 lsr x{{\d+}}, x{{\d+}}, #34
   /// CHECK-NEXT:            mov w{{\d+}}, #0x7
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$IntALenRemBy7(int[]) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            slli {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 34
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$IntALenRemBy7(int[] arr) {
     int r = arr.length % 7;
     return r;
   }
 
-  // A test case to check that 'lsr' and 'add' are combined into one 'adds'.
-  // Divisor -7 has the same property as divisor 7: the result of get_high(dividend * magic)
-  // must be corrected. In this case it is a 'sub' instruction.
-  //
-  // The test case also checks 'sub' and 'add_shift' are optimized into 'subs' and 'cinc'.
+  // A test case to check that shift and subtract operations are optimized for remainder
+  // calculation with divisor -7. Divisor -7 has the same property as divisor 7: the result
+  // of high part multiplication by magic number must be corrected, but with subtraction
+  // instead of addition.
   //
   /// CHECK-START-ARM64: int RemTest.$noinline$IntRemByMinus7(int) disassembly (after)
   /// CHECK:                 subs x{{\d+}}, x{{\d+}}, x{{\d+}}, lsl #32
@@ -209,23 +273,39 @@ public class RemTest {
   /// CHECK-NEXT:            cinc w{{\d+}}, w{{\d+}}, mi
   /// CHECK-NEXT:            mov w{{\d+}}, #0xfffffff9
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$IntRemByMinus7(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            slli {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 34
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$IntRemByMinus7(int v) {
     int r = v % -7;
     return r;
   }
 
-  // A test case to check that 'asr' is used to get the high 32 bits of the result of
-  // 'dividend * magic'.
-  // For divisor 6 seen in the core library there is no need to correct the result of
-  // get_high(dividend * magic). Also there is no 'asr' before the final 'add' instruction
-  // which uses only the high 32 bits of the result. In such a case 'asr' getting the high
-  // 32 bits can be used as well.
+  // A test case to check that arithmetic shift right is used to get the high 32 bits
+  // of the multiplication result for remainder calculation. For divisor 6 seen in the
+  // core library, there is no need to correct the result of high part multiplication
+  // by magic number.
   //
   /// CHECK-START-ARM64: int RemTest.$noinline$IntRemBy6(int) disassembly (after)
   /// CHECK:                 asr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            add w{{\d+}}, w{{\d+}}, w{{\d+}}, lsr #31
   /// CHECK-NEXT:            mov w{{\d+}}, #0x6
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$IntRemBy6(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$IntRemBy6(int v) {
     int r = v % 6;
     return r;
@@ -243,23 +323,35 @@ public class RemTest {
   /// CHECK:                 lsr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            mov w{{\d+}}, #0x6
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$IntALenRemBy6(int[]) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 32
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$IntALenRemBy6(int[] arr) {
     int r = arr.length % 6;
     return r;
   }
 
-  // A test case to check that 'asr' is used to get the high 32 bits of the result of
-  // 'dividend * magic'.
-  // Divisor -6 has the same property as divisor 6: no need to correct the result of
-  // get_high(dividend * magic) and no 'asr' before the final 'add' instruction
-  // which uses only the high 32 bits of the result. In such a case 'asr' getting the high
-  // 32 bits can be used as well.
+  // A test case to check that arithmetic shift right is used to get the high 32 bits
+  // of the multiplication result for remainder calculation. Divisor -6 has the same
+  // property as divisor 6: no need to correct the result of high part multiplication
+  // by magic number.
   //
   /// CHECK-START-ARM64: int RemTest.$noinline$IntRemByMinus6(int) disassembly (after)
   /// CHECK:                 asr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            add w{{\d+}}, w{{\d+}}, w{{\d+}}, lsr #31
   /// CHECK-NEXT:            mov w{{\d+}}, #0xfffffffa
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$IntRemByMinus6(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$IntRemByMinus6(int v) {
     int r = v % -6;
     return r;
@@ -280,16 +372,22 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM:   int RemTest.$noinline$UnsignedIntRem01(int) disassembly (after)
+  /// CHECK-START-ARM:   int RemTest.$noinline$PositiveIntRem01(int) disassembly (after)
   /// CHECK:                 smull     r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   /// CHECK-NEXT:            mov{{s?}} r{{\d+}}, #6
   /// CHECK-NEXT:            mls       r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   //
-  /// CHECK-START-ARM64: int RemTest.$noinline$UnsignedIntRem01(int) disassembly (after)
+  /// CHECK-START-ARM64: int RemTest.$noinline$PositiveIntRem01(int) disassembly (after)
   /// CHECK:                 lsr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            mov w{{\d+}}, #0x6
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
-  private static int $noinline$UnsignedIntRem01(int v) {
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$PositiveIntRem01(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 32
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$PositiveIntRem01(int v) {
     int c = 0;
     if (v > 0) {
       c = v % 6;
@@ -302,16 +400,22 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM:   int RemTest.$noinline$UnsignedIntRem02(int) disassembly (after)
+  /// CHECK-START-ARM:   int RemTest.$noinline$PositiveIntRem02(int) disassembly (after)
   /// CHECK:                 smull     r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   /// CHECK-NEXT:            mov{{s?}} r{{\d+}}, #6
   /// CHECK-NEXT:            mls       r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   //
-  /// CHECK-START-ARM64: int RemTest.$noinline$UnsignedIntRem02(int) disassembly (after)
+  /// CHECK-START-ARM64: int RemTest.$noinline$PositiveIntRem02(int) disassembly (after)
   /// CHECK:                 lsr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            mov w{{\d+}}, #0x6
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
-  private static int $noinline$UnsignedIntRem02(int v) {
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$PositiveIntRem02(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 32
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$PositiveIntRem02(int v) {
     int c = 0;
     if (0 < v) {
       c = v % 6;
@@ -324,16 +428,22 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM:   int RemTest.$noinline$UnsignedIntRem03(int) disassembly (after)
+  /// CHECK-START-ARM:   int RemTest.$noinline$PositiveIntRem03(int) disassembly (after)
   /// CHECK:                 smull     r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   /// CHECK-NEXT:            mov{{s?}} r{{\d+}}, #6
   /// CHECK-NEXT:            mls       r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   //
-  /// CHECK-START-ARM64: int RemTest.$noinline$UnsignedIntRem03(int) disassembly (after)
+  /// CHECK-START-ARM64: int RemTest.$noinline$PositiveIntRem03(int) disassembly (after)
   /// CHECK:                 lsr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            mov w{{\d+}}, #0x6
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
-  private static int $noinline$UnsignedIntRem03(int v) {
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$PositiveIntRem03(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 32
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$PositiveIntRem03(int v) {
     int c = 0;
     if (v >= 0) {
       c = v % 6;
@@ -346,16 +456,22 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM:   int RemTest.$noinline$UnsignedIntRem04(int) disassembly (after)
+  /// CHECK-START-ARM:   int RemTest.$noinline$PositiveIntRem04(int) disassembly (after)
   /// CHECK:                 smull     r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   /// CHECK-NEXT:            mov{{s?}} r{{\d+}}, #6
   /// CHECK-NEXT:            mls       r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   //
-  /// CHECK-START-ARM64: int RemTest.$noinline$UnsignedIntRem04(int) disassembly (after)
+  /// CHECK-START-ARM64: int RemTest.$noinline$PositiveIntRem04(int) disassembly (after)
   /// CHECK:                 lsr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            mov w{{\d+}}, #0x6
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
-  private static int $noinline$UnsignedIntRem04(int v) {
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$PositiveIntRem04(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 32
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$PositiveIntRem04(int v) {
     int c = 0;
     if (0 <= v) {
       c = v % 6;
@@ -368,17 +484,23 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM:   int RemTest.$noinline$UnsignedIntRem05(int) disassembly (after)
+  /// CHECK-START-ARM:   int RemTest.$noinline$PositiveIntRem05(int) disassembly (after)
   /// CHECK:                 smull     r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   /// CHECK-NEXT:            lsr{{s?}} r{{\d+}}, #2
   /// CHECK-NEXT:            mov{{s?}} r{{\d+}}, #10
   /// CHECK-NEXT:            mls       r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   //
-  /// CHECK-START-ARM64: int RemTest.$noinline$UnsignedIntRem05(int) disassembly (after)
+  /// CHECK-START-ARM64: int RemTest.$noinline$PositiveIntRem05(int) disassembly (after)
   /// CHECK:                 lsr x{{\d+}}, x{{\d+}}, #34
   /// CHECK-NEXT:            mov w{{\d+}}, #0xa
   /// CHECK-NEXT:            msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
-  private static int $noinline$UnsignedIntRem05(int v) {
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$PositiveIntRem05(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 34
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$PositiveIntRem05(int v) {
     int c = 0;
     for(; v > 100; ++c) {
       v %= 10;
@@ -389,16 +511,22 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM:   int RemTest.$noinline$UnsignedIntRem06(int) disassembly (after)
+  /// CHECK-START-ARM:   int RemTest.$noinline$PositiveIntRem06(int) disassembly (after)
   /// CHECK:                 smull     r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   /// CHECK-NEXT:            lsr{{s?}} r{{\d+}}, r{{\d+}}, #2
   /// CHECK:                 mls       r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
   //
-  /// CHECK-START-ARM64: int RemTest.$noinline$UnsignedIntRem06(int) disassembly (after)
+  /// CHECK-START-ARM64: int RemTest.$noinline$PositiveIntRem06(int) disassembly (after)
   /// CHECK:                 smull x{{\d+}}, w{{\d+}}, w{{\d+}}
   /// CHECK-NEXT:            lsr x{{\d+}}, x{{\d+}}, #34
   /// CHECK:                 msub w{{\d+}}, w{{\d+}}, w{{\d+}}, w{{\d+}}
-  private static int $noinline$UnsignedIntRem06(int v) {
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$PositiveIntRem06(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 34
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$PositiveIntRem06(int v) {
     if (v < 10) {
       v = $noinline$Negate(v); // This is to prevent from using Select.
     } else {
@@ -419,6 +547,14 @@ public class RemTest {
   /// CHECK-START-ARM64: int RemTest.$noinline$SignedIntRem01(int) disassembly (after)
   /// CHECK:                 asr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            add w{{\d+}}, w{{\d+}}, w{{\d+}}, lsr #31
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$SignedIntRem01(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$SignedIntRem01(int v) {
     int c = 0;
     if (v < 0) {
@@ -441,6 +577,14 @@ public class RemTest {
   /// CHECK-START-ARM64: int RemTest.$noinline$SignedIntRem02(int) disassembly (after)
   /// CHECK:                 asr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            add w{{\d+}}, w{{\d+}}, w{{\d+}}, lsr #31
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$SignedIntRem02(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$SignedIntRem02(int v) {
     int c = 0;
     if (v <= 0) {
@@ -451,7 +595,7 @@ public class RemTest {
     return c;
   }
 
-  // A test case to check that a correcting 'add' is generated for signed division.
+  // A test case to check that a correcting 'add' is generated for signed remainder calculation.
   //
   /// CHECK-START-ARM:   int RemTest.$noinline$SignedIntRem03(int) disassembly (after)
   /// CHECK:                 smull     r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
@@ -462,6 +606,14 @@ public class RemTest {
   /// CHECK-START-ARM64: int RemTest.$noinline$SignedIntRem03(int) disassembly (after)
   /// CHECK:                 asr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            add w{{\d+}}, w{{\d+}}, w{{\d+}}, lsr #31
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$SignedIntRem03(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$SignedIntRem03(int v) {
     boolean positive = (v > 0);
     int c = v % 6;
@@ -471,7 +623,7 @@ public class RemTest {
     return c;
   }
 
-  // A test case to check that a correcting 'add' is generated for signed division.
+  // A test case to check that a correcting 'add' is generated for signed remainder calculation.
   //
   /// CHECK-START-ARM:   int RemTest.$noinline$SignedIntRem04(int, boolean) disassembly (after)
   /// CHECK:                 smull     r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
@@ -482,6 +634,14 @@ public class RemTest {
   /// CHECK-START-ARM64: int RemTest.$noinline$SignedIntRem04(int, boolean) disassembly (after)
   /// CHECK:                 asr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            add w{{\d+}}, w{{\d+}}, w{{\d+}}, lsr #31
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$SignedIntRem04(int, boolean) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$SignedIntRem04(int v, boolean apply_rem) {
     int c = 0;
     boolean positive = (v > 0);
@@ -496,7 +656,7 @@ public class RemTest {
     return c;
   }
 
-  // A test case to check that a correcting 'add' is generated for signed division.
+  // A test case to check that a correcting 'add' is generated for signed remainder calculation.
   //
   /// CHECK-START-ARM:   int RemTest.$noinline$SignedIntRem05(int, int, int) disassembly (after)
   /// CHECK:                 smull     r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
@@ -507,6 +667,14 @@ public class RemTest {
   /// CHECK-START-ARM64: int RemTest.$noinline$SignedIntRem05(int, int, int) disassembly (after)
   /// CHECK:                 asr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            add w{{\d+}}, w{{\d+}}, w{{\d+}}, lsr #31
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$SignedIntRem05(int, int, int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$SignedIntRem05(int v, int a, int b) {
     int c = 0;
 
@@ -525,7 +693,7 @@ public class RemTest {
     return c;
   }
 
-  // A test case to check that a correcting 'add' is generated for signed division.
+  // A test case to check that a correcting 'add' is generated for signed remainder calculation.
   //
   /// CHECK-START-ARM:   int RemTest.$noinline$SignedIntRem06(int) disassembly (after)
   /// CHECK:                 smull     r{{\d+}}, r{{\d+}}, r{{\d+}}, r{{\d+}}
@@ -536,6 +704,14 @@ public class RemTest {
   /// CHECK-START-ARM64: int RemTest.$noinline$SignedIntRem06(int) disassembly (after)
   /// CHECK:                 asr x{{\d+}}, x{{\d+}}, #32
   /// CHECK-NEXT:            add w{{\d+}}, w{{\d+}}, w{{\d+}}, lsr #31
+  //
+  /// CHECK-START-RISCV64:   int RemTest.$noinline$SignedIntRem06(int) disassembly (after)
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 31
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
   private static int $noinline$SignedIntRem06(int v) {
     int c = v % 6;
 
@@ -544,6 +720,88 @@ public class RemTest {
     }
 
     return c;
+  }
+
+  //The next three tests check that division with remainder works
+  //correctly for divisors with the high bit set.
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$IntUnsignedRemNearOverflowBoundary1(int) disassembly (after)
+  /// CHECK:                 c.slli {{\w+}}, 32
+  /// CHECK-NEXT:            c.srli {{\w+}}, 32
+  /// CHECK-NEXT:            mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 63
+  /// CHECK:            mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$IntUnsignedRemNearOverflowBoundary1(int v) {
+    int r = Integer.remainderUnsigned(v, 0xFFFFFFFF);
+    return r;
+  }
+
+  /// CHECK-START-RISCV64: int RemTest.$noinline$IntUnsignedRemNearOverflowBoundary2(int) disassembly (after)
+  /// CHECK:                 c.slli {{\w+}}, 32
+  /// CHECK-NEXT:            c.srli {{\w+}}, 32
+  /// CHECK-NEXT:            mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 32
+  /// CHECK:            mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$IntUnsignedRemNearOverflowBoundary2(int v) {
+    int r = Integer.remainderUnsigned(v, 0x80000000);
+    return r;
+  }
+
+  /// CHECK-START-RISCV64: int RemTest.$noinline$IntUnsignedRemNearOverflowBoundary3(int) disassembly (after)
+  /// CHECK:                 c.slli {{\w+}}, 32
+  /// CHECK-NEXT:            c.srli {{\w+}}, 32
+  /// CHECK-NEXT:            mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 61
+  /// CHECK:            mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$IntUnsignedRemNearOverflowBoundary3(int v) {
+    int r = Integer.remainderUnsigned(v, 0xBFFFFFFF);
+    return r;
+  }
+
+  //This test checks the correctness of division with remainder for a
+  //divisor that does not require correction by addition.
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$UnsignedIntRemBy3(int) disassembly (after)
+  /// CHECK:                 c.slli {{\w+}}, 32
+  /// CHECK-NEXT:            c.srli {{\w+}}, 32
+  /// CHECK-NEXT:            mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 33
+  /// CHECK:            mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$UnsignedIntRemBy3(int v) {
+    int r = Integer.remainderUnsigned(v, 3);
+    return r;
+  }
+
+  //This test checks the correctness of division with remainder for a
+  //divisor that require correction by addition.
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$UnsignedIntRemBy7(int) disassembly (after)
+  /// CHECK:                 c.slli {{\w+}}, 32
+  /// CHECK-NEXT:            c.srli {{\w+}}, 32
+  /// CHECK-NEXT:            mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 32
+  /// CHECK-NEXT:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 1
+  /// CHECK-NEXT:            addw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srliw {{\w+}}, {{\w+}}, 2
+  /// CHECK:            mulw {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            subw {{\w+}}, {{\w+}}, {{\w+}}
+  private static int $noinline$UnsignedIntRemBy7(int v) {
+    int r = Integer.remainderUnsigned(v, 7);
+    return r;
+  }
+
+  //This test checks the correctness of division with remainder by 1
+  //
+  /// CHECK-START-RISCV64: int RemTest.$noinline$UnsignedIntRemBy1(int) disassembly (after)
+  /// CHECK:                 c.li {{\w+}}, 0
+  private static int $noinline$UnsignedIntRemBy1(int v) {
+    int r = Integer.remainderUnsigned(v, 1);
+    return r;
   }
 
   private static void remLong() {
@@ -611,12 +869,12 @@ public class RemTest {
     expectEquals(1L, $noinline$LongRemByMinus100(101L));
     expectEquals(-1L, $noinline$LongRemByMinus100(-101L));
 
-    expectEquals(1L, $noinline$UnsignedLongRem01(13L));
-    expectEquals(1L, $noinline$UnsignedLongRem02(13L));
-    expectEquals(1L, $noinline$UnsignedLongRem03(13L));
-    expectEquals(1L, $noinline$UnsignedLongRem04(13L));
-    expectEquals(1L, $noinline$UnsignedLongRem05(101L));
-    expectEquals(11L, $noinline$UnsignedLongRem06(101L));
+    expectEquals(1L, $noinline$PositiveLongRem01(13L));
+    expectEquals(1L, $noinline$PositiveLongRem02(13L));
+    expectEquals(1L, $noinline$PositiveLongRem03(13L));
+    expectEquals(1L, $noinline$PositiveLongRem04(13L));
+    expectEquals(1L, $noinline$PositiveLongRem05(101L));
+    expectEquals(11L, $noinline$PositiveLongRem06(101L));
 
     expectEquals(-1L, $noinline$SignedLongRem01(-13L));
     expectEquals(-1L, $noinline$SignedLongRem02(-13L));
@@ -624,16 +882,57 @@ public class RemTest {
     expectEquals(1L, $noinline$SignedLongRem04(-13L, true));
     expectEquals(0L, $noinline$SignedLongRem05(-12L, 0L,-13L));
     expectEquals(-1L, $noinline$SignedLongRem06(-13L));
+
+    expectEquals(0L, $noinline$LongUnsignedRemNearOverflowBoundary1(0L));
+    expectEquals(0L, $noinline$LongUnsignedRemNearOverflowBoundary1(Long.parseUnsignedLong("18446744073709551615")));
+    expectEquals(1L, $noinline$LongUnsignedRemNearOverflowBoundary1(1L));
+    expectEquals(0L, $noinline$LongUnsignedRemNearOverflowBoundary2(0L));
+    expectEquals(0L, $noinline$LongUnsignedRemNearOverflowBoundary2(Long.parseUnsignedLong("9223372036854775808")));
+    expectEquals(1L, $noinline$LongUnsignedRemNearOverflowBoundary2(1L));
+    expectEquals(0L, $noinline$LongUnsignedRemNearOverflowBoundary3(0L));
+    expectEquals(0L, $noinline$LongUnsignedRemNearOverflowBoundary3(Long.parseUnsignedLong("13835058055282163711")));
+    expectEquals(1L, $noinline$LongUnsignedRemNearOverflowBoundary3(1L));
+
+    expectEquals(0L, $noinline$LongUnsignedRemBy3(0L));
+    expectEquals(1L, $noinline$LongUnsignedRemBy3(1L));
+    expectEquals(0L, $noinline$LongUnsignedRemBy3(3L));
+    expectEquals(1L, $noinline$LongUnsignedRemBy3(10L));
+    expectEquals(0L, $noinline$LongUnsignedRemBy3(Long.parseUnsignedLong("18446744073709551615")));
+    expectEquals(2L, $noinline$LongUnsignedRemBy3(Long.parseUnsignedLong("9223372036854775808")));
+    expectEquals(2L, $noinline$LongUnsignedRemBy3(Long.parseUnsignedLong("13835058055282163711")));
+
+    expectEquals(0L, $noinline$LongUnsignedRemBy7(0L));
+    expectEquals(1L, $noinline$LongUnsignedRemBy7(1L));
+    expectEquals(0L, $noinline$LongUnsignedRemBy7(7L));
+    expectEquals(3L, $noinline$LongUnsignedRemBy7(10L));
+    expectEquals(1L, $noinline$LongUnsignedRemBy7(Long.parseUnsignedLong("18446744073709551615")));
+    expectEquals(1L, $noinline$LongUnsignedRemBy7(Long.parseUnsignedLong("9223372036854775808")));
+    expectEquals(4L, $noinline$LongUnsignedRemBy7(Long.parseUnsignedLong("13835058055282163711")));
+
+    expectEquals(0L, $noinline$LongUnsignedRemBy1(0L));
+    expectEquals(0L, $noinline$LongUnsignedRemBy1(1L));
+    expectEquals(0L, $noinline$LongUnsignedRemBy1(10L));
+    expectEquals(0L, $noinline$LongUnsignedRemBy1(42L));
+    expectEquals(0L, $noinline$LongUnsignedRemBy1(Long.parseUnsignedLong("18446744073709551615")));
+    expectEquals(0L, $noinline$LongUnsignedRemBy1(Long.parseUnsignedLong("9223372036854775808")));
+    expectEquals(0L, $noinline$LongUnsignedRemBy1(Long.parseUnsignedLong("13835058055282163711")));
   }
 
-  // Test cases for Int64 HDiv/HRem to check that optimizations implemented for Int32 are not
-  // used for Int64. The same divisors 18, -18, 7, -7, 6 and -6 are used.
+  // Test cases for Int64 remainder calculations to check that optimizations implemented
+  // for Int32 are not used for Int64. The same divisors 18, -18, 7, -7, 6 and -6 are used.
 
   /// CHECK-START-ARM64: long RemTest.$noinline$LongRemBy18(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0x12
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongRemBy18(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 63
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$LongRemBy18(long v) {
     long r = v % 18L;
     return r;
@@ -644,6 +943,13 @@ public class RemTest {
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0xffffffffffffffee
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongRemByMinus18(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 63
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$LongRemByMinus18(long v) {
     long r = v % -18L;
     return r;
@@ -655,6 +961,14 @@ public class RemTest {
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0x7
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongRemBy7(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 1
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 63
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$LongRemBy7(long v) {
     long r = v % 7L;
     return r;
@@ -666,6 +980,14 @@ public class RemTest {
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0xfffffffffffffff9
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongRemByMinus7(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 1
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 63
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$LongRemByMinus7(long v) {
     long r = v % -7L;
     return r;
@@ -676,6 +998,13 @@ public class RemTest {
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongRemBy6(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 63
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$LongRemBy6(long v) {
     long r = v % 6L;
     return r;
@@ -686,12 +1015,20 @@ public class RemTest {
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0xfffffffffffffffa
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongRemByMinus6(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 63
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$LongRemByMinus6(long v) {
     long r = v % -6L;
     return r;
   }
 
-  // A test to check 'add' and 'add_shift' are optimized into 'adds' and 'cinc'.
+  // A test to check that add and add_shift operations are optimized for remainder
+  // calculation with divisor 100.
   //
   /// CHECK-START-ARM64: long RemTest.$noinline$LongRemBy100(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
@@ -700,12 +1037,22 @@ public class RemTest {
   /// CHECK-NEXT:            cinc  x{{\d+}}, x{{\d+}}, mi
   /// CHECK-NEXT:            mov x{{\d+}}, #0x64
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongRemBy100(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 6
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 63
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$LongRemBy100(long v) {
     long r = v % 100L;
     return r;
   }
 
-  // A test to check 'sub' and 'add_shift' are optimized into 'subs' and 'cinc'.
+  // A test to check that subtract and add_shift operations are optimized for remainder
+  // calculation with divisor -100.
   //
   /// CHECK-START-ARM64: long RemTest.$noinline$LongRemByMinus100(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
@@ -714,6 +1061,15 @@ public class RemTest {
   /// CHECK-NEXT:            cinc  x{{\d+}}, x{{\d+}}, mi
   /// CHECK-NEXT:            mov x{{\d+}}, #0xffffffffffffff9c
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongRemByMinus100(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srai {{\w+}}, {{\w+}}, 6
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 63
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$LongRemByMinus100(long v) {
     long r = v % -100L;
     return r;
@@ -734,11 +1090,16 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM64: long RemTest.$noinline$UnsignedLongRem01(long) disassembly (after)
+  /// CHECK-START-ARM64: long RemTest.$noinline$PositiveLongRem01(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
-  private static long $noinline$UnsignedLongRem01(long v) {
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$PositiveLongRem01(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$PositiveLongRem01(long v) {
     long c = 0;
     if (v > 0) {
       c = v % 6;
@@ -751,11 +1112,16 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM64: long RemTest.$noinline$UnsignedLongRem02(long) disassembly (after)
+  /// CHECK-START-ARM64: long RemTest.$noinline$PositiveLongRem02(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
-  private static long $noinline$UnsignedLongRem02(long v) {
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$PositiveLongRem02(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$PositiveLongRem02(long v) {
     long c = 0;
     if (0 < v) {
       c = v % 6;
@@ -768,11 +1134,16 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM64: long RemTest.$noinline$UnsignedLongRem03(long) disassembly (after)
+  /// CHECK-START-ARM64: long RemTest.$noinline$PositiveLongRem03(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
-  private static long $noinline$UnsignedLongRem03(long v) {
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$PositiveLongRem03(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$PositiveLongRem03(long v) {
     long c = 0;
     if (v >= 0) {
       c = v % 6;
@@ -785,11 +1156,16 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM64: long RemTest.$noinline$UnsignedLongRem04(long) disassembly (after)
+  /// CHECK-START-ARM64: long RemTest.$noinline$PositiveLongRem04(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
-  private static long $noinline$UnsignedLongRem04(long v) {
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$PositiveLongRem04(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$PositiveLongRem04(long v) {
     long c = 0;
     if (0 <= v) {
       c = v % 6;
@@ -802,12 +1178,18 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM64: long RemTest.$noinline$UnsignedLongRem05(long) disassembly (after)
+  /// CHECK-START-ARM64: long RemTest.$noinline$PositiveLongRem05(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            lsr x{{\d+}}, x{{\d+}}, #2
   /// CHECK-NEXT:            mov x{{\d+}}, #0xa
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
-  private static long $noinline$UnsignedLongRem05(long v) {
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$PositiveLongRem05(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 2
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$PositiveLongRem05(long v) {
     long c = 0;
     for(; v > 100; ++c) {
       v %= 10;
@@ -818,11 +1200,17 @@ public class RemTest {
   // A test case to check that a correcting 'add' is not generated for a non-negative
   // dividend and a positive divisor.
   //
-  /// CHECK-START-ARM64: long RemTest.$noinline$UnsignedLongRem06(long) disassembly (after)
+  /// CHECK-START-ARM64: long RemTest.$noinline$PositiveLongRem06(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            lsr x{{\d+}}, x{{\d+}}, #2
   /// CHECK:                 msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
-  private static long $noinline$UnsignedLongRem06(long v) {
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$PositiveLongRem06(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 2
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$PositiveLongRem06(long v) {
     if (v < 10) {
       v = $noinline$Negate(v); // This is to prevent from using Select.
     } else {
@@ -839,6 +1227,11 @@ public class RemTest {
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$SignedLongRem01(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$SignedLongRem01(long v) {
     long c = 0;
     if (v < 0) {
@@ -857,6 +1250,11 @@ public class RemTest {
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$SignedLongRem02(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$SignedLongRem02(long v) {
     long c = 0;
     if (v <= 0) {
@@ -867,13 +1265,18 @@ public class RemTest {
     return c;
   }
 
-  // A test case to check that a correcting 'add' is generated for signed division.
+  // A test case to check that a correcting 'add' is generated for signed remainder calculation.
   //
   /// CHECK-START-ARM64: long RemTest.$noinline$SignedLongRem03(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$SignedLongRem03(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$SignedLongRem03(long v) {
     boolean positive = (v > 0);
     long c = v % 6;
@@ -883,13 +1286,18 @@ public class RemTest {
     return c;
   }
 
-  // A test case to check that a correcting 'add' is generated for signed division.
+  // A test case to check that a correcting 'add' is generated for signed remainder calculation.
   //
   /// CHECK-START-ARM64: long RemTest.$noinline$SignedLongRem04(long, boolean) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$SignedLongRem04(long, boolean) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$SignedLongRem04(long v, boolean apply_rem) {
     long c = 0;
     boolean positive = (v > 0);
@@ -904,13 +1312,18 @@ public class RemTest {
     return c;
   }
 
-  // A test case to check that a correcting 'add' is generated for signed division.
+  // A test case to check that a correcting 'add' is generated for signed remainder calculation.
   //
   /// CHECK-START-ARM64: long RemTest.$noinline$SignedLongRem05(long, long, long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$SignedLongRem05(long, long, long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$SignedLongRem05(long v, long a, long b) {
     long c = 0;
 
@@ -929,13 +1342,18 @@ public class RemTest {
     return c;
   }
 
-  // A test case to check that a correcting 'add' is generated for signed division.
+  // A test case to check that a correcting 'add' is generated for signed remainder calculation.
   //
   /// CHECK-START-ARM64: long RemTest.$noinline$SignedLongRem06(long) disassembly (after)
   /// CHECK:                 smulh x{{\d+}}, x{{\d+}}, x{{\d+}}
   /// CHECK-NEXT:            add x{{\d+}}, x{{\d+}}, x{{\d+}}, lsr #63
   /// CHECK-NEXT:            mov x{{\d+}}, #0x6
   /// CHECK-NEXT:            msub x{{\d+}}, x{{\d+}}, x{{\d+}}, x{{\d+}}
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$SignedLongRem06(long) disassembly (after)
+  /// CHECK:                 mulh {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:                 mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
   private static long $noinline$SignedLongRem06(long v) {
     long c = v % 6;
 
@@ -944,5 +1362,75 @@ public class RemTest {
     }
 
     return c;
+  }
+
+  //The next three tests check that division with remainder works
+  //correctly for divisors with the high bit set.
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongUnsignedRemNearOverflowBoundary1(long) disassembly (after)
+  /// CHECK:                 mulhu {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 63
+  /// CHECK:            mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$LongUnsignedRemNearOverflowBoundary1(long v) {
+    long r = Long.remainderUnsigned(v, 0xFFFFFFFFFFFFFFFFL);
+    return r;
+  }
+
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongUnsignedRemNearOverflowBoundary2(long) disassembly (after)
+  /// CHECK:                 mulhu {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$LongUnsignedRemNearOverflowBoundary2(long v) {
+    long r = Long.remainderUnsigned(v, 0x8000000000000000L);
+    return r;
+  }
+
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongUnsignedRemNearOverflowBoundary3(long) disassembly (after)
+  /// CHECK:                 mulhu {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 61
+  /// CHECK:            mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$LongUnsignedRemNearOverflowBoundary3(long v) {
+    long r = Long.remainderUnsigned(v, 0xBFFFFFFFFFFFFFFFL);
+    return r;
+  }
+
+  //This test checks the correctness of division with remainder for a
+  //divisor that does not require correction by addition.
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongUnsignedRemBy3(long) disassembly (after)
+  /// CHECK:                 mulhu {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            srli {{\w+}}, {{\w+}}, 1
+  /// CHECK:            mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$LongUnsignedRemBy3(long v) {
+    long r = Long.remainderUnsigned(v, 3L);
+    return r;
+  }
+
+  //This test checks the correctness of division with remainder for a
+  //divisor that require correction by addition.
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongUnsignedRemBy7(long) disassembly (after)
+  /// CHECK:                 mulhu {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            c.srli {{\w+}}, 1
+  /// CHECK-NEXT:            c.add {{\w+}}, {{\w+}}
+  /// CHECK-NEXT:            c.srli {{\w+}}, 2
+  /// CHECK:            mul {{\w+}}, {{\w+}}, {{\w+}}
+  /// CHECK:            sub {{\w+}}, {{\w+}}, {{\w+}}
+  private static long $noinline$LongUnsignedRemBy7(long v) {
+    long r = Long.remainderUnsigned(v, 7L);
+    return r;
+  }
+
+  //This test checks the correctness of division with remainder by 1
+  //
+  /// CHECK-START-RISCV64: long RemTest.$noinline$LongUnsignedRemBy1(long) disassembly (after)
+  /// CHECK:                 c.li {{\w+}}, 0
+  private static long $noinline$LongUnsignedRemBy1(long v) {
+    long r = Long.remainderUnsigned(v, 1L);
+    return r;
   }
 }

@@ -96,6 +96,114 @@ void CalculateMagicAndShiftForDivRem(int64_t divisor, bool is_long,
   *shift = is_long ? p - 64 : p - 32;
 }
 
+template <typename T>
+void CalculateMagicAndShiftForUnsignedDivRem(
+    T divisor, bool is_unsigned_long, T* magic, int* shamt, bool* indicator_add) {
+  // It does not make sense to calculate magic and shift for zero divisor.
+  // Note: This function assumes divisor != 0 (should add DCHECK_NE(divisor, 0))
+
+  /* Implementation according to H.S.Warren's "Hacker's Delight" (Addison Wesley, 2002)
+   * Chapter 10 and T.Granlund, P.L.Montgomery's "Division by Invariant Integers Using
+   * Multiplication" (PLDI 1994).
+   *
+   * This is the unsigned version of the magic number algorithm for division optimization.
+   * The magic number M, shift S, and add indicator can be calculated to replace division
+   * with faster multiplication and shift operations.
+   *
+   * For unsigned division, we need to handle cases where the magic number might overflow,
+   * which is indicated by the 'indicator_add' flag. When this flag is set, the optimized
+   * division formula becomes: ((n * M) >> w + (n - (n * M) >> w) >> 1) >> (S - 1)
+   * Otherwise, the standard formula is used: (n * M) >> S
+   *
+   * The algorithm works as follows:
+   * Let nc be the most positive value such that nc = 2^w - 1 - (2^w - 1) % d,
+   * where w is the word size (32 or 64 bits) and d is the divisor.
+   *
+   * The shift p is the smallest value satisfying:
+   * 2^p > nc * (d - (2^p - 1) % d)
+   *
+   * The magic number M is calculated as:
+   * M = (2^p + d - 1 - (2^p - 1) % d) / d
+   *
+   * The add indicator is set when intermediate calculations would overflow during
+   * the iterative process, requiring a modified division formula.
+   *
+   * The final shift S is calculated as p - w, where w is 32 or 64.
+   */
+
+  int p = is_unsigned_long ? 63 : 31;
+
+  // Calculate nc: the most positive numerator that gives quotient k and remainder d-1
+  // For unsigned: nc = 2^w - 1 - (2^w - 1) % d = -1 - (-d) % d
+  auto nc = -1 - (-divisor) % divisor;
+
+  const uint64_t exp = is_unsigned_long ? (UINT64_C(1) << 63) : (UINT32_C(1) << 31);
+
+  // Initialize quotient and remainder for 2^w / nc
+  uint64_t quotient1 = exp / nc;
+  uint64_t remainder1 = exp % nc;
+
+  // Initialize quotient and remainder for (2^w - 1) / d
+  uint64_t quotient2 = (exp - 1) / divisor;
+  uint64_t remainder2 = (exp - 1) % divisor;
+
+  /*
+   * Iteratively increase p until the termination condition is met.
+   * This loop simulates long division while tracking potential overflows
+   * that would require the add indicator to be set.
+   */
+  uint64_t delta;
+  do {
+    p++;
+
+    // Update quotient1 and remainder1 for 2^p / nc
+    if (remainder1 >= nc - remainder1) {
+      quotient1 = 2 * quotient1 + 1;
+      remainder1 = 2 * remainder1 - nc;
+    } else {
+      quotient1 = 2 * quotient1;
+      remainder1 = 2 * remainder1;
+    }
+
+    // Update quotient2 and remainder2 for (2^p - 1) / d
+    // Check for potential overflow conditions that require add indicator
+    if (remainder2 + 1 >= divisor - remainder2) {
+      if (quotient2 >= (exp - 1)) {
+        *indicator_add = 1;
+      }
+      quotient2 = 2 * quotient2 + 1;
+      remainder2 = 2 * remainder2 + 1 - divisor;
+    } else {
+      if (quotient2 >= exp) {
+        *indicator_add = 1;
+      }
+      quotient2 = 2 * quotient2;
+      remainder2 = 2 * remainder2 + 1;
+    }
+
+    delta = divisor - 1 - remainder2;
+
+    // Continue until p reaches maximum (2*w) or termination condition is met
+  } while ((is_unsigned_long ? p < 128 : p < 64) &&
+           (quotient1 < delta || (quotient1 == delta && remainder1 == 0)));
+
+  // Calculate the final magic number
+  *magic = quotient2 + 1;
+
+  // Truncate to appropriate size for 32-bit case
+  if (!is_unsigned_long) {
+    *magic = static_cast<uint32_t>(*magic);
+  }
+
+  // Calculate the final shift amount
+  *shamt = is_unsigned_long ? p - 64 : p - 32;
+}
+
+template void CalculateMagicAndShiftForUnsignedDivRem<uint64_t>(
+    uint64_t divisor, bool is_unsigned_long, uint64_t* magic, int* shamt, bool* indicator_add);
+template void CalculateMagicAndShiftForUnsignedDivRem<uint32_t>(
+    uint32_t divisor, bool is_unsigned_long, uint32_t* magic, int* shamt, bool* indicator_add);
+
 bool IsBooleanValueOrMaterializedCondition(HInstruction* cond_input) {
   return !cond_input->IsCondition() || !cond_input->IsEmittedAtUseSite();
 }

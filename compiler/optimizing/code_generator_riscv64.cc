@@ -1415,11 +1415,9 @@ void InstructionCodeGeneratorRISCV64::GenerateTestAndBranch(HInstruction* instru
   }
 }
 
-void InstructionCodeGeneratorRISCV64::DivRemOneOrMinusOne(HBinaryOperation* instruction) {
-  DCHECK(instruction->IsDiv() || instruction->IsRem());
-  DataType::Type type = instruction->GetResultType();
-
-  LocationSummary* locations = instruction->GetLocations();
+void InstructionCodeGeneratorRISCV64::DivRemOneOrMinusOne(LocationSummary* locations,
+                                                          DataType::Type type,
+                                                          bool is_div) {
   Location second = locations->InAt(1);
   DCHECK(second.IsConstant());
 
@@ -1428,7 +1426,7 @@ void InstructionCodeGeneratorRISCV64::DivRemOneOrMinusOne(HBinaryOperation* inst
   int64_t imm = Int64FromConstant(second.GetConstant());
   DCHECK(imm == 1 || imm == -1);
 
-  if (instruction->IsRem()) {
+  if (!is_div) {
     __ Mv(out, Zero);
   } else {
     if (imm == -1) {
@@ -1494,31 +1492,268 @@ void InstructionCodeGeneratorRISCV64::DivRemByPowerOfTwo(HBinaryOperation* instr
   }
 }
 
-void InstructionCodeGeneratorRISCV64::GenerateDivRemWithAnyConstant(HBinaryOperation* instruction) {
-  DCHECK(instruction->IsDiv() || instruction->IsRem());
-  LocationSummary* locations = instruction->GetLocations();
-  XRegister dividend = locations->InAt(0).AsRegister<XRegister>();
-  XRegister out = locations->Out().AsRegister<XRegister>();
-  Location second = locations->InAt(1);
-  int64_t imm = Int64FromConstant(second.GetConstant());
-  DataType::Type type = instruction->GetResultType();
+// Return true if the magic number was modified by subtracting 2^32(Int32 div) or 2^64(Int64 div).
+// So dividend needs to be added.
+static inline bool NeedToAddDividend(int64_t magic_number, int64_t divisor) {
+  return divisor > 0 && magic_number < 0;
+}
+
+// Return true if the magic number was modified by adding 2^32(Int32 div) or 2^64(Int64 div).
+// So dividend needs to be subtracted.
+static inline bool NeedToSubDividend(int64_t magic_number, int64_t divisor) {
+  return divisor < 0 && magic_number > 0;
+}
+
+void InstructionCodeGeneratorRISCV64::GenerateIncrementNegativeByOne(XRegister out,
+                                                                     XRegister in,
+                                                                     int32_t bit_size) {
   ScratchRegisterScope srs(GetAssembler());
   XRegister tmp = srs.AllocateXRegister();
 
-  // TODO: optimize with constant.
-  __ LoadConst64(tmp, imm);
-  if (instruction->IsDiv()) {
-    if (type == DataType::Type::kInt32) {
-      __ Divw(out, dividend, tmp);
+  if (bit_size == 64) {
+    __ Srli(tmp, in, bit_size - 1);
+    __ Add(out, in, tmp);
+  } else {
+    __ Srliw(tmp, in, bit_size - 1);
+    __ Addw(out, in, tmp);
+  }
+}
+
+void InstructionCodeGeneratorRISCV64::GenerateResultRemWithAnyConstant(
+    XRegister out, XRegister dividend, XRegister quotient, int64_t divisor, int32_t bit_size) {
+  ScratchRegisterScope srs(GetAssembler());
+  XRegister tmp = srs.AllocateXRegister();
+
+  if (bit_size == 64) {
+    __ LoadConst64(tmp, divisor);
+    __ Mul(tmp, tmp, quotient);
+    __ Sub(out, dividend, tmp);
+  } else {
+    __ LoadConst32(tmp, divisor);
+    __ Mulw(tmp, tmp, quotient);
+    __ Subw(out, dividend, tmp);
+  }
+}
+
+void InstructionCodeGeneratorRISCV64::GenerateUnsignedInt64DivRemWithUnsignedConstant(
+    XRegister out, XRegister dividend, uint64_t imm, int bit_size, bool is_div) {
+  uint64_t magic;
+  int shamt;
+  bool add_indicator;
+  CalculateMagicAndShiftForUnsignedDivRem(
+      imm, /* is_unsigned_long= */ true, &magic, &shamt, &add_indicator);
+
+  ScratchRegisterScope srs(GetAssembler());
+  XRegister tmp = srs.AllocateXRegister();
+
+  __ LoadConst64(tmp, magic);
+  __ Mulhu(tmp, dividend, tmp);
+  if (add_indicator) {
+    __ Sub(out, dividend, tmp);
+    __ Srli(out, out, 1);
+    __ Add(out, out, tmp);
+    __ Srli(out, out, shamt - 1);
+  } else {
+    __ Srli(out, tmp, shamt);
+  }
+
+  srs.FreeXRegister(tmp);
+  if (!is_div) {
+    GenerateResultRemWithAnyConstant(out, dividend, out, imm, bit_size);
+  }
+}
+
+void InstructionCodeGeneratorRISCV64::GenerateUnsignedInt32DivRemWithUnsignedConstant(
+    XRegister out, XRegister dividend, uint32_t imm, int bit_size, bool is_div) {
+  uint32_t magic;
+  int shamt;
+  bool add_indicator;
+  CalculateMagicAndShiftForUnsignedDivRem(
+      imm, /* is_unsigned_long= */ false, &magic, &shamt, &add_indicator);
+
+  ScratchRegisterScope srs(GetAssembler());
+  XRegister tmp = srs.AllocateXRegister();
+
+  // For uint32_t we are need to use "Li",
+  // because "LoadConst32" leads to a signed interpretation of the digit
+  __ Li(tmp, magic);
+  __ Slli(dividend, dividend, 32);
+  __ Srli(dividend, dividend, 32);
+  __ Mul(tmp, dividend, tmp);
+  if (add_indicator) {
+    __ Srli(tmp, tmp, 32);
+    __ Subw(out, dividend, tmp);
+    __ Srliw(out, out, 1);
+    __ Addw(out, out, tmp);
+    __ Srliw(out, out, shamt - 1);
+  } else {
+    __ Srli(out, tmp, shamt + 32);
+  }
+
+  srs.FreeXRegister(tmp);
+  if (!is_div) {
+    GenerateResultRemWithAnyConstant(out, dividend, out, imm, bit_size);
+  }
+}
+
+void InstructionCodeGeneratorRISCV64::GenerateInt64PositiveDivRemWithAnyPositiveConstant(
+    HBinaryOperation* instruction) {
+  DCHECK(instruction->IsDiv() || instruction->IsRem());
+  DCHECK(instruction->GetResultType() == DataType::Type::kInt64);
+  int32_t bit_size = 64;
+
+  LocationSummary* locations = instruction->GetLocations();
+  Location second = locations->InAt(1);
+  DCHECK(second.IsConstant());
+
+  XRegister out = locations->Out().AsRegister<XRegister>();
+  XRegister dividend = locations->InAt(0).AsRegister<XRegister>();
+  XRegister tmp = locations->GetTemp(0).AsRegister<XRegister>();
+  int64_t imm = Int64FromConstant(second.GetConstant());
+  DCHECK_GT(imm, 0);
+
+  int64_t magic;
+  int shift;
+  CalculateMagicAndShiftForDivRem(imm, /* is_long= */ true, &magic, &shift);
+
+  // tmp = get_high(dividend * magic)
+  __ LoadConst64(tmp, magic);
+  if (magic > 0 && shift == 0) {
+    __ Mulh(instruction->IsDiv() ? out : tmp, dividend, tmp);
+  } else {
+    __ Mulh(tmp, dividend, tmp);
+    if (magic < 0) {
+      // The negative magic means that the multiplier m is greater than INT64_MAX.
+      // In such a case shift is never 0. See the proof in
+      // InstructionCodeGeneratorARMVIXL::GenerateDivRemWithAnyConstant.
+      __ Add(tmp, tmp, dividend);
+    }
+    DCHECK_NE(shift, 0);
+    __ Srli(instruction->IsDiv() ? out : tmp, tmp, shift);
+  }
+
+  if (instruction->IsRem()) {
+    GenerateResultRemWithAnyConstant(out, dividend, tmp, imm, bit_size);
+  }
+}
+
+// Helper to generate code for HDiv/HRem instructions for any dividend and a constant divisor
+// (not power of 2).
+void InstructionCodeGeneratorRISCV64::GenerateInt64DivRemWithAnyConstant(
+    HBinaryOperation* instruction) {
+  DCHECK(instruction->IsDiv() || instruction->IsRem());
+  DCHECK(instruction->GetResultType() == DataType::Type::kInt64);
+  int32_t bit_size = 64;
+
+  LocationSummary* locations = instruction->GetLocations();
+  Location second = locations->InAt(1);
+  DCHECK(second.IsConstant());
+
+  XRegister out = locations->Out().AsRegister<XRegister>();
+  XRegister dividend = locations->InAt(0).AsRegister<XRegister>();
+  XRegister tmp = locations->GetTemp(0).AsRegister<XRegister>();
+  int64_t imm = Int64FromConstant(second.GetConstant());
+
+  int64_t magic;
+  int shift;
+  CalculateMagicAndShiftForDivRem(imm, /* is_long= */ true, &magic, &shift);
+
+  // tmp = get_high(dividend * magic)
+  __ LoadConst64(tmp, magic);
+  __ Mulh(tmp, dividend, tmp);
+
+  // Some combinations of magic_number and the divisor require to correct the result.
+  // Check whether the correction is needed.
+  if (NeedToAddDividend(magic, imm)) {
+    __ Add(tmp, tmp, dividend);
+  } else if (NeedToSubDividend(magic, imm)) {
+    __ Sub(tmp, tmp, dividend);
+  }
+
+  if (shift != 0) {
+    __ Srai(tmp, tmp, shift);
+  }
+
+  if (instruction->IsRem()) {
+    GenerateIncrementNegativeByOne(tmp, tmp, bit_size);
+    GenerateResultRemWithAnyConstant(out, dividend, tmp, imm, bit_size);
+  } else {
+    GenerateIncrementNegativeByOne(out, tmp, bit_size);
+  }
+}
+
+void InstructionCodeGeneratorRISCV64::GenerateInt32DivRemWithAnyConstant(
+    HBinaryOperation* instruction) {
+  DCHECK(instruction->IsDiv() || instruction->IsRem());
+  DCHECK(instruction->GetResultType() == DataType::Type::kInt32);
+  int32_t bit_size = (instruction->GetResultType() == DataType::Type::kInt64) ? 64 : 32;
+
+  LocationSummary* locations = instruction->GetLocations();
+  Location second = locations->InAt(1);
+  DCHECK(second.IsConstant());
+
+  XRegister out = locations->Out().AsRegister<XRegister>();
+  XRegister dividend = locations->InAt(0).AsRegister<XRegister>();
+  XRegister tmp = locations->GetTemp(0).AsRegister<XRegister>();
+  int64_t imm = Int64FromConstant(second.GetConstant());
+
+  int64_t magic;
+  int shift;
+  CalculateMagicAndShiftForDivRem(imm, /* is_long= */ false, &magic, &shift);
+
+  ScratchRegisterScope srs(GetAssembler());
+
+  // tmp = get_high(dividend * magic)
+  __ LoadConst64(tmp, magic);
+  __ Mul(tmp, dividend, tmp);
+
+  // ADD/SUB correction is performed in the high 32 bits
+  // as high 32 bits are ignored because type are kInt32.
+  if (NeedToAddDividend(magic, imm)) {
+    XRegister tmp_shift = srs.AllocateXRegister();
+    __ Slli(tmp_shift, dividend, 32);
+    __ Add(tmp, tmp, tmp_shift);
+    srs.FreeXRegister(tmp_shift);
+  } else if (NeedToSubDividend(magic, imm)) {
+    XRegister tmp_shift = srs.AllocateXRegister();
+    __ Slli(tmp_shift, dividend, 32);
+    __ Sub(tmp, tmp, tmp_shift);
+    srs.FreeXRegister(tmp_shift);
+  }
+
+  // Extract the result from the high 32 bits and apply the final right shift.
+  DCHECK_LT(shift, 32);
+
+  if (imm > 0 && HasNonNegativeInputAt(instruction, 0)) {
+    // No need to adjust the result for a non-negative dividend and a positive divisor.
+    if (instruction->IsDiv()) {
+      __ Srli(out, tmp, 32 + shift);
     } else {
-      __ Div(out, dividend, tmp);
+      __ Srli(tmp, tmp, 32 + shift);
+      GenerateResultRemWithAnyConstant(out, dividend, tmp, imm, bit_size);
     }
   } else {
-    if (type == DataType::Type::kInt32)  {
-      __ Remw(out, dividend, tmp);
+    __ Srai(tmp, tmp, 32 + shift);
+    if (instruction->IsRem()) {
+      GenerateIncrementNegativeByOne(tmp, tmp, bit_size);
+      GenerateResultRemWithAnyConstant(out, dividend, tmp, imm, bit_size);
     } else {
-      __ Rem(out, dividend, tmp);
+      GenerateIncrementNegativeByOne(out, tmp, bit_size);
     }
+  }
+}
+
+void InstructionCodeGeneratorRISCV64::GenerateDivRemWithAnyConstant(HBinaryOperation* instruction,
+                                                                    int64_t divisor) {
+  DCHECK(instruction->IsDiv() || instruction->IsRem());
+  if (instruction->GetResultType() == DataType::Type::kInt64) {
+    if (divisor > 0 && HasNonNegativeInputAt(instruction, 0)) {
+      GenerateInt64PositiveDivRemWithAnyPositiveConstant(instruction);
+    } else {
+      GenerateInt64DivRemWithAnyConstant(instruction);
+    }
+  } else {
+    GenerateInt32DivRemWithAnyConstant(instruction);
   }
 }
 
@@ -1536,12 +1771,12 @@ void InstructionCodeGeneratorRISCV64::GenerateDivRemIntegral(HBinaryOperation* i
     if (imm == 0) {
       // Do not generate anything. DivZeroCheck would prevent any code to be executed.
     } else if (imm == 1 || imm == -1) {
-      DivRemOneOrMinusOne(instruction);
+      DivRemOneOrMinusOne(locations, type, instruction->IsDiv());
     } else if (IsPowerOfTwo(AbsOrMin(imm))) {
       DivRemByPowerOfTwo(instruction);
     } else {
       DCHECK(imm <= -2 || imm >= 2);
-      GenerateDivRemWithAnyConstant(instruction);
+      GenerateDivRemWithAnyConstant(instruction, imm);
     }
   } else {
     XRegister dividend = locations->InAt(0).AsRegister<XRegister>();
@@ -3638,6 +3873,10 @@ void LocationsBuilderRISCV64::VisitDiv(HDiv* instruction) {
       locations->SetInAt(0, Location::RequiresRegister());
       locations->SetInAt(1, Location::RegisterOrConstant(instruction->InputAt(1)));
       locations->SetOut(Location::RequiresRegister(), Location::kNoOutputOverlap);
+      if (instruction->GetLocations()->InAt(1).IsConstant()) {
+        locations->AddTemp(Location::RequiresRegister());
+      }
+
       break;
 
     case DataType::Type::kFloat32:
@@ -4941,6 +5180,9 @@ void LocationsBuilderRISCV64::VisitRem(HRem* instruction) {
       locations->SetInAt(0, Location::RequiresRegister());
       locations->SetInAt(1, Location::RegisterOrConstant(instruction->InputAt(1)));
       locations->SetOut(Location::RequiresRegister(), Location::kNoOutputOverlap);
+      if (instruction->GetLocations()->InAt(1).IsConstant()) {
+        locations->AddTemp(Location::RequiresRegister());
+      }
       break;
 
     case DataType::Type::kFloat32:

@@ -31,6 +31,10 @@ class HInstruction;
 // arguments `magic` and `shift`
 void CalculateMagicAndShiftForDivRem(int64_t divisor, bool is_long, int64_t* magic, int* shift);
 
+template <typename T>
+void CalculateMagicAndShiftForUnsignedDivRem(
+    T divisor, bool is_unsigned_long, T* magic, int* shamt, bool* indicator_add);
+
 // Returns true if `cond_input` is expected to have a location. Assumes that
 // `cond_input` is a conditional input of the currently emitted instruction and
 // that it has been previously visited by the InstructionCodeGenerator.

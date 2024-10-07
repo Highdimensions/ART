@@ -300,6 +300,8 @@ class InstructionCodeGeneratorRISCV64 : public InstructionCodeGenerator {
 
   void ShNAdd(XRegister rd, XRegister rs1, XRegister rs2, DataType::Type type);
 
+  friend void GenerateDivRemUnsigned(HInvoke* invoke, bool is_div, CodeGeneratorRISCV64* codegen);
+
  protected:
   void GenerateClassInitializationCheck(SlowPathCodeRISCV64* slow_path, XRegister class_reg);
   void GenerateBitstringTypeCheckCompare(HTypeCheckInstruction* check, XRegister temp);
@@ -348,9 +350,19 @@ class InstructionCodeGeneratorRISCV64 : public InstructionCodeGenerator {
                              size_t condition_input_index,
                              Riscv64Label* true_target,
                              Riscv64Label* false_target);
-  void DivRemOneOrMinusOne(HBinaryOperation* instruction);
+  void DivRemOneOrMinusOne(LocationSummary* locations, DataType::Type type, bool is_div);
   void DivRemByPowerOfTwo(HBinaryOperation* instruction);
-  void GenerateDivRemWithAnyConstant(HBinaryOperation* instruction);
+  void GenerateResultRemWithAnyConstant(
+      XRegister out, XRegister dividend, XRegister quotient, int64_t divisor, int32_t bit_size);
+  void GenerateUnsignedInt64DivRemWithUnsignedConstant(
+      XRegister out, XRegister dividend, uint64_t imm, int bit_size, bool is_div);
+  void GenerateUnsignedInt32DivRemWithUnsignedConstant(
+      XRegister out, XRegister dividend, uint32_t imm, int bit_size, bool is_div);
+  void GenerateInt64PositiveDivRemWithAnyPositiveConstant(HBinaryOperation* instruction);
+  void GenerateInt64DivRemWithAnyConstant(HBinaryOperation* instruction);
+  void GenerateInt32DivRemWithAnyConstant(HBinaryOperation* instruction);
+  void GenerateIncrementNegativeByOne(XRegister out, XRegister in, int32_t bit_size);
+  void GenerateDivRemWithAnyConstant(HBinaryOperation* instruction, int64_t divisor);
   void GenerateDivRemIntegral(HBinaryOperation* instruction);
   void GenerateIntLongCondition(IfCondition cond, LocationSummary* locations);
   void GenerateIntLongCondition(IfCondition cond,
