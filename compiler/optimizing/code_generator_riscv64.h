@@ -300,6 +300,8 @@ class InstructionCodeGeneratorRISCV64 : public InstructionCodeGenerator {
 
   void ShNAdd(XRegister rd, XRegister rs1, XRegister rs2, DataType::Type type);
 
+  friend void GenerateDivRemUnsigned(HInvoke* invoke, bool is_div, CodeGeneratorRISCV64* codegen);
+
  protected:
   void GenerateClassInitializationCheck(SlowPathCodeRISCV64* slow_path, XRegister class_reg);
   void GenerateBitstringTypeCheckCompare(HTypeCheckInstruction* check, XRegister temp);
@@ -350,7 +352,21 @@ class InstructionCodeGeneratorRISCV64 : public InstructionCodeGenerator {
                              Riscv64Label* false_target);
   void DivRemOneOrMinusOne(HBinaryOperation* instruction);
   void DivRemByPowerOfTwo(HBinaryOperation* instruction);
-  void GenerateDivRemWithAnyConstant(HBinaryOperation* instruction);
+  void GenerateResultRemWithAnyConstant(
+      XRegister out, XRegister dividend, XRegister quotient, int64_t divisor, int32_t amount_bits);
+  void GenerateUnsignedDivRemCode(
+      XRegister out, XRegister dividend, int64_t imm, int32_t amount_bits, bool is_div);
+  void GenerateInt64UnsignedDivRemWithAnyPositiveConstant(HBinaryOperation* instruction);
+  void GenerateInt64DivRemWithAnyConstant(HBinaryOperation* instruction);
+  void GenerateInt32DivRemCode(XRegister out,
+                               XRegister dividend,
+                               int32_t imm,
+                               int32_t amount_bits,
+                               bool is_div,
+                               bool is_non_negative);
+  void GenerateInt32DivRemWithAnyConstant(HBinaryOperation* instruction);
+  void GenerateIncrementNegativeByOne(XRegister out, XRegister in, int32_t amount_bits);
+  void GenerateDivRemWithAnyConstant(HBinaryOperation* instruction, int64_t divisor);
   void GenerateDivRemIntegral(HBinaryOperation* instruction);
   void GenerateIntLongCondition(IfCondition cond, LocationSummary* locations);
   void GenerateIntLongCondition(IfCondition cond,
