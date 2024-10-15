@@ -552,7 +552,7 @@ struct XGcOption {
   gc::CollectorType collector_type_ = gc::kCollectorTypeDefault;
   bool verify_pre_gc_heap_ = false;
   bool verify_pre_sweeping_heap_ = kIsDebugBuild;
-  bool generational_cc = kEnableGenerationalCCByDefault;
+  bool generational_gc = kEnableGenerationalGCByDefault;
   bool verify_post_gc_heap_ = kIsDebugBuild;
   bool verify_pre_gc_rosalloc_ = kIsDebugBuild;
   bool verify_pre_sweeping_rosalloc_ = false;
@@ -587,14 +587,14 @@ struct CmdlineType<XGcOption> : CmdlineTypeParser<XGcOption> {
         // option is ever deprecated, it should still be accepted (but ignored)
         // for compatibility reasons (this should not prevent the runtime from
         // starting up).
-        xgc.generational_cc = true;
+        xgc.generational_gc = true;
       } else if (gc_option == "nogenerational_cc") {
         // Note: Option "-Xgc:nogenerational_cc" can be passed directly by
         // app_process/zygote (see `android::AndroidRuntime::startVm`). If this
         // option is ever deprecated, it should still be accepted (but ignored)
         // for compatibility reasons (this should not prevent the runtime from
         // starting up).
-        xgc.generational_cc = false;
+        xgc.generational_gc = false;
       } else if (gc_option == "postverify") {
         xgc.verify_post_gc_heap_ = true;
       } else if (gc_option == "nopostverify") {
