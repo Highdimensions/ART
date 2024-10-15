@@ -1743,7 +1743,9 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   XGcOption xgc_option = runtime_options.GetOrDefault(Opt::GcOption);
 
   // Generational CC collection is currently only compatible with Baker read barriers.
-  bool use_generational_cc = kUseBakerReadBarrier && xgc_option.generational_cc;
+  // TODO: add logic to check phenotype flag if we want to use generational CMC or not.
+  bool use_generational_gc =
+      (kUseBakerReadBarrier || gUseUserfaultfd) && xgc_option.generational_gc;
 
   // Cache the apex versions.
   InitializeApexVersions();
@@ -1792,7 +1794,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
                        xgc_option.gcstress_,
                        xgc_option.measure_,
                        runtime_options.GetOrDefault(Opt::EnableHSpaceCompactForOOM),
-                       use_generational_cc,
+                       use_generational_gc,
                        runtime_options.GetOrDefault(Opt::HSpaceCompactForOOMMinIntervalsMs),
                        runtime_options.Exists(Opt::DumpRegionInfoBeforeGC),
                        runtime_options.Exists(Opt::DumpRegionInfoAfterGC));
