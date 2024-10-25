@@ -95,6 +95,9 @@ struct EXPORT WellKnownClasses {
   static jclass dalvik_annotation_optimization_FastNative;
   static jclass dalvik_annotation_optimization_NeverCompile;
   static jclass dalvik_annotation_optimization_NeverInline;
+  static jclass dalvik_system_VirtualThreadContext;
+  static jclass dalvik_system_VirtualThreadParkedStates;
+  static jclass dalvik_system_VirtualThreadFrame;
   static jclass java_lang_annotation_Annotation__array;
   static jclass java_lang_ClassValue;
   static jclass java_lang_Record;
@@ -129,6 +132,7 @@ struct EXPORT WellKnownClasses {
   static ArtMethod* java_lang_Long_valueOf;
   static ArtMethod* java_lang_NoClassDefFoundError_init;  // Only for the declaring class.
   static ArtMethod* java_lang_OutOfMemoryError_init;  // Only for the declaring class.
+  static ArtMethod* java_lang_Rnnnable_run;
   static ArtMethod* java_lang_Runtime_nativeLoad;
   static ArtMethod* java_lang_RuntimeException_init;  // Only for the declaring class.
   static ArtMethod* java_lang_Short_valueOf;
@@ -136,6 +140,7 @@ struct EXPORT WellKnownClasses {
   static ArtMethod* java_lang_String_charAt;
   static ArtMethod* java_lang_Thread_dispatchUncaughtException;
   static ArtMethod* java_lang_Thread_init;
+  static ArtMethod* java_lang_Thread_parkVirtualInternal;
   static ArtMethod* java_lang_Thread_run;
   static ArtMethod* java_lang_ThreadGroup_add;
   static ArtMethod* java_lang_ThreadGroup_threadTerminated;
@@ -171,6 +176,11 @@ struct EXPORT WellKnownClasses {
   static ArtField* dalvik_system_DexPathList_dexElements;
   static ArtField* dalvik_system_DexPathList__Element_dexFile;
   static ArtField* dalvik_system_VMRuntime_nonSdkApiUsageConsumer;
+  static ArtField* dalvik_system_VirtualThreadContext_parkedStates;
+  static ArtField* dalvik_system_VirtualThreadParkedStates_frames;
+  static ArtField* dalvik_system_VirtualThreadFrame_frame;
+  static ArtField* dalvik_system_VirtualThreadFrame_refs;
+  static ArtField* dalvik_system_VirtualThreadFrame_declaringClass;
   static ArtField* java_io_FileDescriptor_descriptor;
   static ArtField* java_lang_ref_Reference_disableIntrinsic;
   static ArtField* java_lang_ref_Reference_slowPathEnabled;
@@ -185,6 +195,7 @@ struct EXPORT WellKnownClasses {
   static ArtField* java_lang_Thread_priority;
   static ArtField* java_lang_Thread_nativePeer;
   static ArtField* java_lang_Thread_systemDaemon;
+  static ArtField* java_lang_Thread_target;
   static ArtField* java_lang_Thread_unparkedBeforeStart;
   static ArtField* java_lang_ThreadGroup_groups;
   static ArtField* java_lang_ThreadGroup_ngroups;
