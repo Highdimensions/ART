@@ -190,6 +190,26 @@ inline void PrimitiveArray<T>::Memmove(int32_t dst_pos,
   }
 }
 
+template <class T>
+inline static void forwardCopy(void* dst_raw, const void* src_raw, int32_t count) {
+  if (sizeof(T) == sizeof(uint8_t)) {
+    memcpy(dst_raw, src_raw, count);
+  } else if (sizeof(T) == sizeof(uint16_t)) {
+    uint16_t* d = reinterpret_cast<uint16_t*>(dst_raw);
+    const uint16_t* s = reinterpret_cast<const uint16_t*>(src_raw);
+    ArrayForwardCopy<uint16_t>(d, s, count);
+  } else if (sizeof(T) == sizeof(uint32_t)) {
+    uint32_t* d = reinterpret_cast<uint32_t*>(dst_raw);
+    const uint32_t* s = reinterpret_cast<const uint32_t*>(src_raw);
+    ArrayForwardCopy<uint32_t>(d, s, count);
+  } else {
+    DCHECK_EQ(sizeof(T), sizeof(uint64_t));
+    uint64_t* d = reinterpret_cast<uint64_t*>(dst_raw);
+    const uint64_t* s = reinterpret_cast<const uint64_t*>(src_raw);
+    ArrayForwardCopy<uint64_t>(d, s, count);
+  }
+}
+
 template<class T>
 inline void PrimitiveArray<T>::Memcpy(int32_t dst_pos,
                                       ObjPtr<PrimitiveArray<T>> src,
@@ -211,22 +231,48 @@ inline void PrimitiveArray<T>::Memcpy(int32_t dst_pos,
   // in our implementation, because they may copy byte-by-byte.
   void* dst_raw = GetRawData(sizeof(T), dst_pos);
   const void* src_raw = src->GetRawData(sizeof(T), src_pos);
-  if (sizeof(T) == sizeof(uint8_t)) {
-    memcpy(dst_raw, src_raw, count);
-  } else if (sizeof(T) == sizeof(uint16_t)) {
-    uint16_t* d = reinterpret_cast<uint16_t*>(dst_raw);
-    const uint16_t* s = reinterpret_cast<const uint16_t*>(src_raw);
-    ArrayForwardCopy<uint16_t>(d, s, count);
-  } else if (sizeof(T) == sizeof(uint32_t)) {
-    uint32_t* d = reinterpret_cast<uint32_t*>(dst_raw);
-    const uint32_t* s = reinterpret_cast<const uint32_t*>(src_raw);
-    ArrayForwardCopy<uint32_t>(d, s, count);
-  } else {
-    DCHECK_EQ(sizeof(T), sizeof(uint64_t));
-    uint64_t* d = reinterpret_cast<uint64_t*>(dst_raw);
-    const uint64_t* s = reinterpret_cast<const uint64_t*>(src_raw);
-    ArrayForwardCopy<uint64_t>(d, s, count);
+  forwardCopy<T>(dst_raw, src_raw, count);
+}
+
+template <class T>
+inline void PrimitiveArray<T>::Memcpy(int32_t dst_pos,
+                                      const T* src,
+                                      int32_t src_pos,
+                                      int32_t count) {
+  if (UNLIKELY(count == 0)) {
+    return;
   }
+  DCHECK_GE(dst_pos, 0);
+  DCHECK_GE(src_pos, 0);
+  DCHECK_GT(count, 0);
+  DCHECK(src != nullptr);
+  DCHECK_LT(dst_pos, GetLength());
+  DCHECK_LE(dst_pos, GetLength() - count);
+
+  // Note for non-byte copies we can't rely on standard libc functions like memcpy(3) and memmove(3)
+  // in our implementation, because they may copy byte-by-byte.
+  void* dst_raw = GetRawData(sizeof(T), dst_pos);
+  const void* src_raw = src + src_pos;
+  forwardCopy<T>(dst_raw, src_raw, count);
+}
+
+template <class T>
+inline void PrimitiveArray<T>::MemcpyTo(int32_t src_pos, T* dst, int32_t dst_pos, int32_t count) {
+  if (UNLIKELY(count == 0)) {
+    return;
+  }
+  DCHECK_GE(dst_pos, 0);
+  DCHECK_GE(src_pos, 0);
+  DCHECK_GT(count, 0);
+  DCHECK(dst != nullptr);
+  DCHECK_LT(src_pos, GetLength());
+  DCHECK_LE(src_pos, GetLength() - count);
+
+  // Note for non-byte copies we can't rely on standard libc functions like memcpy(3) and memmove(3)
+  // in our implementation, because they may copy byte-by-byte.
+  void* dst_raw = dst + dst_pos;
+  const void* src_raw = GetRawData(sizeof(T), src_pos);
+  forwardCopy<T>(dst_raw, src_raw, count);
 }
 
 template<typename T, PointerSize kPointerSize, VerifyObjectFlags kVerifyFlags>
