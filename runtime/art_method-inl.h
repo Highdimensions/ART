@@ -334,7 +334,7 @@ inline bool ArtMethod::CheckIncompatibleClassChange(InvokeType type) {
       return IsConstructor() || IsStatic();
     case kInterface: {
       ObjPtr<mirror::Class> methods_class = GetDeclaringClass();
-      return IsDirect() || !(methods_class->IsInterface() || methods_class->IsObjectClass());
+      return IsDirect() || !(methods_class->IsInterface() /*|| methods_class->IsObjectClass()*/);
     }
     case kPolymorphic:
       return !IsSignaturePolymorphic();
