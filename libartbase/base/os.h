@@ -19,6 +19,9 @@
 
 #include <stdint.h>
 
+#include <optional>
+#include <utility>
+
 namespace unix_file {
 class FdFile;
 }  // namespace unix_file
@@ -31,6 +34,9 @@ using File = ::unix_file::FdFile;
 
 class OS {
  public:
+  // Returns the linux kernel version as (major,minor) tuple or std::nullopt on error.
+  static std::optional<std::pair<int, int>> GetKernelVersion();
+
   // Open an existing file with read only access.
   static File* OpenFileForReading(const char* name);
 

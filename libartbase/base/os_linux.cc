@@ -14,20 +14,32 @@
  * limitations under the License.
  */
 
-#include "os.h"
-
+#include <android-base/logging.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/utsname.h>
 
 #include <cstddef>
 #include <memory>
 
-#include <android-base/logging.h>
-
+#include "os.h"
 #include "unix_file/fd_file.h"
 
 namespace art {
+
+std::optional<std::pair<int, int>> OS::GetKernelVersion() {
+  static auto version = []() -> std::optional<std::pair<int, int>> {
+    struct utsname uts;
+    int major, minor;
+    if (uname(&uts) != 0 || strcmp(uts.sysname, "Linux") != 0 ||
+        sscanf(uts.release, "%d.%d", &major, &minor) != 2) {
+      return std::nullopt;
+    }
+    return std::make_pair(major, minor);
+  }();
+  return version;
+}
 
 File* OS::OpenFileForReading(const char* name) {
   return OpenFileWithFlags(name, O_RDONLY);
