@@ -74,7 +74,12 @@ import java.util.Objects;
  */
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 public class PreRebootDriver {
+    private static final long UPDATE_ENGINE_TIMEOUT_MS = 5000;
+
     @NonNull private final Injector mInjector;
+
+    @NonNull private final mIsUpdateEngineReadyLock = new Object();
+    @GuardedBy("mIsUpdateEngineReadyLock") private boolean mIsUpdateEngineReady = false;
 
     public PreRebootDriver(@NonNull Context context, @NonNull ArtManagerLocal artManagerLocal) {
         this(new Injector(context, artManagerLocal));
@@ -94,7 +99,7 @@ public class PreRebootDriver {
      * @param mapSnapshotsForOta Whether to map/unmap snapshots. Only applicable to an OTA update.
      */
     public boolean run(@Nullable String otaSlot, boolean mapSnapshotsForOta,
-            @NonNull CancellationSignal cancellationSignal) {
+            boolean needUpdateEngineForOta, @NonNull CancellationSignal cancellationSignal) {
         var statsReporter = new PreRebootStatsReporter();
         boolean success = false;
         boolean systemRequirementCheckFailed = false;
@@ -104,7 +109,7 @@ public class PreRebootDriver {
                 BatchDexoptParams params = mInjector.getArtManagerLocal().getBatchDexoptParams(
                         snapshot, ReasonMapping.REASON_PRE_REBOOT_DEXOPT, cancellationSignal);
                 if (!cancellationSignal.isCanceled()) {
-                    setUp(otaSlot, mapSnapshotsForOta);
+                    setUp(otaSlot, mapSnapshotsForOta, needUpdateEngineForOta);
                     runFromChroot(cancellationSignal, snapshot, params);
                 }
             }
@@ -185,13 +190,35 @@ public class PreRebootDriver {
         }
     }
 
-    private void setUp(@Nullable String otaSlot, boolean mapSnapshotsForOta)
-            throws RemoteException, SystemRequirementException {
+    private void setUp(
+            @Nullable String otaSlot, boolean mapSnapshotsForOta, boolean needUpdateEngineForOta)
+            throws RemoteException, SystemRequirementException, UpdateEngineException {
+        if (needUpdateEngineForOta) {
+            waitForUpdateEngine();
+        }
         mInjector.getDexoptChrootSetup().setUp(otaSlot, mapSnapshotsForOta);
         if (!mInjector.getArtd().checkPreRebootSystemRequirements(CHROOT_DIR)) {
             throw new SystemRequirementException("See logs for details");
         }
         mInjector.getDexoptChrootSetup().init();
+    }
+
+    private void waitForUpdateEngine() throws UpdateEngineException {
+        // TODO: Call update engine.
+        long startTime = System.getCurrentTimeMillis();
+        synchronized (mIsUpdateEngineReadyLock) {
+            if (mIsUpdateEngineReady) {
+                return;
+            }
+            for (long remainingTime = UPDATE_ENGINE_TIMEOUT_MS; remainingTime > 0;
+                    remainingTime = UPDATE_ENGINE_TIMEOUT_MS
+                            - (System.getCurrentTimeMillis() - startTime)) {
+                mIsUpdateEngineReadyLock.wait(remainingTime);
+                if (mIsUpdateEngineReady) {
+                    return;
+                }
+            }
+        }
     }
 
     private void tearDown() throws RemoteException, IOException {
@@ -254,6 +281,12 @@ public class PreRebootDriver {
                 .invoke(preRebootManager, ArtModuleServiceInitializer.getArtModuleServiceManager(),
                         mInjector.getContext(), cancellationSignal, snapshot,
                         params.toProto().toByteArray());
+    }
+
+    public static class UpdateEngineException extends Exception {
+        public UpdateEngineException(@NonNull String message) {
+            super(message);
+        }
     }
 
     /**

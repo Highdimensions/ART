@@ -87,6 +87,8 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
     /** Whether to map/unmap snapshots. Only applicable to an OTA update. */
     @GuardedBy("this") private boolean mMapSnapshotsForOta = false;
 
+    @GuardedBy("this") private boolean mNeedUpdateEngineForOta = false;
+
     /**
      * Offloads `onStartJob` and `onStopJob` calls from the main thread while keeping the execution
      * order as the main thread does.
@@ -183,18 +185,21 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
      * @param otaSlot The slot that contains the OTA update, "_a" or "_b", or null for a Mainline
      *         update.
      */
-    public synchronized void onUpdateReady(@Nullable String otaSlot) {
+    public synchronized void onUpdateReady(
+            @Nullable String otaSlot, boolean needUpdateEngineForOta) {
         // `onUpdateReadyImpl` can take time, especially on `resetLocked` when there are staged
         // files from a previous run to be cleaned up, so we put it on a separate thread.
-        mSerializedExecutor.execute(() -> onUpdateReadyImpl(otaSlot));
+        mSerializedExecutor.execute(() -> onUpdateReadyImpl(otaSlot, needUpdateEngineForOta));
     }
 
     /** For internal and testing use only. */
-    public synchronized @ScheduleStatus int onUpdateReadyImpl(@Nullable String otaSlot) {
+    public synchronized @ScheduleStatus int onUpdateReadyImpl(
+            @Nullable String otaSlot, boolean needUpdateEngineForOta) {
         cancelAnyLocked();
         resetLocked();
         updateOtaSlotLocked(otaSlot);
-        mMapSnapshotsForOta = true;
+        mMapSnapshotsForOta = !needUpdateEngineForOta;
+        mNeedUpdateEngineForOta = needUpdateEngineForOta;
         return scheduleLocked();
     }
 
@@ -202,16 +207,15 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
      * Same as {@link #onUpdateReady}, but starts the job immediately, instead of going through the
      * job scheduler.
      *
-     * @param mapSnapshotsForOta whether to map/unmap snapshots. Only applicable to an OTA update.
      * @return The future of the job, or null if Pre-reboot Dexopt is not enabled.
      */
     @Nullable
-    public synchronized CompletableFuture<Void> onUpdateReadyStartNow(
-            @Nullable String otaSlot, boolean mapSnapshotsForOta) {
+    public synchronized CompletableFuture<Void> onUpdateReadyStartNow(@Nullable String otaSlot) {
         cancelAnyLocked();
         resetLocked();
         updateOtaSlotLocked(otaSlot);
-        mMapSnapshotsForOta = mapSnapshotsForOta;
+        mMapSnapshotsForOta = false;
+        mNeedUpdateEngineForOta = false;
         if (!isEnabled()) {
             mInjector.getStatsReporter().recordJobNotScheduled(
                     Status.STATUS_NOT_SCHEDULED_DISABLED, isOtaUpdate());
@@ -354,11 +358,13 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
 
         String otaSlot = mOtaSlot;
         boolean mapSnapshotsForOta = mMapSnapshotsForOta;
+        boolean needUpdateEngineForOta = mNeedUpdateEngineForOta;
         var cancellationSignal = mCancellationSignal = new CancellationSignal();
         mRunningJob = new CompletableFuture().runAsync(() -> {
             markHasStarted(true);
             try {
-                mInjector.getPreRebootDriver().run(otaSlot, mapSnapshotsForOta, cancellationSignal);
+                mInjector.getPreRebootDriver().run(
+                        otaSlot, mapSnapshotsForOta, needUpdateEngineForOta, cancellationSignal);
             } catch (RuntimeException e) {
                 AsLog.e("Fatal error", e);
             } finally {
