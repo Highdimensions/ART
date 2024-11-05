@@ -36,6 +36,9 @@ import android.app.job.JobScheduler;
 import android.os.CancellationSignal;
 import android.os.Process;
 import android.os.SystemProperties;
+import android.platform.test.annotations.DisableFlags;
+import android.platform.test.annotations.EnableFlags;
+import android.platform.test.flag.junit.SetFlagsRule;
 
 import androidx.test.filters.SmallTest;
 
@@ -65,6 +68,7 @@ public class ArtShellCommandTest {
     @Rule
     public StaticMockitoRule mockitoRule = new StaticMockitoRule(
             SystemProperties.class, BackgroundDexoptJobService.class, ArtJni.class);
+    @Rule public final SetFlagsRule mSetFlagsRule = new SetFlagsRule();
 
     @Mock private BackgroundDexoptJobService mJobService;
     @Mock private PreRebootDriver mPreRebootDriver;
@@ -141,6 +145,7 @@ public class ArtShellCommandTest {
     }
 
     @Test
+    @DisableFlags({android.os.Flags.FLAG_UPDATE_ENGINE_API})
     public void testOnOtaStagedSync() throws Exception {
         when(mInjector.getCallingUid()).thenReturn(Process.ROOT_UID);
 
@@ -157,6 +162,7 @@ public class ArtShellCommandTest {
     }
 
     @Test
+    @DisableFlags({android.os.Flags.FLAG_UPDATE_ENGINE_API})
     public void testOnOtaStagedSyncFatalError() throws Exception {
         when(mInjector.getCallingUid()).thenReturn(Process.ROOT_UID);
 
@@ -173,6 +179,7 @@ public class ArtShellCommandTest {
     }
 
     @Test
+    @DisableFlags({android.os.Flags.FLAG_UPDATE_ENGINE_API})
     public void testOnOtaStagedSyncCancelledByCommand() throws Exception {
         when(mInjector.getCallingUid()).thenReturn(Process.ROOT_UID);
 
@@ -205,6 +212,7 @@ public class ArtShellCommandTest {
     }
 
     @Test
+    @DisableFlags({android.os.Flags.FLAG_UPDATE_ENGINE_API})
     public void testOnOtaStagedSyncCancelledByBrokenPipe() throws Exception {
         when(mInjector.getCallingUid()).thenReturn(Process.ROOT_UID);
 
@@ -231,6 +239,7 @@ public class ArtShellCommandTest {
     }
 
     @Test
+    @DisableFlags({android.os.Flags.FLAG_UPDATE_ENGINE_API})
     public void testOnOtaStagedAsyncLegacy() throws Exception {
         when(mInjector.getCallingUid()).thenReturn(Process.ROOT_UID);
 
@@ -283,6 +292,7 @@ public class ArtShellCommandTest {
     }
 
     @Test
+    @DisableFlags({android.os.Flags.FLAG_UPDATE_ENGINE_API})
     public void testPrDexoptJobRunOta() throws Exception {
         when(mInjector.getCallingUid()).thenReturn(Process.ROOT_UID);
 
@@ -332,6 +342,7 @@ public class ArtShellCommandTest {
     }
 
     @Test
+    @DisableFlags({android.os.Flags.FLAG_UPDATE_ENGINE_API})
     public void testPrDexoptJobScheduleOta() throws Exception {
         when(mInjector.getCallingUid()).thenReturn(Process.ROOT_UID);
 

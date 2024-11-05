@@ -690,6 +690,7 @@ public final class ArtShellCommand extends BasicShellCommandHandler {
             throw new SecurityException("Only root can call 'on-ota-staged'");
         }
 
+        String mode = null;
         String otaSlot = null;
 
         String opt;
@@ -698,23 +699,29 @@ public final class ArtShellCommand extends BasicShellCommandHandler {
                 case "--slot":
                     otaSlot = getNextArgRequired();
                     break;
+                case "--start":
+                    mode = opt;
+                    break;
                 default:
                     pw.println("Error: Unknown option: " + opt);
                     return 1;
             }
         }
 
-        if (otaSlot == null) {
-            pw.println("Error: '--slot' must be specified");
-            return 1;
-        }
-
-        if (mInjector.getArtManagerLocal().getPreRebootDexoptJob().isAsyncForOta()) {
-            return handleSchedulePrDexoptJob(pw, otaSlot);
+        if ("--start".equals(mode)) {
+            return handleOnOtaStagedStart(pw);
         } else {
-            // Don't map snapshots when running synchronously. `update_engine` maps snapshots
-            // for us.
-            return handleRunPrDexoptJob(pw, otaSlot, false /* mapSnapshotsForOta */);
+            if (otaSlot == null) {
+                pw.println("Error: '--slot' must be specified");
+                return 1;
+            }
+
+            if (mInjector.getArtManagerLocal().getPreRebootDexoptJob().isAsyncForOta()) {
+                return handleSchedulePrDexoptJob(pw, otaSlot);
+            } else {
+                // In the synchronous case, `update_engine` has already mapped snapshots for us.
+                return handleRunPrDexoptJob(pw, otaSlot, true /* isUpdateEngineReady */);
+            }
         }
     }
 
@@ -766,7 +773,7 @@ public final class ArtShellCommand extends BasicShellCommandHandler {
             case "--test":
                 return handleTestPrDexoptJob(pw);
             case "--run":
-                return handleRunPrDexoptJob(pw, otaSlot, true /* mapSnapshotsForOta */);
+                return handleRunPrDexoptJob(pw, otaSlot, false /* isUpdateEngineReady */);
             case "--schedule":
                 return handleSchedulePrDexoptJob(pw, otaSlot);
             case "--cancel":
@@ -792,14 +799,33 @@ public final class ArtShellCommand extends BasicShellCommandHandler {
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     private int handleRunPrDexoptJob(
-            @NonNull PrintWriter pw, @Nullable String otaSlot, boolean mapSnapshotsForOta) {
+            @NonNull PrintWriter pw, @Nullable String otaSlot, boolean isUpdateEngineReady) {
         PreRebootDexoptJob job = mInjector.getArtManagerLocal().getPreRebootDexoptJob();
 
-        CompletableFuture<Void> future = job.onUpdateReadyStartNow(otaSlot, mapSnapshotsForOta);
+        CompletableFuture<Void> future = job.onUpdateReadyStartNow(otaSlot, isUpdateEngineReady);
         if (future == null) {
             pw.println("Job disabled by system property");
             return 1;
         }
+
+        return handlePrDexoptJobRunning(pw, future);
+    }
+
+    private int handleOnOtaStagedStart(@NonNull PrintWriter pw) {
+        PreRebootDexoptJob job = mInjector.getArtManagerLocal().getPreRebootDexoptJob();
+
+        CompletableFuture<Void> future = job.setUpdateEngineReady();
+        if (future == null) {
+            pw.println("No waiting job found");
+            return 1;
+        }
+
+        return handlePrDexoptJobRunning(pw, future);
+    }
+
+    private int handlePrDexoptJobRunning(
+            @NonNull PrintWriter pw, @NonNull CompletableFuture<Void> future) {
+        PreRebootDexoptJob job = mInjector.getArtManagerLocal().getPreRebootDexoptJob();
 
         // Put the read in a separate thread because there isn't an easy way in Java to wait for
         // both the `Future` and the read.
