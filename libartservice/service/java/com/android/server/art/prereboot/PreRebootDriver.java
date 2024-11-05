@@ -93,13 +93,10 @@ public class PreRebootDriver {
      *         update.
      * @param mapSnapshotsForOta Whether to map/unmap snapshots. Only applicable to an OTA update.
      */
-    public boolean run(@Nullable String otaSlot, boolean mapSnapshotsForOta,
+    public @NonNull PreRebootResult run(@Nullable String otaSlot, boolean mapSnapshotsForOta,
             @NonNull CancellationSignal cancellationSignal) {
-        var statsReporter = new PreRebootStatsReporter();
-        boolean success = false;
         boolean systemRequirementCheckFailed = false;
         try {
-            statsReporter.recordJobStarted();
             try (var snapshot = mInjector.getPackageManagerLocal().withFilteredSnapshot()) {
                 BatchDexoptParams params = mInjector.getArtManagerLocal().getBatchDexoptParams(
                         snapshot, ReasonMapping.REASON_PRE_REBOOT_DEXOPT, cancellationSignal);
@@ -108,8 +105,7 @@ public class PreRebootDriver {
                     runFromChroot(cancellationSignal, snapshot, params);
                 }
             }
-            success = true;
-            return true;
+            return new PreRebootResult(true /* success */);
         } catch (RemoteException e) {
             Utils.logArtdException(e);
         } catch (ServiceSpecificException e) {
@@ -139,11 +135,9 @@ public class PreRebootDriver {
                 Utils.logArtdException(e);
             } catch (ServiceSpecificException | IOException e) {
                 AsLog.e("Failed to tear down chroot", e);
-            } finally {
-                statsReporter.recordJobEnded(success, systemRequirementCheckFailed);
             }
         }
-        return false;
+        return new PreRebootResult(false /* success */, systemRequirementCheckFailed);
     }
 
     public void test() {
@@ -254,6 +248,12 @@ public class PreRebootDriver {
                 .invoke(preRebootManager, ArtModuleServiceInitializer.getArtModuleServiceManager(),
                         mInjector.getContext(), cancellationSignal, snapshot,
                         params.toProto().toByteArray());
+    }
+
+    public record PreRebootResult(boolean success, boolean systemRequirementCheckFailed) {
+        public PreRebootResult(boolean success) {
+            this(success, false /* systemRequirementCheckFailed */);
+        }
     }
 
     /**
