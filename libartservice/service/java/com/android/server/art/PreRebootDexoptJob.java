@@ -71,12 +71,16 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
     /** An arbitrary number. Must be unique among all jobs owned by the system uid. */
     public static final int JOB_ID = 27873781;
 
+    private static final long UPDATE_ENGINE_TIMEOUT_MS = 5000;
+
     @NonNull private final Injector mInjector;
 
-    // Job state variables. The monitor of `this` is notified when `mRunningJob` is changed.
-    // `mRunningJob` and `mCancellationSignal` have the same nullness.
+    // Job state variables. The monitor of `this` is notified when `mRunningJob` or
+    // `mIsUpdateEngineReady` is changed. `mRunningJob` and `mCancellationSignal` have the same
+    // nullness.
     @GuardedBy("this") @Nullable private CompletableFuture<Void> mRunningJob = null;
     @GuardedBy("this") @Nullable private CancellationSignal mCancellationSignal = null;
+    @GuardedBy("this") private boolean mIsUpdateEngineReady = false;
 
     /** Whether `mRunningJob` is running from the job scheduler's perspective. */
     @GuardedBy("this") private boolean mIsRunningJobKnownByJobScheduler = false;
@@ -84,7 +88,10 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
     /** The slot that contains the OTA update, "_a" or "_b", or null for a Mainline update. */
     @GuardedBy("this") @Nullable private String mOtaSlot = null;
 
-    /** Whether to map/unmap snapshots. Only applicable to an OTA update. */
+    /**
+     * Whether to map/unmap snapshots ourselves rather than using update_engine. Only applicable to
+     * an OTA update. For legacy use only.
+     */
     @GuardedBy("this") private boolean mMapSnapshotsForOta = false;
 
     /**
@@ -158,9 +165,10 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
             // return value of `onStopJob` will be respected, and this call will be ignored.
             jobService.jobFinished(params, false /* wantsReschedule */);
         };
-        // No need to handle exceptions thrown by the future because exceptions are handled inside
-        // the future itself.
-        startLocked(onJobFinishedLocked);
+        startLocked(onJobFinishedLocked, false /* isUpdateEngineReady */).exceptionally(t -> {
+            AsLog.e("Fatal error", t);
+            return null;
+        });
     }
 
     @Override
@@ -194,7 +202,7 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
         cancelAnyLocked();
         resetLocked();
         updateOtaSlotLocked(otaSlot);
-        mMapSnapshotsForOta = true;
+        mMapSnapshotsForOta = !android.os.Flags.updateEngineApi();
         return scheduleLocked();
     }
 
@@ -218,7 +226,10 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
             return null;
         }
         mInjector.getStatsReporter().recordJobScheduled(false /* isAsync */, isOtaUpdate());
-        return startLocked(null /* onJobFinishedLocked */);
+        // If the caller wants to start the job immediately without mapping snapshots ourselves,
+        // then update_engine must be ready.
+        return startLocked(
+                null /* onJobFinishedLocked */, !mapSnapshotsForOta /* isUpdateEngineReady */);
     }
 
     public synchronized void test() {
@@ -349,18 +360,34 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
      */
     @GuardedBy("this")
     @NonNull
-    private CompletableFuture<Void> startLocked(@Nullable Runnable onJobFinishedLocked) {
+    private CompletableFuture<Void> startLocked(
+            @Nullable Runnable onJobFinishedLocked, boolean isUpdateEngineReady) {
         Utils.check(mRunningJob == null);
 
         String otaSlot = mOtaSlot;
         boolean mapSnapshotsForOta = mMapSnapshotsForOta;
         var cancellationSignal = mCancellationSignal = new CancellationSignal();
+        mIsUpdateEngineReady = isUpdateEngineReady;
         mRunningJob = new CompletableFuture().runAsync(() -> {
             markHasStarted(true);
+            PreRebootStatsReporter statsReporter = mInjector.getStatsReporter();
             try {
-                mInjector.getPreRebootDriver().run(otaSlot, mapSnapshotsForOta, cancellationSignal);
+                statsReporter.recordJobStarted();
+                if (otaSlot != null && !isUpdateEngineReady && !mapSnapshotsForOta) {
+                    waitForUpdateEngine();
+                }
+                var result = mInjector.getPreRebootDriver().run(
+                        otaSlot, mapSnapshotsForOta, cancellationSignal);
+                statsReporter.recordJobEnded(
+                        result.success(), result.systemRequirementCheckFailed());
+            } catch (UpdateEngineException e) {
+                AsLog.e("update_engine error", e);
+                statsReporter.recordJobEnded(
+                        false /* success */, false /* systemRequirementCheckFailed */);
             } catch (RuntimeException e) {
                 AsLog.e("Fatal error", e);
+                statsReporter.recordJobEnded(
+                        false /* success */, false /* systemRequirementCheckFailed */);
             } finally {
                 synchronized (this) {
                     if (onJobFinishedLocked != null) {
@@ -372,12 +399,46 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
                     }
                     mRunningJob = null;
                     mCancellationSignal = null;
+                    mIsUpdateEngineReady = false;
                     this.notifyAll();
                 }
             }
         }, mExecutor);
         this.notifyAll();
         return mRunningJob;
+    }
+
+    private void waitForUpdateEngine() throws UpdateEngineException {
+        if (!android.os.Flags.updateEngineApi()) {
+            // Should never happen.
+            throw new UnsupportedOperationException();
+        }
+        AsLog.i("Waiting for update_engine to map snapshots...");
+        try {
+            new android.os.UpdateEngine().triggerPostinstall("system");
+        } catch (ServiceSpecificException e) {
+            throw new UpdateEngineException("Failed to trigger postinstall: " + e.getMessage());
+        }
+        long startTime = System.currentTimeMillis();
+        synchronized (this) {
+            if (mIsUpdateEngineReady || mRunningJob == null) {
+                return;
+            }
+            long remainingTime;
+            while ((remainingTime = UPDATE_ENGINE_TIMEOUT_MS
+                                   - (System.currentTimeMillis() - startTime))
+                    > 0) {
+                try {
+                    this.wait(remainingTime);
+                } catch (InterruptedException e) {
+                    AsLog.wtf("Interrupted", e);
+                }
+                if (mIsUpdateEngineReady || mRunningJob == null) {
+                    return;
+                }
+            }
+        }
+        throw new UpdateEngineException("Timed out while waiting for update_engine");
     }
 
     /**
@@ -471,6 +532,10 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
     }
 
     public boolean isAsyncForOta() {
+        if (android.os.Flags.updateEngineApi()) {
+            return true;
+        }
+        // Legacy flag.
         return SystemProperties.getBoolean("dalvik.vm.pr_dexopt_async_for_ota", false /* def */);
     }
 
@@ -504,6 +569,26 @@ public class PreRebootDexoptJob implements ArtServiceJobInterface {
     @GuardedBy("this")
     private boolean isOtaUpdate() {
         return mOtaSlot != null;
+    }
+
+    @Nullable
+    public CompletableFuture<Void> setUpdateEngineReady() {
+        synchronized (this) {
+            if (mRunningJob == null) {
+                AsLog.e("No waiting job found");
+                return null;
+            }
+            AsLog.i("update_engine finished mapping snapshots");
+            mIsUpdateEngineReady = true;
+            this.notifyAll();
+            return mRunningJob;
+        }
+    }
+
+    private static class UpdateEngineException extends Exception {
+        public UpdateEngineException(@NonNull String message) {
+            super(message);
+        }
     }
 
     /**

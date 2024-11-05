@@ -674,6 +674,7 @@ public final class ArtShellCommand extends BasicShellCommandHandler {
             throw new SecurityException("Only root can call 'on-ota-staged'");
         }
 
+        String mode = null;
         String otaSlot = null;
 
         String opt;
@@ -682,23 +683,30 @@ public final class ArtShellCommand extends BasicShellCommandHandler {
                 case "--slot":
                     otaSlot = getNextArgRequired();
                     break;
+                case "--start":
+                    mode = opt;
+                    break;
                 default:
                     pw.println("Error: Unknown option: " + opt);
                     return 1;
             }
         }
 
-        if (otaSlot == null) {
-            pw.println("Error: '--slot' must be specified");
-            return 1;
-        }
-
-        if (mArtManagerLocal.getPreRebootDexoptJob().isAsyncForOta()) {
-            return handleSchedulePrDexoptJob(pw, otaSlot);
+        if ("--start".equals(mode)) {
+            return handleOnOtaStagedStart(pw);
         } else {
-            // Don't map snapshots when running synchronously. `update_engine` maps snapshots for
-            // us.
-            return handleRunPrDexoptJob(pw, otaSlot, false /* mapSnapshotsForOta */);
+            if (otaSlot == null) {
+                pw.println("Error: '--slot' must be specified");
+                return 1;
+            }
+
+            if (mArtManagerLocal.getPreRebootDexoptJob().isAsyncForOta()) {
+                return handleSchedulePrDexoptJob(pw, otaSlot);
+            } else {
+                // Don't map snapshots when running synchronously. `update_engine` maps snapshots
+                // for us.
+                return handleRunPrDexoptJob(pw, otaSlot, false /* mapSnapshotsForOta */);
+            }
         }
     }
 
@@ -784,6 +792,25 @@ public final class ArtShellCommand extends BasicShellCommandHandler {
             pw.println("Job disabled by system property");
             return 1;
         }
+
+        return handlePrDexoptJobRunning(pw, future);
+    }
+
+    private int handleOnOtaStagedStart(@NonNull PrintWriter pw) {
+        PreRebootDexoptJob job = mArtManagerLocal.getPreRebootDexoptJob();
+
+        CompletableFuture<Void> future = job.setUpdateEngineReady();
+        if (future == null) {
+            pw.println("No waiting job found");
+            return 1;
+        }
+
+        return handlePrDexoptJobRunning(pw, future);
+    }
+
+    private int handlePrDexoptJobRunning(
+            @NonNull PrintWriter pw, @NonNull CompletableFuture<Void> future) {
+        PreRebootDexoptJob job = mArtManagerLocal.getPreRebootDexoptJob();
 
         // Put the read in a separate thread because there isn't an easy way in Java to wait for
         // both the `Future` and the read.
