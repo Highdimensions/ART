@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+// This is essentially, but not quite, a copy of system/libartpalette/palette_fake.cc.
+// THEY SHOULD BE UPDATED AT THE SAME TIME.
+// TODO(b/265435354): Reconstruct if / why this is necessary.
+
 #include <android-base/logging.h>
 #include <stdbool.h>
 
@@ -50,6 +54,24 @@ palette_status_t PaletteSchedGetPriority(int32_t tid,
   return PALETTE_STATUS_OK;
 }
 
+// Introduced in version 4 API, corresponding to SDK level 36.
+palette_status_t PaletteGetPriorityMapping(int* result,
+                                           int32_t managed_min_priority,
+                                           size_t npriorities) {
+  if (managed_min_priority < art::palette::kMinManagedThreadPriority ||
+      managed_min_priority + npriorities > art::palette::kMaxManagedThreadPriority + 1) {
+    return PALETTE_STATUS_INVALID_ARGUMENT;
+  }
+  size_t ri = 0;
+  for (int32_t i = managed_min_priority;
+       ri < npriorities && i <= art::palette::kMaxManagedThreadPriority;
+       ++i, ++ri) {
+    // Some test code assumes these are monotically decreasing, so we can reconstruct priority
+    // from niceness.
+    result[ri] = 10 - 2 * i;
+  }
+  return PALETTE_STATUS_OK;
+}
 palette_status_t PaletteWriteCrashThreadStacks(/*in*/ const char* stacks, size_t stacks_len) {
   LOG(INFO) << std::string_view(stacks, stacks_len);
   return PALETTE_STATUS_OK;
@@ -148,8 +170,9 @@ palette_status_t PaletteSetTaskProfiles([[maybe_unused]] int32_t tid,
   return PALETTE_STATUS_OK;
 }
 
-// Methods in version 4 API, corresponding to SDK level 36.
+// Introduced in version 4 API, corresponding to SDK level 36.
 palette_status_t PaletteDebugStoreGetString([[maybe_unused]] char* result,
                                             [[maybe_unused]] size_t max_size) {
+  result[0] = '\0';
   return PALETTE_STATUS_OK;
 }

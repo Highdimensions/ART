@@ -77,8 +77,7 @@
   /*         internal unstable API. */                                                        \
   M(PaletteSetTaskProfiles, int32_t tid, const char* const profiles[], size_t profiles_len)   \
                                                                                               \
-  /* Methods in version 4 API, corresponding to SDK level 36. */                              \
-                                                                                              \
+  /* Introduced in version 4 API, corresponding to SDK level 36. */                           \
   /* Retrieves the debug store as a string. */                                                \
   /* */                                                                                       \
   /* This function retrieves debug information stored in a predefined debug store. */         \
@@ -92,6 +91,29 @@
   /*                 up to max_size characters. */                                            \
   /* @return PALETTE_STATUS_OK if the call succeeded. */                                      \
   /*          PALETTE_STATUS_INVALID_ARGUMENT if the pointer is a nullptr or max_size is 0 */ \
-  M(PaletteDebugStoreGetString, char* result, size_t max_size)
+  M(PaletteDebugStoreGetString, char* result, size_t max_size)                                \
+                                                                                              \
+  /* Introduced in version 4 API, corresponding to SDK level 36. */                           \
+  /* Retrieve nice values (as used by Posix setpriority()) corresponding to managed (Java) */ \
+  /* thread priorities. */                                                                    \
+  /* The npriorities nice values corresponding to managed priorities starting at */           \
+  /* managed_start_priority are copied into the result array. Although we define constants */ \
+  /* in some places to represent the minimum Java priority and the number of priorities, */   \
+  /* we assume that these numbers are 1 and 10 respectively, reflecting Java programmer */    \
+  /* expectations. To retrieve all priority  mappings, use */                                 \
+  /*      managed_start_priority = 1 (kMinManagedThreadPriority) */                           \
+  /*      npriorities = 10 (kNumManagedThreadPriorities) */                                   \
+  /*      result is an array of 10 (kNumManagedThreadPriorities) ints. */                     \
+  /* */                                                                                       \
+  /* @param npriorities  The number of nice values to be returned. */                         \
+  /* @param result  A pointer to an array of npriorities ints in which the results will be */ \
+  /*                will be stored. */                                                        \
+  /* @param managed_start_priority  The smallest Java priority for which we return the */     \
+  /*                                niceness value. That value will be stored in result[0].*/ \
+  /* @return PALETTE_STATUS_OK if the call succeeded. */                                      \
+  /*         PALETTE_STATUS_INVALID_ARGUMENT if */                                            \
+  /*         [managed_min_priority, managed_mim_priority + nprioritites) */                   \
+  /*         is not a valid range of Java priorities. */                                      \
+  M(PaletteGetPriorityMapping, int* result, int32_t managed_start_priority, size_t npriorities)
 
 #endif  // ART_LIBARTPALETTE_INCLUDE_PALETTE_PALETTE_METHOD_LIST_H_
