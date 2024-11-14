@@ -25,6 +25,7 @@
 
 #include "base/common_art_test.h"
 #include "gtest/gtest.h"
+#include "system/palette_system.h"
 
 #ifdef ART_TARGET_ANDROID
 #include "android-modules-utils/sdk_level.h"
@@ -54,6 +55,11 @@ bool PaletteDebugStoreIsSupported() {
   // TODO(b/345433959): Switch to android::modules::sdklevel::IsAtLeastW
   return android_get_device_api_level() >= 36;
 }
+bool PaletteGetPriorityMappingIsSupported() {
+  // TODO(b/345433959): Switch to android::modules::sdklevel::IsAtLeastW
+  return android_get_device_api_level() >= 36;
+}
+
 #endif
 
 }  // namespace
@@ -180,5 +186,39 @@ TEST_F(PaletteClientTest, DebugStore) {
   const char* end = "::";
   EXPECT_TRUE(len > strlen(start) + strlen(end));
   EXPECT_EQ(strncmp(result.data() + len - strlen(end), end, strlen(end)), 0);
+#endif
+}
+
+TEST_F(PaletteClientTest, GetPriorityMapping) {
+#ifndef ART_TARGET_ANDROID
+  GTEST_SKIP() << "GetPriorityMapping is only supported on Android";
+#else
+  std::array<int, art::palette::kNumManagedThreadPriorities> result{};
+  // Make sure the we are on a correct API level.
+  if (!PaletteGetPriorityMappingIsSupported()) {
+    GTEST_SKIP() << "GetPriorityMapping is only supported on API 36+";
+  }
+  int result;
+  int last_result = 100;  // > any plausible niceness value.
+  for (int32_t i = art::palette::kMinManagedThreadPriority;
+       i <= art::palette::kMaxManagedThreadPriority;
+       ++i) {
+    palette_status_t pstatus = PaletteGetPriorityMapping(i, &result);
+    EXPECT_EQ(PALETTE_STATUS_OK, pstatus);
+    if (i == art::palette::kMinManagedThreadPriority) {
+      EXPECT_GT(result, 0);
+    }
+    if (i == art::palette::kMaxManagedThreadPriority) {
+      EXPECT_LT(result, 0);
+    }
+    EXPECT_LT(result, last_result);
+    last_result = result;
+  }
+
+  // This time with invalid Java priorities.
+  pstatus = PaletteGetPriorityMapping(art::palette::kMinManagedThreadPriority - 1, &result);
+  EXPECT_EQ(PALETTE_STATUS_INVALID_ARGUMENT, pstatus);
+  pstatus = PaletteGetPriorityMapping(art::palette::kMaxManagedThreadPriority + 1, &result);
+  EXPECT_EQ(PALETTE_STATUS_INVALID_ARGUMENT, pstatus);
 #endif
 }
