@@ -254,11 +254,18 @@ palette_status_t PaletteSetTaskProfiles(int32_t tid,
   return m(tid, profiles, profiles_len);
 }
 
-// Methods in version 4 API, corresponding to SDK level 36.
+// Introduced in version 4 API, corresponding to SDK level 36.
 palette_status_t PaletteDebugStoreGetString(char* result, size_t max_size) {
   PaletteDebugStoreGetStringMethod m =
       PaletteLoader::Instance().GetPaletteDebugStoreGetStringMethod();
   return m(result, max_size);
+}
+
+// Introduced in version 5 API, corresponding to SDK level 37.
+palette_status_t PaletteGetPriorityMapping(int32_t managed_priority, int* result) {
+  PaletteGetPriorityMappingMethod m =
+      PaletteLoader::Instance().GetPaletteGetPriorityMappingMethod();
+  return m(managed_priority, result);
 }
 
 }  // extern "C"
