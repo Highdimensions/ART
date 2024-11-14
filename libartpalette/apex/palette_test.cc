@@ -182,3 +182,35 @@ TEST_F(PaletteClientTest, DebugStore) {
   EXPECT_EQ(strncmp(result.data() + len - strlen(end), end, strlen(end)), 0);
 #endif
 }
+
+TEST_F(PaletteClientTest, GetPriorityMapping) {
+#ifndef ART_TARGET_ANDROID
+  GTEST_SKIP() << "DebugStore is only supported on Android";
+#else
+  std::array<int, kNumManagedThreadPriorities> result{};
+  // Make sure the we are on a correct API level.
+  if (!PaletteGetPriorityMappingIsSupported()) {
+    GTEST_SKIP() << "DebugStore is only supported on API 36+";
+  }
+  palette_status_t pstatus =
+      PaletteGetPriorityMapping(result.data(), kMinManagedThreadPriority, result.size());
+  EXPECT_EQ(PALETTE_STATUS_OK, pstatus);
+  EXPECT_GT(result[0], 0);                  // Positive niceness for kMinManagedThreadPriority.
+  EXPECT_LT(result[result.size() - 1], 0);  // Positive niceness for kMinManagedThreadPriority.
+  for (int i = 1; i < kNumManagedThreadPriorities; ++i) {
+    EXPECT_LE(result[i], result[i - 1]);
+  }
+
+  int result5 = result[5];
+  int result1 = result[1];
+  // Retrieve just 5 elements, starting at 2 this time, so we can tell what got replaced.
+  palette_status_t pstatus = PaletteGetPriorityMapping(result.data(), 2, 5);
+  EXPECT_EQ(PALETTE_STATUS_OK, pstatus);
+  EXPECT_GT(result1, result[0]);
+  EXPECT_GT(result5, result[5]);
+
+  // This time with an invalid starting priority.
+  palette_status_t pstatus = PaletteGetPriorityMapping(result.data(), 0, 5);
+  EXPECT_EQ(PALETTE_STATUS_INVALID_ARGUMENT, pstatus);
+#endif
+}
