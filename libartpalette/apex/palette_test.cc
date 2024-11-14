@@ -25,6 +25,7 @@
 
 #include "base/common_art_test.h"
 #include "gtest/gtest.h"
+#include "system/palette_system.h"
 
 #ifdef ART_TARGET_ANDROID
 #include "android-modules-utils/sdk_level.h"
@@ -54,6 +55,11 @@ bool PaletteDebugStoreIsSupported() {
   // TODO(b/345433959): Switch to android::modules::sdklevel::IsAtLeastW
   return android_get_device_api_level() >= 36;
 }
+bool PaletteGetPriorityMappingIsSupported() {
+  // TODO(b/345433959): Switch to android::modules::sdklevel::IsAtLeastW
+  return android_get_device_api_level() >= 36;
+}
+
 #endif
 
 }  // namespace
@@ -180,5 +186,37 @@ TEST_F(PaletteClientTest, DebugStore) {
   const char* end = "::";
   EXPECT_TRUE(len > strlen(start) + strlen(end));
   EXPECT_EQ(strncmp(result.data() + len - strlen(end), end, strlen(end)), 0);
+#endif
+}
+
+TEST_F(PaletteClientTest, GetPriorityMapping) {
+#ifndef ART_TARGET_ANDROID
+  GTEST_SKIP() << "GetPriorityMapping is only supported on Android";
+#else
+  std::array<int, art::palette::kNumManagedThreadPriorities> result{};
+  // Make sure the we are on a correct API level.
+  if (!PaletteGetPriorityMappingIsSupported()) {
+    GTEST_SKIP() << "GetPriorityMapping is only supported on API 36+";
+  }
+  palette_status_t pstatus = PaletteGetPriorityMapping(
+      result.data(), art::palette::kMinManagedThreadPriority, result.size());
+  EXPECT_EQ(PALETTE_STATUS_OK, pstatus);
+  EXPECT_GT(result[0], 0);                  // Positive niceness for kMinManagedThreadPriority.
+  EXPECT_LT(result[result.size() - 1], 0);  // Negative niceness for kMaxManagedThreadPriority.
+  for (int i = 1; i < art::palette::kNumManagedThreadPriorities; ++i) {
+    EXPECT_LE(result[i], result[i - 1]);
+  }
+
+  int result5 = result[5];
+  int result1 = result[1];
+  // Retrieve just 5 elements, starting at 2 this time, so we can tell what got replaced.
+  pstatus = PaletteGetPriorityMapping(result.data(), 2, 5);
+  EXPECT_EQ(PALETTE_STATUS_OK, pstatus);
+  EXPECT_GT(result1, result[0]);
+  EXPECT_EQ(result5, result[5]);
+
+  // This time with an invalid starting priority.
+  pstatus = PaletteGetPriorityMapping(result.data(), 0, 5);
+  EXPECT_EQ(PALETTE_STATUS_INVALID_ARGUMENT, pstatus);
 #endif
 }
