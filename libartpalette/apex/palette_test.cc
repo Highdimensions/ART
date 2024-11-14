@@ -25,6 +25,7 @@
 
 #include "base/common_art_test.h"
 #include "gtest/gtest.h"
+#include "system/palette_system.h"
 
 #ifdef ART_TARGET_ANDROID
 #include "android-modules-utils/sdk_level.h"
@@ -54,6 +55,17 @@ bool PaletteDebugStoreIsSupported() {
   // TODO(b/345433959): Switch to android::modules::sdklevel::IsAtLeastW
   return android_get_device_api_level() >= 36;
 }
+bool PaletteMapPriorityIsSupported() {
+  // TODO(b/345433959): Switch to android::modules::sdklevel::IsAtLeastW
+  return android_get_device_api_level() >= 37;
+}
+
+#else
+
+bool PaletteMapPriorityIsSupported() {
+  return true;  // Safe?
+}
+
 #endif
 
 }  // namespace
@@ -181,4 +193,34 @@ TEST_F(PaletteClientTest, DebugStore) {
   EXPECT_TRUE(len > strlen(start) + strlen(end));
   EXPECT_EQ(strncmp(result.data() + len - strlen(end), end, strlen(end)), 0);
 #endif
+}
+
+TEST_F(PaletteClientTest, MapPriority) {
+  // Make sure the we are on a correct API level.
+  if (!PaletteMapPriorityIsSupported()) {
+    GTEST_SKIP() << "GetPriorityMapping is only supported on API 37+";
+  }
+  int result;
+  int last_result = 100;  // > any plausible niceness value.
+  palette_status_t pstatus;
+  for (int32_t i = art::palette::kMinManagedThreadPriority;
+       i <= art::palette::kMaxManagedThreadPriority;
+       ++i) {
+    pstatus = PaletteMapPriority(i, &result);
+    EXPECT_EQ(PALETTE_STATUS_OK, pstatus);
+    if (i == art::palette::kMinManagedThreadPriority) {
+      EXPECT_GT(result, 0);
+    }
+    if (i == art::palette::kMaxManagedThreadPriority) {
+      EXPECT_LT(result, 0);
+    }
+    EXPECT_LT(result, last_result);
+    last_result = result;
+  }
+
+  // This time with invalid Java priorities.
+  pstatus = PaletteMapPriority(art::palette::kMinManagedThreadPriority - 1, &result);
+  EXPECT_EQ(PALETTE_STATUS_INVALID_ARGUMENT, pstatus);
+  pstatus = PaletteMapPriority(art::palette::kMaxManagedThreadPriority + 1, &result);
+  EXPECT_EQ(PALETTE_STATUS_INVALID_ARGUMENT, pstatus);
 }
