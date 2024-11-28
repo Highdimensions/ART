@@ -16,6 +16,7 @@
 
 #include "intrinsics_arm64.h"
 
+#include "aarch64/assembler-aarch64.h"
 #include "arch/arm64/callee_save_frame_arm64.h"
 #include "arch/arm64/instruction_set_features_arm64.h"
 #include "art_method.h"
@@ -33,6 +34,7 @@
 #include "mirror/array-inl.h"
 #include "mirror/class.h"
 #include "mirror/method_handle_impl.h"
+#include "mirror/method_type.h"
 #include "mirror/object.h"
 #include "mirror/object_array-inl.h"
 #include "mirror/reference.h"
@@ -5978,10 +5980,16 @@ void IntrinsicLocationsBuilderARM64::VisitMethodHandleInvokeExact(HInvoke* invok
   InvokeDexCallingConventionVisitorARM64 calling_convention;
   locations->SetOut(calling_convention.GetReturnLocation(invoke->GetType()));
 
-  locations->SetInAt(0, Location::RequiresRegister());
-
   // Accomodating LocationSummary for underlying invoke-* call.
   uint32_t number_of_args = invoke->GetNumberOfArguments();
+    // Accessors have at most 2 arguments (base and new value). Target methods are crafted in such a
+  // way that MethodHandle is expected to be at W2 (3rd argument).
+  if (number_of_args <= 3) {
+    locations->SetInAt(0, Location::RegisterLocation(W2));
+  } else {
+    locations->SetInAt(0, Location::RequiresRegister());
+  }
+
   for (uint32_t i = 1; i < number_of_args; ++i) {
     locations->SetInAt(i, calling_convention.GetNextLocation(invoke->InputAt(i)->GetType()));
   }
@@ -6016,10 +6024,18 @@ void IntrinsicCodeGeneratorARM64::VisitMethodHandleInvokeExact(HInvoke* invoke) 
   __ Ldr(method, HeapOperand(method_handle.W(), mirror::MethodHandle::ArtFieldOrMethodOffset()));
 
   vixl::aarch64::Label execute_target_method;
+  vixl::aarch64::Label method_dispatch;
 
   Register method_handle_kind = WRegisterFrom(locations->GetTemp(2));
   __ Ldr(method_handle_kind,
          HeapOperand(method_handle.W(), mirror::MethodHandle::HandleKindOffset()));
+
+  __ Cmp(method_handle_kind, Operand(mirror::MethodHandle::Kind::kFirstAccessorKind));
+  __ B(lt, &method_dispatch);
+  __ Ldr(method, HeapOperand(method_handle.W(), mirror::MethodHandleImpl::TargetOffset()));
+  __ B(&execute_target_method);
+
+  __ Bind(&method_dispatch);
   __ Cmp(method_handle_kind, Operand(mirror::MethodHandle::Kind::kInvokeStatic));
   __ B(eq, &execute_target_method);
 
