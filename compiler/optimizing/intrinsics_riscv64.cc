@@ -16,6 +16,7 @@
 
 #include "intrinsics_riscv64.h"
 
+#include "arch/riscv64/registers_riscv64.h"
 #include "code_generator_riscv64.h"
 #include "intrinsic_objects.h"
 #include "intrinsics_utils.h"
@@ -5772,7 +5773,6 @@ void IntrinsicLocationsBuilderRISCV64::VisitMethodHandleInvokeExact(HInvoke* inv
 
   InvokeDexCallingConventionVisitorRISCV64 calling_convention;
   locations->SetOut(calling_convention.GetReturnLocation(invoke->GetType()));
-  locations->SetInAt(0, Location::RequiresRegister());
 
   // Accomodating LocationSummary for underlying invoke-* call.
   uint32_t number_of_args = invoke->GetNumberOfArguments();
@@ -5780,21 +5780,39 @@ void IntrinsicLocationsBuilderRISCV64::VisitMethodHandleInvokeExact(HInvoke* inv
     locations->SetInAt(i, calling_convention.GetNextLocation(invoke->InputAt(i)->GetType()));
   }
 
+  // Passing MethodHandle object as the last parameter: accessors implementation rely on it.
+  DCHECK_EQ(invoke->InputAt(0)->GetType(), DataType::Type::kReference);
+  Location receiver_mh_loc = calling_convention.GetNextLocation(DataType::Type::kReference);
+  locations->SetInAt(0, receiver_mh_loc);
+
   // The last input is MethodType object corresponding to the call-site.
   locations->SetInAt(number_of_args, Location::RequiresRegister());
 
   locations->AddTemp(Location::RequiresRegister());
   locations->AddTemp(calling_convention.GetMethodLocation());
+  if (!receiver_mh_loc.IsRegister()) {
+    locations->AddTemp(Location::RequiresRegister());
+  }
 }
 
 void IntrinsicCodeGeneratorRISCV64::VisitMethodHandleInvokeExact(HInvoke* invoke) {
   LocationSummary* locations = invoke->GetLocations();
-  XRegister method_handle = locations->InAt(0).AsRegister<XRegister>();
+  Riscv64Assembler* assembler = GetAssembler();
+
+  Location receiver_mh_loc = locations->InAt(0);
+  XRegister method_handle = receiver_mh_loc.IsRegister()
+      ? receiver_mh_loc.AsRegister<XRegister>()
+      : locations->GetTemp(2).AsRegister<XRegister>();
+
+  if (!receiver_mh_loc.IsRegister()) {
+    DCHECK(receiver_mh_loc.IsStackSlot());
+    __ Loadwu(method_handle, SP, receiver_mh_loc.GetStackIndex());
+  }
+
   SlowPathCodeRISCV64* slow_path =
       new (codegen_->GetScopedAllocator()) InvokePolymorphicSlowPathRISCV64(invoke, method_handle);
 
   codegen_->AddSlowPath(slow_path);
-  Riscv64Assembler* assembler = GetAssembler();
   XRegister call_site_type =
       locations->InAt(invoke->GetNumberOfArguments()).AsRegister<XRegister>();
 
