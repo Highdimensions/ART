@@ -460,14 +460,13 @@ void JniIdManager::VisitReflectiveTargets(ReflectiveValueVisitor* rvv) {
               !old_ext_data->HasStaticFieldPointerIdMarker())
             << old_class->PrettyClass();
         // Clear the old field mapping.
+        size_t old_off = ArraySlice<ArtField>(old_class->GetFieldsPtr()).OffsetOf(old_field);
         if (old_field->IsStatic()) {
-          size_t old_off = ArraySlice<ArtField>(old_class->GetSFieldsPtr()).OffsetOf(old_field);
           ObjPtr<mirror::PointerArray> old_statics(old_ext_data->GetStaticJFieldIDsPointerArray());
           if (!old_statics.IsNull()) {
             old_statics->SetElementPtrSize(old_off, 0, kRuntimePointerSize);
           }
         } else {
-          size_t old_off = ArraySlice<ArtField>(old_class->GetIFieldsPtr()).OffsetOf(old_field);
           ObjPtr<mirror::PointerArray> old_instances(
               old_ext_data->GetInstanceJFieldIDsPointerArray());
           if (!old_instances.IsNull()) {
@@ -480,14 +479,13 @@ void JniIdManager::VisitReflectiveTargets(ReflectiveValueVisitor* rvv) {
               !new_ext_data->HasStaticFieldPointerIdMarker())
             << new_class->PrettyClass();
         // Set the new field mapping.
+        size_t new_off = ArraySlice<ArtField>(new_class->GetFieldsPtr()).OffsetOf(new_field);
         if (new_field->IsStatic()) {
-          size_t new_off = ArraySlice<ArtField>(new_class->GetSFieldsPtr()).OffsetOf(new_field);
           ObjPtr<mirror::PointerArray> new_statics(new_ext_data->GetStaticJFieldIDsPointerArray());
           if (!new_statics.IsNull()) {
             new_statics->SetElementPtrSize(new_off, id, kRuntimePointerSize);
           }
         } else {
-          size_t new_off = ArraySlice<ArtField>(new_class->GetIFieldsPtr()).OffsetOf(new_field);
           ObjPtr<mirror::PointerArray> new_instances(
               new_ext_data->GetInstanceJFieldIDsPointerArray());
           if (!new_instances.IsNull()) {
