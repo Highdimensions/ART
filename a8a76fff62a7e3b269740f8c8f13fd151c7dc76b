@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74d4da05_52ce4318",
+        "filename": "libartbase/base/mem_map.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1065473
+      },
+      "writtenOn": "2024-12-06T15:38:47Z",
+      "side": 1,
+      "message": "Nicolas - do you have an opinion on this?\n\nAs per https://lore.kernel.org/all/20241115215256.578125-1-kaleshsingh@google.com/ it seems the change in behavior wasn\u0027t Ubuntu intentional change, but rather kernel bug.\n\nThe workaround here works, but I wouldn\u0027t be surprised if we hit it on some Android device sooner or later as well. What should we do?\n\n1) Keep it as is, and resolve the issue on Android devices if and when it happens.\n\n2) Remove the condition, and always apply the word-around.\n\n3) As per the kernel patch, maybe we can work-around it by making the allocated size unaligned.",
+      "revId": "a8a76fff62a7e3b269740f8c8f13fd151c7dc76b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
