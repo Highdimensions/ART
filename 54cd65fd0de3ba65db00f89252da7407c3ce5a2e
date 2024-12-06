@@ -70,6 +70,30 @@
       },
       "revId": "54cd65fd0de3ba65db00f89252da7407c3ce5a2e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80ec2782_7ab97a62",
+        "filename": "runtime/class_linker-inl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-06T15:44:21Z",
+      "side": 1,
+      "message": "Besided returning null, we should also throw the correct throw, e.g. `ResolveField` throws `ThrowNoSuchFieldError`.\n\nNot sure if we should throw `IncompatibleClassChangeError` if we find a static and we were searching for a non-static (or viceversa)",
+      "parentUuid": "9bb265ea_24196832",
+      "range": {
+        "startLine": 366,
+        "startChar": 44,
+        "endLine": 366,
+        "endChar": 83
+      },
+      "revId": "54cd65fd0de3ba65db00f89252da7407c3ce5a2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
