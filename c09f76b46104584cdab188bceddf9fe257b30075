@@ -16,6 +16,24 @@
       "message": "I noted another `getCallingUid` call [ħere](https://cs.android.com/android/platform/superproject/main/+/main:art/libartservice/service/java/com/android/server/art/Utils.java;l\u003d474;drc\u003da3d9ad8d83692399056838c5adda3142a9adb491), but it seems pretty unlikely that things would change so that becomes a problem.",
       "revId": "c09f76b46104584cdab188bceddf9fe257b30075",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eca7502f_ec13df0f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2024-12-06T18:53:09Z",
+      "side": 1,
+      "message": "Thanks for checking. That call is fine because it\u0027s not used in tests.",
+      "parentUuid": "7eda0fee_c998337b",
+      "revId": "c09f76b46104584cdab188bceddf9fe257b30075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
