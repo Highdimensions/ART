@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cd90552_804a55e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-06T17:11:59Z",
+      "side": 1,
+      "message": "LGTM, too. But I\u0027m a bit suspicious this will collide with some other mapping on some platform. The old value may not have been as arbitrary as it seems. I wonder whether the test failures provide some insight?",
+      "revId": "c6e8b68f1f04bb7608ca9237e5cbb4499cd2647c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
