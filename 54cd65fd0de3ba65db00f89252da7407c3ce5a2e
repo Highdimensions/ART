@@ -94,6 +94,30 @@
       },
       "revId": "54cd65fd0de3ba65db00f89252da7407c3ce5a2e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7de8c81_8c304231",
+        "filename": "runtime/class_linker-inl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:45:54Z",
+      "side": 1,
+      "message": "Ah ok, so calling `ResolveField` below will make us throw the right exception. Can you add that as a comment?",
+      "parentUuid": "80ec2782_7ab97a62",
+      "range": {
+        "startLine": 366,
+        "startChar": 44,
+        "endLine": 366,
+        "endChar": 83
+      },
+      "revId": "54cd65fd0de3ba65db00f89252da7407c3ce5a2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
