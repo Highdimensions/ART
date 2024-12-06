@@ -363,7 +363,7 @@ inline ArtField* ClassLinker::ResolveField(uint32_t field_idx,
   Thread::PoisonObjectPointersIfDebug();
   ObjPtr<mirror::DexCache> dex_cache = referrer->GetDexCache();
   ArtField* resolved_field = dex_cache->GetResolvedField(field_idx);
-  if (UNLIKELY(resolved_field == nullptr)) {
+  if (UNLIKELY(resolved_field == nullptr || resolved_field->IsStatic() != is_static)) {
     StackHandleScope<2> hs(Thread::Current());
     referrer = referrer->GetInterfaceMethodIfProxy(image_pointer_size_);
     ObjPtr<mirror::Class> referring_class = referrer->GetDeclaringClass();
@@ -385,7 +385,7 @@ inline ArtField* ClassLinker::ResolveField(uint32_t field_idx,
   DCHECK(!Thread::Current()->IsExceptionPending()) << Thread::Current()->GetException()->Dump();
   ArtField* resolved = dex_cache->GetResolvedField(field_idx);
   Thread::PoisonObjectPointersIfDebug();
-  if (resolved != nullptr) {
+  if (resolved != nullptr && resolved->IsStatic() == is_static) {
     return resolved;
   }
   const DexFile& dex_file = *dex_cache->GetDexFile();
@@ -398,7 +398,7 @@ inline ArtField* ClassLinker::ResolveField(uint32_t field_idx,
 
   // Look for the field again in case the type resolution updated the cache.
   resolved = dex_cache->GetResolvedField(field_idx);
-  if (resolved != nullptr) {
+  if (resolved != nullptr && resolved->IsStatic() == is_static) {
     return resolved;
   }
 
