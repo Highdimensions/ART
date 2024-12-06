@@ -90,7 +90,7 @@ public class DexUseManagerTest {
     public StaticMockitoRule mockitoRule = new StaticMockitoRule(
             SystemProperties.class, Constants.class, Process.class, ArtJni.class);
 
-    private final UserHandle mUserHandle = Binder.getCallingUserHandle();
+    private final UserHandle mUserHandle = UserHandle.of(1);
 
     /**
      * The default value of `fileVisibility` returned by `getSecondaryDexInfo`. The value doesn't
@@ -185,6 +185,8 @@ public class DexUseManagerTest {
         lenient().when(mInjector.isPreReboot()).thenReturn(false);
         lenient().when(mInjector.getArtManagerLocal()).thenReturn(mArtManagerLocal);
         lenient().when(mInjector.getPackageManagerLocal()).thenReturn(mPackageManagerLocal);
+        lenient().when(mInjector.getCallingUserHandle()).thenReturn(mUserHandle);
+        lenient().when(mInjector.getCallingUid()).thenReturn(110001);
 
         mDexUseManager = new DexUseManagerLocal(mInjector);
         mDexUseManager.systemReady();
@@ -801,6 +803,7 @@ public class DexUseManagerTest {
                 + "      loading_package_name: \"com.example.owningpackage\"\n"
                 + "    }\n"
                 + "    user_id {\n"
+                + "      value: 1\n"
                 + "    }\n"
                 + "  }\n"
                 + "}");
