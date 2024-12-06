@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "521094f9_5de8acbb",
+        "filename": "runtime/class_linker-inl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:38:15Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we return null in this case?",
+      "range": {
+        "startLine": 366,
+        "startChar": 44,
+        "endLine": 366,
+        "endChar": 83
+      },
+      "revId": "54cd65fd0de3ba65db00f89252da7407c3ce5a2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
