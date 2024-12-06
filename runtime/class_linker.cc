@@ -10351,16 +10351,11 @@ ObjPtr<mirror::MethodHandle> ClassLinker::ResolveMethodHandleForField(
   ArtField* target_field =
       ResolveField(method_handle.field_or_method_idx_, referrer, is_static);
   if (LIKELY(target_field != nullptr)) {
+    DCHECK_EQ(is_static, target_field->IsStatic());
     ObjPtr<mirror::Class> target_class = target_field->GetDeclaringClass();
     ObjPtr<mirror::Class> referring_class = referrer->GetDeclaringClass();
     if (UNLIKELY(!referring_class->CanAccessMember(target_class, target_field->GetAccessFlags()))) {
       ThrowIllegalAccessErrorField(referring_class, target_field);
-      return nullptr;
-    }
-    // TODO(b/364876321): ResolveField might return instance field when is_static is true and
-    // vice versa.
-    if (UNLIKELY(is_static != target_field->IsStatic())) {
-      ThrowIncompatibleClassChangeErrorField(target_field, is_static, referrer);
       return nullptr;
     }
     if (UNLIKELY(is_put && target_field->IsFinal())) {
