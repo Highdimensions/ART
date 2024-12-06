@@ -1,0 +1,722 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c1412f9_bb023033",
+        "filename": "runtime/gc/accounting/card_table.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "Not sure I understand this. why/how would we call visitor on something before scan_begin or after scan_end ?",
+      "range": {
+        "startLine": 124,
+        "startChar": 2,
+        "endLine": 125,
+        "endChar": 60
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "02a521a8_a62ef99a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/accounting/card_table.h",
+              "range": {
+                "startLine": 124,
+                "startChar": 0,
+                "endLine": 126,
+                "endChar": 0
+              },
+              "replacement": "  // NOTE: \u0027scan_begin\u0027 and \u0027scan_end\u0027 are aligned to card-size so \u0027visitor\u0027 will\n  // only get called on object(s) within [scan_begin, scan_end).\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8b730ea_2496a89c",
+        "filename": "runtime/gc/collector/garbage_collector.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "Was that a missing check? Why do you need it now? Add a comment?",
+      "range": {
+        "startLine": 347,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 34
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6ae02fba_bc35efd1",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/garbage_collector.cc",
+              "range": {
+                "startLine": 347,
+                "startChar": 0,
+                "endLine": 348,
+                "endChar": 0
+              },
+              "replacement": "      } else {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "290a454c_d50e7e07",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1401,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "drop?",
+      "range": {
+        "startLine": 1401,
+        "startChar": 2,
+        "endLine": 1401,
+        "endChar": 10
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9f9b795_78a44816",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1416,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "drop?",
+      "range": {
+        "startLine": 1416,
+        "startChar": 2,
+        "endLine": 1416,
+        "endChar": 10
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5c77cad_73af7df6",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1427,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "const",
+      "range": {
+        "startLine": 1427,
+        "startChar": 24,
+        "endLine": 1427,
+        "endChar": 25
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4445c287_597563ed",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1487,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "Wonder if it would be more readable to just have something like `pointer_end_` with a comment that says what it means. Up to you.",
+      "range": {
+        "startLine": 1484,
+        "startChar": 0,
+        "endLine": 1487,
+        "endChar": 4
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6b9db771_be7aadd4",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 455,
+                "startChar": 0,
+                "endLine": 456,
+                "endChar": 0
+              },
+              "replacement": "      moving_space_end_(bump_pointer_space_-\u003eLimit() - gPageSize),\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 668,
+                "startChar": 0,
+                "endLine": 669,
+                "endChar": 0
+              },
+              "replacement": "                                           reinterpret_cast\u003cmirror::Object*\u003e(moving_space_end_ + gPageSize));\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 760,
+                "startChar": 0,
+                "endLine": 761,
+                "endChar": 0
+              },
+              "replacement": "  moving_space_end_ \u003d bump_pointer_space_-\u003eLimit() - gPageSize;\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1420,
+                "startChar": 0,
+                "endLine": 1421,
+                "endChar": 0
+              },
+              "replacement": "        moving_space_end_(collector-\u003emoving_space_end_ + gPageSize),\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1484,
+                "startChar": 0,
+                "endLine": 1488,
+                "endChar": 0
+              },
+              "replacement": "  // moving_space_end_ is the end of the moving space, which is one page before\n  // the end of the bump-pointer space.\n  uint8_t* const moving_space_end_;\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1657,
+                "startChar": 0,
+                "endLine": 1658,
+                "endChar": 0
+              },
+              "replacement": "      post_compact_obj \u003d PostCompactAddress(obj, black_dense_end_, moving_space_end_ + gPageSize);\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2320,
+                "startChar": 0,
+                "endLine": 2321,
+                "endChar": 0
+              },
+              "replacement": "  uint8_t* to_space_end \u003d moving_space_begin_ + page_status_arr_len * gPageSize - gPageSize;\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2338,
+                "startChar": 0,
+                "endLine": 2339,
+                "endChar": 0
+              },
+              "replacement": "      page \u003d to_space_end + gPageSize;\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2371,
+                "startChar": 0,
+                "endLine": 2372,
+                "endChar": 0
+              },
+              "replacement": "      page \u003d to_space_end + gPageSize;\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2498,
+                "startChar": 0,
+                "endLine": 2499,
+                "endChar": 0
+              },
+              "replacement": "      uint8_t* to_space_start \u003d moving_space_begin_ + arr_idx * gPageSize - gPageSize;\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2547,
+                "startChar": 0,
+                "endLine": 2548,
+                "endChar": 0
+              },
+              "replacement": "      std::max(reinterpret_cast\u003cuint8_t*\u003e(first) + mirror::kObjectHeaderSize, page + gPageSize);\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2559,
+                "startChar": 0,
+                "endLine": 2560,
+                "endChar": 0
+              },
+              "replacement": "      if (reinterpret_cast\u003cuint8_t*\u003e(curr_obj) \u003c page + gPageSize) {\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2562,
+                "startChar": 0,
+                "endLine": 2563,
+                "endChar": 0
+              },
+              "replacement": "        MemberOffset begin_offset(page + gPageSize - reinterpret_cast\u003cuint8_t*\u003e(curr_obj));\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2604,
+                "startChar": 0,
+                "endLine": 2605,
+                "endChar": 0
+              },
+              "replacement": "    if (reinterpret_cast\u003cuint8_t*\u003e(curr_obj) \u003c page + gPageSize) {\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2608,
+                "startChar": 0,
+                "endLine": 2609,
+                "endChar": 0
+              },
+              "replacement": "          visitor, MemberOffset(page + gPageSize - reinterpret_cast\u003cuint8_t*\u003e(curr_obj)), end_offset);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a1f85d2_95402154",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1492,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "avoid?",
+      "range": {
+        "startLine": 1492,
+        "startChar": 2,
+        "endLine": 1492,
+        "endChar": 9
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "449f5364_1d25544f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1492,
+                "startChar": 0,
+                "endLine": 1493,
+                "endChar": 0
+              },
+              "replacement": "  bool dirty_card_;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8865b139_c30349dd",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4319,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "drop",
+      "range": {
+        "startLine": 4319,
+        "startChar": 16,
+        "endLine": 4319,
+        "endChar": 24
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "804bde5d_36df2988",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4378,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "avoid?",
+      "range": {
+        "startLine": 4378,
+        "startChar": 2,
+        "endLine": 4378,
+        "endChar": 9
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe722760_b6d95cd2",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4465,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "during",
+      "range": {
+        "startLine": 4465,
+        "startChar": 18,
+        "endLine": 4465,
+        "endChar": 23
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4ad570c_cf0e809e",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4520,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "replace false about what it means?",
+      "range": {
+        "startLine": 4520,
+        "startChar": 54,
+        "endLine": 4520,
+        "endChar": 59
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "8b1fc342_db701d60",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 4520,
+                "startChar": 0,
+                "endLine": 4521,
+                "endChar": 0
+              },
+              "replacement": "    // If obj is in old-gen (in young-gc) then return false as it\u0027s not\n    // considered \u0027marked\u0027 in young-gc.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60f3a7cf_c6a21aaa",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4520,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "during?",
+      "range": {
+        "startLine": 4520,
+        "startChar": 29,
+        "endLine": 4520,
+        "endChar": 31
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e054eaab_97729d62",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "the post compact address or the root?",
+      "range": {
+        "startLine": 281,
+        "startChar": 24,
+        "endLine": 281,
+        "endChar": 26
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6315df26_c99fa1d2",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 293,
+        "startChar": 64,
+        "endLine": 293,
+        "endChar": 66
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ab3b5353_435777b5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 293,
+                "startChar": 0,
+                "endLine": 295,
+                "endChar": 0
+              },
+              "replacement": "  // Update the given root with post-compact address and return the post-compact\n  // address. [begin, end) is a range in moving-space.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ed85ba1_8fbc690a",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "Fix this TODO?",
+      "range": {
+        "startLine": 323,
+        "startChar": 0,
+        "endLine": 323,
+        "endChar": 42
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c45c4acc_42832526",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "address",
+      "range": {
+        "startLine": 763,
+        "startChar": 55,
+        "endLine": 763,
+        "endChar": 59
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d7de6be_18a32ed5",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "address",
+      "range": {
+        "startLine": 770,
+        "startChar": 61,
+        "endLine": 770,
+        "endChar": 65
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "45453919_c9afaaf4",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 770,
+                "startChar": 0,
+                "endLine": 771,
+                "endChar": 0
+              },
+              "replacement": "  // End of compacted space. Used for computing post-compact adr of black\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1259013c_2bd44f52",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "Why making it a union and not two fields?",
+      "range": {
+        "startLine": 795,
+        "startChar": 0,
+        "endLine": 798,
+        "endChar": 4
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2abf6b1d_cc248b8f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 323,
+                "startChar": 0,
+                "endLine": 326,
+                "endChar": 0
+              },
+              "replacement": "  // Clears (for alloc spaces in the beginning of marking phase) or ages the card\n  // table. Also, identifies immune spaces and mark bitmap.\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 791,
+                "startChar": 0,
+                "endLine": 791,
+                "endChar": 0
+              },
+              "replacement": "  // Set to a page-aligned address such that [moving_space_begin_,\n  // black_dense_end_) is considered to be densely populated with reachable objects\n  // and hence is not compacted.\n  uint8_t* black_dense_end_;\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 792,
+                "startChar": 0,
+                "endLine": 799,
+                "endChar": 0
+              },
+              "replacement": "  uint8_t* old_gen_end_;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
