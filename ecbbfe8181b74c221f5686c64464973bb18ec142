@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe282d12_fc37f0ab",
+        "filename": "runtime/jit/jit_code_cache.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-06T15:17:40Z",
+      "side": 1,
+      "message": "Maybe just remove this bit? Not sure why you are comparing `MethodType` to the others",
+      "range": {
+        "startLine": 810,
+        "startChar": 15,
+        "endLine": 810,
+        "endChar": 52
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "5aa6bebe_844616c8",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/jit/jit_code_cache.cc",
+              "range": {
+                "startLine": 810,
+                "startChar": 0,
+                "endLine": 812,
+                "endChar": 0
+              },
+              "replacement": "            // `MethodType`s are strong GC roots and need write barrier.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ecbbfe8181b74c221f5686c64464973bb18ec142",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
