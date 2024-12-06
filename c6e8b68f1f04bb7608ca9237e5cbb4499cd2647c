@@ -34,6 +34,24 @@
       "parentUuid": "7cd90552_804a55e4",
       "revId": "c6e8b68f1f04bb7608ca9237e5cbb4499cd2647c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7ae7549_47cdf6d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2024-12-06T20:04:51Z",
+      "side": 1,
+      "message": "Discussed off-line. Agreed to merge the change.",
+      "parentUuid": "d19dd57e_630ae322",
+      "revId": "c6e8b68f1f04bb7608ca9237e5cbb4499cd2647c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
