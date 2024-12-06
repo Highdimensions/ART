@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af3431a2_79085f99",
+        "filename": "dex2oat/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1334152
+      },
+      "writtenOn": "2024-12-06T17:49:50Z",
+      "side": 1,
+      "message": "I think I\u0027m misunderstanding something but I thought we wanted static not whole_static here?  Or does it get shrunk later?",
+      "range": {
+        "startLine": 88,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 21
+      },
+      "revId": "24d4a0762d27a0d579391fe2f56db5a32616449b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
