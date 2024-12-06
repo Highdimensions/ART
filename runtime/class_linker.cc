@@ -5808,7 +5808,7 @@ bool ClassLinker::InitializeClass(Thread* self,
   if (num_static_fields > 0) {
     const dex::ClassDef* dex_class_def = klass->GetClassDef();
     CHECK(dex_class_def != nullptr);
-    StackHandleScope<3> hs(self);
+    StackHandleScope<2> hs(self);
     Handle<mirror::ClassLoader> class_loader(hs.NewHandle(klass->GetClassLoader()));
     Handle<mirror::DexCache> dex_cache(hs.NewHandle(klass->GetDexCache()));
 
@@ -10182,19 +10182,17 @@ ArtField* ClassLinker::FindResolvedField(ObjPtr<mirror::Class> klass,
                                          uint32_t field_idx,
                                          bool is_static) {
   DCHECK(dex_cache->GetClassLoader() == class_loader);
-  ArtField* resolved = is_static ? klass->FindStaticField(dex_cache, field_idx)
-                                 : klass->FindInstanceField(dex_cache, field_idx);
-  if (resolved != nullptr &&
-      hiddenapi::ShouldDenyAccessToMember(resolved,
+  ArtField* resolved = klass->FindField(dex_cache, field_idx);
+  if (resolved == nullptr || is_static != resolved->IsStatic()) {
+    return nullptr;
+  }
+  if (hiddenapi::ShouldDenyAccessToMember(resolved,
                                           hiddenapi::AccessContext(class_loader, dex_cache),
                                           hiddenapi::AccessMethod::kLinking)) {
-    resolved = nullptr;
+    return nullptr;
   }
 
-  if (resolved != nullptr) {
-    dex_cache->SetResolvedField(field_idx, resolved);
-  }
-
+  dex_cache->SetResolvedField(field_idx, resolved);
   return resolved;
 }
 
@@ -10348,16 +10346,11 @@ ObjPtr<mirror::MethodHandle> ClassLinker::ResolveMethodHandleForField(
   ArtField* target_field =
       ResolveField(method_handle.field_or_method_idx_, referrer, is_static);
   if (LIKELY(target_field != nullptr)) {
+    DCHECK_EQ(is_static, target_field->IsStatic());
     ObjPtr<mirror::Class> target_class = target_field->GetDeclaringClass();
     ObjPtr<mirror::Class> referring_class = referrer->GetDeclaringClass();
     if (UNLIKELY(!referring_class->CanAccessMember(target_class, target_field->GetAccessFlags()))) {
       ThrowIllegalAccessErrorField(referring_class, target_field);
-      return nullptr;
-    }
-    // TODO(b/364876321): ResolveField might return instance field when is_static is true and
-    // vice versa.
-    if (UNLIKELY(is_static != target_field->IsStatic())) {
-      ThrowIncompatibleClassChangeErrorField(target_field, is_static, referrer);
       return nullptr;
     }
     if (UNLIKELY(is_put && target_field->IsFinal())) {
