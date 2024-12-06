@@ -16,6 +16,24 @@
       "message": "Nicolas - do you have an opinion on this?\n\nAs per https://lore.kernel.org/all/20241115215256.578125-1-kaleshsingh@google.com/ it seems the change in behavior wasn\u0027t Ubuntu intentional change, but rather kernel bug.\n\nThe workaround here works, but I wouldn\u0027t be surprised if we hit it on some Android device sooner or later as well. What should we do?\n\n1) Keep it as is, and resolve the issue on Android devices if and when it happens.\n\n2) Remove the condition, and always apply the word-around.\n\n3) As per the kernel patch, maybe we can work-around it by making the allocated size unaligned.",
       "revId": "a8a76fff62a7e3b269740f8c8f13fd151c7dc76b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eaf72838_97924954",
+        "filename": "libartbase/base/mem_map.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-06T21:28:19Z",
+      "side": 1,
+      "message": "Can we check once whether the kernel version is at least 4.17 (if that\u0027s still an issue), and then always apply the workaround? (IsMemBarrierSupported() has such checking code, as does memfd_create, as does ...) I don\u0027t immediately see a downside, since I think we really meanMAP_FIXED_NOREPLACE here, no matter what the kernel folks eventually decide.\n\nAnd I still don\u0027t like really the compile-time check on kIsVm.",
+      "parentUuid": "74d4da05_52ce4318",
+      "revId": "a8a76fff62a7e3b269740f8c8f13fd151c7dc76b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
