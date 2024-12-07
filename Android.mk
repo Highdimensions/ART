@@ -28,6 +28,33 @@ include $(art_path)/build/Android.cpplint.mk
 ########################################################################
 # product rules
 
+<<<<<<< PATCH SET (75efbf Revert^2 "Revert "Introduce support for hardware simulators,)
+include $(art_path)/runtime/Android.mk
+include $(art_path)/compiler/Android.mk
+include $(art_path)/dexdump/Android.mk
+include $(art_path)/dexlist/Android.mk
+include $(art_path)/dex2oat/Android.mk
+include $(art_path)/disassembler/Android.mk
+include $(art_path)/oatdump/Android.mk
+include $(art_path)/imgdiag/Android.mk
+include $(art_path)/patchoat/Android.mk
+include $(art_path)/dalvikvm/Android.mk
+include $(art_path)/tools/Android.mk
+||||||| BASE
+include $(art_path)/runtime/Android.mk
+include $(art_path)/runtime/simulator/Android.mk
+include $(art_path)/compiler/Android.mk
+include $(art_path)/dexdump/Android.mk
+include $(art_path)/dexlist/Android.mk
+include $(art_path)/dex2oat/Android.mk
+include $(art_path)/disassembler/Android.mk
+include $(art_path)/oatdump/Android.mk
+include $(art_path)/imgdiag/Android.mk
+include $(art_path)/patchoat/Android.mk
+include $(art_path)/dalvikvm/Android.mk
+include $(art_path)/tools/Android.mk
+=======
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
 include $(art_path)/tools/ahat/Android.mk
 
 ART_HOST_DEPENDENCIES := \
