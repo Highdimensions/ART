@@ -20,9 +20,32 @@
 #include "base/macros.h"
 #include "base/utils.h"
 #include "builder.h"
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+#include "code_generator_arm.h"
+#include "code_generator_arm64.h"
+#include "code_generator_mips.h"
+#include "code_generator_mips64.h"
+#include "code_generator_x86.h"
+#include "code_generator_x86_64.h"
+#include "common_compiler_test.h"
+#include "dex_file.h"
+#include "dex_instruction.h"
+||||||| BASE
+#include "code_generator_arm.h"
+#include "code_generator_arm64.h"
+#include "code_generator_mips.h"
+#include "code_generator_mips64.h"
+#include "code_generator_x86.h"
+#include "code_generator_x86_64.h"
+#include "code_simulator_container.h"
+#include "common_compiler_test.h"
+#include "dex_file.h"
+#include "dex_instruction.h"
+=======
 #include "codegen_test_utils.h"
 #include "dex/dex_file.h"
 #include "dex/dex_instruction.h"
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
 #include "driver/compiler_options.h"
 #include "nodes.h"
 #include "optimizing_unit_test.h"
@@ -55,6 +78,320 @@ static ::std::vector<CodegenTargetConfig> GetTargetConfigs() {
 #endif
   };
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+  void SetupBlockedRegisters(bool is_baseline) const OVERRIDE {
+    arm::CodeGeneratorARM::SetupBlockedRegisters(is_baseline);
+    blocked_core_registers_[arm::R4] = true;
+    blocked_core_registers_[arm::R6] = false;
+    blocked_core_registers_[arm::R7] = false;
+    // Makes pair R6-R7 available.
+    blocked_register_pairs_[arm::R6_R7] = false;
+  }
+};
+
+class TestCodeGeneratorX86 : public x86::CodeGeneratorX86 {
+ public:
+  TestCodeGeneratorX86(HGraph* graph,
+                       const X86InstructionSetFeatures& isa_features,
+                       const CompilerOptions& compiler_options)
+      : x86::CodeGeneratorX86(graph, isa_features, compiler_options) {
+    // Save edi, we need it for getting enough registers for long multiplication.
+    AddAllocatedRegister(Location::RegisterLocation(x86::EDI));
+  }
+
+  void SetupBlockedRegisters(bool is_baseline) const OVERRIDE {
+    x86::CodeGeneratorX86::SetupBlockedRegisters(is_baseline);
+    // ebx is a callee-save register in C, but caller-save for ART.
+    blocked_core_registers_[x86::EBX] = true;
+    blocked_register_pairs_[x86::EAX_EBX] = true;
+    blocked_register_pairs_[x86::EDX_EBX] = true;
+    blocked_register_pairs_[x86::ECX_EBX] = true;
+    blocked_register_pairs_[x86::EBX_EDI] = true;
+
+    // Make edi available.
+    blocked_core_registers_[x86::EDI] = false;
+    blocked_register_pairs_[x86::ECX_EDI] = false;
+  }
+};
+
+class InternalCodeAllocator : public CodeAllocator {
+ public:
+  InternalCodeAllocator() : size_(0) { }
+
+  virtual uint8_t* Allocate(size_t size) {
+    size_ = size;
+    memory_.reset(new uint8_t[size]);
+    return memory_.get();
+  }
+
+  size_t GetSize() const { return size_; }
+  uint8_t* GetMemory() const { return memory_.get(); }
+
+ private:
+  size_t size_;
+  std::unique_ptr<uint8_t[]> memory_;
+
+  DISALLOW_COPY_AND_ASSIGN(InternalCodeAllocator);
+};
+
+template <typename Expected>
+static void Run(const InternalCodeAllocator& allocator,
+                const CodeGenerator& codegen,
+                bool has_result,
+                Expected expected) {
+  typedef Expected (*fptr)();
+  CommonCompilerTest::MakeExecutable(allocator.GetMemory(), allocator.GetSize());
+  fptr f = reinterpret_cast<fptr>(allocator.GetMemory());
+  if (codegen.GetInstructionSet() == kThumb2) {
+    // For thumb we need the bottom bit set.
+    f = reinterpret_cast<fptr>(reinterpret_cast<uintptr_t>(f) + 1);
+  }
+  Expected result = f();
+  if (has_result) {
+    ASSERT_EQ(expected, result);
+  }
+}
+
+template <typename Expected>
+static void RunCodeBaseline(HGraph* graph, bool has_result, Expected expected) {
+  InternalCodeAllocator allocator;
+
+  CompilerOptions compiler_options;
+  std::unique_ptr<const X86InstructionSetFeatures> features_x86(
+      X86InstructionSetFeatures::FromCppDefines());
+  TestCodeGeneratorX86 codegenX86(graph, *features_x86.get(), compiler_options);
+  // We avoid doing a stack overflow check that requires the runtime being setup,
+  // by making sure the compiler knows the methods we are running are leaf methods.
+  codegenX86.CompileBaseline(&allocator, true);
+  if (kRuntimeISA == kX86) {
+    Run(allocator, codegenX86, has_result, expected);
+  }
+
+  std::unique_ptr<const ArmInstructionSetFeatures> features_arm(
+      ArmInstructionSetFeatures::FromCppDefines());
+  TestCodeGeneratorARM codegenARM(graph, *features_arm.get(), compiler_options);
+  codegenARM.CompileBaseline(&allocator, true);
+  if (kRuntimeISA == kArm || kRuntimeISA == kThumb2) {
+    Run(allocator, codegenARM, has_result, expected);
+  }
+
+  std::unique_ptr<const X86_64InstructionSetFeatures> features_x86_64(
+      X86_64InstructionSetFeatures::FromCppDefines());
+  x86_64::CodeGeneratorX86_64 codegenX86_64(graph, *features_x86_64.get(), compiler_options);
+  codegenX86_64.CompileBaseline(&allocator, true);
+  if (kRuntimeISA == kX86_64) {
+    Run(allocator, codegenX86_64, has_result, expected);
+  }
+
+  std::unique_ptr<const Arm64InstructionSetFeatures> features_arm64(
+      Arm64InstructionSetFeatures::FromCppDefines());
+  arm64::CodeGeneratorARM64 codegenARM64(graph, *features_arm64.get(), compiler_options);
+  codegenARM64.CompileBaseline(&allocator, true);
+  if (kRuntimeISA == kArm64) {
+    Run(allocator, codegenARM64, has_result, expected);
+  }
+
+  std::unique_ptr<const MipsInstructionSetFeatures> features_mips(
+      MipsInstructionSetFeatures::FromCppDefines());
+  mips::CodeGeneratorMIPS codegenMIPS(graph, *features_mips.get(), compiler_options);
+  codegenMIPS.CompileBaseline(&allocator, true);
+  if (kRuntimeISA == kMips) {
+    Run(allocator, codegenMIPS, has_result, expected);
+  }
+
+  std::unique_ptr<const Mips64InstructionSetFeatures> features_mips64(
+      Mips64InstructionSetFeatures::FromCppDefines());
+  mips64::CodeGeneratorMIPS64 codegenMIPS64(graph, *features_mips64.get(), compiler_options);
+  codegenMIPS64.CompileBaseline(&allocator, true);
+  if (kRuntimeISA == kMips64) {
+    Run(allocator, codegenMIPS64, has_result, expected);
+||||||| BASE
+  void SetupBlockedRegisters(bool is_baseline) const OVERRIDE {
+    arm::CodeGeneratorARM::SetupBlockedRegisters(is_baseline);
+    blocked_core_registers_[arm::R4] = true;
+    blocked_core_registers_[arm::R6] = false;
+    blocked_core_registers_[arm::R7] = false;
+    // Makes pair R6-R7 available.
+    blocked_register_pairs_[arm::R6_R7] = false;
+  }
+};
+
+class TestCodeGeneratorX86 : public x86::CodeGeneratorX86 {
+ public:
+  TestCodeGeneratorX86(HGraph* graph,
+                       const X86InstructionSetFeatures& isa_features,
+                       const CompilerOptions& compiler_options)
+      : x86::CodeGeneratorX86(graph, isa_features, compiler_options) {
+    // Save edi, we need it for getting enough registers for long multiplication.
+    AddAllocatedRegister(Location::RegisterLocation(x86::EDI));
+  }
+
+  void SetupBlockedRegisters(bool is_baseline) const OVERRIDE {
+    x86::CodeGeneratorX86::SetupBlockedRegisters(is_baseline);
+    // ebx is a callee-save register in C, but caller-save for ART.
+    blocked_core_registers_[x86::EBX] = true;
+    blocked_register_pairs_[x86::EAX_EBX] = true;
+    blocked_register_pairs_[x86::EDX_EBX] = true;
+    blocked_register_pairs_[x86::ECX_EBX] = true;
+    blocked_register_pairs_[x86::EBX_EDI] = true;
+
+    // Make edi available.
+    blocked_core_registers_[x86::EDI] = false;
+    blocked_register_pairs_[x86::ECX_EDI] = false;
+  }
+};
+
+class InternalCodeAllocator : public CodeAllocator {
+ public:
+  InternalCodeAllocator() : size_(0) { }
+
+  virtual uint8_t* Allocate(size_t size) {
+    size_ = size;
+    memory_.reset(new uint8_t[size]);
+    return memory_.get();
+  }
+
+  size_t GetSize() const { return size_; }
+  uint8_t* GetMemory() const { return memory_.get(); }
+
+ private:
+  size_t size_;
+  std::unique_ptr<uint8_t[]> memory_;
+
+  DISALLOW_COPY_AND_ASSIGN(InternalCodeAllocator);
+};
+
+static bool CanExecuteOnHardware(InstructionSet target_isa) {
+  return (target_isa == kRuntimeISA)
+      // Handle the special case of ARM, with two instructions sets (ARM32 and Thumb-2).
+      || (kRuntimeISA == kArm && target_isa == kThumb2);
+}
+
+static bool CanExecute(InstructionSet target_isa) {
+  CodeSimulatorContainer simulator(target_isa);
+  return CanExecuteOnHardware(target_isa) || simulator.CanSimulate();
+}
+
+template <typename Expected>
+static Expected SimulatorExecute(CodeSimulator* simulator, Expected (*f)());
+
+template <>
+bool SimulatorExecute<bool>(CodeSimulator* simulator, bool (*f)()) {
+  simulator->RunFrom(reinterpret_cast<intptr_t>(f));
+  return simulator->GetCReturnBool();
+}
+
+template <>
+int32_t SimulatorExecute<int32_t>(CodeSimulator* simulator, int32_t (*f)()) {
+  simulator->RunFrom(reinterpret_cast<intptr_t>(f));
+  return simulator->GetCReturnInt32();
+}
+
+template <>
+int64_t SimulatorExecute<int64_t>(CodeSimulator* simulator, int64_t (*f)()) {
+  simulator->RunFrom(reinterpret_cast<intptr_t>(f));
+  return simulator->GetCReturnInt64();
+}
+
+template <typename Expected>
+static void VerifyGeneratedCode(InstructionSet target_isa,
+                                Expected (*f)(),
+                                bool has_result,
+                                Expected expected) {
+  ASSERT_TRUE(CanExecute(target_isa)) << "Target isa is not executable.";
+
+  // Verify on simulator.
+  CodeSimulatorContainer simulator(target_isa);
+  if (simulator.CanSimulate()) {
+    Expected result = SimulatorExecute<Expected>(simulator.Get(), f);
+    if (has_result) {
+      ASSERT_EQ(expected, result);
+    }
+  }
+
+  // Verify on hardware.
+  if (CanExecuteOnHardware(target_isa)) {
+    Expected result = f();
+    if (has_result) {
+      ASSERT_EQ(expected, result);
+    }
+  }
+}
+
+template <typename Expected>
+static void Run(const InternalCodeAllocator& allocator,
+                const CodeGenerator& codegen,
+                bool has_result,
+                Expected expected) {
+  InstructionSet target_isa = codegen.GetInstructionSet();
+
+  typedef Expected (*fptr)();
+  CommonCompilerTest::MakeExecutable(allocator.GetMemory(), allocator.GetSize());
+  fptr f = reinterpret_cast<fptr>(allocator.GetMemory());
+  if (target_isa == kThumb2) {
+    // For thumb we need the bottom bit set.
+    f = reinterpret_cast<fptr>(reinterpret_cast<uintptr_t>(f) + 1);
+  }
+  VerifyGeneratedCode(target_isa, f, has_result, expected);
+}
+
+template <typename Expected>
+static void RunCodeBaseline(InstructionSet target_isa,
+                            HGraph* graph,
+                            bool has_result,
+                            Expected expected) {
+  InternalCodeAllocator allocator;
+
+  CompilerOptions compiler_options;
+  std::unique_ptr<const X86InstructionSetFeatures> features_x86(
+      X86InstructionSetFeatures::FromCppDefines());
+  TestCodeGeneratorX86 codegenX86(graph, *features_x86.get(), compiler_options);
+  // We avoid doing a stack overflow check that requires the runtime being setup,
+  // by making sure the compiler knows the methods we are running are leaf methods.
+  codegenX86.CompileBaseline(&allocator, true);
+  if (target_isa == kX86) {
+    Run(allocator, codegenX86, has_result, expected);
+  }
+
+  std::unique_ptr<const ArmInstructionSetFeatures> features_arm(
+      ArmInstructionSetFeatures::FromCppDefines());
+  TestCodeGeneratorARM codegenARM(graph, *features_arm.get(), compiler_options);
+  codegenARM.CompileBaseline(&allocator, true);
+  if (target_isa == kArm || target_isa == kThumb2) {
+    Run(allocator, codegenARM, has_result, expected);
+  }
+
+  std::unique_ptr<const X86_64InstructionSetFeatures> features_x86_64(
+      X86_64InstructionSetFeatures::FromCppDefines());
+  x86_64::CodeGeneratorX86_64 codegenX86_64(graph, *features_x86_64.get(), compiler_options);
+  codegenX86_64.CompileBaseline(&allocator, true);
+  if (target_isa == kX86_64) {
+    Run(allocator, codegenX86_64, has_result, expected);
+  }
+
+  std::unique_ptr<const Arm64InstructionSetFeatures> features_arm64(
+      Arm64InstructionSetFeatures::FromCppDefines());
+  arm64::CodeGeneratorARM64 codegenARM64(graph, *features_arm64.get(), compiler_options);
+  codegenARM64.CompileBaseline(&allocator, true);
+  if (target_isa == kArm64) {
+    Run(allocator, codegenARM64, has_result, expected);
+  }
+
+  std::unique_ptr<const MipsInstructionSetFeatures> features_mips(
+      MipsInstructionSetFeatures::FromCppDefines());
+  mips::CodeGeneratorMIPS codegenMIPS(graph, *features_mips.get(), compiler_options);
+  codegenMIPS.CompileBaseline(&allocator, true);
+  if (kRuntimeISA == kMips) {
+    Run(allocator, codegenMIPS, has_result, expected);
+  }
+
+  std::unique_ptr<const Mips64InstructionSetFeatures> features_mips64(
+      Mips64InstructionSetFeatures::FromCppDefines());
+  mips64::CodeGeneratorMIPS64 codegenMIPS64(graph, *features_mips64.get(), compiler_options);
+  codegenMIPS64.CompileBaseline(&allocator, true);
+  if (target_isa == kMips64) {
+    Run(allocator, codegenMIPS64, has_result, expected);
+=======
   for (const CodegenTargetConfig& test_config : test_config_candidates) {
     if (CanExecuteISA(test_config.GetInstructionSet())) {
       v.push_back(test_config);
@@ -103,6 +440,7 @@ void CodegenTest::TestCodeLong(const std::vector<uint16_t>& data,
     std::unique_ptr<CompilerOptions> compiler_options =
         CommonCompilerTest::CreateCompilerOptions(target_config.GetInstructionSet(), "default");
     RunCode(target_config, *compiler_options, graph, [](HGraph*) {}, has_result, expected);
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
   }
 }
 
@@ -111,16 +449,181 @@ TEST_F(CodegenTest, ReturnVoid) {
   TestCode(data);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+template <typename Expected>
+static void RunCodeOptimized(HGraph* graph,
+                             std::function<void(HGraph*)> hook_before_codegen,
+                             bool has_result,
+                             Expected expected) {
+  CompilerOptions compiler_options;
+  if (kRuntimeISA == kArm || kRuntimeISA == kThumb2) {
+    TestCodeGeneratorARM codegenARM(graph,
+                                    *ArmInstructionSetFeatures::FromCppDefines(),
+                                    compiler_options);
+    RunCodeOptimized(&codegenARM, graph, hook_before_codegen, has_result, expected);
+  } else if (kRuntimeISA == kArm64) {
+    arm64::CodeGeneratorARM64 codegenARM64(graph,
+                                           *Arm64InstructionSetFeatures::FromCppDefines(),
+                                           compiler_options);
+    RunCodeOptimized(&codegenARM64, graph, hook_before_codegen, has_result, expected);
+  } else if (kRuntimeISA == kX86) {
+    std::unique_ptr<const X86InstructionSetFeatures> features_x86(
+        X86InstructionSetFeatures::FromCppDefines());
+    x86::CodeGeneratorX86 codegenX86(graph, *features_x86.get(), compiler_options);
+    RunCodeOptimized(&codegenX86, graph, hook_before_codegen, has_result, expected);
+  } else if (kRuntimeISA == kX86_64) {
+    std::unique_ptr<const X86_64InstructionSetFeatures> features_x86_64(
+        X86_64InstructionSetFeatures::FromCppDefines());
+    x86_64::CodeGeneratorX86_64 codegenX86_64(graph, *features_x86_64.get(), compiler_options);
+    RunCodeOptimized(&codegenX86_64, graph, hook_before_codegen, has_result, expected);
+  } else if (kRuntimeISA == kMips) {
+    std::unique_ptr<const MipsInstructionSetFeatures> features_mips(
+        MipsInstructionSetFeatures::FromCppDefines());
+    mips::CodeGeneratorMIPS codegenMIPS(graph, *features_mips.get(), compiler_options);
+    RunCodeOptimized(&codegenMIPS, graph, hook_before_codegen, has_result, expected);
+  } else if (kRuntimeISA == kMips64) {
+    std::unique_ptr<const Mips64InstructionSetFeatures> features_mips64(
+        Mips64InstructionSetFeatures::FromCppDefines());
+    mips64::CodeGeneratorMIPS64 codegenMIPS64(graph, *features_mips64.get(), compiler_options);
+    RunCodeOptimized(&codegenMIPS64, graph, hook_before_codegen, has_result, expected);
+  }
+}
+
+static void TestCode(const uint16_t* data, bool has_result = false, int32_t expected = 0) {
+  ArenaPool pool;
+  ArenaAllocator arena(&pool);
+  HGraph* graph = CreateGraph(&arena);
+  HGraphBuilder builder(graph);
+  const DexFile::CodeItem* item = reinterpret_cast<const DexFile::CodeItem*>(data);
+  bool graph_built = builder.BuildGraph(*item);
+  ASSERT_TRUE(graph_built);
+  // Remove suspend checks, they cannot be executed in this context.
+  RemoveSuspendChecks(graph);
+  RunCodeBaseline(graph, has_result, expected);
+}
+
+static void TestCodeLong(const uint16_t* data, bool has_result, int64_t expected) {
+  ArenaPool pool;
+  ArenaAllocator arena(&pool);
+  HGraph* graph = CreateGraph(&arena);
+  HGraphBuilder builder(graph, Primitive::kPrimLong);
+  const DexFile::CodeItem* item = reinterpret_cast<const DexFile::CodeItem*>(data);
+  bool graph_built = builder.BuildGraph(*item);
+  ASSERT_TRUE(graph_built);
+  // Remove suspend checks, they cannot be executed in this context.
+  RemoveSuspendChecks(graph);
+  RunCodeBaseline(graph, has_result, expected);
+}
+
+TEST(CodegenTest, ReturnVoid) {
+  const uint16_t data[] = ZERO_REGISTER_CODE_ITEM(Instruction::RETURN_VOID);
+  TestCode(data);
+}
+
+TEST(CodegenTest, CFG1) {
+  const uint16_t data[] = ZERO_REGISTER_CODE_ITEM(
+||||||| BASE
+template <typename Expected>
+static void RunCodeOptimized(InstructionSet target_isa,
+                             HGraph* graph,
+                             std::function<void(HGraph*)> hook_before_codegen,
+                             bool has_result,
+                             Expected expected) {
+  CompilerOptions compiler_options;
+  if (target_isa == kArm || target_isa == kThumb2) {
+    std::unique_ptr<const ArmInstructionSetFeatures> features_arm(
+        ArmInstructionSetFeatures::FromCppDefines());
+    TestCodeGeneratorARM codegenARM(graph, *features_arm.get(), compiler_options);
+    RunCodeOptimized(&codegenARM, graph, hook_before_codegen, has_result, expected);
+  } else if (target_isa == kArm64) {
+    std::unique_ptr<const Arm64InstructionSetFeatures> features_arm64(
+        Arm64InstructionSetFeatures::FromCppDefines());
+    arm64::CodeGeneratorARM64 codegenARM64(graph, *features_arm64.get(), compiler_options);
+    RunCodeOptimized(&codegenARM64, graph, hook_before_codegen, has_result, expected);
+  } else if (target_isa == kX86) {
+    std::unique_ptr<const X86InstructionSetFeatures> features_x86(
+        X86InstructionSetFeatures::FromCppDefines());
+    x86::CodeGeneratorX86 codegenX86(graph, *features_x86.get(), compiler_options);
+    RunCodeOptimized(&codegenX86, graph, hook_before_codegen, has_result, expected);
+  } else if (target_isa == kX86_64) {
+    std::unique_ptr<const X86_64InstructionSetFeatures> features_x86_64(
+        X86_64InstructionSetFeatures::FromCppDefines());
+    x86_64::CodeGeneratorX86_64 codegenX86_64(graph, *features_x86_64.get(), compiler_options);
+    RunCodeOptimized(&codegenX86_64, graph, hook_before_codegen, has_result, expected);
+  } else if (target_isa == kMips) {
+    std::unique_ptr<const MipsInstructionSetFeatures> features_mips(
+        MipsInstructionSetFeatures::FromCppDefines());
+    mips::CodeGeneratorMIPS codegenMIPS(graph, *features_mips.get(), compiler_options);
+    RunCodeOptimized(&codegenMIPS, graph, hook_before_codegen, has_result, expected);
+  } else if (target_isa == kMips64) {
+    std::unique_ptr<const Mips64InstructionSetFeatures> features_mips64(
+        Mips64InstructionSetFeatures::FromCppDefines());
+    mips64::CodeGeneratorMIPS64 codegenMIPS64(graph, *features_mips64.get(), compiler_options);
+    RunCodeOptimized(&codegenMIPS64, graph, hook_before_codegen, has_result, expected);
+  }
+}
+
+static void TestCode(InstructionSet target_isa,
+                     const uint16_t* data,
+                     bool has_result = false,
+                     int32_t expected = 0) {
+  ArenaPool pool;
+  ArenaAllocator arena(&pool);
+  HGraph* graph = CreateGraph(&arena);
+  HGraphBuilder builder(graph);
+  const DexFile::CodeItem* item = reinterpret_cast<const DexFile::CodeItem*>(data);
+  bool graph_built = builder.BuildGraph(*item);
+  ASSERT_TRUE(graph_built);
+  // Remove suspend checks, they cannot be executed in this context.
+  RemoveSuspendChecks(graph);
+  RunCodeBaseline(target_isa, graph, has_result, expected);
+}
+
+static void TestCodeLong(InstructionSet target_isa,
+                         const uint16_t* data,
+                         bool has_result,
+                         int64_t expected) {
+  ArenaPool pool;
+  ArenaAllocator arena(&pool);
+  HGraph* graph = CreateGraph(&arena);
+  HGraphBuilder builder(graph, Primitive::kPrimLong);
+  const DexFile::CodeItem* item = reinterpret_cast<const DexFile::CodeItem*>(data);
+  bool graph_built = builder.BuildGraph(*item);
+  ASSERT_TRUE(graph_built);
+  // Remove suspend checks, they cannot be executed in this context.
+  RemoveSuspendChecks(graph);
+  RunCodeBaseline(target_isa, graph, has_result, expected);
+}
+
+class CodegenTest: public ::testing::TestWithParam<InstructionSet> {};
+
+TEST_P(CodegenTest, ReturnVoid) {
+  const uint16_t data[] = ZERO_REGISTER_CODE_ITEM(Instruction::RETURN_VOID);
+  TestCode(GetParam(), data);
+}
+
+TEST_P(CodegenTest, CFG1) {
+  const uint16_t data[] = ZERO_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, CFG1) {
   const std::vector<uint16_t> data = ZERO_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::GOTO | 0x100,
     Instruction::RETURN_VOID);
 
   TestCode(data);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, CFG2) {
+  const uint16_t data[] = ZERO_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, CFG2) {
+  const uint16_t data[] = ZERO_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, CFG2) {
   const std::vector<uint16_t> data = ZERO_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::GOTO | 0x100,
     Instruction::GOTO | 0x100,
     Instruction::RETURN_VOID);
@@ -128,8 +631,16 @@ TEST_F(CodegenTest, CFG2) {
   TestCode(data);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, CFG3) {
+  const uint16_t data1[] = ZERO_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, CFG3) {
+  const uint16_t data1[] = ZERO_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, CFG3) {
   const std::vector<uint16_t> data1 = ZERO_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::GOTO | 0x200,
     Instruction::RETURN_VOID,
     Instruction::GOTO | 0xFF00);
@@ -151,8 +662,16 @@ TEST_F(CodegenTest, CFG3) {
   TestCode(data3);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, CFG4) {
+  const uint16_t data[] = ZERO_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, CFG4) {
+  const uint16_t data[] = ZERO_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, CFG4) {
   const std::vector<uint16_t> data = ZERO_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::RETURN_VOID,
     Instruction::GOTO | 0x100,
     Instruction::GOTO | 0xFE00);
@@ -160,8 +679,16 @@ TEST_F(CodegenTest, CFG4) {
   TestCode(data);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, CFG5) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, CFG5) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, CFG5) {
   const std::vector<uint16_t> data = ONE_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 0 | 0,
     Instruction::IF_EQ, 3,
     Instruction::GOTO | 0x100,
@@ -170,24 +697,48 @@ TEST_F(CodegenTest, CFG5) {
   TestCode(data);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, IntConstant) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, IntConstant) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, IntConstant) {
   const std::vector<uint16_t> data = ONE_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 0 | 0,
     Instruction::RETURN_VOID);
 
   TestCode(data);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, Return1) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, Return1) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, Return1) {
   const std::vector<uint16_t> data = ONE_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 0 | 0,
     Instruction::RETURN | 0);
 
   TestCode(data, true, 0);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, Return2) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, Return2) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+=======
 TEST_F(CodegenTest, Return2) {
   const std::vector<uint16_t> data = TWO_REGISTERS_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 0 | 0,
     Instruction::CONST_4 | 0 | 1 << 8,
     Instruction::RETURN | 1 << 8);
@@ -195,8 +746,16 @@ TEST_F(CodegenTest, Return2) {
   TestCode(data, true, 0);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, Return3) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, Return3) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+=======
 TEST_F(CodegenTest, Return3) {
   const std::vector<uint16_t> data = TWO_REGISTERS_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 0 | 0,
     Instruction::CONST_4 | 1 << 8 | 1 << 12,
     Instruction::RETURN | 1 << 8);
@@ -204,8 +763,16 @@ TEST_F(CodegenTest, Return3) {
   TestCode(data, true, 1);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnIf1) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnIf1) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnIf1) {
   const std::vector<uint16_t> data = TWO_REGISTERS_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 0 | 0,
     Instruction::CONST_4 | 1 << 8 | 1 << 12,
     Instruction::IF_EQ, 3,
@@ -215,8 +782,16 @@ TEST_F(CodegenTest, ReturnIf1) {
   TestCode(data, true, 1);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnIf2) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnIf2) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnIf2) {
   const std::vector<uint16_t> data = TWO_REGISTERS_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 0 | 0,
     Instruction::CONST_4 | 1 << 8 | 1 << 12,
     Instruction::IF_EQ | 0 << 4 | 1 << 8, 3,
@@ -227,6 +802,31 @@ TEST_F(CodegenTest, ReturnIf2) {
 }
 
 // Exercise bit-wise (one's complement) not-int instruction.
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+#define NOT_INT_TEST(TEST_NAME, INPUT, EXPECTED_OUTPUT) \
+TEST(CodegenTest, TEST_NAME) {                          \
+  const int32_t input = INPUT;                          \
+  const uint16_t input_lo = Low16Bits(input);           \
+  const uint16_t input_hi = High16Bits(input);          \
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(      \
+      Instruction::CONST | 0 << 8, input_lo, input_hi,  \
+      Instruction::NOT_INT | 1 << 8 | 0 << 12 ,         \
+      Instruction::RETURN | 1 << 8);                    \
+                                                        \
+  TestCode(data, true, EXPECTED_OUTPUT);                \
+||||||| BASE
+#define NOT_INT_TEST(TEST_NAME, INPUT, EXPECTED_OUTPUT) \
+TEST_P(CodegenTest, TEST_NAME) {                        \
+  const int32_t input = INPUT;                          \
+  const uint16_t input_lo = Low16Bits(input);           \
+  const uint16_t input_hi = High16Bits(input);          \
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(      \
+      Instruction::CONST | 0 << 8, input_lo, input_hi,  \
+      Instruction::NOT_INT | 1 << 8 | 0 << 12 ,         \
+      Instruction::RETURN | 1 << 8);                    \
+                                                        \
+  TestCode(GetParam(), data, true, EXPECTED_OUTPUT);    \
+=======
 #define NOT_INT_TEST(TEST_NAME, INPUT, EXPECTED_OUTPUT)           \
 TEST_F(CodegenTest, TEST_NAME) {                                  \
   const int32_t input = INPUT;                                    \
@@ -238,6 +838,7 @@ TEST_F(CodegenTest, TEST_NAME) {                                  \
       Instruction::RETURN | 1 << 8);                              \
                                                                   \
   TestCode(data, true, EXPECTED_OUTPUT);                          \
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
 }
 
 NOT_INT_TEST(ReturnNotIntMinus2, -2, 1)
@@ -253,7 +854,13 @@ NOT_INT_TEST(ReturnNotIntINT32_MAX, 2147483647, -2147483648)  // -(2^31)
 
 // Exercise bit-wise (one's complement) not-long instruction.
 #define NOT_LONG_TEST(TEST_NAME, INPUT, EXPECTED_OUTPUT)                 \
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, TEST_NAME) {                                           \
+||||||| BASE
+TEST_P(CodegenTest, TEST_NAME) {                                         \
+=======
 TEST_F(CodegenTest, TEST_NAME) {                                         \
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
   const int64_t input = INPUT;                                           \
   const uint16_t word0 = Low16Bits(Low32Bits(input));   /* LSW. */       \
   const uint16_t word1 = High16Bits(Low32Bits(input));                   \
@@ -303,7 +910,13 @@ NOT_LONG_TEST(ReturnNotLongINT64_MAX,
 
 #undef NOT_LONG_TEST
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, IntToLongOfLongToInt) {
+||||||| BASE
+TEST_P(CodegenTest, IntToLongOfLongToInt) {
+=======
 TEST_F(CodegenTest, IntToLongOfLongToInt) {
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
   const int64_t input = INT64_C(4294967296);             // 2^32
   const uint16_t word0 = Low16Bits(Low32Bits(input));    // LSW.
   const uint16_t word1 = High16Bits(Low32Bits(input));
@@ -320,8 +933,16 @@ TEST_F(CodegenTest, IntToLongOfLongToInt) {
   TestCodeLong(data, true, 1);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnAdd1) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnAdd1) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnAdd1) {
   const std::vector<uint16_t> data = TWO_REGISTERS_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 3 << 12 | 0,
     Instruction::CONST_4 | 4 << 12 | 1 << 8,
     Instruction::ADD_INT, 1 << 8 | 0,
@@ -330,8 +951,16 @@ TEST_F(CodegenTest, ReturnAdd1) {
   TestCode(data, true, 7);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnAdd2) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnAdd2) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnAdd2) {
   const std::vector<uint16_t> data = TWO_REGISTERS_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 3 << 12 | 0,
     Instruction::CONST_4 | 4 << 12 | 1 << 8,
     Instruction::ADD_INT_2ADDR | 1 << 12,
@@ -340,8 +969,16 @@ TEST_F(CodegenTest, ReturnAdd2) {
   TestCode(data, true, 7);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnAdd3) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnAdd3) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnAdd3) {
   const std::vector<uint16_t> data = ONE_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 4 << 12 | 0 << 8,
     Instruction::ADD_INT_LIT8, 3 << 8 | 0,
     Instruction::RETURN);
@@ -349,8 +986,16 @@ TEST_F(CodegenTest, ReturnAdd3) {
   TestCode(data, true, 7);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnAdd4) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnAdd4) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnAdd4) {
   const std::vector<uint16_t> data = ONE_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 4 << 12 | 0 << 8,
     Instruction::ADD_INT_LIT16, 3,
     Instruction::RETURN);
@@ -358,8 +1003,114 @@ TEST_F(CodegenTest, ReturnAdd4) {
   TestCode(data, true, 7);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, NonMaterializedCondition) {
+  ArenaPool pool;
+  ArenaAllocator allocator(&pool);
+
+  HGraph* graph = CreateGraph(&allocator);
+  HBasicBlock* entry = new (&allocator) HBasicBlock(graph);
+  graph->AddBlock(entry);
+  graph->SetEntryBlock(entry);
+  entry->AddInstruction(new (&allocator) HGoto());
+
+  HBasicBlock* first_block = new (&allocator) HBasicBlock(graph);
+  graph->AddBlock(first_block);
+  entry->AddSuccessor(first_block);
+  HIntConstant* constant0 = graph->GetIntConstant(0);
+  HIntConstant* constant1 = graph->GetIntConstant(1);
+  HEqual* equal = new (&allocator) HEqual(constant0, constant0);
+  first_block->AddInstruction(equal);
+  first_block->AddInstruction(new (&allocator) HIf(equal));
+
+  HBasicBlock* then = new (&allocator) HBasicBlock(graph);
+  HBasicBlock* else_ = new (&allocator) HBasicBlock(graph);
+  HBasicBlock* exit = new (&allocator) HBasicBlock(graph);
+
+  graph->AddBlock(then);
+  graph->AddBlock(else_);
+  graph->AddBlock(exit);
+  first_block->AddSuccessor(then);
+  first_block->AddSuccessor(else_);
+  then->AddSuccessor(exit);
+  else_->AddSuccessor(exit);
+
+  exit->AddInstruction(new (&allocator) HExit());
+  then->AddInstruction(new (&allocator) HReturn(constant0));
+  else_->AddInstruction(new (&allocator) HReturn(constant1));
+
+  ASSERT_TRUE(equal->NeedsMaterialization());
+  graph->BuildDominatorTree();
+  PrepareForRegisterAllocation(graph).Run();
+  ASSERT_FALSE(equal->NeedsMaterialization());
+
+  auto hook_before_codegen = [](HGraph* graph_in) {
+    HBasicBlock* block = graph_in->GetEntryBlock()->GetSuccessors()[0];
+    HParallelMove* move = new (graph_in->GetArena()) HParallelMove(graph_in->GetArena());
+    block->InsertInstructionBefore(move, block->GetLastInstruction());
+  };
+
+  RunCodeOptimized(graph, hook_before_codegen, true, 0);
+}
+
+TEST(CodegenTest, ReturnMulInt) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, NonMaterializedCondition) {
+  ArenaPool pool;
+  ArenaAllocator allocator(&pool);
+
+  HGraph* graph = CreateGraph(&allocator);
+  HBasicBlock* entry = new (&allocator) HBasicBlock(graph);
+  graph->AddBlock(entry);
+  graph->SetEntryBlock(entry);
+  entry->AddInstruction(new (&allocator) HGoto());
+
+  HBasicBlock* first_block = new (&allocator) HBasicBlock(graph);
+  graph->AddBlock(first_block);
+  entry->AddSuccessor(first_block);
+  HIntConstant* constant0 = graph->GetIntConstant(0);
+  HIntConstant* constant1 = graph->GetIntConstant(1);
+  HEqual* equal = new (&allocator) HEqual(constant0, constant0);
+  first_block->AddInstruction(equal);
+  first_block->AddInstruction(new (&allocator) HIf(equal));
+
+  HBasicBlock* then = new (&allocator) HBasicBlock(graph);
+  HBasicBlock* else_ = new (&allocator) HBasicBlock(graph);
+  HBasicBlock* exit = new (&allocator) HBasicBlock(graph);
+
+  graph->AddBlock(then);
+  graph->AddBlock(else_);
+  graph->AddBlock(exit);
+  first_block->AddSuccessor(then);
+  first_block->AddSuccessor(else_);
+  then->AddSuccessor(exit);
+  else_->AddSuccessor(exit);
+
+  exit->AddInstruction(new (&allocator) HExit());
+  then->AddInstruction(new (&allocator) HReturn(constant0));
+  else_->AddInstruction(new (&allocator) HReturn(constant1));
+
+  ASSERT_TRUE(equal->NeedsMaterialization());
+  graph->BuildDominatorTree();
+  PrepareForRegisterAllocation(graph).Run();
+  ASSERT_FALSE(equal->NeedsMaterialization());
+
+  auto hook_before_codegen = [](HGraph* graph_in) {
+    HBasicBlock* block = graph_in->GetEntryBlock()->GetSuccessors()[0];
+    HParallelMove* move = new (graph_in->GetArena()) HParallelMove(graph_in->GetArena());
+    block->InsertInstructionBefore(move, block->GetLastInstruction());
+  };
+
+  RunCodeOptimized(GetParam(), graph, hook_before_codegen, true, 0);
+}
+
+TEST_P(CodegenTest, ReturnMulInt) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnMulInt) {
   const std::vector<uint16_t> data = TWO_REGISTERS_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 3 << 12 | 0,
     Instruction::CONST_4 | 4 << 12 | 1 << 8,
     Instruction::MUL_INT, 1 << 8 | 0,
@@ -368,8 +1119,16 @@ TEST_F(CodegenTest, ReturnMulInt) {
   TestCode(data, true, 12);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnMulInt2addr) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnMulInt2addr) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnMulInt2addr) {
   const std::vector<uint16_t> data = TWO_REGISTERS_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 3 << 12 | 0,
     Instruction::CONST_4 | 4 << 12 | 1 << 8,
     Instruction::MUL_INT_2ADDR | 1 << 12,
@@ -378,28 +1137,68 @@ TEST_F(CodegenTest, ReturnMulInt2addr) {
   TestCode(data, true, 12);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnMulLong) {
+  const uint16_t data[] = FOUR_REGISTERS_CODE_ITEM(
+    Instruction::CONST_4 | 3 << 12 | 0,
+    Instruction::CONST_4 | 0 << 12 | 1 << 8,
+    Instruction::CONST_4 | 4 << 12 | 2 << 8,
+    Instruction::CONST_4 | 0 << 12 | 3 << 8,
+||||||| BASE
+TEST_P(CodegenTest, ReturnMulLong) {
+  const uint16_t data[] = FOUR_REGISTERS_CODE_ITEM(
+    Instruction::CONST_4 | 3 << 12 | 0,
+    Instruction::CONST_4 | 0 << 12 | 1 << 8,
+    Instruction::CONST_4 | 4 << 12 | 2 << 8,
+    Instruction::CONST_4 | 0 << 12 | 3 << 8,
+=======
 TEST_F(CodegenTest, ReturnMulLong) {
   const std::vector<uint16_t> data = FOUR_REGISTERS_CODE_ITEM(
     Instruction::CONST_WIDE | 0 << 8, 3, 0, 0, 0,
     Instruction::CONST_WIDE | 2 << 8, 4, 0, 0, 0,
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::MUL_LONG, 2 << 8 | 0,
     Instruction::RETURN_WIDE);
 
   TestCodeLong(data, true, 12);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnMulLong2addr) {
+  const uint16_t data[] = FOUR_REGISTERS_CODE_ITEM(
+    Instruction::CONST_4 | 3 << 12 | 0 << 8,
+    Instruction::CONST_4 | 0 << 12 | 1 << 8,
+    Instruction::CONST_4 | 4 << 12 | 2 << 8,
+    Instruction::CONST_4 | 0 << 12 | 3 << 8,
+||||||| BASE
+TEST_P(CodegenTest, ReturnMulLong2addr) {
+  const uint16_t data[] = FOUR_REGISTERS_CODE_ITEM(
+    Instruction::CONST_4 | 3 << 12 | 0 << 8,
+    Instruction::CONST_4 | 0 << 12 | 1 << 8,
+    Instruction::CONST_4 | 4 << 12 | 2 << 8,
+    Instruction::CONST_4 | 0 << 12 | 3 << 8,
+=======
 TEST_F(CodegenTest, ReturnMulLong2addr) {
   const std::vector<uint16_t> data = FOUR_REGISTERS_CODE_ITEM(
     Instruction::CONST_WIDE | 0 << 8, 3, 0, 0, 0,
     Instruction::CONST_WIDE | 2 << 8, 4, 0, 0, 0,
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::MUL_LONG_2ADDR | 2 << 12,
     Instruction::RETURN_WIDE);
 
   TestCodeLong(data, true, 12);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnMulIntLit8) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnMulIntLit8) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnMulIntLit8) {
   const std::vector<uint16_t> data = ONE_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 4 << 12 | 0 << 8,
     Instruction::MUL_INT_LIT8, 3 << 8 | 0,
     Instruction::RETURN);
@@ -407,8 +1206,16 @@ TEST_F(CodegenTest, ReturnMulIntLit8) {
   TestCode(data, true, 12);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnMulIntLit16) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnMulIntLit16) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnMulIntLit16) {
   const std::vector<uint16_t> data = ONE_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 4 << 12 | 0 << 8,
     Instruction::MUL_INT_LIT16, 3,
     Instruction::RETURN);
@@ -416,9 +1223,23 @@ TEST_F(CodegenTest, ReturnMulIntLit16) {
   TestCode(data, true, 12);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, MaterializedCondition1) {
+  // Check that condition are materialized correctly. A materialized condition
+  // should yield `1` if it evaluated to true, and `0` otherwise.
+  // We force the materialization of comparisons for different combinations of
+  // inputs and check the results.
+||||||| BASE
+TEST_P(CodegenTest, MaterializedCondition1) {
+  // Check that condition are materialized correctly. A materialized condition
+  // should yield `1` if it evaluated to true, and `0` otherwise.
+  // We force the materialization of comparisons for different combinations of
+  // inputs and check the results.
+=======
 TEST_F(CodegenTest, NonMaterializedCondition) {
   for (CodegenTargetConfig target_config : GetTargetConfigs()) {
     HGraph* graph = CreateGraph();
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
 
     HBasicBlock* entry = new (GetAllocator()) HBasicBlock(graph);
     graph->AddBlock(entry);
@@ -463,15 +1284,35 @@ TEST_F(CodegenTest, NonMaterializedCondition) {
       block->InsertInstructionBefore(move, block->GetLastInstruction());
     };
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+    RunCodeOptimized(graph, hook_before_codegen, true, lhs[i] < rhs[i]);
+||||||| BASE
+    RunCodeOptimized(GetParam(), graph, hook_before_codegen, true, lhs[i] < rhs[i]);
+=======
     RunCode(target_config, *compiler_options, graph, hook_before_codegen, true, 0);
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
   }
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, MaterializedCondition2) {
+  // Check that HIf correctly interprets a materialized condition.
+  // We force the materialization of comparisons for different combinations of
+  // inputs. An HIf takes the materialized combination as input and returns a
+  // value that we verify.
+||||||| BASE
+TEST_P(CodegenTest, MaterializedCondition2) {
+  // Check that HIf correctly interprets a materialized condition.
+  // We force the materialization of comparisons for different combinations of
+  // inputs. An HIf takes the materialized combination as input and returns a
+  // value that we verify.
+=======
 TEST_F(CodegenTest, MaterializedCondition1) {
   for (CodegenTargetConfig target_config : GetTargetConfigs()) {
     // Check that condition are materialized correctly. A materialized condition
     // should yield `1` if it evaluated to true, and `0` otherwise.
     // We force the materialization of comparisons for different combinations of
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
 
     // inputs and check the results.
 
@@ -500,6 +1341,59 @@ TEST_F(CodegenTest, MaterializedCondition1) {
       HInstruction* cmp_lt = MakeCondition(code_block, kCondLT, cst_lhs, cst_rhs);
       MakeReturn(code_block, cmp_lt);
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+    HIntConstant* cst_lhs = graph->GetIntConstant(lhs[i]);
+    HIntConstant* cst_rhs = graph->GetIntConstant(rhs[i]);
+    HLessThan cmp_lt(cst_lhs, cst_rhs);
+    if_block->AddInstruction(&cmp_lt);
+    // We insert a temporary to separate the HIf from the HLessThan and force
+    // the materialization of the condition.
+    HTemporary force_materialization(0);
+    if_block->AddInstruction(&force_materialization);
+    HIf if_lt(&cmp_lt);
+    if_block->AddInstruction(&if_lt);
+
+    HIntConstant* cst_lt = graph->GetIntConstant(1);
+    HReturn ret_lt(cst_lt);
+    if_true_block->AddInstruction(&ret_lt);
+    HIntConstant* cst_ge = graph->GetIntConstant(0);
+    HReturn ret_ge(cst_ge);
+    if_false_block->AddInstruction(&ret_ge);
+
+    auto hook_before_codegen = [](HGraph* graph_in) {
+      HBasicBlock* block = graph_in->GetEntryBlock()->GetSuccessors()[0];
+      HParallelMove* move = new (graph_in->GetArena()) HParallelMove(graph_in->GetArena());
+      block->InsertInstructionBefore(move, block->GetLastInstruction());
+    };
+
+    RunCodeOptimized(graph, hook_before_codegen, true, lhs[i] < rhs[i]);
+||||||| BASE
+    HIntConstant* cst_lhs = graph->GetIntConstant(lhs[i]);
+    HIntConstant* cst_rhs = graph->GetIntConstant(rhs[i]);
+    HLessThan cmp_lt(cst_lhs, cst_rhs);
+    if_block->AddInstruction(&cmp_lt);
+    // We insert a temporary to separate the HIf from the HLessThan and force
+    // the materialization of the condition.
+    HTemporary force_materialization(0);
+    if_block->AddInstruction(&force_materialization);
+    HIf if_lt(&cmp_lt);
+    if_block->AddInstruction(&if_lt);
+
+    HIntConstant* cst_lt = graph->GetIntConstant(1);
+    HReturn ret_lt(cst_lt);
+    if_true_block->AddInstruction(&ret_lt);
+    HIntConstant* cst_ge = graph->GetIntConstant(0);
+    HReturn ret_ge(cst_ge);
+    if_false_block->AddInstruction(&ret_ge);
+
+    auto hook_before_codegen = [](HGraph* graph_in) {
+      HBasicBlock* block = graph_in->GetEntryBlock()->GetSuccessors()[0];
+      HParallelMove* move = new (graph_in->GetArena()) HParallelMove(graph_in->GetArena());
+      block->InsertInstructionBefore(move, block->GetLastInstruction());
+    };
+
+    RunCodeOptimized(GetParam(), graph, hook_before_codegen, true, lhs[i] < rhs[i]);
+=======
       graph->BuildDominatorTree();
       auto hook_before_codegen = [](HGraph* graph_in) {
         HBasicBlock* block = graph_in->GetEntryBlock()->GetSuccessors()[0];
@@ -511,9 +1405,17 @@ TEST_F(CodegenTest, MaterializedCondition1) {
           CommonCompilerTest::CreateCompilerOptions(target_config.GetInstructionSet(), "default");
       RunCode(target_config, *compiler_options, graph, hook_before_codegen, true, lhs[i] < rhs[i]);
     }
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
   }
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnDivIntLit8) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnDivIntLit8) {
+  const uint16_t data[] = ONE_REGISTER_CODE_ITEM(
+=======
 TEST_F(CodegenTest, MaterializedCondition2) {
   for (CodegenTargetConfig target_config : GetTargetConfigs()) {
     // Check that HIf correctly interprets a materialized condition.
@@ -582,6 +1484,7 @@ TEST_F(CodegenTest, MaterializedCondition2) {
 
 TEST_F(CodegenTest, ReturnDivIntLit8) {
   const std::vector<uint16_t> data = ONE_REGISTER_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 4 << 12 | 0 << 8,
     Instruction::DIV_INT_LIT8, 3 << 8 | 0,
     Instruction::RETURN);
@@ -589,14 +1492,25 @@ TEST_F(CodegenTest, ReturnDivIntLit8) {
   TestCode(data, true, 1);
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ReturnDivInt2Addr) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+||||||| BASE
+TEST_P(CodegenTest, ReturnDivInt2Addr) {
+  const uint16_t data[] = TWO_REGISTERS_CODE_ITEM(
+=======
 TEST_F(CodegenTest, ReturnDivInt2Addr) {
   const std::vector<uint16_t> data = TWO_REGISTERS_CODE_ITEM(
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     Instruction::CONST_4 | 4 << 12 | 0,
     Instruction::CONST_4 | 2 << 12 | 1 << 8,
     Instruction::DIV_INT_2ADDR | 1 << 12,
     Instruction::RETURN);
 
   TestCode(data, true, 2);
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+||||||| BASE
+=======
 }
 
 static bool GetExpectedResultFromComparison(IfCondition condition, int64_t lhs, int64_t rhs) {
@@ -626,15 +1540,64 @@ static bool GetExpectedResultFromComparison(IfCondition condition, int64_t lhs, 
   }
   LOG(FATAL) << "Condition '" << enum_cast<uint32_t>(condition) << "' not supported: ";
   UNREACHABLE();
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
 }
 
 // Helper method.
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+static void TestComparison(IfCondition condition, int64_t i, int64_t j, Primitive::Type type) {
+  ArenaPool pool;
+  ArenaAllocator allocator(&pool);
+  HGraph* graph = CreateGraph(&allocator);
+
+  HBasicBlock* entry_block = new (&allocator) HBasicBlock(graph);
+  graph->AddBlock(entry_block);
+  graph->SetEntryBlock(entry_block);
+  entry_block->AddInstruction(new (&allocator) HGoto());
+
+  HBasicBlock* block = new (&allocator) HBasicBlock(graph);
+  graph->AddBlock(block);
+
+  HBasicBlock* exit_block = new (&allocator) HBasicBlock(graph);
+  graph->AddBlock(exit_block);
+  graph->SetExitBlock(exit_block);
+  exit_block->AddInstruction(new (&allocator) HExit());
+
+  entry_block->AddSuccessor(block);
+  block->AddSuccessor(exit_block);
+||||||| BASE
+static void TestComparison(IfCondition condition,
+                           int64_t i,
+                           int64_t j,
+                           Primitive::Type type,
+                           const InstructionSet target_isa) {
+  ArenaPool pool;
+  ArenaAllocator allocator(&pool);
+  HGraph* graph = CreateGraph(&allocator);
+
+  HBasicBlock* entry_block = new (&allocator) HBasicBlock(graph);
+  graph->AddBlock(entry_block);
+  graph->SetEntryBlock(entry_block);
+  entry_block->AddInstruction(new (&allocator) HGoto());
+
+  HBasicBlock* block = new (&allocator) HBasicBlock(graph);
+  graph->AddBlock(block);
+
+  HBasicBlock* exit_block = new (&allocator) HBasicBlock(graph);
+  graph->AddBlock(exit_block);
+  graph->SetExitBlock(exit_block);
+  exit_block->AddInstruction(new (&allocator) HExit());
+
+  entry_block->AddSuccessor(block);
+  block->AddSuccessor(exit_block);
+=======
 void CodegenTest::TestComparison(IfCondition condition,
                                  int64_t i,
                                  int64_t j,
                                  DataType::Type type,
                                  const CodegenTargetConfig target_config) {
   HBasicBlock* block = InitEntryMainExitGraph();
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
 
   HInstruction* op1;
   HInstruction* op2;
@@ -650,13 +1613,53 @@ void CodegenTest::TestComparison(IfCondition condition,
   HInstruction* comparison = MakeCondition(block, condition, op1, op2);
   MakeReturn(block, comparison);
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+  auto hook_before_codegen = [](HGraph*) {
+  };
+  RunCodeOptimized(graph, hook_before_codegen, true, expected_result);
+||||||| BASE
+  auto hook_before_codegen = [](HGraph*) {
+  };
+  RunCodeOptimized(target_isa, graph, hook_before_codegen, true, expected_result);
+=======
   graph_->BuildDominatorTree();
   std::unique_ptr<CompilerOptions> compiler_options =
       CommonCompilerTest::CreateCompilerOptions(target_config.GetInstructionSet(), "default");
   bool expected_result = GetExpectedResultFromComparison(condition, i, j);
   RunCode(target_config, *compiler_options, graph_, [](HGraph*) {}, true, expected_result);
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ComparisonsInt) {
+  for (int64_t i = -1; i <= 1; i++) {
+    for (int64_t j = -1; j <= 1; j++) {
+      TestComparison(kCondEQ, i, j, Primitive::kPrimInt);
+      TestComparison(kCondNE, i, j, Primitive::kPrimInt);
+      TestComparison(kCondLT, i, j, Primitive::kPrimInt);
+      TestComparison(kCondLE, i, j, Primitive::kPrimInt);
+      TestComparison(kCondGT, i, j, Primitive::kPrimInt);
+      TestComparison(kCondGE, i, j, Primitive::kPrimInt);
+      TestComparison(kCondB,  i, j, Primitive::kPrimInt);
+      TestComparison(kCondBE, i, j, Primitive::kPrimInt);
+      TestComparison(kCondA,  i, j, Primitive::kPrimInt);
+      TestComparison(kCondAE, i, j, Primitive::kPrimInt);
+||||||| BASE
+TEST_P(CodegenTest, ComparisonsInt) {
+  const InstructionSet target_isa = GetParam();
+  for (int64_t i = -1; i <= 1; i++) {
+    for (int64_t j = -1; j <= 1; j++) {
+      TestComparison(kCondEQ, i, j, Primitive::kPrimInt, target_isa);
+      TestComparison(kCondNE, i, j, Primitive::kPrimInt, target_isa);
+      TestComparison(kCondLT, i, j, Primitive::kPrimInt, target_isa);
+      TestComparison(kCondLE, i, j, Primitive::kPrimInt, target_isa);
+      TestComparison(kCondGT, i, j, Primitive::kPrimInt, target_isa);
+      TestComparison(kCondGE, i, j, Primitive::kPrimInt, target_isa);
+      TestComparison(kCondB,  i, j, Primitive::kPrimInt, target_isa);
+      TestComparison(kCondBE, i, j, Primitive::kPrimInt, target_isa);
+      TestComparison(kCondA,  i, j, Primitive::kPrimInt, target_isa);
+      TestComparison(kCondAE, i, j, Primitive::kPrimInt, target_isa);
+=======
 TEST_F(CodegenTest, ComparisonsInt) {
   for (CodegenTargetConfig target_config : GetTargetConfigs()) {
     for (int64_t i = -1; i <= 1; i++) {
@@ -666,10 +1669,55 @@ TEST_F(CodegenTest, ComparisonsInt) {
               static_cast<IfCondition>(cond), i, j, DataType::Type::kInt32, target_config);
         }
       }
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     }
   }
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+TEST(CodegenTest, ComparisonsLong) {
+  // TODO: make MIPS work for long
+  if (kRuntimeISA == kMips || kRuntimeISA == kMips64) {
+    return;
+  }
+
+  for (int64_t i = -1; i <= 1; i++) {
+    for (int64_t j = -1; j <= 1; j++) {
+      TestComparison(kCondEQ, i, j, Primitive::kPrimLong);
+      TestComparison(kCondNE, i, j, Primitive::kPrimLong);
+      TestComparison(kCondLT, i, j, Primitive::kPrimLong);
+      TestComparison(kCondLE, i, j, Primitive::kPrimLong);
+      TestComparison(kCondGT, i, j, Primitive::kPrimLong);
+      TestComparison(kCondGE, i, j, Primitive::kPrimLong);
+      TestComparison(kCondB,  i, j, Primitive::kPrimLong);
+      TestComparison(kCondBE, i, j, Primitive::kPrimLong);
+      TestComparison(kCondA,  i, j, Primitive::kPrimLong);
+      TestComparison(kCondAE, i, j, Primitive::kPrimLong);
+||||||| BASE
+TEST_P(CodegenTest, ComparisonsLong) {
+  // TODO: make MIPS work for long
+  if (kRuntimeISA == kMips || kRuntimeISA == kMips64) {
+    return;
+  }
+
+  const InstructionSet target_isa = GetParam();
+  if (target_isa == kMips || target_isa == kMips64) {
+    return;
+  }
+
+  for (int64_t i = -1; i <= 1; i++) {
+    for (int64_t j = -1; j <= 1; j++) {
+      TestComparison(kCondEQ, i, j, Primitive::kPrimLong, target_isa);
+      TestComparison(kCondNE, i, j, Primitive::kPrimLong, target_isa);
+      TestComparison(kCondLT, i, j, Primitive::kPrimLong, target_isa);
+      TestComparison(kCondLE, i, j, Primitive::kPrimLong, target_isa);
+      TestComparison(kCondGT, i, j, Primitive::kPrimLong, target_isa);
+      TestComparison(kCondGE, i, j, Primitive::kPrimLong, target_isa);
+      TestComparison(kCondB,  i, j, Primitive::kPrimLong, target_isa);
+      TestComparison(kCondBE, i, j, Primitive::kPrimLong, target_isa);
+      TestComparison(kCondA,  i, j, Primitive::kPrimLong, target_isa);
+      TestComparison(kCondAE, i, j, Primitive::kPrimLong, target_isa);
+=======
 TEST_F(CodegenTest, ComparisonsLong) {
   for (CodegenTargetConfig target_config : GetTargetConfigs()) {
     for (int64_t i = -1; i <= 1; i++) {
@@ -679,10 +1727,40 @@ TEST_F(CodegenTest, ComparisonsLong) {
               static_cast<IfCondition>(cond), i, j, DataType::Type::kInt64, target_config);
         }
       }
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
     }
   }
 }
 
+<<<<<<< PATCH SET (b3d6d3 Revert^2 "Revert "Introduce support for hardware simulators,)
+||||||| BASE
+static ::std::vector<InstructionSet> GetTargetISAs() {
+  ::std::vector<InstructionSet> v;
+  // Add all ISAs that are executable on hardware or on simulator.
+  const ::std::vector<InstructionSet> executable_isa_candidates = {
+    kArm,
+    kArm64,
+    kThumb2,
+    kX86,
+    kX86_64,
+    kMips,
+    kMips64
+  };
+
+  for (auto target_isa : executable_isa_candidates) {
+    if (CanExecute(target_isa)) {
+      v.push_back(target_isa);
+    }
+  }
+
+  return v;
+}
+
+INSTANTIATE_TEST_CASE_P(MultipleTargets,
+                        CodegenTest,
+                        ::testing::ValuesIn(GetTargetISAs()));
+
+=======
 // Tests a PackedSwitch in a very large HGraph; validates that the switch jump table is in
 // range for the PC-relative load in the codegen visitor.
 void CodegenTest::TestPackedSwitch(const CodegenTargetConfig target_config) {
@@ -1051,4 +2129,5 @@ DEFINE_CONDITION_TESTS(Int32)
 
 #endif
 
+>>>>>>> BASE      (b71aea Change preferred-alloc-space addr to accomodate larger heap)
 }  // namespace art
