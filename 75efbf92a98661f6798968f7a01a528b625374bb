@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03cb2e34_aa949803",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3725210
+      },
+      "writtenOn": "2024-12-07T07:11:52Z",
+      "side": 1,
+      "message": "3396405: Revert^2 \"Revert \"Introduce support for hardware simulators, starting with ARM64\"\" | https://android-review.googlesource.com/c/platform/art/+/3396405",
+      "revId": "75efbf92a98661f6798968f7a01a528b625374bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
