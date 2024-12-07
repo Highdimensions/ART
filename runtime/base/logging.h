@@ -48,7 +48,6 @@ struct LogVerbosity {
   bool oat;
   bool profiler;
   bool signals;
-  bool simulator;
   bool startup;
   bool third_party_jni;  // Enabled with "-verbose:third-party-jni".
   bool threads;

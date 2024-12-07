@@ -77,7 +77,6 @@ include $(art_path)/build/Android.cpplint.mk
 # product rules
 
 include $(art_path)/runtime/Android.mk
-include $(art_path)/runtime/simulator/Android.mk
 include $(art_path)/compiler/Android.mk
 include $(art_path)/dexdump/Android.mk
 include $(art_path)/dexlist/Android.mk
