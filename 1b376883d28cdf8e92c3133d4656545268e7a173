@@ -94,6 +94,30 @@
       },
       "revId": "1b376883d28cdf8e92c3133d4656545268e7a173",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0aab61e_4da51dea",
+        "filename": "test/2040-huge-native-alloc/huge_native_buf.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1065473
+      },
+      "writtenOn": "2024-12-09T16:07:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b615e6ec_c656368c",
+      "range": {
+        "startLine": 45,
+        "startChar": 9,
+        "endLine": 45,
+        "endChar": 14
+      },
+      "revId": "1b376883d28cdf8e92c3133d4656545268e7a173",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
