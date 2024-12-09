@@ -34,6 +34,24 @@
       "parentUuid": "74d4da05_52ce4318",
       "revId": "a8a76fff62a7e3b269740f8c8f13fd151c7dc76b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b880019_154b8f9b",
+        "filename": "libartbase/base/mem_map.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-09T09:47:50Z",
+      "side": 1,
+      "message": "I share Hans\u0027 dislike of the compiler time check isVM. Would be much better if we remain using the same binary.",
+      "parentUuid": "eaf72838_97924954",
+      "revId": "a8a76fff62a7e3b269740f8c8f13fd151c7dc76b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
