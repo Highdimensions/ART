@@ -22,6 +22,30 @@
       },
       "revId": "21a47f5d216032374bc444fe3d64e2998efbd6cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68669b0c_9d8f4d03",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2024-12-09T12:43:10Z",
+      "side": 1,
+      "message": "The flags are to annotate the APIs per the API guidelines. They are enabled in trunkfood already and must be enabled in next before SDK finalization, or the APIs won\u0027t be included in the SDK.\n\nHowever, by \"use\" here I mean app stores (e.g., Play Store) distributing SDM files to devices. This will take years, if it ever happens.",
+      "parentUuid": "849f5f0e_59a7d8f2",
+      "range": {
+        "startLine": 9,
+        "startChar": 60,
+        "endLine": 10,
+        "endChar": 48
+      },
+      "revId": "21a47f5d216032374bc444fe3d64e2998efbd6cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
