@@ -1342,6 +1342,12 @@ bool HInliner::TryDevirtualize(HInvoke* invoke_instruction,
     return false;
   }
 
+  // Intrinsics logic only recognize invoke-polymorphic on signature polymorphic methods, and not
+  // invoke-virtual, so we do not devirtualize such calls.
+  if (invoke_instruction->IsInvokeVirtual() && method->IsSignaturePolymorphic()) {
+    return false;
+  }
+
   // Don't devirtualize to an intrinsic invalid after the builder phase. The ArtMethod might be an
   // intrinsic even when the HInvoke isn't e.g. java.lang.CharSequence.isEmpty (not an intrinsic)
   // can get devirtualized into java.lang.String.isEmpty (which is an intrinsic).
