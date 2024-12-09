@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "849f5f0e_59a7d8f2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2024-12-09T12:31:21Z",
+      "side": 1,
+      "message": "It\u0027s only printed when the flag is enabled, so isn\u0027t it in use then?\n\nIs the intention to revert this when the feature is \"actually\" used? If so then please add a TODO about that.",
+      "range": {
+        "startLine": 9,
+        "startChar": 60,
+        "endLine": 10,
+        "endChar": 48
+      },
+      "revId": "21a47f5d216032374bc444fe3d64e2998efbd6cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
