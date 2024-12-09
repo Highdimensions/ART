@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56e36bbc_7f570960",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-09T19:19:19Z",
+      "side": 1,
+      "message": "FWIW - I agree with the lint complaint, but it is clearly a pre-existing issue.",
+      "revId": "2b82752ce859891b259fb39172605d86d8b1ca08",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
