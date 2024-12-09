@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee121e46_c121c750",
+        "filename": "openjdkjvmti/ti_heap.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 0,
+      "message": "Was removing the DCHECK intended?",
+      "revId": "8ec33c0a3019cd2f14f0dd234effa6b2dcbb34b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e86628dc_ebc0ab36",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1281,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 0,
+      "message": "We had two booleans to signal that we wanted to search in both instance and static field arrays. This was used e.g. in `Class::FindField`. Are you changing the meaning of `kSearchStaticFields` to mean \"search on static fields too but always search in instance fields\"? Otherwise `Class::FindField` will not return what we want",
+      "revId": "8ec33c0a3019cd2f14f0dd234effa6b2dcbb34b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

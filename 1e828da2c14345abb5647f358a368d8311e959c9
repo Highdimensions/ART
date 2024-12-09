@@ -16,6 +16,590 @@
       "message": "Как разблокировать камеру Камера не работает из-за того то что аккаунте где-то что-то заблокировал самостоятельно и не могу вспомнить подскажите пожалуйста если знаете",
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a353ed09_c5bdc5de",
+        "filename": "compiler/debug/elf_debug_info_writer.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "non-blocking future cleanup: maybe we can have helpers like `GetInstanceFieldOrNull` similar to the `AsXXXOrNull` that we have in nodes.h. This would avoid potential developer error when doing the correct `field-\u003eIsStatic` or `!field-\u003eIsStatic` when calling a field.",
+      "range": {
+        "startLine": 383,
+        "startChar": 0,
+        "endLine": 383,
+        "endChar": 46
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ace6ce9_c0bc36cd",
+        "filename": "compiler/optimizing/inliner.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "Is field `0` guaranteed to be an instance field here? Or are we looking for the first instance field (which could be e.g. `3`)?",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06984c07_b2db2c0f",
+        "filename": "compiler/optimizing/intrinsics.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "update this comment and line 184?",
+      "fixSuggestions": [
+        {
+          "fixId": "cd5d59e9_c60558ab",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/intrinsics.cc",
+              "range": {
+                "startLine": 176,
+                "startChar": 0,
+                "endLine": 177,
+                "endChar": 0
+              },
+              "replacement": "  // The \"disableIntrinsic\" is the first static field in the class.\n"
+            },
+            {
+              "path": "compiler/optimizing/intrinsics.cc",
+              "range": {
+                "startLine": 184,
+                "startChar": 0,
+                "endLine": 185,
+                "endChar": 0
+              },
+              "replacement": "  // The \"slowPathEnabled\" is the sixth static field in the class.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2772b52_131c5e3a",
+        "filename": "compiler/optimizing/intrinsics.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "Similar question here as `compiler/optimizing/inliner.cc` but for static instead of instance",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c894656_4723773c",
+        "filename": "dex2oat/driver/compiler_driver.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1407,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "Is the `IsArrayClass` an optimization? Or a correctness check?",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f5a5926_8855bf57",
+        "filename": "openjdkjvmti/ti_heap.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "Suggestion: WDYT about something like:\n```\nauto visitor \u003d field.IsStatic() ?\n\t\t(field.IsPrimitiveType() ? static_prim_visitor : static_ref_visitor) : \n\t\t(field.IsPrimitiveType() ? instance_prim_visitor : instance_ref_visitor);\nif (visitor(obj, klass, field, field_index, user_data_)) {\n        return true;\n}\n```",
+      "range": {
+        "startLine": 356,
+        "startChar": 0,
+        "endLine": 392,
+        "endChar": 7
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b132ede_bac72948",
+        "filename": "runtime/art_field-inl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "I\u0027d add the staticness check too\n```\nif (field.IsStatic() \u003d\u003d is_static) {\n  return \u0026field;\n} else {\n  return nullptr;\n} \n```\n\nOtherwise, we might be returning a (non-)static field when we wanted the other kind",
+      "range": {
+        "startLine": 433,
+        "startChar": 8,
+        "endLine": 433,
+        "endChar": 22
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fda1d80_964e4d38",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 4112,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "Doesn\u0027t the verifier already verify this?",
+      "range": {
+        "startLine": 4108,
+        "startChar": 0,
+        "endLine": 4112,
+        "endChar": 19
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd3648e3_5b903210",
+        "filename": "runtime/class_linker_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "`ComputeNumInstanceFields`?",
+      "range": {
+        "startLine": 347,
+        "startChar": 21,
+        "endLine": 347,
+        "endChar": 30
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00615ba2_f9925fff",
+        "filename": "runtime/class_linker_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "We could do `const size_t start_index \u003d is_static ? 0 : klass-\u003eComputeNumStaticFields();` (and do `klass-\u003eGetField(start_index  + i);`) and we wouldn\u0027t have to compute it over and over. This would make the test more readable in my opinion.",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec6d13c8_7c903f90",
+        "filename": "runtime/gc/reference_processor.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "The index should be the same right? Static fields go first and then the instance fields.",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a03fdea_272a8655",
+        "filename": "runtime/hprof/hprof.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1380,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "Why is this called `static_field_writer`? It is confusing that we do `if (!class_field.IsStatic()) {` and then do `static_field_writer`. Maybe `static_field_writer` should be renamed to `field_writer`?",
+      "range": {
+        "startLine": 1380,
+        "startChar": 8,
+        "endLine": 1380,
+        "endChar": 27
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c545aa73_08ec6242",
+        "filename": "runtime/jni/jni_id_manager.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "Would the offset be the same? We combined sfield and ifield but `GetStaticJFieldIDsPointerArray` and `GetInstanceJFieldIDsPointerArray` are different arrays so I am not sure if we can just use `old_off` or if we should have a \"base offset\" for instance fields for example.\n\nIf we can use the old_off as-is I have a non-blocking suggestion: This can now be\n```\nsize_t old_off \u003d ArraySlice\u003cArtField\u003e(old_class-\u003eGetFieldsPtr()).OffsetOf(old_field);\nObjPtr\u003cmirror::PointerArray\u003e old_array \u003d old_field-\u003eIsStatic() ?\n\told_ext_data-\u003eGetStaticJFieldIDsPointerArray() : \n\told_ext_data-\u003eGetInstanceJFieldIDsPointerArray());\nif (!old_statics.IsNull()) {\n  old_statics-\u003eSetElementPtrSize(old_off, 0, kRuntimePointerSize);\n}\n```\n\nSimilar below.",
+      "range": {
+        "startLine": 463,
+        "startChar": 8,
+        "endLine": 476,
+        "endChar": 9
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8630f33b_e4e357ce",
+        "filename": "runtime/mirror/class-inl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "nit: remove `static` same for line 1010",
+      "range": {
+        "startLine": 1001,
+        "startChar": 5,
+        "endLine": 1001,
+        "endChar": 23
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2695f1c1_57ab0c8e",
+        "filename": "runtime/mirror/class-inl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "Could we use `ClassAccessor accessor` here too? It may be faster since it doesn\u0027t iterate through all fields and it just decodes how many it has.",
+      "fixSuggestions": [
+        {
+          "fixId": "e9db6705_ceffb92b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/mirror/class-inl.h",
+              "range": {
+                "startLine": 1221,
+                "startChar": 0,
+                "endLine": 1228,
+                "endChar": 0
+              },
+              "replacement": "  ClassAccessor accessor(GetDexFile(), GetDexClassDefIndex());\n  return accessor.NumStaticFields();\n"
+            },
+            {
+              "path": "runtime/mirror/class-inl.h",
+              "range": {
+                "startLine": 1231,
+                "startChar": 0,
+                "endLine": 1238,
+                "endChar": 0
+              },
+              "replacement": "  ClassAccessor accessor(GetDexFile(), GetDexClassDefIndex());\n  return accessor.NumInstanceFields();\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c446352_9c3ee500",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "Suggestion: We could add if this field is static or not",
+      "fixSuggestions": [
+        {
+          "fixId": "e8e0bce5_85e39a18",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/mirror/class.cc",
+              "range": {
+                "startLine": 433,
+                "startChar": 0,
+                "endLine": 434,
+                "endChar": 0
+              },
+              "replacement": "          ObjPtr\u003cmirror::Field\u003e field \u003d GetField(i);\n          os \u003c\u003c StringPrintf(\"    %2zd: %s%s\\n\", i, ArtField::PrettyField(field).c_str(),\n                             field-\u003eIsStatic() ? \" (static)\" : \"\");\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f323edd1_28717a52",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1279,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "`if (f !\u003d nullptr \u0026\u0026 f-\u003eIsStatic() \u003d\u003d kSearchStaticFields) {` ?\nOr maybe\n```\nif (f !\u003d nullptr) {\n    if (f-\u003eIsStatic() !\u003d kSearchStaticFields) {\n      return nullptr;\n    } else {\n      return f;\n    }\n}\n```",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6230231d_31450ecf",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "Do you mean if we need to check the staticness of the field vs `kSearchStaticFields`? If so, I think we should.\n\nSince we are doing it in the callers of `FindFieldByNameAndType` maybe we can add an `is_static` parameter",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "348f9ee6_4e3f3e54",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1041,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "nit: `new_fields`",
+      "range": {
+        "startLine": 1041,
+        "startChar": 51,
+        "endLine": 1041,
+        "endChar": 62
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "be7fc006_6fff96c3",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/mirror/class.h",
+              "range": {
+                "startLine": 1041,
+                "startChar": 0,
+                "endLine": 1042,
+                "endChar": 0
+              },
+              "replacement": "  void SetFieldsPtr(LengthPrefixedArray\u003cArtField\u003e* new_fields)\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb7aedef_af8e4ef0",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "nit: `new_fields`",
+      "range": {
+        "startLine": 1045,
+        "startChar": 60,
+        "endLine": 1045,
+        "endChar": 71
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c149b408_d8436bd0",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1506,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "static and instance fields",
+      "range": {
+        "startLine": 1506,
+        "startChar": 5,
+        "endLine": 1506,
+        "endChar": 13
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19918b1b_bcbe72a6",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1509,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "instance fields",
+      "range": {
+        "startLine": 1509,
+        "startChar": 24,
+        "endLine": 1509,
+        "endChar": 30
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6bb0022_222d879f",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1510,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "fields",
+      "range": {
+        "startLine": 1510,
+        "startChar": 15,
+        "endLine": 1510,
+        "endChar": 22
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adcbd4c9_153f5f1e",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1511,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-09T13:02:58Z",
+      "side": 1,
+      "message": "fields",
+      "range": {
+        "startLine": 1511,
+        "startChar": 28,
+        "endLine": 1511,
+        "endChar": 35
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
