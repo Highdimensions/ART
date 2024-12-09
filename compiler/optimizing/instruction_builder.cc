@@ -32,6 +32,7 @@
 #include "handle_cache-inl.h"
 #include "imtable-inl.h"
 #include "intrinsics.h"
+#include "intrinsics_enum.h"
 #include "intrinsics_utils.h"
 #include "jit/jit.h"
 #include "jit/profiling_info.h"
@@ -1185,6 +1186,20 @@ bool HInstructionBuilder::BuildInvoke(const Instruction& instruction,
       invoke->SetArgumentAt(clinit_check_index, clinit_check);
     }
   } else if (invoke_type == kVirtual) {
+    bool enable_intrinsic_opt = !graph_->IsDebuggable();
+    // In the wild there are apps which have invoke-virtual targeting polymorphic methods like
+    // MethodHandle.invokeExact.
+    // It never worked in the first place, but invokeExact intrinsics expect invokeExact to be
+    // called using invoke-polymorphic and can crash runtime otherwise. This forces runtime to
+    // treat such invoke-virtual calls as-if they are calling a native method, which
+    // MethodHandle's invoke and invokeExact are.
+    if (resolved_method->IsIntrinsic()) {
+      Intrinsics intrinsic = resolved_method->GetIntrinsic();
+      if (intrinsic == Intrinsics::kMethodHandleInvokeExact ||
+          intrinsic == Intrinsics::kMethodHandleInvoke) {
+        enable_intrinsic_opt = false;
+      }
+    }
     invoke = new (allocator_) HInvokeVirtual(allocator_,
                                              number_of_arguments,
                                              operands.GetNumberOfOperands(),
@@ -1194,7 +1209,7 @@ bool HInstructionBuilder::BuildInvoke(const Instruction& instruction,
                                              resolved_method,
                                              resolved_method_reference,
                                              /*vtable_index=*/ imt_or_vtable_index,
-                                             !graph_->IsDebuggable());
+                                             enable_intrinsic_opt);
   } else {
     DCHECK_EQ(invoke_type, kInterface);
     if (kIsDebugBuild) {
