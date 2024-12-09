@@ -218,6 +218,7 @@ def default_run(ctx, args, **kwargs):
   PATH = os.environ.get("PATH", "")
   SANITIZE_HOST = os.environ.get("SANITIZE_HOST", "")
   TEST_NAME = os.environ["TEST_NAME"]
+  ANDROID_GC_TYPE = os.environ.get("ANDROID_GC_TYPE", "CC")
 
   assert ANDROID_BUILD_TOP, "Did you forget to run `lunch`?"
 
@@ -323,6 +324,9 @@ def default_run(ctx, args, **kwargs):
   # Let the compiler and runtime know that we are running tests.
   COMPILE_FLAGS += " --compile-art-test"
   ANDROID_FLAGS += " -Xcompiler-option --compile-art-test"
+
+  COMPILE_FLAGS += f" --runtime-arg -Xgc:{ANDROID_GC_TYPE}"
+  ANDROID_FLAGS += f" -Xgc:{ANDROID_GC_TYPE}"
 
   if USE_JVMTI:
     IS_JVMTI_TEST = True
