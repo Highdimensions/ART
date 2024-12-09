@@ -166,6 +166,30 @@
       },
       "revId": "ecee442f6432c727eea77d80d9c20ba037bcbaa9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "105b00c6_929d5221",
+        "filename": "tools/boot-image-profile-generate.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2024-12-09T17:45:24Z",
+      "side": 0,
+      "message": "Thanks!",
+      "parentUuid": "1585cf3d_f4209ebe",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 44
+      },
+      "revId": "ecee442f6432c727eea77d80d9c20ba037bcbaa9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
