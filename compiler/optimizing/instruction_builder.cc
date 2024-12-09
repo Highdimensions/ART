@@ -32,6 +32,7 @@
 #include "handle_cache-inl.h"
 #include "imtable-inl.h"
 #include "intrinsics.h"
+#include "intrinsics_enum.h"
 #include "intrinsics_utils.h"
 #include "jit/jit.h"
 #include "jit/profiling_info.h"
@@ -1047,6 +1048,23 @@ static ArtMethod* ResolveMethod(uint16_t method_idx,
   return resolved_method;
 }
 
+static bool IsSignaturePolymorphic(ArtMethod* method) {
+  if (!method->IsIntrinsic()) {
+    return false;
+  }
+  Intrinsics intrinsic = method->GetIntrinsic();
+
+  switch (intrinsic) {
+#define IS_POLYMOPHIC(Name, ...) \
+    case Intrinsics::k ## Name:
+      ART_SIGNATURE_POLYMORPHIC_INTRINSICS_LIST(IS_POLYMOPHIC)
+#undef IS_POLYMOPHIC
+      return true;
+    default:
+      return false;
+  }
+}
+
 bool HInstructionBuilder::BuildInvoke(const Instruction& instruction,
                                       uint32_t dex_pc,
                                       uint32_t method_idx,
@@ -1185,6 +1203,18 @@ bool HInstructionBuilder::BuildInvoke(const Instruction& instruction,
       invoke->SetArgumentAt(clinit_check_index, clinit_check);
     }
   } else if (invoke_type == kVirtual) {
+    // In the wild there are apps which have invoke-virtual targeting polymorphic methods like
+    // MethodHandle.invokeExact.
+    // It never worked in the first place, but invokeExact intrinsics expect invokeExact to be
+    // called using invoke-polymorphic and would throw an exception otherwise. This forces runtime
+    // to treat such invoke-virtual calls as-if they are calling a native method, which
+    // MethodHandle's invoke and invokeExact are.
+    const bool enable_intrinsic_opt =
+        !graph_->IsDebuggable() && !IsSignaturePolymorphic(resolved_method);
+    if (kIsDebugBuild) {
+      ScopedObjectAccess soa(Thread::Current());
+      CHECK_EQ(IsSignaturePolymorphic(resolved_method), resolved_method->IsSignaturePolymorphic());
+    }
     invoke = new (allocator_) HInvokeVirtual(allocator_,
                                              number_of_arguments,
                                              operands.GetNumberOfOperands(),
@@ -1194,7 +1224,7 @@ bool HInstructionBuilder::BuildInvoke(const Instruction& instruction,
                                              resolved_method,
                                              resolved_method_reference,
                                              /*vtable_index=*/ imt_or_vtable_index,
-                                             !graph_->IsDebuggable());
+                                             enable_intrinsic_opt);
   } else {
     DCHECK_EQ(invoke_type, kInterface);
     if (kIsDebugBuild) {
