@@ -26,12 +26,14 @@
 #include "data_type-inl.h"
 #include "dex/bytecode_utils.h"
 #include "dex/dex_instruction-inl.h"
+#include "dex/invoke_type.h"
 #include "driver/compiler_options.h"
 #include "driver/dex_compilation_unit.h"
 #include "entrypoints/entrypoint_utils-inl.h"
 #include "handle_cache-inl.h"
 #include "imtable-inl.h"
 #include "intrinsics.h"
+#include "intrinsics_enum.h"
 #include "intrinsics_utils.h"
 #include "jit/jit.h"
 #include "jit/profiling_info.h"
@@ -1051,6 +1053,23 @@ static ArtMethod* ResolveMethod(uint16_t method_idx,
   return resolved_method;
 }
 
+static bool IsSignaturePolymorphic(ArtMethod* method) {
+  if (!method->IsIntrinsic()) {
+    return false;
+  }
+  Intrinsics intrinsic = method->GetIntrinsic();
+
+  switch (intrinsic) {
+#define IS_POLYMOPHIC(Name, ...) \
+    case Intrinsics::k ## Name:
+      ART_SIGNATURE_POLYMORPHIC_INTRINSICS_LIST(IS_POLYMOPHIC)
+#undef IS_POLYMOPHIC
+      return true;
+    default:
+      return false;
+  }
+}
+
 bool HInstructionBuilder::BuildInvoke(const Instruction& instruction,
                                       uint32_t dex_pc,
                                       uint32_t method_idx,
@@ -1078,10 +1097,36 @@ bool HInstructionBuilder::BuildInvoke(const Instruction& instruction,
                                              &is_string_constructor);
 
   MethodReference method_reference(&graph_->GetDexFile(), method_idx);
-  if (UNLIKELY(resolved_method == nullptr)) {
+
+  // In the wild there are apps which have invoke-virtual targeting polymorphic methods like
+  // MethodHandle.invokeExact.
+  // It never worked in the first place, but invokeExact intrinsics expect invokeExact to be
+  // called using invoke-polymorphic and would throw an exception otherwise. This forces runtime
+  // to treat such invoke-virtual calls as-if they are calling a native method, which
+  // MethodHandle's invoke and invokeExact are.
+  if (kIsDebugBuild) {
+    ScopedObjectAccess soa(Thread::Current());
+    CHECK_EQ(IsSignaturePolymorphic(resolved_method), resolved_method->IsSignaturePolymorphic());
+  }
+
+  if (UNLIKELY(resolved_method == nullptr
+               || (invoke_type != kPolymorphic && IsSignaturePolymorphic(resolved_method)))) {
     DCHECK(!Thread::Current()->IsExceptionPending());
-    MaybeRecordStat(compilation_stats_,
-                    MethodCompilationStat::kUnresolvedMethod);
+    if (resolved_method == nullptr) {
+      MaybeRecordStat(compilation_stats_,
+                      MethodCompilationStat::kUnresolvedMethod);
+    }
+    HInvoke* invoke = new (allocator_) HInvokeUnresolved(allocator_,
+                                                         number_of_arguments,
+                                                         operands.GetNumberOfOperands(),
+                                                         return_type,
+                                                         dex_pc,
+                                                         method_reference,
+                                                         invoke_type);
+    return HandleInvoke(invoke, operands, shorty, /* is_unresolved= */ true);
+  }
+
+  if (UNLIKELY(invoke_type != kPolymorphic && IsSignaturePolymorphic(resolved_method))) {
     HInvoke* invoke = new (allocator_) HInvokeUnresolved(allocator_,
                                                          number_of_arguments,
                                                          operands.GetNumberOfOperands(),
