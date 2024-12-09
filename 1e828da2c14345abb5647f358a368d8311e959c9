@@ -122,6 +122,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "36ce8cc0_4ae3d1e6",
+        "filename": "compiler/optimizing/intrinsics.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "There is now a disconnect between the comment and the code.\n\nDo you want to add a check that fields 1-4 are instance fields? Or, instead, do you want to remove the comment and add a check that the field is static?",
+      "range": {
+        "startLine": 184,
+        "startChar": 34,
+        "endLine": 184,
+        "endChar": 40
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9c894656_4723773c",
         "filename": "dex2oat/driver/compiler_driver.cc",
         "patchSetId": 9
@@ -133,6 +156,29 @@
       "writtenOn": "2024-12-09T13:02:58Z",
       "side": 1,
       "message": "Is the `IsArrayClass` an optimization? Or a correctness check?",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3195374_e0700b72",
+        "filename": "dex2oat/linker/image_writer.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "Nit: use `std::all_of`?\n\n    auto fields \u003d as_klass-\u003eGetFields();\n    bool all_final \u003d std::all_of(fields.begin(),\n                                 fields.end(),\n                                 [](ArtField\u0026 f) { return !f.IsStatic() || f.IsFinal(); });",
+      "range": {
+        "startLine": 764,
+        "startChar": 8,
+        "endLine": 770,
+        "endChar": 9
+      },
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -155,6 +201,52 @@
         "startChar": 0,
         "endLine": 392,
         "endChar": 7
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0674e1d9_ef1b3c76",
+        "filename": "openjdkjvmti/ti_redefine.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2864,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "Drive-by: Update to use `GetNameView()` and `GetTypeDescriptorView()`?",
+      "range": {
+        "startLine": 2862,
+        "startChar": 15,
+        "endLine": 2864,
+        "endChar": 73
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a37ecee3_bb999240",
+        "filename": "openjdkjvmti/ti_redefine.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2871,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "You effectively removed the static flag check here. Should we add it to the `pred`?",
+      "range": {
+        "startLine": 2870,
+        "startChar": 14,
+        "endLine": 2871,
+        "endChar": 86
       },
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
@@ -185,6 +277,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9721a75e_90f10c66",
+        "filename": "runtime/art_field-inl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "You\u0027re not checking the `is_static` in this path.",
+      "range": {
+        "startLine": 432,
+        "startChar": 6,
+        "endLine": 434,
+        "endChar": 7
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fda4cc1d_967d6356",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1106,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "Add `!IsStatic()` checks here and below?",
+      "range": {
+        "startLine": 1106,
+        "startChar": 2,
+        "endLine": 1106,
+        "endChar": 13
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7fda1d80_964e4d38",
         "filename": "runtime/class_linker.cc",
         "patchSetId": 9
@@ -201,6 +339,52 @@
         "startChar": 0,
         "endLine": 4112,
         "endChar": 19
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3efe8e90_10885636",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 4112,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "I just tried to create a class that has both static and instance fields with the same name and type. That didn\u0027t work with `jasmin` but it worked just fine with `smali`. This makes the `std::sort` here somewhat non-deterministic (order of such fields can change when upgrading the standard library) and breaks your implementation of `Class::GetDeclared{Instance,Static}Field()`.\n\nShould we reject classes that have both instance and static fields with the same name and type just like we do when we find a virtual method with the same name and signature as a direct method? (Look for \"Found virtual method with same index as direct method:\" in `dex_file_verifier.cc`.) Should we try to find APKs with such classes using the APK scanner?",
+      "range": {
+        "startLine": 4108,
+        "startChar": 6,
+        "endLine": 4112,
+        "endChar": 19
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "015b1e8a_2624e3f0",
+        "filename": "runtime/class_linker_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "Check that they are not static?",
+      "range": {
+        "startLine": 159,
+        "startChar": 4,
+        "endLine": 160,
+        "endChar": 77
       },
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
@@ -265,6 +449,63 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "00eb9f27_b28c4515",
+        "filename": "runtime/gc/reference_processor.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "`DCHECK(field-\u003eIsStatic());`",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee5a3e99_1b5c36c2",
+        "filename": "runtime/hidden_api_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "`ASSERT_TRUE(field-\u003eIsStatic());`",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "414e9171_76ea96d8",
+        "filename": "runtime/hprof/hprof.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1290,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "This feels quite wrong. Why are we reporting superclass fields but not fields further up the chain?\n\nBut that\u0027s not something to fix in this CL, so please acknowledge and move on.",
+      "range": {
+        "startLine": 1290,
+        "startChar": 42,
+        "endLine": 1290,
+        "endChar": 98
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2a03fdea_272a8655",
         "filename": "runtime/hprof/hprof.cc",
         "patchSetId": 9
@@ -288,6 +529,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c81fdc11_ab9dd503",
+        "filename": "runtime/jni/jni_id_manager.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "Pull identical code before the `if`.",
+      "range": {
+        "startLine": 464,
+        "startChar": 10,
+        "endLine": 464,
+        "endChar": 95
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c545aa73_08ec6242",
         "filename": "runtime/jni/jni_id_manager.cc",
         "patchSetId": 9
@@ -304,6 +568,29 @@
         "startChar": 8,
         "endLine": 476,
         "endChar": 9
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e41dd8fe_183787e6",
+        "filename": "runtime/jni/jni_id_manager.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 484,
+        "startChar": 10,
+        "endLine": 484,
+        "endChar": 95
       },
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
@@ -408,6 +695,46 @@
           ]
         }
       ],
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a44e2908_522d2e8c",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "Also dump type \"static/instance\"?",
+      "range": {
+        "startLine": 433,
+        "startChar": 10,
+        "endLine": 433,
+        "endChar": 94
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ed16ec6_04383a7b",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1153,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "`DCHECK` that these fields are static?",
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -597,6 +924,29 @@
         "startChar": 28,
         "endLine": 1511,
         "endChar": 35
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d9e09b3_a25a19b5",
+        "filename": "runtime/reflection.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 1,
+      "message": "The boxing/unboxing cleanup looks like it could be pulled out of this CL and submitted first.",
+      "range": {
+        "startLine": 265,
+        "startChar": 40,
+        "endLine": 265,
+        "endChar": 83
       },
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"

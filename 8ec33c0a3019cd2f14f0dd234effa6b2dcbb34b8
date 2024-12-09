@@ -20,6 +20,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ef3ad350_345aa021",
+        "filename": "runtime/class_linker_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1160,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-09T13:37:09Z",
+      "side": 0,
+      "message": "Did you remove this test because you rewrote the boxing/unboxing using `WellKnownClasses`?",
+      "revId": "8ec33c0a3019cd2f14f0dd234effa6b2dcbb34b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e86628dc_ebc0ab36",
         "filename": "runtime/mirror/class.cc",
         "patchSetId": 9
