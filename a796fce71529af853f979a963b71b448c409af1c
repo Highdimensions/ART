@@ -50,6 +50,24 @@
       "message": "What is the context here?",
       "revId": "a796fce71529af853f979a963b71b448c409af1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e3f26a2_38dfc1ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2024-12-10T18:39:45Z",
+      "side": 1,
+      "message": "Please explain why is this change required? We rarely explicitly set GC-type as the decision depends on some other factors.",
+      "parentUuid": "aedf7e65_8726b90d",
+      "revId": "a796fce71529af853f979a963b71b448c409af1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
