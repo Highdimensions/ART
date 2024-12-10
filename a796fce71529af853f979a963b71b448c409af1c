@@ -33,6 +33,23 @@
       "message": "Please take a look",
       "revId": "a796fce71529af853f979a963b71b448c409af1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28f7f8c8_a84a83f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1065473
+      },
+      "writtenOn": "2024-12-10T14:19:17Z",
+      "side": 1,
+      "message": "What is the context here?",
+      "revId": "a796fce71529af853f979a963b71b448c409af1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
