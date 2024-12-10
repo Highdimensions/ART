@@ -22,6 +22,30 @@
       },
       "revId": "82b4fa5832eeb5dbb181a5d628aaef79d52ff228",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e753baa_3e0f4325",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1198,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-10T18:44:32Z",
+      "side": 1,
+      "message": "Technically it can.\n\nTBH `method-\u003eIsSignaturePolymorphic()` would be the most accurate check, but it requires mutator lock [1] so I only covered `MethodHandle`s.\n\n[1] https://source.corp.google.com/h/android/platform/superproject/main/+/main:art/runtime/art_method.h;l\u003d529;drc\u003d8666596312768c91d5d031468dfc61ed5cfe5483",
+      "parentUuid": "91cba232_b54769db",
+      "range": {
+        "startLine": 1197,
+        "startChar": 6,
+        "endLine": 1198,
+        "endChar": 57
+      },
+      "revId": "82b4fa5832eeb5dbb181a5d628aaef79d52ff228",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
