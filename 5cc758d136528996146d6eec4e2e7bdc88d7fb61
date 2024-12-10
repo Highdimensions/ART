@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dae09419_cf65738f",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-10T16:21:34Z",
+      "side": 1,
+      "message": "If you don\u0027t mind separating the CHECK_EQ from the uname call, I\u0027d appreciate it. I think we now generally avoid CHECKs with important side-effects, and I found this hard to read because the uname call was hard to find.",
+      "range": {
+        "startLine": 173,
+        "startChar": 4,
+        "endLine": 173,
+        "endChar": 29
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "37eb85ce_49b1efbe",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartbase/base/utils.cc",
+              "range": {
+                "startLine": 173,
+                "startChar": 0,
+                "endLine": 174,
+                "endChar": 0
+              },
+              "replacement": "    int ret \u003d uname(\u0026uts);\n    CHECK_EQ(ret, 0);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5cc758d136528996146d6eec4e2e7bdc88d7fb61",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
