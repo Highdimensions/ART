@@ -105,6 +105,9 @@ done
 
 if [[ "$has_mode" = "no" ]];  then
   args+=(--mode=device)
+  if [ -n "$ART_TEST_ON_VM" ]; then
+    args+=("--ssh=$ART_TEST_SSH_USER@$ART_TEST_SSH_HOST:$ART_TEST_SSH_PORT")
+  fi
 fi
 
 if [[ "$has_variant" = "no" && "$mode" != "ri" ]];  then
