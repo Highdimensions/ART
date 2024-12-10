@@ -733,6 +733,9 @@ bool VerifierDeps::VerifyDexFileAndUpdateStatus(
   uint32_t number_of_warnings = 0;
   static constexpr uint32_t kMaxWarnings = 5;
   for (const auto& vec : assignables) {
+    if (UNLIKELY(!deps.verified_classes_[class_def_index])) {
+      continue;
+    }
     for (const auto& entry : vec) {
       size_t destination_desc_length;
       const char* destination_desc =
