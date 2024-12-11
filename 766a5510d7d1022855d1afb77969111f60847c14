@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49586a08_cc5b24f7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-11T14:24:12Z",
+      "side": 1,
+      "message": "Do you want to update `TEST_F(ClassLinkerTest, ValidateBoxedTypes) {` as part of this? That validation is not needed with this change",
+      "revId": "766a5510d7d1022855d1afb77969111f60847c14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
