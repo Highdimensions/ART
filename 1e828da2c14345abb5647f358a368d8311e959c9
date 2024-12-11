@@ -58,6 +58,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f92e044_79e4fdb7",
+        "filename": "compiler/optimizing/inliner.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "It\u0027s currently guaranteed to be that field (shadow$_klass, see line below). I\u0027ll do a follow-up where I change these hardcoded constants to using WellKnownClasses instead.",
+      "parentUuid": "1ace6ce9_c0bc36cd",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "06984c07_b2db2c0f",
@@ -103,6 +121,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d304627_0c6572bf",
+        "filename": "compiler/optimizing/intrinsics.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "06984c07_b2db2c0f",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2772b52_131c5e3a",
@@ -116,6 +152,24 @@
       "writtenOn": "2024-12-09T13:02:58Z",
       "side": 1,
       "message": "Similar question here as `compiler/optimizing/inliner.cc` but for static instead of instance",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07e81077_379dd3d3",
+        "filename": "compiler/optimizing/intrinsics.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "ditto, I\u0027ll change that in a follow-up.",
+      "parentUuid": "e2772b52_131c5e3a",
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -143,6 +197,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "13e3ab6f_06497862",
+        "filename": "compiler/optimizing/intrinsics.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Updating the comment. I\u0027ll follow-up with a CL introducing a proper WellKnownClasses fields.",
+      "parentUuid": "36ce8cc0_4ae3d1e6",
+      "range": {
+        "startLine": 184,
+        "startChar": 34,
+        "endLine": 184,
+        "endChar": 40
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9c894656_4723773c",
@@ -160,6 +238,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d719e49b_68016b74",
+        "filename": "dex2oat/driver/compiler_driver.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1407,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "It\u0027s required to call `klass-\u003eHasStaticFields`.",
+      "parentUuid": "9c894656_4723773c",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b3195374_e0700b72",
@@ -173,6 +269,30 @@
       "writtenOn": "2024-12-09T13:37:09Z",
       "side": 1,
       "message": "Nit: use `std::all_of`?\n\n    auto fields \u003d as_klass-\u003eGetFields();\n    bool all_final \u003d std::all_of(fields.begin(),\n                                 fields.end(),\n                                 [](ArtField\u0026 f) { return !f.IsStatic() || f.IsFinal(); });",
+      "range": {
+        "startLine": 764,
+        "startChar": 8,
+        "endLine": 770,
+        "endChar": 9
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3feffdc_6dfdb280",
+        "filename": "dex2oat/linker/image_writer.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3195374_e0700b72",
       "range": {
         "startLine": 764,
         "startChar": 8,
@@ -206,6 +326,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac8e65de_b8cc02ad",
+        "filename": "openjdkjvmti/ti_heap.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Unfortunately, the visitors end up being of different types, so cannot be used in a ternary operation (unless I guess I add up some casts).",
+      "parentUuid": "6f5a5926_8855bf57",
+      "range": {
+        "startLine": 356,
+        "startChar": 0,
+        "endLine": 392,
+        "endChar": 7
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0674e1d9_ef1b3c76",
@@ -219,6 +363,30 @@
       "writtenOn": "2024-12-09T13:37:09Z",
       "side": 1,
       "message": "Drive-by: Update to use `GetNameView()` and `GetTypeDescriptorView()`?",
+      "range": {
+        "startLine": 2862,
+        "startChar": 15,
+        "endLine": 2864,
+        "endChar": 73
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "640ae136_2a4708a1",
+        "filename": "openjdkjvmti/ti_redefine.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2864,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0674e1d9_ef1b3c76",
       "range": {
         "startLine": 2862,
         "startChar": 15,
@@ -252,6 +420,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ec39d69_874c4158",
+        "filename": "openjdkjvmti/ti_redefine.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2871,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "The code for instance fields below was the same. I\u0027ll keep it as is modulo your feedback that the same field bight be instance/static.",
+      "parentUuid": "a37ecee3_bb999240",
+      "range": {
+        "startLine": 2870,
+        "startChar": 14,
+        "endLine": 2871,
+        "endChar": 86
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b132ede_bac72948",
@@ -265,6 +457,30 @@
       "writtenOn": "2024-12-09T13:02:58Z",
       "side": 1,
       "message": "I\u0027d add the staticness check too\n```\nif (field.IsStatic() \u003d\u003d is_static) {\n  return \u0026field;\n} else {\n  return nullptr;\n} \n```\n\nOtherwise, we might be returning a (non-)static field when we wanted the other kind",
+      "range": {
+        "startLine": 433,
+        "startChar": 8,
+        "endLine": 433,
+        "endChar": 22
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cae3c102_2173f16c",
+        "filename": "runtime/art_field-inl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Good catch, done.",
+      "parentUuid": "5b132ede_bac72948",
       "range": {
         "startLine": 433,
         "startChar": 8,
@@ -298,6 +514,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa74c268_652cdd9a",
+        "filename": "runtime/art_field-inl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9721a75e_90f10c66",
+      "range": {
+        "startLine": 432,
+        "startChar": 6,
+        "endLine": 434,
+        "endChar": 7
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fda4cc1d_967d6356",
@@ -311,6 +551,30 @@
       "writtenOn": "2024-12-09T13:37:09Z",
       "side": 1,
       "message": "Add `!IsStatic()` checks here and below?",
+      "range": {
+        "startLine": 1106,
+        "startChar": 2,
+        "endLine": 1106,
+        "endChar": 13
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f35e80c9_79ae05e8",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1106,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fda4cc1d_967d6356",
       "range": {
         "startLine": 1106,
         "startChar": 2,
@@ -367,6 +631,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e01a51f2_a63381df",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 4112,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Yes, but the array created above ends up containing static fields first, and then instance fields.",
+      "parentUuid": "7fda1d80_964e4d38",
+      "range": {
+        "startLine": 4108,
+        "startChar": 0,
+        "endLine": 4112,
+        "endChar": 19
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "493db8a1_4d0e7268",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 4112,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Ack, will run an APK scanner run.",
+      "parentUuid": "3efe8e90_10885636",
+      "range": {
+        "startLine": 4108,
+        "startChar": 6,
+        "endLine": 4112,
+        "endChar": 19
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "015b1e8a_2624e3f0",
@@ -380,6 +692,30 @@
       "writtenOn": "2024-12-09T13:37:09Z",
       "side": 1,
       "message": "Check that they are not static?",
+      "range": {
+        "startLine": 159,
+        "startChar": 4,
+        "endLine": 160,
+        "endChar": 77
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06f2c847_3d958058",
+        "filename": "runtime/class_linker_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "015b1e8a_2624e3f0",
       "range": {
         "startLine": 159,
         "startChar": 4,
@@ -413,6 +749,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "56f31798_9e269d41",
+        "filename": "runtime/class_linker_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd3648e3_5b903210",
+      "range": {
+        "startLine": 347,
+        "startChar": 21,
+        "endLine": 347,
+        "endChar": 30
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00615ba2_f9925fff",
@@ -426,6 +786,24 @@
       "writtenOn": "2024-12-09T13:02:58Z",
       "side": 1,
       "message": "We could do `const size_t start_index \u003d is_static ? 0 : klass-\u003eComputeNumStaticFields();` (and do `klass-\u003eGetField(start_index  + i);`) and we wouldn\u0027t have to compute it over and over. This would make the test more readable in my opinion.",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "141dd1db_4e537db1",
+        "filename": "runtime/class_linker_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "No, because the array has instance and static fields intermixed (hence the sort in class_linker.cc).",
+      "parentUuid": "00615ba2_f9925fff",
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -464,6 +842,42 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "60929844_2376277f",
+        "filename": "runtime/gc/reference_processor.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "No because I\u0027m using `sort` in class_linker.cc",
+      "parentUuid": "ec6d13c8_7c903f90",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7fc044f5_ee96c9be",
+        "filename": "runtime/gc/reference_processor.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00eb9f27_b28c4515",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee5a3e99_1b5c36c2",
@@ -481,6 +895,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a78ce366_5a70db0a",
+        "filename": "runtime/hidden_api_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee5a3e99_1b5c36c2",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "414e9171_76ea96d8",
@@ -494,6 +926,30 @@
       "writtenOn": "2024-12-09T13:37:09Z",
       "side": 1,
       "message": "This feels quite wrong. Why are we reporting superclass fields but not fields further up the chain?\n\nBut that\u0027s not something to fix in this CL, so please acknowledge and move on.",
+      "range": {
+        "startLine": 1290,
+        "startChar": 42,
+        "endLine": 1290,
+        "endChar": 98
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23e537b3_74176ff6",
+        "filename": "runtime/hprof/hprof.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1290,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "I think it\u0027s expected, it\u0027s just adding j.l.Object fields here. class_class is j.l.Class.",
+      "parentUuid": "414e9171_76ea96d8",
       "range": {
         "startLine": 1290,
         "startChar": 42,
@@ -527,6 +983,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4eb05581_b82d3f4d",
+        "filename": "runtime/hprof/hprof.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1380,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Because those are fields of the class. Not sure why they called it `static_field_writer`.",
+      "parentUuid": "2a03fdea_272a8655",
+      "range": {
+        "startLine": 1380,
+        "startChar": 8,
+        "endLine": 1380,
+        "endChar": 27
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c81fdc11_ab9dd503",
@@ -540,6 +1020,30 @@
       "writtenOn": "2024-12-09T13:37:09Z",
       "side": 1,
       "message": "Pull identical code before the `if`.",
+      "range": {
+        "startLine": 464,
+        "startChar": 10,
+        "endLine": 464,
+        "endChar": 95
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0268b32e_1ceb5ec5",
+        "filename": "runtime/jni/jni_id_manager.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c81fdc11_ab9dd503",
       "range": {
         "startLine": 464,
         "startChar": 10,
@@ -573,6 +1077,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "893a9769_8f89d661",
+        "filename": "runtime/jni/jni_id_manager.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "No, they\u0027re all intermixed.",
+      "parentUuid": "c545aa73_08ec6242",
+      "range": {
+        "startLine": 463,
+        "startChar": 8,
+        "endLine": 476,
+        "endChar": 9
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e41dd8fe_183787e6",
@@ -596,6 +1124,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f634712_248a65cb",
+        "filename": "runtime/jni/jni_id_manager.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e41dd8fe_183787e6",
+      "range": {
+        "startLine": 484,
+        "startChar": 10,
+        "endLine": 484,
+        "endChar": 95
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8630f33b_e4e357ce",
@@ -609,6 +1161,30 @@
       "writtenOn": "2024-12-09T13:02:58Z",
       "side": 1,
       "message": "nit: remove `static` same for line 1010",
+      "range": {
+        "startLine": 1001,
+        "startChar": 5,
+        "endLine": 1001,
+        "endChar": 23
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d513c55d_308871ef",
+        "filename": "runtime/mirror/class-inl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8630f33b_e4e357ce",
       "range": {
         "startLine": 1001,
         "startChar": 5,
@@ -660,6 +1236,24 @@
           ]
         }
       ],
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d87d6f19_1401c319",
+        "filename": "runtime/mirror/class-inl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "No, because the dex file allows duplicates (see code in class_linker.cc) and the array does not have duplicates.",
+      "parentUuid": "2695f1c1_57ab0c8e",
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -722,6 +1316,48 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "61a12dca_3ae70610",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c446352_9c3ee500",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4133d59d_24567551",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a44e2908_522d2e8c",
+      "range": {
+        "startLine": 433,
+        "startChar": 10,
+        "endLine": 433,
+        "endChar": 94
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1ed16ec6_04383a7b",
@@ -735,6 +1371,24 @@
       "writtenOn": "2024-12-09T13:37:09Z",
       "side": 1,
       "message": "`DCHECK` that these fields are static?",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d91be204_4ecd063e",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1153,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ed16ec6_04383a7b",
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -756,6 +1410,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea901d33_11a3530d",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1279,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "We should only have one field, and it should match. At least that was my understanding, and I need to check Vladimir\u0027s feedback that we actually do allow the same field to be static and instance. I\u0027ll do an APK run to see if that\u0027s happening in practice.",
+      "parentUuid": "f323edd1_28717a52",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6230231d_31450ecf",
@@ -769,6 +1441,24 @@
       "writtenOn": "2024-12-09T13:02:58Z",
       "side": 1,
       "message": "Do you mean if we need to check the staticness of the field vs `kSearchStaticFields`? If so, I think we should.\n\nSince we are doing it in the callers of `FindFieldByNameAndType` maybe we can add an `is_static` parameter",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c16844f8_404594e7",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "This was a temporary TODO. Removed.",
+      "parentUuid": "6230231d_31450ecf",
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -814,6 +1504,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e836cf37_d4e072d2",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1041,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "348f9ee6_4e3f3e54",
+      "range": {
+        "startLine": 1041,
+        "startChar": 51,
+        "endLine": 1041,
+        "endChar": 62
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eb7aedef_af8e4ef0",
@@ -827,6 +1541,30 @@
       "writtenOn": "2024-12-09T13:02:58Z",
       "side": 1,
       "message": "nit: `new_fields`",
+      "range": {
+        "startLine": 1045,
+        "startChar": 60,
+        "endLine": 1045,
+        "endChar": 71
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a801b7da_5262fc28",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb7aedef_af8e4ef0",
       "range": {
         "startLine": 1045,
         "startChar": 60,
@@ -860,6 +1598,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "691006d8_f834760c",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1506,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c149b408_d8436bd0",
+      "range": {
+        "startLine": 1506,
+        "startChar": 5,
+        "endLine": 1506,
+        "endChar": 13
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "19918b1b_bcbe72a6",
@@ -873,6 +1635,30 @@
       "writtenOn": "2024-12-09T13:02:58Z",
       "side": 1,
       "message": "instance fields",
+      "range": {
+        "startLine": 1509,
+        "startChar": 24,
+        "endLine": 1509,
+        "endChar": 30
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0bb1280_30e380b3",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1509,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "No, it\u0027s both static and instance.",
+      "parentUuid": "19918b1b_bcbe72a6",
       "range": {
         "startLine": 1509,
         "startChar": 24,
@@ -906,6 +1692,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8bd883a_91ffabea",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1510,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6bb0022_222d879f",
+      "range": {
+        "startLine": 1510,
+        "startChar": 15,
+        "endLine": 1510,
+        "endChar": 22
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "adcbd4c9_153f5f1e",
@@ -929,6 +1739,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbde0ff8_d52f519f",
+        "filename": "runtime/mirror/class.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1511,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adcbd4c9_153f5f1e",
+      "range": {
+        "startLine": 1511,
+        "startChar": 28,
+        "endLine": 1511,
+        "endChar": 35
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d9e09b3_a25a19b5",
@@ -942,6 +1776,30 @@
       "writtenOn": "2024-12-09T13:37:09Z",
       "side": 1,
       "message": "The boxing/unboxing cleanup looks like it could be pulled out of this CL and submitted first.",
+      "range": {
+        "startLine": 265,
+        "startChar": 40,
+        "endLine": 265,
+        "endChar": 83
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2212eb46_66bc7a34",
+        "filename": "runtime/reflection.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 1,
+      "message": "Done here: https://android-review.git.corp.google.com/c/platform/art/+/3406320",
+      "parentUuid": "9d9e09b3_a25a19b5",
       "range": {
         "startLine": 265,
         "startChar": 40,

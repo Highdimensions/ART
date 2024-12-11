@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "26cb56b4_b70d5975",
+        "filename": "openjdkjvmti/ti_heap.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 0,
+      "message": "Yes, there\u0027s no `NumInstanceFields` anymore.",
+      "parentUuid": "ee121e46_c121c750",
+      "revId": "8ec33c0a3019cd2f14f0dd234effa6b2dcbb34b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef3ad350_345aa021",
@@ -35,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "51418733_b9888966",
+        "filename": "runtime/class_linker_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1160,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 0,
+      "message": "Yes, so this isn\u0027t needed anymore.",
+      "parentUuid": "ef3ad350_345aa021",
+      "revId": "8ec33c0a3019cd2f14f0dd234effa6b2dcbb34b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e86628dc_ebc0ab36",
@@ -48,6 +84,24 @@
       "writtenOn": "2024-12-09T13:02:58Z",
       "side": 0,
       "message": "We had two booleans to signal that we wanted to search in both instance and static field arrays. This was used e.g. in `Class::FindField`. Are you changing the meaning of `kSearchStaticFields` to mean \"search on static fields too but always search in instance fields\"? Otherwise `Class::FindField` will not return what we want",
+      "revId": "8ec33c0a3019cd2f14f0dd234effa6b2dcbb34b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0289cac_b0e1d916",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1281,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T14:22:03Z",
+      "side": 0,
+      "message": "There\u0027s only one array to search now, so there is no optimization to make on instance fields (there is for static fields as we would look for super interfaces).",
+      "parentUuid": "e86628dc_ebc0ab36",
       "revId": "8ec33c0a3019cd2f14f0dd234effa6b2dcbb34b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
