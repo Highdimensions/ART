@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e6df030e_6d748309",
+        "filename": "compiler/optimizing/inliner.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-11T17:47:16Z",
+      "side": 1,
+      "message": "w/o this, runtime will try to call intrinsic directly and crash in the same way as it happens in b/383057088.",
+      "parentUuid": "e0102c54_64f50959",
+      "range": {
+        "startLine": 1345,
+        "startChar": 0,
+        "endLine": 1348,
+        "endChar": 3
+      },
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "75857267_1f032b3f",
         "filename": "compiler/optimizing/instruction_builder.cc",
         "patchSetId": 9
@@ -61,6 +85,30 @@
           ]
         }
       ],
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b01720f2_eef2bcd5",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1209,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-11T17:47:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75857267_1f032b3f",
+      "range": {
+        "startLine": 1209,
+        "startChar": 43,
+        "endLine": 1209,
+        "endChar": 70
+      },
       "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -122,6 +170,30 @@
           ]
         }
       ],
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea31ce0a_38fc0b44",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-11T17:47:16Z",
+      "side": 1,
+      "message": "All signature polymorphic methods are listed as intrinsics in [1]. Their implementations are in `intrinsics_*` files anyway. \n\n\u003e why do we need another signal to the compiler that they are special?\n\nNot sure. Do you think it will simplify compiler code? \n\n[1] https://source.corp.google.com/h/android/platform/superproject/main/+/main:art/runtime/intrinsics_list.h;l\u003d52;drc\u003d8555b07360ec214671603c8648c1b1ff90417462",
+      "parentUuid": "201bc9ed_e8d5e87c",
+      "range": {
+        "startLine": 1211,
+        "startChar": 22,
+        "endLine": 1211,
+        "endChar": 45
+      },
       "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -247,6 +319,24 @@
       "side": 1,
       "message": "If this can\u0027t happen, feel free to ignore the comment",
       "parentUuid": "971c0ebd_38ca155d",
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b435be22_4dab5b65",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1216,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-11T17:47:16Z",
+      "side": 1,
+      "message": "I see what you mean.\n\nHere I just utilize the fact that all of them are defined as intrinsics. If we are to change that, then this will be easy to update (and removing `invokeExact` from intrinsics will trigger this check, we won\u0027t miss it).",
+      "parentUuid": "0dcb659d_5d54a882",
       "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
