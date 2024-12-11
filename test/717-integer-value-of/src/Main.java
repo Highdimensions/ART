@@ -50,6 +50,7 @@ public class Main {
                         start_end.notify();
                     }
                     while (!start_end.flag) {
+                        // Won't work.
                         cacheField.set(integerCacheClass, alt_cache);
                         cacheField.set(integerCacheClass, cache);
                     }
