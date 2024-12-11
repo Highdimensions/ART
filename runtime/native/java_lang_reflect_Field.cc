@@ -17,6 +17,7 @@
 #include "java_lang_reflect_Field.h"
 
 #include "android-base/stringprintf.h"
+#include "base/sdk_version.h"
 #include "nativehelper/jni_macros.h"
 
 #include "art_field-inl.h"
@@ -71,6 +72,38 @@ ALWAYS_INLINE inline static bool VerifyFieldAccess(Thread* self,
                     field->GetDeclaringClass()->PrettyClass().c_str()).c_str());
     return false;
   }
+  return true;
+}
+
+ALWAYS_INLINE inline static bool CanOverrideStaticField(ObjPtr<mirror::Field> field)
+    REQUIRES_SHARED(Locks::mutator_lock_) {
+  DCHECK(field->IsStatic());
+  DCHECK(field->IsFinal());
+  DCHECK(field->IsAccessible());
+  // For presubmit purposes commenting actual check out.
+  /*
+  uint32_t targetSdkVersion = Runtime::Current()->GetTargetSdkVersion();
+  if (IsSdkVersionSetAndMoreThan(targetSdkVersion, SdkVersion::kV)) {
+    return false;
+  }
+  return true;*/
+  return false;
+}
+
+ALWAYS_INLINE inline static bool CanOverrideFinalField(ObjPtr<mirror::Field> field)
+    REQUIRES_SHARED(Locks::mutator_lock_) {
+  DCHECK(!field->GetDeclaringClass()->IsRecordClass());
+  DCHECK(field->IsFinal());
+
+  if (!field->IsAccessible() || (field->IsStatic() && !CanOverrideStaticField(field))) {
+    ThrowIllegalAccessException(
+            StringPrintf("Cannot set %s field %s of class %s",
+                PrettyJavaAccessFlags(field->GetAccessFlags()).c_str(),
+                ArtField::PrettyField(field->GetArtField()).c_str(),
+                field->GetDeclaringClass()->PrettyClass().c_str()).c_str());
+    return false;
+  }
+
   return true;
 }
 
@@ -399,6 +432,13 @@ static void Field_set(JNIEnv* env, jobject javaField, jobject javaObj, jobject j
     DCHECK(soa.Self()->IsExceptionPending());
     return;
   }
+
+  // Certain conditions must be met to override a final field.
+  if (f->IsFinal() && !CanOverrideFinalField(f)) {
+    DCHECK(soa.Self()->IsExceptionPending());
+    return;
+  }
+
   SetFieldValue(o, f, field_prim_type, true, unboxed_value);
 }
 
