@@ -76,6 +76,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "79f52b81_d7faa9c3",
+        "filename": "compiler/optimizing/inliner.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-11T14:57:08Z",
+      "side": 1,
+      "message": "Ack, using `WellKnownClasses` should be better for magic numbers like this one.",
+      "parentUuid": "0f92e044_79e4fdb7",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "06984c07_b2db2c0f",
@@ -1091,6 +1109,30 @@
       "side": 1,
       "message": "No, they\u0027re all intermixed.",
       "parentUuid": "c545aa73_08ec6242",
+      "range": {
+        "startLine": 463,
+        "startChar": 8,
+        "endLine": 476,
+        "endChar": 9
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cddddee5_cf28e7d0",
+        "filename": "runtime/jni/jni_id_manager.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-11T14:57:08Z",
+      "side": 1,
+      "message": "My (non-blocking) suggestion is related to what you did by pulling the common code out of the if/else. You could take it a step further and just have the pointer array assignment be a ternary operator since the rest of the code is the same for both branches.\n\nSame for the if/else below",
+      "parentUuid": "893a9769_8f89d661",
       "range": {
         "startLine": 463,
         "startChar": 8,
