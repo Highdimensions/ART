@@ -363,6 +363,24 @@
       "parentUuid": "0dcb659d_5d54a882",
       "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ae748f1_04684e8e",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1216,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-11T17:56:39Z",
+      "side": 1,
+      "message": "Acknowledged. I think that e.g. removing `invokeExact` will hit this check because of your added test in this CL but other intrinsics will not hit it. Fine to keep as-is though.",
+      "parentUuid": "b435be22_4dab5b65",
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
