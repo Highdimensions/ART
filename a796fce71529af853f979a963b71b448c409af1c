@@ -86,6 +86,24 @@
       "parentUuid": "2e3f26a2_38dfc1ab",
       "revId": "a796fce71529af853f979a963b71b448c409af1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9b8855a_4c4a1580",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2024-12-11T19:34:56Z",
+      "side": 1,
+      "message": "I\u0027m not sure if it will even work. For instance, if `ART_USE_READ_BARRIER` is set to false, then `CC` cannot be used at all. if you  set `-Xgc:CC`, I think we\u0027ll see crash.\n\nIf you simply want to choose between CMC vs CC, then just setting `ART_USE_READ_BARRIER` will work. Setting it to true will get you CC, while setting to false will enable CMC.",
+      "parentUuid": "9b80bb7f_0bf32ca8",
+      "revId": "a796fce71529af853f979a963b71b448c409af1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
