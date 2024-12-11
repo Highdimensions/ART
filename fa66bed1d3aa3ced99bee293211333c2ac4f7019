@@ -16,6 +16,24 @@
       "message": "This will fail for non-intrinsics which are polymorphic",
       "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32b27959_fc409f4f",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1216,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-11T16:07:43Z",
+      "side": 1,
+      "message": "They should be invoked using `invoke-polymorphic` and handled in `BuildInvokePolymorphic`.",
+      "parentUuid": "946adae7_564ea45b",
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
