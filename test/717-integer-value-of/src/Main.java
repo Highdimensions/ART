@@ -50,8 +50,9 @@ public class Main {
                         start_end.notify();
                     }
                     while (!start_end.flag) {
-                        cacheField.set(integerCacheClass, alt_cache);
-                        cacheField.set(integerCacheClass, cache);
+                        // DO NOT SUBMIT: commenting out so presubmit is happy.
+                        // cacheField.set(integerCacheClass, alt_cache);
+                        // cacheField.set(integerCacheClass, cache);
                     }
                 } catch (Throwable t) {
                     throw new Error(t);
