@@ -3501,10 +3501,4 @@ void Runtime::DCheckNoTransactionCheckAllowed() {
   }
 }
 
-NO_INLINE void Runtime::AllowPageSizeAccess() {
-#ifdef ART_PAGE_SIZE_AGNOSTIC
-  gPageSize.AllowAccess();
-#endif
-}
-
 }  // namespace art
