@@ -1143,6 +1143,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43e38954_52207d7b",
+        "filename": "runtime/jni/jni_id_manager.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T16:20:58Z",
+      "side": 1,
+      "message": "Ah right, and I think we may even be able to merge `StaticJFieldIDsPointerArray` and `InstanceJFieldIDsPointerArray`. I\u0027ll leave this to another CL though.\n\nMoved to using ternary operator.",
+      "parentUuid": "cddddee5_cf28e7d0",
+      "range": {
+        "startLine": 463,
+        "startChar": 8,
+        "endLine": 476,
+        "endChar": 9
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e41dd8fe_183787e6",
