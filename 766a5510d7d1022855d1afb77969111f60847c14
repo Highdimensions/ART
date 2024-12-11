@@ -16,6 +16,24 @@
       "message": "Do you want to update `TEST_F(ClassLinkerTest, ValidateBoxedTypes) {` as part of this? That validation is not needed with this change",
       "revId": "766a5510d7d1022855d1afb77969111f60847c14",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6695159e_5f49d673",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T16:15:37Z",
+      "side": 1,
+      "message": "I could, but because that didn\u0027t break the test, I decided to keep it for now.",
+      "parentUuid": "49586a08_cc5b24f7",
+      "revId": "766a5510d7d1022855d1afb77969111f60847c14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
