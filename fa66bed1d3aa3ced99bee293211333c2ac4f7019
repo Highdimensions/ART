@@ -34,6 +34,24 @@
       "parentUuid": "946adae7_564ea45b",
       "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2ae135d_1cb3304f",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1216,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-11T16:12:41Z",
+      "side": 1,
+      "message": "but if someone does `invoke-virtual` for a non-intrinsic polymorphic method don\u0027t we arrive here?",
+      "parentUuid": "32b27959_fc409f4f",
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
