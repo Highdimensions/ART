@@ -198,6 +198,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fceb8bc4_9c64a175",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T17:52:06Z",
+      "side": 1,
+      "message": "Ah it\u0027s used for the dispatch. Probably we should keep them as intrinsic then.",
+      "parentUuid": "ea31ce0a_38fc0b44",
+      "range": {
+        "startLine": 1211,
+        "startChar": 22,
+        "endLine": 1211,
+        "endChar": 45
+      },
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "946adae7_564ea45b",
