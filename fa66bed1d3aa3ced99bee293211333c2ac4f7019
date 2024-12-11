@@ -195,6 +195,24 @@
       "parentUuid": "a2ae135d_1cb3304f",
       "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e52e9096_83c8b75a",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1216,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-11T16:21:42Z",
+      "side": 1,
+      "message": "\u003e We shouldn\u0027t.\n\nBecause signature polymorphic method\u0027s signature in Java code has to be `Object method(Object... args)`. And all other invokes can call it by passing an array, which has to be passed as the first argument. However, that\u0027s not how polymorphic methods are executed.\n\n(Please correct me if I misunderstand anything here)",
+      "parentUuid": "aaffa0aa_dbe7c4bb",
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
