@@ -3,6 +3,131 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e0102c54_64f50959",
+        "filename": "compiler/optimizing/inliner.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T16:19:58Z",
+      "side": 1,
+      "message": "Do we need this? Wouldn\u0027t we see the method is native and not inline it anyway?",
+      "range": {
+        "startLine": 1345,
+        "startChar": 0,
+        "endLine": 1348,
+        "endChar": 3
+      },
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75857267_1f032b3f",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1209,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T16:19:58Z",
+      "side": 1,
+      "message": "No it wouldn\u0027t, it would throw an exception.",
+      "range": {
+        "startLine": 1209,
+        "startChar": 43,
+        "endLine": 1209,
+        "endChar": 70
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ea8e665b_074e4c52",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/instruction_builder.cc",
+              "range": {
+                "startLine": 1209,
+                "startChar": 0,
+                "endLine": 1210,
+                "endChar": 0
+              },
+              "replacement": "    // called using invoke-polymorphic and would throw an exception otherwise. This forces runtime to\n"
+            }
+          ]
+        }
+      ],
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "201bc9ed_e8d5e87c",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-11T16:19:58Z",
+      "side": 1,
+      "message": "Do we need to mark such methods as intrinsics? We already know they can only be called through invokepolymorphic, so why do we need another signal to the compiler that they are special?",
+      "range": {
+        "startLine": 1211,
+        "startChar": 22,
+        "endLine": 1211,
+        "endChar": 45
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "01c4bdfc_c08425e9",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/instruction_builder.cc",
+              "range": {
+                "startLine": 1050,
+                "startChar": 0,
+                "endLine": 1067,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "compiler/optimizing/instruction_builder.cc",
+              "range": {
+                "startLine": 1212,
+                "startChar": 0,
+                "endLine": 1218,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "compiler/optimizing/instruction_builder.cc",
+              "range": {
+                "startLine": 1227,
+                "startChar": 0,
+                "endLine": 1228,
+                "endChar": 0
+              },
+              "replacement": "                                             !graph_-\u003eIsDebuggable());\n"
+            }
+          ]
+        }
+      ],
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "946adae7_564ea45b",
         "filename": "compiler/optimizing/instruction_builder.cc",
         "patchSetId": 9
