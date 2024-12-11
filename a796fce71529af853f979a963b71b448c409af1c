@@ -68,6 +68,24 @@
       "parentUuid": "aedf7e65_8726b90d",
       "revId": "a796fce71529af853f979a963b71b448c409af1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b80bb7f_0bf32ca8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2024-12-11T07:30:13Z",
+      "side": 1,
+      "message": "Sometimes it could be useful to be able to choose between `CC` and `CMC` GCs when running tests so I made such change. Seems like it won\u0027t break anything so decided to try to upstream it.",
+      "parentUuid": "2e3f26a2_38dfc1ab",
+      "revId": "a796fce71529af853f979a963b71b448c409af1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
