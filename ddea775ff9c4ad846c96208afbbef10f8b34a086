@@ -187,6 +187,30 @@
       },
       "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab79c289_0cd77577",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 6061,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-12T18:44:47Z",
+      "side": 1,
+      "message": "```\n__ Ldr(method, MemOperand(method, temp.X(), Shift::LSL, 3u));\n```\n\nalso works, so it has to be [this](https://source.corp.google.com/h/android/platform/superproject/main/+/main:external/vixl/src/aarch64/operands-aarch64.cc;l\u003d288;drc\u003d1e97cefcebc1ed82de1f1c279805ef8478758dce) check.",
+      "parentUuid": "0c84411d_bdf4fdb6",
+      "range": {
+        "startLine": 6061,
+        "startChar": 44,
+        "endLine": 6061,
+        "endChar": 56
+      },
+      "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
