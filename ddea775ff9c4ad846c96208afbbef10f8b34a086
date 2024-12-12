@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45fc5bbd_ac56350b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-12T17:47:46Z",
+      "side": 1,
+      "message": "and invoke direct?",
+      "range": {
+        "startLine": 7,
+        "startChar": 14,
+        "endLine": 7,
+        "endChar": 28
+      },
+      "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27db51b2_92d6a191",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 6021,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-12T17:47:46Z",
+      "side": 1,
+      "message": "You are making this implemenation different than the x86_64 one in terms of the order of the comparisons. This is fine as long as both are correct but just FYI it is usually easier to port if they all look alike.",
+      "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15fd3235_f921e0cd",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 6043,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-12T17:47:46Z",
+      "side": 1,
+      "message": "nit: I think we can use one less register as the `method_handle_kind` shouldn\u0027t be used anymore. We can deal with cleanups like this one once the arm64 implementation has been finalized",
+      "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "def0a104_555ee565",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 6061,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-12T17:47:46Z",
+      "side": 1,
+      "message": "do you want to extend? Or do `Shift::LSL`?\nYou want `method + temp * 8 + vtable_offset` right?",
+      "range": {
+        "startLine": 6061,
+        "startChar": 44,
+        "endLine": 6061,
+        "endChar": 56
+      },
+      "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
