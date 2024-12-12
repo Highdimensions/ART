@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a69bc14_f91e2c8c",
+        "filename": "runtime/jni/jni_id_manager.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-12T10:03:29Z",
+      "side": 1,
+      "message": "Since we\u0027re merging fields in `Class`, we should consider merging these in `ClassExt`.",
+      "range": {
+        "startLine": 464,
+        "startChar": 8,
+        "endLine": 466,
+        "endChar": 64
+      },
+      "revId": "7b9aac4cfcddd64863ea0f77127b2f789baac82e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

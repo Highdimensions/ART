@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "003f0b79_8cbfd495",
+        "filename": "compiler/debug/elf_debug_info_writer.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-12T10:03:29Z",
+      "side": 1,
+      "message": "We could have `GetInstanceFields()` and `GetStaticFields()` using the `Filter()` function from `stl_util.h`. (But clang may not be able to optimize away that abstraction, so the current approach may be better for performance.)",
+      "parentUuid": "a353ed09_c5bdc5de",
+      "range": {
+        "startLine": 383,
+        "startChar": 0,
+        "endLine": 383,
+        "endChar": 46
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1ace6ce9_c0bc36cd",
@@ -452,6 +476,30 @@
       "side": 1,
       "message": "The code for instance fields below was the same. I\u0027ll keep it as is modulo your feedback that the same field bight be instance/static.",
       "parentUuid": "a37ecee3_bb999240",
+      "range": {
+        "startLine": 2870,
+        "startChar": 14,
+        "endLine": 2871,
+        "endChar": 86
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf2574a7_5b1fe7a7",
+        "filename": "openjdkjvmti/ti_redefine.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2871,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-12T10:03:29Z",
+      "side": 1,
+      "message": "I briefly looked at how this is used and I find the whole `ReflectiveHandle` usage rather dangerous, considering that a non-null value can be replaced by null. I\u0027m therefore concerned about anything that affects the behavior of this code in any way whatsoever.",
+      "parentUuid": "9ec39d69_874c4158",
       "range": {
         "startLine": 2870,
         "startChar": 14,
@@ -978,6 +1026,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e654f062_f6808367",
+        "filename": "runtime/hprof/hprof.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1290,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-12T10:03:29Z",
+      "side": 1,
+      "message": "I see, I missed that this is a `Class.class` and the superclass is `Object.class` as checked above.",
+      "parentUuid": "23e537b3_74176ff6",
+      "range": {
+        "startLine": 1290,
+        "startChar": 42,
+        "endLine": 1290,
+        "endChar": 98
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2a03fdea_272a8655",
@@ -1015,6 +1087,30 @@
       "side": 1,
       "message": "Because those are fields of the class. Not sure why they called it `static_field_writer`.",
       "parentUuid": "2a03fdea_272a8655",
+      "range": {
+        "startLine": 1380,
+        "startChar": 8,
+        "endLine": 1380,
+        "endChar": 27
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "549b17bd_cd0a741f",
+        "filename": "runtime/hprof/hprof.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1380,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-12T10:03:29Z",
+      "side": 1,
+      "message": "I consider this a misnomer but let\u0027s not touch that in this CL.",
+      "parentUuid": "4eb05581_b82d3f4d",
       "range": {
         "startLine": 1380,
         "startChar": 8,
@@ -1320,6 +1416,24 @@
       "side": 1,
       "message": "No, because the dex file allows duplicates (see code in class_linker.cc) and the array does not have duplicates.",
       "parentUuid": "2695f1c1_57ab0c8e",
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96af3548_963b3ac0",
+        "filename": "runtime/mirror/class-inl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-12T10:03:29Z",
+      "side": 1,
+      "message": "If we need to speed this up, we can add a member to the `Class`. (We\u0027re removing a 64-bit member in this CL, so we\u0027re good on the memory impact.)",
+      "parentUuid": "d87d6f19_1401c319",
       "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
