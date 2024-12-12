@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "18b48654_6a4c3c87",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-12T18:20:57Z",
+      "side": 1,
+      "message": "And invoke-direct :)",
+      "parentUuid": "45fc5bbd_ac56350b",
+      "range": {
+        "startLine": 7,
+        "startChar": 14,
+        "endLine": 7,
+        "endChar": 28
+      },
+      "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "27db51b2_92d6a191",
         "filename": "compiler/optimizing/intrinsics_arm64.cc",
         "patchSetId": 2
@@ -37,6 +61,24 @@
       "writtenOn": "2024-12-12T17:47:46Z",
       "side": 1,
       "message": "You are making this implemenation different than the x86_64 one in terms of the order of the comparisons. This is fine as long as both are correct but just FYI it is usually easier to port if they all look alike.",
+      "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "111b6871_68f88ed8",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 6021,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-12T18:20:57Z",
+      "side": 1,
+      "message": "I will need to update x64 too. Otherwise static method invocation where the first argument is null will take slow path.",
+      "parentUuid": "27db51b2_92d6a191",
       "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -58,6 +100,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "44530932_bfa9b958",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 6043,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-12T18:20:57Z",
+      "side": 1,
+      "message": "That was my plan. I still not sure how to use temp properly: I\u0027d like to keep `method_handle_kind`\u0027s name: that makes sections clear, but creating an alias (a new `Register` targeting the same temp) looks errorprone,",
+      "parentUuid": "15fd3235_f921e0cd",
+      "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "def0a104_555ee565",
@@ -71,6 +131,30 @@
       "writtenOn": "2024-12-12T17:47:46Z",
       "side": 1,
       "message": "do you want to extend? Or do `Shift::LSL`?\nYou want `method + temp * 8 + vtable_offset` right?",
+      "range": {
+        "startLine": 6061,
+        "startChar": 44,
+        "endLine": 6061,
+        "endChar": 56
+      },
+      "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33890b26_5776a1cf",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 6061,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-12T18:20:57Z",
+      "side": 1,
+      "message": "\u003e You want method + temp * 8 + vtable_offset right?\n\nThat\u0027s what I want. Doing\n```\n__ Ldr(method, MemOperand(method, temp, Shift::LSL, 3u));\n```\ncrashes dex2oat. I couldn\u0027t make `./development/scripts/stack` work, but stacktrace is gpaste/5918928472375296.\n\nSo I followed what `invoke.S` is [doing](https://source.corp.google.com/h/android/platform/superproject/main/+/main:art/runtime/interpreter/mterp/arm64ng/invoke.S;l\u003d163;drc\u003d15eb8f997e1e7814599f0d1d2b7ee84166853bfd)",
+      "parentUuid": "def0a104_555ee565",
       "range": {
         "startLine": 6061,
         "startChar": 44,
