@@ -163,6 +163,30 @@
       },
       "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c84411d_bdf4fdb6",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 6061,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-12T18:27:16Z",
+      "side": 1,
+      "message": "Ah, UXTW does extend+shift",
+      "parentUuid": "33890b26_5776a1cf",
+      "range": {
+        "startLine": 6061,
+        "startChar": 44,
+        "endLine": 6061,
+        "endChar": 56
+      },
+      "revId": "ddea775ff9c4ad846c96208afbbef10f8b34a086",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
