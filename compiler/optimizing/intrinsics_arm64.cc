@@ -16,10 +16,16 @@
 
 #include "intrinsics_arm64.h"
 
+#include "aarch64/assembler-aarch64.h"
+#include "aarch64/constants-aarch64.h"
+#include "aarch64/instructions-aarch64.h"
+#include "aarch64/operands-aarch64.h"
+#include "aarch64/registers-aarch64.h"
 #include "arch/arm64/callee_save_frame_arm64.h"
 #include "arch/arm64/instruction_set_features_arm64.h"
 #include "art_method.h"
 #include "base/bit_utils.h"
+#include "base/pointer_size.h"
 #include "code_generator_arm64.h"
 #include "common_arm64.h"
 #include "data_type-inl.h"
@@ -31,7 +37,9 @@
 #include "intrinsics_utils.h"
 #include "lock_word.h"
 #include "mirror/array-inl.h"
+#include "mirror/class.h"
 #include "mirror/method_handle_impl.h"
+#include "mirror/object.h"
 #include "mirror/object_array-inl.h"
 #include "mirror/reference.h"
 #include "mirror/string-inl.h"
@@ -5988,7 +5996,8 @@ void IntrinsicLocationsBuilderARM64::VisitMethodHandleInvokeExact(HInvoke* invok
   locations->SetInAt(number_of_args, Location::RequiresRegister());
 
   locations->AddTemp(calling_convention.GetMethodLocation());
-  locations->AddRegisterTemps(3);
+  locations->AddRegisterTemps(4);
+  // We cannot request ip1 as it's blocked by the register allocator.
 }
 
 void IntrinsicCodeGeneratorARM64::VisitMethodHandleInvokeExact(HInvoke* invoke) {
@@ -6020,6 +6029,11 @@ void IntrinsicCodeGeneratorARM64::VisitMethodHandleInvokeExact(HInvoke* invoke) 
          HeapOperand(method_handle.W(), mirror::MethodHandle::HandleKindOffset()));
   __ Cmp(method_handle_kind, Operand(mirror::MethodHandle::Kind::kInvokeStatic));
   __ B(eq, &execute_target_method);
+
+  // The register ip1 is required to be used for the hidden argument in
+  // art_quick_imt_conflict_trampoline, so prevent VIXL from using it.
+  UseScratchRegisterScope scratch_scope(masm);
+  scratch_scope.Exclude(ip1);
 
   if (invoke->AsInvokePolymorphic()->CanTargetInstanceMethod()) {
     Register receiver = InputRegisterAt(invoke, 1);
@@ -6060,12 +6074,53 @@ void IntrinsicCodeGeneratorARM64::VisitMethodHandleInvokeExact(HInvoke* invoke) 
     __ Add(method, method, vtable_offset);
     __ Ldr(method, MemOperand(method, temp, Extend::UXTW, 3u));
     __ B(&execute_target_method);
-    __ Bind(&non_virtual_dispatch);
-  }
 
-  // Checks above are jumping to `execute_target_method` is they succeed. If none match, try to
-  // handle in the slow path.
-  __ B(slow_path->GetEntryLabel());
+    __ Bind(&non_virtual_dispatch);
+    __ Cmp(method_handle_kind, Operand(mirror::MethodHandle::Kind::kInvokeInterface));
+    __ B(ne, slow_path->GetEntryLabel());
+
+    // Skip virtual dispatch if `method` is private.
+    // Re-using method_handle_kind to store access flags.
+    Register access_flags = WRegisterFrom(locations->GetTemp(4));
+    __ Ldr(access_flags, MemOperand(method, ArtMethod::AccessFlagsOffset().Int32Value()));
+    __ And(temp, access_flags, Operand(kAccPrivate));
+    __ Cbnz(temp, &execute_target_method);
+
+    Register hidden_arg = ip1;
+    // Set the hidden argument.
+    __ Mov(hidden_arg, method);
+
+    vixl::aarch64::Label get_imt_index_from_method_index;
+    vixl::aarch64::Label do_imt_dispatch;
+
+    // Get IMT index.
+    // Not doing default conflict check as IMT index is set for all method which have
+    // kAccAbstract bit.
+    __ And(temp, access_flags, Operand(kAccAbstract));
+    __ Cbz(temp, &get_imt_index_from_method_index);
+
+    // imt_index is uint16_t
+    __ Ldrh(temp, MemOperand(method, ArtMethod::MethodIndexOffset().Int32Value()));
+    __ B(&do_imt_dispatch);
+
+    // Default method, do method->GetMethodIndex() & (ImTable::kSizeTruncToPowerOfTwo - 1);
+    __ Bind(&get_imt_index_from_method_index);
+    __ Ldr(temp, MemOperand(method, ArtMethod::MethodIndexOffset().Int32Value()));
+    __ And(temp, temp, Operand(ImTable::kSizeTruncToPowerOfTwo - 1));
+
+    __ Bind(&do_imt_dispatch);
+    // Re-using `method` to store receiver class and ImTableEntry.
+    __ Ldr(method.W(), HeapOperand(receiver.W(), mirror::Object::ClassOffset()));
+    codegen_->GetAssembler()->MaybePoisonHeapReference(method.W());
+
+    __ Ldr(method, MemOperand(method, mirror::Class::ImtPtrOffset(PointerSize::k64).Int32Value()));
+    __ Ldr(method, MemOperand(method, temp, Extend::UXTW, 3u));
+
+    __ B(&execute_target_method);
+  } else {
+    // Not invoke-static and the first argument is not a reference type.
+    __ B(slow_path->GetEntryLabel());
+  }
 
   __ Bind(&execute_target_method);
   Offset entry_point = ArtMethod::EntryPointFromQuickCompiledCodeOffset(kArm64PointerSize);
