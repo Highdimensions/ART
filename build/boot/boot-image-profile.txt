@@ -3624,6 +3624,7 @@ HSPLjava/nio/DirectByteBuffer;->getUnchecked(I[SII)V
 HSPLjava/nio/DirectByteBuffer;->isDirect()Z
 HSPLjava/nio/DirectByteBuffer;->isReadOnly()Z
 HSPLjava/nio/DirectByteBuffer;->ix(I)J
+HSPLjava/nio/DirectByteBuffer;->populate()V
 HSPLjava/nio/DirectByteBuffer;->put(B)Ljava/nio/ByteBuffer;
 HSPLjava/nio/DirectByteBuffer;->put(IB)Ljava/nio/ByteBuffer;
 HSPLjava/nio/DirectByteBuffer;->put(JB)Ljava/nio/ByteBuffer;
