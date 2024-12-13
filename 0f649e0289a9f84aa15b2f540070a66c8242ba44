@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97dbf806_5a12fa5f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-13T02:19:52Z",
+      "side": 1,
+      "message": "A modest beginning. Haven\u0027t made it too far yet.",
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b41ae166_dada4d9c",
+        "filename": "runtime/gc/accounting/card_table.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-13T02:19:52Z",
+      "side": 1,
+      "message": "Could we say anything in a comment about what these represent? Especially since AgeCardVisitor doesn\u0027t deal with kCardAged2.",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 0
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4c1412f9_bb023033",
@@ -532,6 +572,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f95e405c_287443fb",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-13T02:19:52Z",
+      "side": 1,
+      "message": "[begin, end) is only used for checking, right? Can we say \"the post-compact address must be in [begin, end)\" instead? I was confused as to what this meant.",
+      "parentUuid": "e054eaab_97729d62",
+      "range": {
+        "startLine": 281,
+        "startChar": 24,
+        "endLine": 281,
+        "endChar": 26
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6315df26_c99fa1d2",
         "filename": "runtime/gc/collector/mark_compact.h",
         "patchSetId": 16
@@ -589,6 +653,75 @@
         "startChar": 0,
         "endLine": 323,
         "endChar": 42
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6fdf268a_cb3d2a0f",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-13T02:19:52Z",
+      "side": 1,
+      "message": "Can we avoid that, or limit to a smaller section of code?\n\nIf not, this should always go on the definition, not the declaration, and needs an explanation.",
+      "range": {
+        "startLine": 376,
+        "startChar": 44,
+        "endLine": 376,
+        "endChar": 69
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5eac6a17_75fab662",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-13T02:19:52Z",
+      "side": 1,
+      "message": "What vector? Was this next to something?",
+      "range": {
+        "startLine": 711,
+        "startChar": 1,
+        "endLine": 711,
+        "endChar": 24
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a25ab51_afdeb957",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-13T02:19:52Z",
+      "side": 1,
+      "message": "These seem to have gotten separated from the corresponding arrays, which seems unfortunate?",
+      "range": {
+        "startLine": 713,
+        "startChar": 0,
+        "endLine": 718,
+        "endChar": 22
       },
       "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
