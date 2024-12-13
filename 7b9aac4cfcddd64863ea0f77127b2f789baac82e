@@ -22,6 +22,30 @@
       },
       "revId": "7b9aac4cfcddd64863ea0f77127b2f789baac82e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d3e89ae_9a35afce",
+        "filename": "runtime/jni/jni_id_manager.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-13T10:55:48Z",
+      "side": 1,
+      "message": "Yes, Santiago had a similar comment. I\u0027ll try to do it as a follow-up.",
+      "parentUuid": "6a69bc14_f91e2c8c",
+      "range": {
+        "startLine": 464,
+        "startChar": 8,
+        "endLine": 466,
+        "endChar": 64
+      },
+      "revId": "7b9aac4cfcddd64863ea0f77127b2f789baac82e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

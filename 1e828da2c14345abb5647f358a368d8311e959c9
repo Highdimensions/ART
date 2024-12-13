@@ -510,6 +510,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "35192aae_7596fc5f",
+        "filename": "openjdkjvmti/ti_redefine.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2871,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-13T10:55:48Z",
+      "side": 1,
+      "message": "Agree about this code",
+      "parentUuid": "cf2574a7_5b1fe7a7",
+      "range": {
+        "startLine": 2870,
+        "startChar": 14,
+        "endLine": 2871,
+        "endChar": 86
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b132ede_bac72948",
