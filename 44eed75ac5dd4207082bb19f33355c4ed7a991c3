@@ -170,6 +170,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bc00f90_4e899500",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6108,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-13T14:43:16Z",
+      "side": 1,
+      "message": "Ah I missed that. Either way is fine",
+      "parentUuid": "c7938a28_c0f1604b",
+      "range": {
+        "startLine": 6108,
+        "startChar": 11,
+        "endLine": 6108,
+        "endChar": 15
+      },
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9ecf1763_28debe5e",
@@ -225,6 +249,30 @@
       "side": 1,
       "message": "These values are small. `ImtPtrOffset` here seems to be 128.",
       "parentUuid": "9ecf1763_28debe5e",
+      "range": {
+        "startLine": 6116,
+        "startChar": 84,
+        "endLine": 6116,
+        "endChar": 94
+      },
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf37cef3_bb8e5581",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6116,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-13T14:43:16Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "6745f79a_dbf5f463",
       "range": {
         "startLine": 6116,
         "startChar": 84,
