@@ -160,6 +160,24 @@
       "parentUuid": "2184cbb7_b1943f79",
       "revId": "b0b11e0169dd33a938c67cc25512fc484e43198f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af0f5b79_b58e250a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2024-12-13T21:16:23Z",
+      "side": 1,
+      "message": "I retried using byte[16] (which according to Java Heap Profiling takes up 32 bytes?).\n\nApproximate timings for the test now are:\n* Profiling Disabled: ~65ms\n* Existing Implementation, infinite sample interval: ~70ms\n* TLAB size of 0, infinite sampling interval: ~280ms\n\nPS5 is a draft with randomized TLAB size, which eliminates the allocation overhead for large enough sampling intervals. The accuracy of the reported results looks pretty good to me still.",
+      "parentUuid": "af9230cc_cc4e05a6",
+      "revId": "b0b11e0169dd33a938c67cc25512fc484e43198f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
