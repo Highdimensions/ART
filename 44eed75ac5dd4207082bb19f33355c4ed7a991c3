@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "da2d0ee8_15ada8cc",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6000,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-13T14:31:08Z",
+      "side": 1,
+      "message": "In x64 I just request `RAX`. Other cases: ARM64 code_generator for InvokeInterface does not request extra temp (x64 explicitly asks for `RAX`).\n\nThough I tried \n```\nlocations-\u003eAddTemp(Location::RegisterLocation(ip1.GetCode()));\n```\nand it worked.\n\nI will investigate further.",
+      "parentUuid": "2c123a38_545f7b98",
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e3435de4_7e943f66",
         "filename": "compiler/optimizing/intrinsics_arm64.cc",
         "patchSetId": 1
@@ -81,6 +99,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eab6f36a_34ec487a",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6103,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-13T14:31:08Z",
+      "side": 1,
+      "message": "Nice catch, thanks!",
+      "parentUuid": "63a9d319_a0e1ee61",
+      "range": {
+        "startLine": 6103,
+        "startChar": 48,
+        "endLine": 6103,
+        "endChar": 65
+      },
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d67f84d1_19cad59a",
@@ -94,6 +136,30 @@
       "writtenOn": "2024-12-13T13:51:57Z",
       "side": 1,
       "message": ".W()?",
+      "range": {
+        "startLine": 6108,
+        "startChar": 11,
+        "endLine": 6108,
+        "endChar": 15
+      },
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7938a28_c0f1604b",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6108,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-13T14:31:08Z",
+      "side": 1,
+      "message": "temp is `WRegisterFrom(locations-\u003eGetTemp(1));`. Or is it better to be explicit?",
+      "parentUuid": "d67f84d1_19cad59a",
       "range": {
         "startLine": 6108,
         "startChar": 11,
@@ -141,6 +207,30 @@
           ]
         }
       ],
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6745f79a_dbf5f463",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6116,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2024-12-13T14:31:08Z",
+      "side": 1,
+      "message": "These values are small. `ImtPtrOffset` here seems to be 128.",
+      "parentUuid": "9ecf1763_28debe5e",
+      "range": {
+        "startLine": 6116,
+        "startChar": 84,
+        "endLine": 6116,
+        "endChar": 94
+      },
       "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
