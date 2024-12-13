@@ -1506,6 +1506,15 @@ class EXPORT Thread {
   uint8_t* GetTlabEnd() {
     return tlsPtr_.thread_local_end;
   }
+
+  // Returns how far the Tlab position has advanced beyond the JHP position.
+  size_t GetTlabJhpPosOffset() const {
+    return tlsPtr_.thread_local_pos - tlsPtr_.thread_local_jhp_pos;
+  }
+
+  // Records the current position as the JHP position.
+  void SetTlabJhpPos() { tlsPtr_.thread_local_jhp_pos = tlsPtr_.thread_local_pos; }
+
   // Remove the suspend trigger for this thread by making the suspend_trigger_ TLS value
   // equal to a valid pointer.
   void RemoveSuspendTrigger() {
@@ -2193,48 +2202,50 @@ class EXPORT Thread {
   } tls64_;
 
   struct alignas(sizeof(void*)) tls_ptr_sized_values {
-      tls_ptr_sized_values() : card_table(nullptr),
-                               exception(nullptr),
-                               stack_end(nullptr),
-                               managed_stack(),
-                               suspend_trigger(nullptr),
-                               jni_env(nullptr),
-                               tmp_jni_env(nullptr),
-                               self(nullptr),
-                               opeer(nullptr),
-                               jpeer(nullptr),
-                               stack_begin(nullptr),
-                               stack_size(0),
-                               deps_or_stack_trace_sample(),
-                               wait_next(nullptr),
-                               monitor_enter_object(nullptr),
-                               top_handle_scope(nullptr),
-                               class_loader_override(nullptr),
-                               stacked_shadow_frame_record(nullptr),
-                               deoptimization_context_stack(nullptr),
-                               frame_id_to_shadow_frame(nullptr),
-                               name(nullptr),
-                               pthread_self(0),
-                               active_suspendall_barrier(nullptr),
-                               active_suspend1_barriers(nullptr),
-                               thread_local_pos(nullptr),
-                               thread_local_end(nullptr),
-                               thread_local_start(nullptr),
-                               thread_local_limit(nullptr),
-                               thread_local_objects(0),
-                               checkpoint_function(nullptr),
-                               thread_local_alloc_stack_top(nullptr),
-                               thread_local_alloc_stack_end(nullptr),
-                               mutator_lock(nullptr),
-                               flip_function(nullptr),
-                               thread_local_mark_stack(nullptr),
-                               async_exception(nullptr),
-                               top_reflective_handle_scope(nullptr),
-                               method_trace_buffer(nullptr),
-                               method_trace_buffer_curr_entry(nullptr),
-                               thread_exit_flags(nullptr),
-                               last_no_thread_suspension_cause(nullptr),
-                               last_no_transaction_checks_cause(nullptr) {
+    tls_ptr_sized_values()
+        : card_table(nullptr),
+          exception(nullptr),
+          stack_end(nullptr),
+          managed_stack(),
+          suspend_trigger(nullptr),
+          jni_env(nullptr),
+          tmp_jni_env(nullptr),
+          self(nullptr),
+          opeer(nullptr),
+          jpeer(nullptr),
+          stack_begin(nullptr),
+          stack_size(0),
+          deps_or_stack_trace_sample(),
+          wait_next(nullptr),
+          monitor_enter_object(nullptr),
+          top_handle_scope(nullptr),
+          class_loader_override(nullptr),
+          stacked_shadow_frame_record(nullptr),
+          deoptimization_context_stack(nullptr),
+          frame_id_to_shadow_frame(nullptr),
+          name(nullptr),
+          pthread_self(0),
+          active_suspendall_barrier(nullptr),
+          active_suspend1_barriers(nullptr),
+          thread_local_pos(nullptr),
+          thread_local_end(nullptr),
+          thread_local_start(nullptr),
+          thread_local_limit(nullptr),
+          thread_local_jhp_pos(nullptr),
+          thread_local_objects(0),
+          checkpoint_function(nullptr),
+          thread_local_alloc_stack_top(nullptr),
+          thread_local_alloc_stack_end(nullptr),
+          mutator_lock(nullptr),
+          flip_function(nullptr),
+          thread_local_mark_stack(nullptr),
+          async_exception(nullptr),
+          top_reflective_handle_scope(nullptr),
+          method_trace_buffer(nullptr),
+          method_trace_buffer_curr_entry(nullptr),
+          thread_exit_flags(nullptr),
+          last_no_thread_suspension_cause(nullptr),
+          last_no_transaction_checks_cause(nullptr) {
       std::fill(held_mutexes, held_mutexes + kLockLevelCount, nullptr);
     }
 
@@ -2360,6 +2371,10 @@ class EXPORT Thread {
     // Thread local limit is how much we can expand the thread local buffer to, it is greater or
     // equal to thread_local_end.
     uint8_t* thread_local_limit;
+
+    // The position in the thread local buffer last reported for Java Heap
+    // Profiling. This will be at or before thread_local_pos.
+    uint8_t* thread_local_jhp_pos;
 
     size_t thread_local_objects;
 

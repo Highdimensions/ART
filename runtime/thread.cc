@@ -4666,19 +4666,12 @@ void Thread::SetTlab(uint8_t* start, uint8_t* end, uint8_t* limit) {
   tlsPtr_.thread_local_pos  = tlsPtr_.thread_local_start;
   tlsPtr_.thread_local_end = end;
   tlsPtr_.thread_local_limit = limit;
+  tlsPtr_.thread_local_jhp_pos = tlsPtr_.thread_local_pos;
   tlsPtr_.thread_local_objects = 0;
 }
 
 void Thread::ResetTlab() {
   gc::Heap* const heap = Runtime::Current()->GetHeap();
-  if (heap->GetHeapSampler().IsEnabled()) {
-    // Note: We always ResetTlab before SetTlab, therefore we can do the sample
-    // offset adjustment here.
-    heap->AdjustSampleOffset(GetTlabPosOffset());
-    VLOG(heap) << "JHP: ResetTlab, Tid: " << GetTid()
-               << " adjustment = "
-               << (tlsPtr_.thread_local_pos - tlsPtr_.thread_local_start);
-  }
   SetTlab(nullptr, nullptr, nullptr);
 }
 
@@ -4698,6 +4691,7 @@ void Thread::AdjustTlab(size_t slide_bytes) {
     tlsPtr_.thread_local_pos -= slide_bytes;
     tlsPtr_.thread_local_end -= slide_bytes;
     tlsPtr_.thread_local_limit -= slide_bytes;
+    tlsPtr_.thread_local_jhp_pos -= slide_bytes;
   }
 }
 
