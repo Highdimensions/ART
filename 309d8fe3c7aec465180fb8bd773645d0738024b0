@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "acf0655a_5fd4a98b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2024-12-13T19:37:25Z",
+      "side": 1,
+      "message": "(performance result is already discussed and due to real/apparent size difference, see also b/331970662)",
+      "revId": "309d8fe3c7aec465180fb8bd773645d0738024b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
