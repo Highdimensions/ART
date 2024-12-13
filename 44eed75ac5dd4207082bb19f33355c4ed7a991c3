@@ -1,0 +1,148 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c123a38_545f7b98",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6000,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-13T13:51:57Z",
+      "side": 1,
+      "message": "If you are not requesting it, and are modifying it then it can lead to errors. How is it handled in other cases?",
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3435de4_7e943f66",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6036,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-13T13:51:57Z",
+      "side": 1,
+      "message": "Since you are hand-creating the code there\u0027s no codegen by VIXL. Feel free to keep the comment regarding ip1 but remove the scope. Id move the comment closer to the kInvokeInterface path",
+      "range": {
+        "startLine": 6033,
+        "startChar": 0,
+        "endLine": 6036,
+        "endChar": 29
+      },
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "184d74d1_f7193050",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6084,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-13T13:51:57Z",
+      "side": 1,
+      "message": "Same comment as the other CL. Temp#2 is not used, and temp#3 is not used either. It is easier to see that temp#3 is not used as one is the virtual dispatch and the other the non-virtual one.\n\nFeel free to keep this as a future cleanup",
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63a9d319_a0e1ee61",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6103,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-13T13:51:57Z",
+      "side": 1,
+      "message": "ImtIndexOffset",
+      "range": {
+        "startLine": 6103,
+        "startChar": 48,
+        "endLine": 6103,
+        "endChar": 65
+      },
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d67f84d1_19cad59a",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6108,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-13T13:51:57Z",
+      "side": 1,
+      "message": ".W()?",
+      "range": {
+        "startLine": 6108,
+        "startChar": 11,
+        "endLine": 6108,
+        "endChar": 15
+      },
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ecf1763_28debe5e",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6116,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2024-12-13T13:51:57Z",
+      "side": 1,
+      "message": "on x86_64 we are doing `Uint32Value`. Not sure if it matters",
+      "range": {
+        "startLine": 6116,
+        "startChar": 84,
+        "endLine": 6116,
+        "endChar": 94
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "fbae748d_cf1b64f5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/intrinsics_arm64.cc",
+              "range": {
+                "startLine": 6116,
+                "startChar": 0,
+                "endLine": 6117,
+                "endChar": 0
+              },
+              "replacement": "    __ Ldr(method, MemOperand(method, mirror::Class::ImtPtrOffset(PointerSize::k64).Uint32Value()));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
