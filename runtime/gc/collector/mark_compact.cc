@@ -1108,7 +1108,7 @@ void MarkCompact::ReMarkRoots(Runtime* runtime) {
                                                   | kVisitRootFlagStopLoggingNewRoots
                                                   | kVisitRootFlagClearRootLog),
                       runtime);
-
+  ProcessMarkStack();
   if (kVerifyRootsMarked) {
     TimingLogger::ScopedTiming t2("(Paused)VerifyRoots", GetTimings());
     VerifyRootMarkedVisitor visitor(this);
@@ -3890,6 +3890,7 @@ void MarkCompact::MarkRoots(VisitRootFlags flags) {
   MarkRootsCheckpoint(thread_running_gc_, runtime);
   MarkNonThreadRoots(runtime);
   MarkConcurrentRoots(flags, runtime);
+  ProcessMarkStack();
 }
 
 void MarkCompact::PreCleanCards() {
