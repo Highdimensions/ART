@@ -7999,8 +7999,10 @@ HSPLjava/util/zip/InflaterInputStream;->read()I
 HSPLjava/util/zip/InflaterInputStream;->read([BII)I
 HSPLjava/util/zip/ZipCoder$UTF8ZipCoder;->checkedHash([BII)I
 HSPLjava/util/zip/ZipCoder$UTF8ZipCoder;->hasTrailingSlash([BI)Z
+HSPLjava/util/zip/ZipCoder$UTF8ZipCoder;->hasTrailingSlash(Ljava/nio/DirectByteBuffer;I)Z
 HSPLjava/util/zip/ZipCoder$UTF8ZipCoder;->isUTF8()Z
 HSPLjava/util/zip/ZipCoder$UTF8ZipCoder;->toString([BII)Ljava/lang/String;
+HSPLjava/util/zip/ZipCoder$UTF8ZipCoder;->toString(Ljava/nio/DirectByteBuffer;II)Ljava/lang/String;
 HSPLjava/util/zip/ZipCoder;-><init>(Ljava/nio/charset/Charset;)V
 HSPLjava/util/zip/ZipCoder;->decoder()Ljava/nio/charset/CharsetDecoder;
 HSPLjava/util/zip/ZipCoder;->encoder()Ljava/nio/charset/CharsetEncoder;
@@ -8008,6 +8010,7 @@ HSPLjava/util/zip/ZipCoder;->get(Ljava/nio/charset/Charset;)Ljava/util/zip/ZipCo
 HSPLjava/util/zip/ZipCoder;->getBytes(Ljava/lang/String;)[B
 HSPLjava/util/zip/ZipCoder;->isUTF8()Z
 HSPLjava/util/zip/ZipCoder;->toString([BI)Ljava/lang/String;
+HSPLjava/util/zip/ZipCoder;->toString(Ljava/nio/DirectByteBuffer;II)Ljava/lang/String;
 HSPLjava/util/zip/ZipEntry;-><init>()V
 HSPLjava/util/zip/ZipEntry;-><init>(Ljava/lang/String;)V
 HSPLjava/util/zip/ZipEntry;-><init>(Ljava/util/zip/ZipEntry;)V
