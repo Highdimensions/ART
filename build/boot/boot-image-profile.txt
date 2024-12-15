@@ -3605,6 +3605,7 @@ HSPLjava/nio/DirectByteBuffer;->duplicate()Ljava/nio/ByteBuffer;
 HSPLjava/nio/DirectByteBuffer;->duplicate()Ljava/nio/MappedByteBuffer;
 HSPLjava/nio/DirectByteBuffer;->get()B
 HSPLjava/nio/DirectByteBuffer;->get(I)B
+HSPLjava/nio/DirectByteBuffer;->get(I[BII)Ljava/nio/ByteBuffer;
 HSPLjava/nio/DirectByteBuffer;->get(J)B
 HSPLjava/nio/DirectByteBuffer;->get([BII)Ljava/nio/ByteBuffer;
 HSPLjava/nio/DirectByteBuffer;->getChar()C
