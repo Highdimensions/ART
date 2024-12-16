@@ -1,0 +1,436 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e846d6b8_631c6501",
+        "filename": "runtime/mutator_gc_coord.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "drop?",
+      "range": {
+        "startLine": 321,
+        "startChar": 60,
+        "endLine": 321,
+        "endChar": 62
+      },
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ce56658_44197a12",
+        "filename": "runtime/mutator_gc_coord.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "extra `-`.",
+      "range": {
+        "startLine": 389,
+        "startChar": 30,
+        "endLine": 389,
+        "endChar": 31
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "47d57ae8_5debccc8",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/mutator_gc_coord.md",
+              "range": {
+                "startLine": 389,
+                "startChar": 0,
+                "endLine": 390,
+                "endChar": 0
+              },
+              "replacement": "`RunCheckpoint()` call happens before the end of _S_. Since we learned of _T_\u0027s\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ef7ce08_884387b2",
+        "filename": "runtime/mutator_gc_coord.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "Why did the original implementation/optimization thought this was safe?",
+      "range": {
+        "startLine": 395,
+        "startChar": 18,
+        "endLine": 395,
+        "endChar": 63
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "07133654_16d838d0",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/mutator_gc_coord.md",
+              "range": {
+                "startLine": 395,
+                "startChar": 0,
+                "endLine": 397,
+                "endChar": 0
+              },
+              "replacement": "optimized that by avoiding ever suspending the affected threads. This was\nconsidered safe because we only ever run empty checkpoints after a read barrier\nthat ensures that all threads have passed a suspend point at which the\ncorresponding write barrier has completed. This means that all threads that\ncould be affected by the write barrier have already passed a suspend point, and\nthus are guaranteed to have observed the write barrier.\n\nThis appears more expensive to do correctly than it is to forego the\noptimization:\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d20cb1d6_0fada092",
+        "filename": "runtime/mutator_gc_coord.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "its",
+      "range": {
+        "startLine": 418,
+        "startChar": 20,
+        "endLine": 418,
+        "endChar": 25
+      },
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3bc47f5_4fcd53bb",
+        "filename": "runtime/mutator_gc_coord.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 423,
+        "startChar": 29,
+        "endLine": 423,
+        "endChar": 33
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "9b196f79_6b9f3444",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/mutator_gc_coord.md",
+              "range": {
+                "startLine": 423,
+                "startChar": 0,
+                "endLine": 424,
+                "endChar": 0
+              },
+              "replacement": ": The canonical fix for this kind of `store; load` reordering problem is to make\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdd7b8a5_cc848669",
+        "filename": "runtime/thread-inl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "`should be` ?",
+      "range": {
+        "startLine": 86,
+        "startChar": 28,
+        "endLine": 86,
+        "endChar": 30
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "93661d6b_ef30320f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread-inl.h",
+              "range": {
+                "startLine": 86,
+                "startChar": 0,
+                "endLine": 89,
+                "endChar": 0
+              },
+              "replacement": "    // Memory_order_relaxed should be OK, since RunCheckpointFunction shares a lock with the\n    // requestor, and FullSuspendCheck() re-checks later. We currently need memory_order_acquire\n    // for the empty checkpoint path.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e03a114f_8b30a925",
+        "filename": "runtime/thread-inl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "should be",
+      "range": {
+        "startLine": 243,
+        "startChar": 28,
+        "endLine": 243,
+        "endChar": 30
+      },
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c7465ab_467cffe7",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1607,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "Add a comment that points to the documentation?",
+      "range": {
+        "startLine": 1607,
+        "startChar": 0,
+        "endLine": 1607,
+        "endChar": 82
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1883b1c0_6e8eb5a9",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread.cc",
+              "range": {
+                "startLine": 1607,
+                "startChar": 0,
+                "endLine": 1608,
+                "endChar": 0
+              },
+              "replacement": "  AtomicClearFlag(ThreadFlag::kEmptyCheckpointRequest,\n                  std::memory_order_release);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "445445d3_2f918e64",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1793,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "Add a comment that points to the documentation?",
+      "range": {
+        "startLine": 1793,
+        "startChar": 51,
+        "endLine": 1793,
+        "endChar": 76
+      },
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cd1ed47_03149922",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1875,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "Extra `-` ?",
+      "range": {
+        "startLine": 1875,
+        "startChar": 58,
+        "endLine": 1875,
+        "endChar": 59
+      },
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fda31034_0986b85b",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1948,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "ditto about a comment (here and other places where we `acquire`)",
+      "range": {
+        "startLine": 1948,
+        "startChar": 0,
+        "endLine": 1948,
+        "endChar": 81
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "33047da7_9d94407d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread.cc",
+              "range": {
+                "startLine": 1793,
+                "startChar": 0,
+                "endLine": 1793,
+                "endChar": 0
+              },
+              "replacement": "    // We re-read with memory_order_acquire before acting on the flags.\n"
+            },
+            {
+              "path": "runtime/thread.cc",
+              "range": {
+                "startLine": 1949,
+                "startChar": 0,
+                "endLine": 1949,
+                "endChar": 0
+              },
+              "replacement": "      // We re-read with memory_order_acquire before acting on the flags.\n"
+            },
+            {
+              "path": "runtime/thread.cc",
+              "range": {
+                "startLine": 1968,
+                "startChar": 0,
+                "endLine": 1968,
+                "endChar": 0
+              },
+              "replacement": "    // We re-read with memory_order_acquire before acting on the flags.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c435166_b88ce47f",
+        "filename": "runtime/thread_list.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2024-12-16T11:15:09Z",
+      "side": 1,
+      "message": "_S_",
+      "range": {
+        "startLine": 143,
+        "startChar": 62,
+        "endLine": 143,
+        "endChar": 63
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1023f687_0e88e2d9",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread_list.h",
+              "range": {
+                "startLine": 143,
+                "startChar": 0,
+                "endLine": 144,
+                "endChar": 0
+              },
+              "replacement": "  // barrier), then every thread has executed a code sequence _S_ during which it remained in a\n"
+            },
+            {
+              "path": "runtime/thread_list.h",
+              "range": {
+                "startLine": 145,
+                "startChar": 0,
+                "endLine": 146,
+                "endChar": 0
+              },
+              "replacement": "  // beginning of _S_ happened before _X_. Thus after a RunCheckpoint() call, no preexisting\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
