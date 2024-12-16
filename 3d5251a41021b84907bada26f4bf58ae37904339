@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6565007_2d28eaa1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-16T21:21:10Z",
+      "side": 1,
+      "message": "The test failures are exactly the same as in the completely unrelated aosp/3412126 and can thus probably be ignored.",
+      "revId": "3d5251a41021b84907bada26f4bf58ae37904339",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
