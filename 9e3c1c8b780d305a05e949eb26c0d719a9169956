@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "63c2ff2b_815bbe35",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-16T21:20:30Z",
+      "side": 1,
+      "message": "Test failures are exactly the same as for the similarly numbered, but completely unrelated aosp/3412125.",
+      "revId": "9e3c1c8b780d305a05e949eb26c0d719a9169956",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e846d6b8_631c6501",
