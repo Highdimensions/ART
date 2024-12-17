@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72b305d4_5c645f88",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T19:02:58Z",
+      "side": 1,
+      "message": "Failing test is unrelated and has known issues, e.g. b/382077698",
+      "revId": "bbfb2e9698a9d445b48998e00fced6f1df5fa972",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
