@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6085e9e6_a9b2bf0d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T16:55:32Z",
+      "side": 1,
+      "message": "Happy to see this works!\n\nI did not manually check the locking discipline here. Since lock checking is now enabled, that should be OK.\n\nI did notice that we still have a bunch of NO_THREAD_SAFETY_ANALYSIS annotations on declarations rather than definitions. We should gradually fix all of those. As the documentation points out, that doesn\u0027t make sense.",
+      "revId": "1318a76fc38ffdd9f2b4bb5e59862a573d737c70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
