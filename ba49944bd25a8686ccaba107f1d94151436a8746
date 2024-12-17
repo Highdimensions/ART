@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0269e3d_61f65996",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T20:16:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25c4d3c0_ccc1a170",
+      "range": {
+        "startLine": 21,
+        "startChar": 30,
+        "endLine": 21,
+        "endChar": 34
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d99d5aac_ea61bb3e",
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5cd03c7f_a7721f54",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T20:16:23Z",
+      "side": 1,
+      "message": "I\u0027m confused. Level 36 is W, right? Would this be any different? Or are you saying that except for Level 1, we need a new header for each method, even if the API level is the same?",
+      "parentUuid": "d99d5aac_ea61bb3e",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 69
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4bc4c838_5a42ecff",
         "filename": "libartpalette/include/palette/palette_method_list.h",
         "patchSetId": 1
@@ -60,6 +108,30 @@
       "writtenOn": "2024-11-15T19:45:18Z",
       "side": 1,
       "message": "There are constants for these in palette_system.h.\n\nEven so, this approach only works if we never change `kMinManagedThreadPriority` or `kMaxManagedThreadPriority`. Is it wise to lock ourselves into that limitation? Otherwise we\u0027ll need an API to query them as well.",
+      "range": {
+        "startLine": 99,
+        "startChar": 62,
+        "endLine": 100,
+        "endChar": 63
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4f77d59_07668a47",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T20:16:23Z",
+      "side": 1,
+      "message": "I added a mentioned of the macros here. AFAICT, the values are completely cast in stone. Every tutorial you find on the web says that in Java MAX_PRIORITY is 10. I\u0027m not entirely sure where it came from. Part of the issue may be that the class change rules would require all clients to be recompiled if it ever changed. And you kind of need to know what the range is in order to set intermediate priorities.",
+      "parentUuid": "4bc4c838_5a42ecff",
       "range": {
         "startLine": 99,
         "startChar": 62,
@@ -134,6 +206,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "79f5646d_32156079",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T20:16:23Z",
+      "side": 1,
+      "message": "It really should be int. It produces arguments for the Posix setpriority() call and those are ints. The range is -20 to 19, as specified by the Linux man page, so the number of bytes really doesn\u0027t matter.",
+      "parentUuid": "f28d6dad_15c47153",
+      "range": {
+        "startLine": 102,
+        "startChar": 31,
+        "endLine": 102,
+        "endChar": 34
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efbb1f80_1ff14484",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T20:16:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "613753dc_04ea3006",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 102,
+        "endChar": 29
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "49b79d43_91a12e57",
@@ -147,6 +267,30 @@
       "writtenOn": "2024-11-15T19:45:18Z",
       "side": 1,
       "message": "Like in the other CL, the new function needs a new section with a new version, with the corresponding change in Android.bp.",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 33
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61e28c59_0c2f1943",
+        "filename": "libartpalette/libartpalette.map",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T20:16:23Z",
+      "side": 1,
+      "message": "Please see my other question.",
+      "parentUuid": "49b79d43_91a12e57",
       "range": {
         "startLine": 55,
         "startChar": 0,
@@ -180,6 +324,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb32a2f6_59a5f628",
+        "filename": "libartpalette/libartpalette.map",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T20:16:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d815afa_ced29cba",
+      "range": {
+        "startLine": 59,
+        "startChar": 33,
+        "endLine": 59,
+        "endChar": 42
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fac0f50d_93b1a5f2",
@@ -193,6 +361,30 @@
       "writtenOn": "2024-11-15T19:45:18Z",
       "side": 1,
       "message": "Please add a corresponding comment to the new function.",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 62
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ebcedddf_5677f5cb",
+        "filename": "libartpalette/system/palette_fake.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T20:16:23Z",
+      "side": 1,
+      "message": "Same question ...",
+      "parentUuid": "fac0f50d_93b1a5f2",
       "range": {
         "startLine": 144,
         "startChar": 0,
@@ -239,6 +431,30 @@
       "writtenOn": "2024-11-15T19:45:18Z",
       "side": 1,
       "message": "Please use `art:palette::k*ManagedThreadPriority` constants.",
+      "range": {
+        "startLine": 161,
+        "startChar": 29,
+        "endLine": 161,
+        "endChar": 30
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fb595fb_f23ee540",
+        "filename": "libartpalette/system/palette_fake.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T20:16:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff81bfd9_17488d28",
       "range": {
         "startLine": 161,
         "startChar": 29,

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2ad4c32_eeef0418",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-17T20:16:23Z",
+      "side": 1,
+      "message": "Fixed a bunch of things. Thanks!\nI have the same recurring question about whether each new function is intended to have its own section in a bunch of places.",
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
