@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abd56191_2f150f60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863710
+      },
+      "writtenOn": "2024-12-17T14:13:19Z",
+      "side": 1,
+      "message": "This is a follow-up from https://android-review.googlesource.com/c/platform/libcore/+/3417701/comment/ebce92cb_0984bd5f/",
+      "revId": "81101f0095c2201fa729993a80adf590f60a5480",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
