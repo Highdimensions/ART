@@ -101,6 +101,9 @@ public class ProguardMap {
     // Mapping from obfuscated field name to clear field name.
     private final Map<String, String> mFields = new HashMap<String, String>();
 
+    // Mapping from obfuscated method name to clear method name.
+    private final Map<String, String> mMethodMap = new HashMap<>();
+
     // obfuscatedMethodName + clearSignature -> FrameData
     private final Map<String, FrameData> mFrames = new HashMap<String, FrameData>();
 
@@ -149,6 +152,14 @@ public class ProguardMap {
       }
       return new Frame(frame.clearMethodName, clearSignature,
           getFileName(clearClassName), frame.getClearLine(obfuscatedLine));
+    }
+
+    public String getClearMethodName(String obfuscatedMethodName) {
+      return mMethodMap.getOrDefault(obfuscatedMethodName, obfuscatedMethodName);
+    }
+
+    private void addMethodMapping(String obfuscatedMethodName, String clearMethodName) {
+      mMethodMap.put(obfuscatedMethodName, clearMethodName);
     }
   }
 
@@ -342,12 +353,30 @@ public class ProguardMap {
 
           String clearSig = fromProguardSignature(sig + type);
           classData.addFrame(obfuscatedName, clearName, clearSig, obfuscatedRange, clearRange);
+          classData.addMethodMapping(obfuscatedName, clearName);
         }
 
         line = reader.readLine();
       }
     }
     reader.close();
+  }
+
+  /**
+   * Returns clear method name. If the mapping is not found, the obfuscated method name is
+   * returned.
+   *
+   * @param clearClassName the unobfuscated name of the class
+   * @param obfuscatedMethodName the obfuscated method name
+   * @return the unobfuscated method name
+   */
+  public String getClearMethodName(String clearClassName, String obfuscatedMethodName) {
+    if (mClassesFromClearName.containsKey(clearClassName)) {
+      ClassData classData = mClassesFromClearName.get(clearClassName);
+      return classData.getClearMethodName(obfuscatedMethodName);
+    }
+
+    return obfuscatedMethodName;
   }
 
   private static class Version implements Comparable<Version> {

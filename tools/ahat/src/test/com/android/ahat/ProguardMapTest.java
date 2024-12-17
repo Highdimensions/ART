@@ -191,6 +191,29 @@ public class ProguardMapTest {
       runNewProguardMap(String.format(TEST_MAP_FORMAT, "3.2"));
   }
 
+  @Test
+  public void noProguard_doesNotDeobfuscateMethod() throws Exception {
+     ProguardMap map = new ProguardMap();
+     String clearClassName = "class.with.Methods";
+     String obfuscatedMethodName = "m";
+
+     String clearMethodName = map.getClearMethodName(clearClassName, obfuscatedMethodName);
+     assertEquals(clearMethodName, obfuscatedMethodName);
+  }
+
+  @Test
+  public void deobfuscateMethod() throws Exception {
+     ProguardMap map = new ProguardMap();
+     map.readFromReader(new StringReader(String.format(TEST_MAP_FORMAT, "3.1")));
+
+     String clearClassName = "class.with.Methods";
+     String obfuscatedMethodName = "m";
+     String expectedClearName = "boringMethod";
+
+     String clearMethodName = map.getClearMethodName(clearClassName, obfuscatedMethodName);
+     assertEquals(clearMethodName, expectedClearName);
+  }
+
   public void runNewProguardMap(String testMap) throws IOException, ParseException {
     ProguardMap map = new ProguardMap();
 
