@@ -26,6 +26,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ef40c140_86a19345",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2024-12-18T14:49:09Z",
+      "side": 1,
+      "message": "Could add a short explanation about why you\u0027re adding these APIs to Ahat?\n\nAlso, is there a bug tracking this work?",
+      "revId": "ee764632a9aa576b4cbd9540fde5c930b3f91e52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "daf16bd9_c9671ee6",
         "filename": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
         "patchSetId": 2
