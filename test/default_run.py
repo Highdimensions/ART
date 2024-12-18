@@ -15,6 +15,7 @@
 
 import sys, os, shutil, shlex, re, subprocess, glob
 from argparse import ArgumentParser, BooleanOptionalAction, Namespace
+from globals import BOOTCLASSPATH
 from os import path
 from os.path import isfile, isdir, basename
 from subprocess import check_output, DEVNULL, PIPE, STDOUT
@@ -144,29 +145,11 @@ def get_target_arch(is64: bool) -> str:
     assert len(arches) == 1, f"Can not find (unique) 32-bit arch in {arches}"
   return arches[0]
 
-# Note: This must start with the CORE_IMG_JARS in Android.common_path.mk
-# because that's what we use for compiling the boot.art image.
-# It may contain additional modules from TEST_CORE_JARS.
-bpath_modules = ("core-oj core-libart okhttp bouncycastle apache-xml core-icu4j"
-                 " conscrypt")
-
 
 # Helper function to construct paths for apex modules (for both -Xbootclasspath and
 # -Xbootclasspath-location).
 def get_apex_bootclasspath_impl(bpath_prefix: str):
-  bpath_separator = ""
-  bpath = ""
-  bpath_jar = ""
-  for bpath_module in bpath_modules.split(" "):
-    apex_module = "com.android.art"
-    if bpath_module == "conscrypt":
-      apex_module = "com.android.conscrypt"
-    if bpath_module == "core-icu4j":
-      apex_module = "com.android.i18n"
-    bpath_jar = f"/apex/{apex_module}/javalib/{bpath_module}.jar"
-    bpath += f"{bpath_separator}{bpath_prefix}{bpath_jar}"
-    bpath_separator = ":"
-  return bpath
+  return ":".join(bpath_prefix + bpath for bpath in BOOTCLASSPATH)
 
 
 # Gets a -Xbootclasspath paths with the apex modules.
@@ -444,6 +427,10 @@ def default_run(ctx, args, **kwargs):
   if HOST or ON_VM:
     TIME_OUT = "timeout"
 
+# Give extra 60 min for tests on QEMU (to avoid timeouts in debuggable mode).
+  if ON_VM:
+    TIME_OUT_EXTRA = 6000
+
 # If you change this, update the timeout in testrunner.py as well.
   if not TIME_OUT_VALUE:
     # 10 minutes is the default.
@@ -711,6 +698,10 @@ def default_run(ctx, args, **kwargs):
     # linker configuration file (`/apex/com.android.art/etc/ld.config.txt`) for
     # these binaries.
     ANDROID_ART_BIN_DIR = f"{ANDROID_ART_ROOT}/bin"
+
+  # Disable metrics reporting to StatsD for chroot tests.
+  if CHROOT:
+    FLAGS += " -Xmetrics-write-to-statsd:false"
 
   profman_cmdline = "true"
   dex2oat_cmdline = "true"
@@ -1045,6 +1036,7 @@ def default_run(ctx, args, **kwargs):
       ANDROID_ART_ROOT = ANDROID_ART_ROOT,
       ANDROID_TZDATA_ROOT = ANDROID_TZDATA_ROOT,
       ANDROID_LOG_TAGS = ANDROID_LOG_TAGS,
+      ART_TEST_ON_VM=ON_VM,
       LD_LIBRARY_PATH = LD_LIBRARY_PATH,
       NATIVELOADER_DEFAULT_NAMESPACE_LIBS = NATIVELOADER_DEFAULT_NAMESPACE_LIBS,
       PATH = f"{PREPEND_TARGET_PATH}:$PATH",

@@ -155,7 +155,19 @@ interface IArtd {
     /**
      * Dexopts a dex file for the given instruction set.
      *
-     * Throws fatal and non-fatal errors.
+     * Throws fatal and non-fatal errors. When dexopt fails, the non-fatal status includes an error
+     * message containing a substring formatted as:
+     * [status=%STATUS%,exit_code=%EXIT_CODE%,signal=%SIGNAL%]
+     * where %STATUS% is the integer value of the corresponding ExecResultStatus enumeration defined
+     * in frameworks/proto_logging/stats/enums/art/common_enums.proto,
+     * %EXIT_CODE% is the exit code for the dex2oat process and set only when %STATUS% is set to
+     * EXEC_RESULT_STATUS_EXITED (-1 otherwsie),
+     * and %SIGNAL% is the signal that interrupted the dex2oat
+     * process and set only when %STATUS% is EXEC_RESULT_STATUS_SIGNALED (0 otherwise).
+     *
+     * The purpose of this format is to share information about the dex2oat run result with the
+     * ArtService code in Java that orchestrates the dexopt process, so that it can be reported to
+     * StatsD.
      */
     com.android.server.art.ArtdDexoptResult dexopt(
             in com.android.server.art.OutputArtifacts outputArtifacts,
@@ -260,6 +272,20 @@ interface IArtd {
      * Throws fatal errors. Logs and ignores non-fatal errors.
      */
     long getProfileSize(in com.android.server.art.ProfilePath profile);
+
+    /**
+     * Returns a notification handle to wait for a process to finish profile save
+     * ({@code ProfileCompilationInfo::Save}).
+     *
+     * A forced profile save can be triggered by sending {@code SIGUSR1} to the process.
+     *
+     * Throws fatal and non-fatal errors.
+     *
+     * Not supported in Pre-reboot Dexopt mode.
+     */
+    @PropagateAllowBlocking
+    com.android.server.art.IArtdNotification initProfileSaveNotification(
+            in com.android.server.art.ProfilePath.PrimaryCurProfilePath profilePath, int pid);
 
     /**
      * Moves the staged files of the given artifacts and profiles to the permanent locations,

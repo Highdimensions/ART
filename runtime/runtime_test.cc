@@ -95,7 +95,8 @@ TEST_F(RuntimeTest, ElfAlignmentMismatch) {
   }
 #endif
   // Determine the alignment of the ART APEX by reading the alignment of boot.oat.
-  std::string core_oat_location = GetSystemImageFilename(GetCoreOatLocation().c_str(), kRuntimeISA);
+  std::string core_oat_location = GetSystemImageFilename(GetCoreOatLocation().c_str(),
+                                                         kRuntimeQuickCodeISA);
   std::unique_ptr<File> core_oat_file(OS::OpenFileForReading(core_oat_location.c_str()));
   ASSERT_TRUE(core_oat_file.get() != nullptr) << core_oat_location;
 
@@ -107,6 +108,34 @@ TEST_F(RuntimeTest, ElfAlignmentMismatch) {
                                                   &error_msg));
   ASSERT_TRUE(elf_file != nullptr) << error_msg;
   EXPECT_EQ(kElfSegmentAlignment, elf_file->GetElfSegmentAlignmentFromFile());
+}
+
+class RuntimeInitMetricsDefaultTest : public CommonRuntimeTest {};
+
+TEST_F(RuntimeInitMetricsDefaultTest, MetricsAreNotInitialized) {
+  ASSERT_FALSE(runtime_->AreMetricsInitialized());
+}
+
+class RuntimeInitMetricsZygoteTest : public CommonRuntimeTest {
+  void SetUpRuntimeOptions(RuntimeOptions* options) override {
+    CommonRuntimeTest::SetUpRuntimeOptions(options);
+    options->emplace_back(std::make_pair("-Xzygote", nullptr));
+  }
+};
+
+TEST_F(RuntimeInitMetricsZygoteTest, MetricsAreInitialized) {
+  ASSERT_TRUE(runtime_->AreMetricsInitialized());
+}
+
+class RuntimeInitMetricsForceEnableTest : public CommonRuntimeTest {
+  void SetUpRuntimeOptions(RuntimeOptions* options) override {
+    CommonRuntimeTest::SetUpRuntimeOptions(options);
+    options->emplace_back(std::make_pair("-Xmetrics-force-enable:true", nullptr));
+  }
+};
+
+TEST_F(RuntimeInitMetricsForceEnableTest, MetricsAreInitialized) {
+  ASSERT_TRUE(runtime_->AreMetricsInitialized());
 }
 
 }  // namespace art

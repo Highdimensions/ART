@@ -1970,6 +1970,25 @@ DEFINE_FUNCTION art_quick_invoke_polymorphic
     RETURN_OR_DELIVER_PENDING_EXCEPTION
 END_FUNCTION art_quick_invoke_polymorphic
 
+    /*
+     * Slow path for MethodHandle.invokeExact intrinsic.
+     * That intrinsic has a custom calling convention: the argument allocation doesn't start from
+     * the receiver (MethodHandle) object, but from the argument following it. That's done to match
+     * expectation of the underlying method when MethodHandle targets a method. That also affects
+     * the way arguments are spilled onto the stack.
+     */
+DEFINE_FUNCTION art_quick_invoke_polymorphic_with_hidden_receiver
+                                                        // On entry: RDI := receiver
+    SETUP_SAVE_REFS_AND_ARGS_FRAME                      // save callee saves
+    movq %gs:THREAD_SELF_OFFSET, %rsi                   // RSI := Thread (self)
+    movq %rsp, %rdx                                     // RDX := pass SP
+    call SYMBOL(artInvokePolymorphicWithHiddenReceiver) // invoke with (receiver, self, SP)
+                                                        // save the code pointer
+    RESTORE_SAVE_REFS_AND_ARGS_FRAME
+    movq %rax, %xmm0                               // Result is in RAX. Copy to FP result register.
+    RETURN_OR_DELIVER_PENDING_EXCEPTION
+END_FUNCTION art_quick_invoke_polymorphic_with_hidden_receiver
+
 DEFINE_FUNCTION art_quick_invoke_custom
     SETUP_SAVE_REFS_AND_ARGS_FRAME                 // save callee saves
                                                    // RDI := call_site_index
@@ -1980,21 +1999,6 @@ DEFINE_FUNCTION art_quick_invoke_custom
     movq %rax, %xmm0                               // Result is in RAX. Copy to FP result register.
     RETURN_OR_DELIVER_PENDING_EXCEPTION
 END_FUNCTION art_quick_invoke_custom
-
-// Wrap ExecuteSwitchImpl in assembly method which specifies DEX PC for unwinding.
-//  Argument 0: RDI: The context pointer for ExecuteSwitchImpl.
-//  Argument 1: RSI: Pointer to the templated ExecuteSwitchImpl to call.
-//  Argument 2: RDX: The value of DEX PC (memory address of the methods bytecode).
-DEFINE_FUNCTION ExecuteSwitchImplAsm
-    PUSH rbx                 // Spill RBX
-    movq %rdx, %rbx          // RBX = DEX PC (callee save register)
-    CFI_DEFINE_DEX_PC_WITH_OFFSET(0 /* RAX */, 3 /* RBX */, 0)
-
-    call *%rsi               // Call the wrapped function
-
-    POP rbx                  // Restore RBX
-    ret
-END_FUNCTION ExecuteSwitchImplAsm
 
 // On entry: edi is the class, r11 is the inline cache. r10 and rax are available.
 DEFINE_FUNCTION art_quick_update_inline_cache

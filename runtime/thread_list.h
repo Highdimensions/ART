@@ -115,18 +115,41 @@ class ThreadList {
 
   // Run a checkpoint on all threads. Return the total number of threads for which the checkpoint
   // function has been or will be called.
+  //
   // Running threads are not suspended but run the checkpoint inside of the suspend check. The
   // return value includes already suspended threads for b/24191051. Runs or requests the
-  // callback, if non-null, inside the thread_list_lock critical section after determining the
-  // runnable/suspended states of the threads. Does not wait for completion of the checkpoint
-  // function in running threads. If the caller holds the mutator lock, then all instances of the
-  // checkpoint function are run with the mutator lock. If the caller does not hold the mutator
-  // lock (see mutator_gc_coord.md) then, since the checkpoint code may not acquire or release the
-  // mutator lock, the checkpoint will have no way to access Java data.
-  // TODO: Is it possible to just require the mutator lock here?
+  // callback, if non-null, inside the thread_list_lock critical section after capturing the list
+  // of threads needing to run the checkpoint.
+  //
+  // Does not wait for completion of the checkpoint function in running threads.
+  //
+  // If the caller holds the mutator lock, or acquire_mutator_lock is true, then all instances of
+  // the checkpoint function are run with the mutator lock. Otherwise, since the checkpoint code
+  // may not acquire or release the mutator lock, the checkpoint will have no way to access Java
+  // data.
+  //
+  // If acquire_mutator_lock is true, it may be acquired repeatedly to avoid holding it for an
+  // extended period without checking for suspension requests.
+  //
+  // We capture a set of threads that simultaneously existed at one point in time, and ensure that
+  // they all run the checkpoint function. We make no guarantees about threads created after this
+  // set of threads was captured. If newly created threads require the effect of the checkpoint,
+  // the caller may update global state indicating that this is necessary, and newly created
+  // threads must act on that. It is possible that on return there will be threads which have not,
+  // and will not, run the checkpoint_function, and neither have/will any of their ancestors.
+  //
+  // We guarantee that if a thread calls RunCheckpoint() then, if at point X RunCheckpoint() has
+  // returned, and all checkpoints have been properly observed to have completed (usually via a
+  // barrier), then every thread has executed a code sequence S during which it remained in a
+  // suspended state, such that the call to `RunCheckpoint` happens-before the end of S, and the
+  // beginning of S happened-before X.  Thus after a RunCheckpoint() call, no preexisting
+  // thread can still be relying on global information it caches between suspend points.
+  //
+  // TODO: Is it possible to simplify mutator_lock handling here? Should this wait for completion?
   EXPORT size_t RunCheckpoint(Closure* checkpoint_function,
-                       Closure* callback = nullptr,
-                       bool allow_lock_checking = true)
+                              Closure* callback = nullptr,
+                              bool allow_lock_checking = true,
+                              bool acquire_mutator_lock = false)
       REQUIRES(!Locks::thread_list_lock_, !Locks::thread_suspend_count_lock_);
 
   // Convenience version of the above to disable lock checking inside Run function. Hopefully this
@@ -141,6 +164,10 @@ class ThreadList {
   // in-flight mutator heap access (eg. a read barrier.) Runnable threads will respond by
   // decrementing the empty checkpoint barrier count. This works even when the weak ref access is
   // disabled. Only one concurrent use is currently supported.
+  // TODO(b/382722942): This is intended to guarantee the analogous memory ordering property to
+  // RunCheckpoint(). It over-optimizes by always avoiding thread suspension and hence does not in
+  // fact guarantee this. (See the discussion in `mutator_gc_coord.md`.) Fix this by implementing
+  // this with RunCheckpoint() instead.
   void RunEmptyCheckpoint()
       REQUIRES(!Locks::thread_list_lock_, !Locks::thread_suspend_count_lock_);
 

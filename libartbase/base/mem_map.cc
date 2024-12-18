@@ -344,13 +344,20 @@ MemMap MemMap::MapAnonymous(const char* name,
   // We need to store and potentially set an error number for pretty printing of errors
   int saved_errno = 0;
 
-  void* actual = MapInternal(addr,
-                             page_aligned_byte_count,
-                             prot,
-                             flags,
-                             fd.get(),
-                             0,
-                             low_4gb);
+  void* actual = nullptr;
+
+  // New Ubuntu linux kerners seem to ignore the address hint, so make it a firm request.
+  // Whereas old kernels allocated at 'addr' if provided, newer kernels seem to ignore it.
+  // However, MAP_FIXED_NOREPLACE tells the kernel it must allocate at the address or fail.
+  // Do this only on host since android kernels still obey the hint without flag (for now).
+  if (!kIsTargetBuild && (flags & MAP_FIXED) == 0 && addr != nullptr) {
+    actual = MapInternal(
+        addr, page_aligned_byte_count, prot, flags | MAP_FIXED_NOREPLACE, fd.get(), 0, low_4gb);
+    // If the fixed-address allocation failed, fallback to the default path (random address).
+  }
+  if (actual == nullptr || actual == MAP_FAILED) {
+    actual = MapInternal(addr, page_aligned_byte_count, prot, flags, fd.get(), 0, low_4gb);
+  }
   saved_errno = errno;
 
   if (actual == MAP_FAILED) {
@@ -524,10 +531,9 @@ MemMap MemMap::MapFileAtAddress(uint8_t* expected_ptr,
 
   // Note that we do not allow MAP_FIXED unless reuse == true or we have an existing
   // reservation, i.e we expect this mapping to be contained within an existing map.
-  if (reuse) {
+  if (reuse && expected_ptr != nullptr) {
     // reuse means it is okay that it overlaps an existing page mapping.
     // Only use this if you actually made the page reservation yourself.
-    CHECK(expected_ptr != nullptr);
     DCHECK(reservation == nullptr);
     DCHECK(error_msg != nullptr);
     DCHECK(ContainedWithinExistingMap(expected_ptr, byte_count, error_msg))

@@ -29,6 +29,12 @@
 #include "globals.h"
 #include "macros.h"
 
+#ifndef __BIONIC__
+#ifndef MAP_FIXED_NOREPLACE
+#define MAP_FIXED_NOREPLACE 0x100000
+#endif
+#endif  // __BIONIC__
+
 namespace art {
 
 #if defined(__LP64__) && !defined(__Fuchsia__) && \
@@ -210,6 +216,28 @@ class MemMap {
                             /*low_4gb=*/ low_4gb,
                             filename,
                             /*reuse=*/ false,
+                            /*reservation=*/ nullptr,
+                            error_msg);
+  }
+
+  static MemMap MapFile(size_t byte_count,
+                        int prot,
+                        int flags,
+                        int fd,
+                        off_t start,
+                        bool low_4gb,
+                        const char* filename,
+                        bool reuse,
+                        std::string* error_msg) {
+    return MapFileAtAddress(nullptr,
+                            byte_count,
+                            prot,
+                            flags,
+                            fd,
+                            start,
+                            /*low_4gb=*/ low_4gb,
+                            filename,
+                            reuse,
                             /*reservation=*/ nullptr,
                             error_msg);
   }
@@ -419,8 +447,8 @@ class MemMap {
   size_t base_size_ = 0u;       // Length of mapping. May be changed by RemapAtEnd (ie Zygote).
   int prot_ = 0;                // Protection of the map.
 
-  // When reuse_ is true, this is just a view of an existing mapping
-  // and we do not take ownership and are not responsible for
+  // When reuse_ is true, this is a view of a mapping on which
+  // we do not take ownership and are not responsible for
   // unmapping.
   bool reuse_ = false;
 

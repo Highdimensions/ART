@@ -286,13 +286,12 @@ ALWAYS_INLINE inline uint32_t GetRuntimeFlags(ArtField* field)
 ALWAYS_INLINE inline uint32_t GetRuntimeFlags(ArtMethod* method)
     REQUIRES_SHARED(Locks::mutator_lock_) {
   if (UNLIKELY(method->IsIntrinsic())) {
-    switch (static_cast<Intrinsics>(method->GetIntrinsic())) {
+    switch (method->GetIntrinsic()) {
       case Intrinsics::kSystemArrayCopyChar:
       case Intrinsics::kSystemArrayCopyByte:
       case Intrinsics::kSystemArrayCopyInt:
       case Intrinsics::kStringGetCharsNoCheck:
       case Intrinsics::kReferenceGetReferent:
-      case Intrinsics::kReferenceRefersTo:
       case Intrinsics::kMemoryPeekByte:
       case Intrinsics::kMemoryPokeByte:
       case Intrinsics::kCRC32Update:
@@ -327,6 +326,7 @@ ALWAYS_INLINE inline uint32_t GetRuntimeFlags(ArtMethod* method)
       case Intrinsics::kUnsafeLoadFence:
       case Intrinsics::kUnsafeStoreFence:
       case Intrinsics::kUnsafeFullFence:
+      case Intrinsics::kJdkUnsafeArrayBaseOffset:
       case Intrinsics::kJdkUnsafeCASInt:
       case Intrinsics::kJdkUnsafeCASLong:
       case Intrinsics::kJdkUnsafeCASObject:
@@ -357,11 +357,13 @@ ALWAYS_INLINE inline uint32_t GetRuntimeFlags(ArtMethod* method)
       case Intrinsics::kJdkUnsafeStoreFence:
       case Intrinsics::kJdkUnsafeFullFence:
       case Intrinsics::kJdkUnsafeGet:
+      case Intrinsics::kJdkUnsafeGetAbsolute:
       case Intrinsics::kJdkUnsafeGetLong:
       case Intrinsics::kJdkUnsafeGetByte:
       case Intrinsics::kJdkUnsafeGetReference:
       case Intrinsics::kJdkUnsafePutLong:
       case Intrinsics::kJdkUnsafePut:
+      case Intrinsics::kJdkUnsafePutAbsolute:
       case Intrinsics::kJdkUnsafePutReference:
       case Intrinsics::kJdkUnsafePutByte:
         return 0u;
@@ -377,12 +379,15 @@ ALWAYS_INLINE inline uint32_t GetRuntimeFlags(ArtMethod* method)
       case Intrinsics::kFP16ToFloat:
       case Intrinsics::kFP16ToHalf:
       case Intrinsics::kFP16Rint:
+      case Intrinsics::kUnsafeArrayBaseOffset:
       case Intrinsics::kUnsafeGet:
+      case Intrinsics::kUnsafeGetAbsolute:
       case Intrinsics::kUnsafeGetLong:
       case Intrinsics::kUnsafeGetByte:
       case Intrinsics::kUnsafeGetObject:
       case Intrinsics::kUnsafePutLong:
       case Intrinsics::kUnsafePut:
+      case Intrinsics::kUnsafePutAbsolute:
       case Intrinsics::kUnsafePutObject:
       case Intrinsics::kUnsafePutByte:
         return kAccCorePlatformApi;

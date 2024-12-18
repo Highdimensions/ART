@@ -113,7 +113,6 @@ ART_TEST_MODULES_COMMON := \
     art_hiddenapi_tests \
     art_imgdiag_tests \
     art_libartbase_tests \
-    art_libartpalette_tests \
     art_libdexfile_external_tests \
     art_libdexfile_support_static_tests \
     art_libdexfile_support_tests \
@@ -134,6 +133,7 @@ ART_TEST_MODULES_TARGET := $(ART_TEST_MODULES_COMMON) \
     art_odrefresh_tests \
 
 ART_TEST_MODULES_HOST := $(ART_TEST_MODULES_COMMON) \
+    art_libartpalette_tests \
     art_libartservice_tests \
     art_libarttools_tests \
 
@@ -235,11 +235,6 @@ define define-art-gtest-rule-host
   #       * ART_HOST_ARCH := x86_64
   #       * 2ND_ART_HOST_ARCH := x86
   #       * 2ND_HOST_ARCH := x86
-  ifeq ($(HOST_PREFER_32_BIT),true)
-    gtest_deps += $$(2ND_HOST_BOOT_IMAGE) # Depend on the 32-bit boot image.
-  else
-    gtest_deps += $$($(3)HOST_BOOT_IMAGE)
-  endif
 
 .PHONY: $$(gtest_build_rule)
 $$(gtest_build_rule) : $$(gtest_exe) $$(gtest_deps)

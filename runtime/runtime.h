@@ -1132,6 +1132,11 @@ class Runtime {
     }
   }
 
+  bool AreMetricsInitialized() const { return metrics_reporter_ != nullptr; }
+
+  // For `artd` only.
+  EXPORT static void AllowPageSizeAccess();
+
  private:
   static void InitPlatformSignalHandlers();
 
@@ -1188,10 +1193,6 @@ class Runtime {
   // refers to this symbol and it can't link with R_386_PC32 relocation.
   // A pointer to the active runtime or null.
   LIBART_PROTECTED static Runtime* instance_;
-
-  // NOTE: these must match the gc::ProcessState values as they come directly from the framework.
-  static constexpr int kProfileForground = 0;
-  static constexpr int kProfileBackground = 1;
 
   static constexpr uint32_t kCalleeSaveSize = 6u;
 

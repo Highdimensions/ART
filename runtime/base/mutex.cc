@@ -109,7 +109,7 @@ static void BackOff(uint32_t i) {
     volatile uint32_t x = 0;
     const uint32_t spin_count = 10 * i;
     for (uint32_t spin = 0; spin < spin_count; ++spin) {
-      ++x;  // Volatile; hence should not be optimized away.
+      x = x + 1;  // Volatile; hence should not be optimized away.
     }
     // TODO: Consider adding x86 PAUSE and/or ARM YIELD here.
   } else if (i <= kYieldMax) {
@@ -463,6 +463,7 @@ void Mutex::ExclusiveLock(Thread* self) {
         done = state_and_contenders_.CompareAndSetWeakAcquire(cur_state, cur_state | kHeldMask);
       } else {
         // Failed to acquire, hang up.
+        // We don't hold the mutex: GetExclusiveOwnerTid() is usually, but not always, correct.
         ScopedContentionRecorder scr(this, SafeGetTid(self), GetExclusiveOwnerTid());
         // Empirically, it appears important to spin again each time through the loop; if we
         // bother to go to sleep and wake up, we should be fairly persistent in trying for the

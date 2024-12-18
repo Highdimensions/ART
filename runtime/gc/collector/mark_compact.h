@@ -255,6 +255,8 @@ class MarkCompact final : public GarbageCollector {
                                              + from_space_slide_diff_);
   }
 
+  inline bool IsOnAllocStack(mirror::Object* ref)
+      REQUIRES_SHARED(Locks::mutator_lock_, Locks::heap_bitmap_lock_);
   // Verifies that that given object reference refers to a valid object.
   // Otherwise fataly dumps logs, including those from callback.
   template <typename Callback>
@@ -328,8 +330,10 @@ class MarkCompact final : public GarbageCollector {
   // on the fly.
   void CompactionPause() REQUIRES(Locks::mutator_lock_);
   // Compute offsets (in chunk_info_vec_) and other data structures required
-  // during concurrent compaction.
-  void PrepareForCompaction() REQUIRES_SHARED(Locks::mutator_lock_);
+  // during concurrent compaction. Also determines a black-dense region at the
+  // beginning of the moving space which is not compacted. Returns false if
+  // performing compaction isn't required.
+  bool PrepareForCompaction() REQUIRES_SHARED(Locks::mutator_lock_);
 
   // Copy gPageSize live bytes starting from 'offset' (within the moving space),
   // which must be within 'obj', into the gPageSize sized memory pointed by 'addr'.
@@ -353,22 +357,30 @@ class MarkCompact final : public GarbageCollector {
                                                      CompactionFn func)
       REQUIRES_SHARED(Locks::mutator_lock_);
 
-  // Update all the objects in the given non-moving space page. 'first' object
+  // Update all the objects in the given non-moving page. 'first' object
   // could have started in some preceding page.
-  void UpdateNonMovingPage(mirror::Object* first, uint8_t* page)
+  void UpdateNonMovingPage(mirror::Object* first,
+                           uint8_t* page,
+                           ptrdiff_t from_space_diff,
+                           accounting::ContinuousSpaceBitmap* bitmap)
       REQUIRES_SHARED(Locks::mutator_lock_);
   // Update all the references in the non-moving space.
   void UpdateNonMovingSpace() REQUIRES_SHARED(Locks::mutator_lock_);
 
   // For all the pages in non-moving space, find the first object that overlaps
   // with the pages' start address, and store in first_objs_non_moving_space_ array.
-  void InitNonMovingSpaceFirstObjects() REQUIRES_SHARED(Locks::mutator_lock_);
+  size_t InitNonMovingFirstObjects(uintptr_t begin,
+                                   uintptr_t end,
+                                   accounting::ContinuousSpaceBitmap* bitmap,
+                                   ObjReference* first_objs_arr)
+      REQUIRES_SHARED(Locks::mutator_lock_);
   // In addition to the first-objects for every post-compact moving space page,
   // also find offsets within those objects from where the contents should be
   // copied to the page. The offsets are relative to the moving-space's
   // beginning. Store the computed first-object and offset in first_objs_moving_space_
   // and pre_compact_offset_moving_space_ respectively.
-  void InitMovingSpaceFirstObjects(const size_t vec_len) REQUIRES_SHARED(Locks::mutator_lock_);
+  void InitMovingSpaceFirstObjects(size_t vec_len, size_t to_space_page_idx)
+      REQUIRES_SHARED(Locks::mutator_lock_);
 
   // Gather the info related to black allocations from bump-pointer space to
   // enable concurrent sliding of these pages.
@@ -729,6 +741,11 @@ class MarkCompact final : public GarbageCollector {
   // clamped.
   uint8_t* const moving_space_begin_;
   uint8_t* moving_space_end_;
+  // Set to moving_space_begin_ if compacting the entire moving space.
+  // Otherwise, set to a page-aligned address such that [moving_space_begin_,
+  // black_dense_end_) is considered to be densely populated with reachable
+  // objects and hence is not compacted.
+  uint8_t* black_dense_end_;
   // moving-space's end pointer at the marking pause. All allocations beyond
   // this will be considered black in the current GC cycle. Aligned up to page
   // size.
@@ -774,6 +791,9 @@ class MarkCompact final : public GarbageCollector {
   std::atomic<uint16_t> compaction_buffer_counter_;
   // True while compacting.
   bool compacting_;
+  // Set to true in MarkingPause() to indicate when allocation_stack_ should be
+  // checked in IsMarked() for black allocations.
+  bool marking_done_;
   // Flag indicating whether one-time uffd initialization has been done. It will
   // be false on the first GC for non-zygote processes, and always for zygote.
   // Its purpose is to minimize the userfaultfd overhead to the minimal in

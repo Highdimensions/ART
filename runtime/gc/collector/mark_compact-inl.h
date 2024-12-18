@@ -20,6 +20,7 @@
 #include "gc/space/bump_pointer_space.h"
 #include "mark_compact.h"
 #include "mirror/object-inl.h"
+#include "thread-inl.h"
 
 namespace art HIDDEN {
 namespace gc {
@@ -192,6 +193,14 @@ uint32_t MarkCompact::LiveWordsBitmap<kAlignment>::FindNthLiveWordOffset(size_t 
   UNREACHABLE();
 }
 
+inline bool MarkCompact::IsOnAllocStack(mirror::Object* ref) {
+  // Pairs with release fence after allocation-stack push in
+  // Heap::AllocObjectWithAllocator().
+  std::atomic_thread_fence(std::memory_order_acquire);
+  accounting::ObjectStack* stack = heap_->GetAllocationStack();
+  return stack->Contains(ref);
+}
+
 inline void MarkCompact::UpdateRef(mirror::Object* obj,
                                    MemberOffset offset,
                                    uint8_t* begin,
@@ -248,8 +257,11 @@ inline bool MarkCompact::VerifyRootSingleUpdate(void* root,
     }
     Thread* self = Thread::Current();
     if (UNLIKELY(stack_low_addr == nullptr)) {
-      stack_low_addr = self->GetStackEnd();
-      stack_high_addr = reinterpret_cast<char*>(stack_low_addr) + self->GetStackSize();
+      // TODO(Simulator): Test that this should not operate on the simulated stack when the
+      // simulator supports mark compact.
+      stack_low_addr = self->GetStackEnd<kNativeStackType>();
+      stack_high_addr = reinterpret_cast<char*>(stack_low_addr)
+                        + self->GetUsableStackSize<kNativeStackType>();
     }
     if (std::less<void*>{}(root, stack_low_addr) || std::greater<void*>{}(root, stack_high_addr)) {
       bool inserted;

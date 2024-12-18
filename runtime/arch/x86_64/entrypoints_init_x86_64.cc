@@ -17,13 +17,13 @@
 #include <math.h>
 
 #include "entrypoints/jni/jni_entrypoints.h"
-#include "entrypoints/math_entrypoints.h"
 #include "entrypoints/quick/quick_alloc_entrypoints.h"
 #include "entrypoints/quick/quick_default_externs.h"
 #if !defined(__APPLE__)
 #include "entrypoints/quick/quick_default_init_entrypoints.h"
 #endif
 #include "entrypoints/quick/quick_entrypoints.h"
+#include "entrypoints/quick/runtime_entrypoints_list.h"
 #include "entrypoints/runtime_asm_entrypoints.h"
 #include "interpreter/interpreter.h"
 
@@ -120,6 +120,10 @@ void InitEntryPoints(JniEntryPoints* jpoints,
   qpoints->SetStringCompareTo(art_quick_string_compareto);
   qpoints->SetMemcpy(art_quick_memcpy);
 
+  // Invoke.
+  qpoints->SetInvokePolymorphicWithHiddenReceiver(
+      art_quick_invoke_polymorphic_with_hidden_receiver);
+
   // Read barrier.
   UpdateReadBarrierEntrypoints(qpoints, /*is_active=*/ false);
   qpoints->SetReadBarrierMarkReg04(nullptr);  // Cannot use register 4 (RSP) to pass arguments.
@@ -141,6 +145,11 @@ void InitEntryPoints(JniEntryPoints* jpoints,
   qpoints->SetReadBarrierSlow(art_quick_read_barrier_slow);
   qpoints->SetReadBarrierForRootSlow(art_quick_read_barrier_for_root_slow);
 #endif  // __APPLE__
+}
+
+void UpdateLowOverheadTraceEntrypoints([[maybe_unused]] QuickEntryPoints* qpoints,
+                                       [[maybe_unused]] bool enable) {
+  // This is a nop on this architecture. Low overhead tracing is only implemented for ARM64.
 }
 
 }  // namespace art

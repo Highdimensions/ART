@@ -51,18 +51,13 @@ if [[ $action = create ]]; then
     if [[ "$TARGET_ARCH" = "riscv64" ]]; then
         # Get U-Boot for Ubuntu 22.04 (Jammy)
         get_stable_binary \
-            u/u-boot/u-boot-qemu_2023.07+dfsg-1ubuntu2_all.deb \
+            u/u-boot/u-boot-qemu_2024.01+dfsg-5ubuntu2_all.deb \
             usr/lib/u-boot/qemu-riscv64_smode/uboot.elf
-
-        # Get OpenSBI for Ubuntu 22.04 (Jammy)
-        get_stable_binary \
-            o/opensbi/opensbi_1.3-1ubuntu0.23.04.2_all.deb \
-            usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.elf
 
     elif [[ "$TARGET_ARCH" = "arm64" ]]; then
         # Get EFI (ARM64)
         get_stable_binary \
-            e/edk2/qemu-efi-aarch64_2023.05-2ubuntu0.1_all.deb \
+            e/edk2/qemu-efi-aarch64_2024.05-2ubuntu0.1_all.deb \
             usr/share/qemu-efi-aarch64/QEMU_EFI.fd
 
         dd if=/dev/zero of=flash0.img bs=1M count=64
@@ -104,19 +99,18 @@ elif [[ $action = boot ]]; then
     cp "$(dirname $0)/user-data.img" "$ART_TEST_VM_DIR/user-data.img"
     cd "$ART_TEST_VM_DIR"
     if [[ "$TARGET_ARCH" = "riscv64" ]]; then
-        ($ANDROID_BUILD_TOP/prebuilts/runtime/mainline/local_riscv64/qemu/x86_64-linux-gnu/bin/qemu-system-riscv64 \
+        echo -n > $SCRIPT_DIR/boot.out
+        ($ANDROID_BUILD_TOP/device/google/cuttlefish_vmm/qemu/x86_64-linux-gnu/bin/qemu-system-riscv64 \
             -M virt \
             -nographic \
             -m 16G \
             -smp 8 \
             -cpu rv64,v=true,elen=64,vlen=128,zba=true,zbb=true,zbs=true \
-            -bios fw_jump.elf \
             -kernel uboot.elf \
-            -cpu rv64,v=true,vlen=128,vext_spec=v1.0 \
             -drive file="$ART_TEST_VM_IMG",if=virtio \
             -drive file=user-data.img,format=raw,if=virtio \
             -device virtio-net-device,netdev=usernet \
-            -netdev user,id=usernet,hostfwd=tcp::$ART_TEST_SSH_PORT-:22 > $SCRIPT_DIR/boot.out &)
+            -netdev user,id=usernet,hostfwd=tcp::$ART_TEST_SSH_PORT-:22 >> $SCRIPT_DIR/boot.out &)
         echo "Now listening for successful boot"
         finish_str='.*finished at.*'
         while IFS= read -d $'\0' -n 1 a ; do
@@ -133,6 +127,7 @@ elif [[ $action = boot ]]; then
         done < <(tail -f $SCRIPT_DIR/boot.out)
 
     elif [[ "$TARGET_ARCH" = "arm64" ]]; then
+        echo -n > $SCRIPT_DIR/boot.out
         (qemu-system-aarch64 \
             -m 16G \
             -smp 8 \
@@ -145,7 +140,7 @@ elif [[ $action = boot ]]; then
             -drive file=user-data.img,format=raw,id=cloud \
             -device virtio-blk-device,drive=hd0 \
             -device virtio-net-device,netdev=usernet \
-            -netdev user,id=usernet,hostfwd=tcp::$ART_TEST_SSH_PORT-:22 > $SCRIPT_DIR/boot.out &)
+            -netdev user,id=usernet,hostfwd=tcp::$ART_TEST_SSH_PORT-:22 >> $SCRIPT_DIR/boot.out &)
         echo "Now listening for successful boot"
         finish_str='.*finished at.*'
         while IFS= read -d $'\0' -n 1 a ; do

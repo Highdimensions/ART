@@ -129,7 +129,7 @@ enum HomogeneousSpaceCompactResult {
 static constexpr bool kUseRosAlloc = true;
 
 // If true, use thread-local allocation stack.
-static constexpr bool kUseThreadLocalAllocationStack = true;
+static constexpr bool kUseThreadLocalAllocationStack = false;
 
 class Heap {
  public:
@@ -1255,7 +1255,7 @@ class Heap {
   void PushOnAllocationStack(Thread* self, ObjPtr<mirror::Object>* obj)
       REQUIRES_SHARED(Locks::mutator_lock_)
       REQUIRES(!*gc_complete_lock_, !*pending_task_lock_, !process_state_update_lock_);
-  void PushOnAllocationStackWithInternalGC(Thread* self, ObjPtr<mirror::Object>* obj)
+  EXPORT void PushOnAllocationStackWithInternalGC(Thread* self, ObjPtr<mirror::Object>* obj)
       REQUIRES_SHARED(Locks::mutator_lock_)
       REQUIRES(!*gc_complete_lock_, !*pending_task_lock_, !process_state_update_lock_);
   EXPORT void PushOnThreadLocalAllocationStackWithInternalGC(Thread* thread,
@@ -1455,16 +1455,16 @@ class Heap {
   // matter.
 
   // Collector type of the running GC.
-  volatile CollectorType collector_type_running_ GUARDED_BY(gc_complete_lock_);
+  CollectorType collector_type_running_ GUARDED_BY(gc_complete_lock_);
 
   // Cause of the last running or attempted GC or GC-like action.
-  volatile GcCause last_gc_cause_ GUARDED_BY(gc_complete_lock_);
+  GcCause last_gc_cause_ GUARDED_BY(gc_complete_lock_);
 
   // The thread currently running the GC.
-  volatile Thread* thread_running_gc_ GUARDED_BY(gc_complete_lock_);
+  Thread* thread_running_gc_ GUARDED_BY(gc_complete_lock_);
 
   // Last Gc type we ran. Used by WaitForConcurrentGc to know which Gc was waited on.
-  volatile collector::GcType last_gc_type_ GUARDED_BY(gc_complete_lock_);
+  collector::GcType last_gc_type_ GUARDED_BY(gc_complete_lock_);
   collector::GcType next_gc_type_;
 
   // Maximum size that the heap can reach.

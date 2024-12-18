@@ -1171,6 +1171,7 @@ CodeGeneratorX86::CodeGeneratorX86(HGraph* graph,
       assembler_(graph->GetAllocator(),
                  compiler_options.GetInstructionSetFeatures()->AsX86InstructionSetFeatures()),
       boot_image_method_patches_(graph->GetAllocator()->Adapter(kArenaAllocCodeGenerator)),
+      app_image_method_patches_(graph->GetAllocator()->Adapter(kArenaAllocCodeGenerator)),
       method_bss_entry_patches_(graph->GetAllocator()->Adapter(kArenaAllocCodeGenerator)),
       boot_image_type_patches_(graph->GetAllocator()->Adapter(kArenaAllocCodeGenerator)),
       app_image_type_patches_(graph->GetAllocator()->Adapter(kArenaAllocCodeGenerator)),
@@ -2237,8 +2238,7 @@ void LocationsBuilderX86::VisitIf(HIf* if_instr) {
         codegen_->GetCompilerOptions().ProfileBranches() &&
         !Runtime::Current()->IsAotCompiler()) {
       locations->SetInAt(0, Location::RequiresRegister());
-      locations->AddTemp(Location::RequiresRegister());
-      locations->AddTemp(Location::RequiresRegister());
+      locations->AddRegisterTemps(2);
     } else {
       locations->SetInAt(0, Location::Any());
     }
@@ -5053,11 +5053,19 @@ void InstructionCodeGeneratorX86::GenerateUShrLong(const Location& loc, Register
   __ Bind(&done);
 }
 
-void LocationsBuilderX86::VisitRor(HRor* ror) {
-  LocationSummary* locations =
-      new (GetGraph()->GetAllocator()) LocationSummary(ror, LocationSummary::kNoCall);
+void LocationsBuilderX86::VisitRol(HRol* rol) {
+  HandleRotate(rol);
+}
 
-  switch (ror->GetResultType()) {
+void LocationsBuilderX86::VisitRor(HRor* ror) {
+  HandleRotate(ror);
+}
+
+void LocationsBuilderX86::HandleRotate(HBinaryOperation* rotate) {
+  LocationSummary* locations =
+      new (GetGraph()->GetAllocator()) LocationSummary(rotate, LocationSummary::kNoCall);
+
+  switch (rotate->GetResultType()) {
     case DataType::Type::kInt64:
       // Add the temporary needed.
       locations->AddTemp(Location::RequiresRegister());
@@ -5065,48 +5073,77 @@ void LocationsBuilderX86::VisitRor(HRor* ror) {
     case DataType::Type::kInt32:
       locations->SetInAt(0, Location::RequiresRegister());
       // The shift count needs to be in CL (unless it is a constant).
-      locations->SetInAt(1, Location::ByteRegisterOrConstant(ECX, ror->InputAt(1)));
+      locations->SetInAt(1, Location::ByteRegisterOrConstant(ECX, rotate->InputAt(1)));
       locations->SetOut(Location::SameAsFirstInput());
       break;
     default:
-      LOG(FATAL) << "Unexpected operation type " << ror->GetResultType();
+      LOG(FATAL) << "Unexpected operation type " << rotate->GetResultType();
       UNREACHABLE();
   }
 }
 
+void InstructionCodeGeneratorX86::VisitRol(HRol* rol) {
+  HandleRotate(rol);
+}
+
 void InstructionCodeGeneratorX86::VisitRor(HRor* ror) {
-  LocationSummary* locations = ror->GetLocations();
+  HandleRotate(ror);
+}
+
+void InstructionCodeGeneratorX86::HandleRotate(HBinaryOperation* rotate) {
+  LocationSummary* locations = rotate->GetLocations();
   Location first = locations->InAt(0);
   Location second = locations->InAt(1);
 
-  if (ror->GetResultType() == DataType::Type::kInt32) {
+  if (rotate->GetResultType() == DataType::Type::kInt32) {
     Register first_reg = first.AsRegister<Register>();
     if (second.IsRegister()) {
       Register second_reg = second.AsRegister<Register>();
-      __ rorl(first_reg, second_reg);
+      if (rotate->IsRol()) {
+        __ roll(first_reg, second_reg);
+      } else {
+        DCHECK(rotate->IsRor());
+        __ rorl(first_reg, second_reg);
+      }
     } else {
       Immediate imm(second.GetConstant()->AsIntConstant()->GetValue() & kMaxIntShiftDistance);
-      __ rorl(first_reg, imm);
+      if (rotate->IsRol()) {
+        __ roll(first_reg, imm);
+      } else {
+        DCHECK(rotate->IsRor());
+        __ rorl(first_reg, imm);
+      }
     }
     return;
   }
 
-  DCHECK_EQ(ror->GetResultType(), DataType::Type::kInt64);
+  DCHECK_EQ(rotate->GetResultType(), DataType::Type::kInt64);
   Register first_reg_lo = first.AsRegisterPairLow<Register>();
   Register first_reg_hi = first.AsRegisterPairHigh<Register>();
   Register temp_reg = locations->GetTemp(0).AsRegister<Register>();
   if (second.IsRegister()) {
     Register second_reg = second.AsRegister<Register>();
     DCHECK_EQ(second_reg, ECX);
+
     __ movl(temp_reg, first_reg_hi);
-    __ shrd(first_reg_hi, first_reg_lo, second_reg);
-    __ shrd(first_reg_lo, temp_reg, second_reg);
+    if (rotate->IsRol()) {
+      __ shld(first_reg_hi, first_reg_lo, second_reg);
+      __ shld(first_reg_lo, temp_reg, second_reg);
+    } else {
+      __ shrd(first_reg_hi, first_reg_lo, second_reg);
+      __ shrd(first_reg_lo, temp_reg, second_reg);
+    }
     __ movl(temp_reg, first_reg_hi);
     __ testl(second_reg, Immediate(32));
     __ cmovl(kNotEqual, first_reg_hi, first_reg_lo);
     __ cmovl(kNotEqual, first_reg_lo, temp_reg);
   } else {
-    int32_t shift_amt = second.GetConstant()->AsIntConstant()->GetValue() & kMaxLongShiftDistance;
+    int32_t value = second.GetConstant()->AsIntConstant()->GetValue();
+    if (rotate->IsRol()) {
+      value = -value;
+    }
+    int32_t shift_amt = value & kMaxLongShiftDistance;
+
     if (shift_amt == 0) {
       // Already fine.
       return;
@@ -5515,6 +5552,13 @@ void CodeGeneratorX86::LoadMethod(MethodLoadKind load_kind, Location temp, HInvo
           GetBootImageOffset(invoke));
       break;
     }
+    case MethodLoadKind::kAppImageRelRo: {
+      DCHECK(GetCompilerOptions().IsAppImage());
+      Register base_reg = GetInvokeExtraParameter(invoke, temp.AsRegister<Register>());
+      __ movl(temp.AsRegister<Register>(), Address(base_reg, kPlaceholder32BitOffset));
+      RecordAppImageMethodPatch(invoke);
+      break;
+    }
     case MethodLoadKind::kBssEntry: {
       Register base_reg = GetInvokeExtraParameter(invoke, temp.AsRegister<Register>());
       __ movl(temp.AsRegister<Register>(), Address(base_reg, kPlaceholder32BitOffset));
@@ -5704,6 +5748,19 @@ void CodeGeneratorX86::RecordBootImageMethodPatch(HInvoke* invoke) {
   __ Bind(&boot_image_method_patches_.back().label);
 }
 
+void CodeGeneratorX86::RecordAppImageMethodPatch(HInvoke* invoke) {
+  size_t index = invoke->IsInvokeInterface()
+      ? invoke->AsInvokeInterface()->GetSpecialInputIndex()
+      : invoke->AsInvokeStaticOrDirect()->GetSpecialInputIndex();
+  HX86ComputeBaseMethodAddress* method_address =
+      invoke->InputAt(index)->AsX86ComputeBaseMethodAddress();
+  app_image_method_patches_.emplace_back(
+      method_address,
+      invoke->GetResolvedMethodReference().dex_file,
+      invoke->GetResolvedMethodReference().index);
+  __ Bind(&app_image_method_patches_.back().label);
+}
+
 void CodeGeneratorX86::RecordMethodBssEntryPatch(HInvoke* invoke) {
   size_t index = invoke->IsInvokeInterface()
       ? invoke->AsInvokeInterface()->GetSpecialInputIndex()
@@ -5865,6 +5922,7 @@ void CodeGeneratorX86::EmitLinkerPatches(ArenaVector<linker::LinkerPatch>* linke
   DCHECK(linker_patches->empty());
   size_t size =
       boot_image_method_patches_.size() +
+      app_image_method_patches_.size() +
       method_bss_entry_patches_.size() +
       boot_image_type_patches_.size() +
       app_image_type_patches_.size() +
@@ -5888,6 +5946,7 @@ void CodeGeneratorX86::EmitLinkerPatches(ArenaVector<linker::LinkerPatch>* linke
     DCHECK(boot_image_type_patches_.empty());
     DCHECK(boot_image_string_patches_.empty());
   }
+  DCHECK_IMPLIES(!GetCompilerOptions().IsAppImage(), app_image_method_patches_.empty());
   DCHECK_IMPLIES(!GetCompilerOptions().IsAppImage(), app_image_type_patches_.empty());
   if (GetCompilerOptions().IsBootImage()) {
     EmitPcRelativeLinkerPatches<NoDexFileAdapter<linker::LinkerPatch::IntrinsicReferencePatch>>(
@@ -5895,6 +5954,8 @@ void CodeGeneratorX86::EmitLinkerPatches(ArenaVector<linker::LinkerPatch>* linke
   } else {
     EmitPcRelativeLinkerPatches<NoDexFileAdapter<linker::LinkerPatch::BootImageRelRoPatch>>(
         boot_image_other_patches_, linker_patches);
+    EmitPcRelativeLinkerPatches<linker::LinkerPatch::MethodAppImageRelRoPatch>(
+        app_image_method_patches_, linker_patches);
     EmitPcRelativeLinkerPatches<linker::LinkerPatch::TypeAppImageRelRoPatch>(
         app_image_type_patches_, linker_patches);
   }

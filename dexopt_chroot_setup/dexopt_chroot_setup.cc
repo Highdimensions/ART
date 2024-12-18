@@ -34,6 +34,7 @@
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <tuple>
 #include <vector>
 
 #include "aidl/com/android/server/art/BnDexoptChrootSetup.h"
@@ -45,6 +46,7 @@
 #include "android-base/result.h"
 #include "android-base/scopeguard.h"
 #include "android-base/strings.h"
+#include "android-base/unique_fd.h"
 #include "android/binder_auto_utils.h"
 #include "android/binder_manager.h"
 #include "android/binder_process.h"
@@ -66,14 +68,17 @@ namespace {
 
 using ::android::base::ConsumePrefix;
 using ::android::base::Error;
+using ::android::base::GetProperty;
 using ::android::base::Join;
 using ::android::base::make_scope_guard;
 using ::android::base::NoDestructor;
 using ::android::base::ReadFileToString;
+using ::android::base::Readlink;
 using ::android::base::Result;
 using ::android::base::SetProperty;
 using ::android::base::Split;
 using ::android::base::Tokenize;
+using ::android::base::unique_fd;
 using ::android::base::WaitForProperty;
 using ::android::base::WriteStringToFile;
 using ::android::fs_mgr::FstabEntry;
@@ -132,6 +137,29 @@ Result<void> CreateDir(const std::string& path) {
   return {};
 }
 
+Result<bool> IsSymlink(const std::string& path) {
+  std::error_code ec;
+  bool res = std::filesystem::is_symlink(path, ec);
+  if (ec) {
+    return Errorf("Failed to create dir '{}': {}", path, ec.message());
+  }
+  return res;
+}
+
+Result<bool> IsSelfOrParentSymlink(const std::string& path) {
+  // We don't use `Realpath` because it does a `stat(2)` call which requires the SELinux "getattr"
+  // permission. which we don't have on all mount points.
+  unique_fd fd(open(path.c_str(), O_PATH | O_CLOEXEC));
+  if (fd.get() < 0) {
+    return ErrnoErrorf("Failed to open '{}' to resolve real path", path);
+  }
+  std::string real_path;
+  if (!Readlink(ART_FORMAT("/proc/self/fd/{}", fd.get()), &real_path)) {
+    return ErrnoErrorf("Failed to resolve real path for '{}'", path);
+  }
+  return path != real_path;
+}
+
 Result<void> Unmount(const std::string& target, bool logging = true) {
   if (umount2(target.c_str(), UMOUNT_NOFOLLOW) == 0) {
     LOG_IF(INFO, logging) << ART_FORMAT("Unmounted '{}'", target);
@@ -152,6 +180,8 @@ Result<void> Unmount(const std::string& target, bool logging = true) {
 // `BindMountDirect` is safe to use only if there is no child mount points under `target`. DO NOT
 // mount or unmount under `target` because mount events propagate to `source`.
 Result<void> BindMountDirect(const std::string& source, const std::string& target) {
+  // Don't follow symlinks.
+  CHECK(!OR_RETURN(IsSelfOrParentSymlink(target))) << target;
   if (mount(source.c_str(),
             target.c_str(),
             /*fs_type=*/nullptr,
@@ -167,6 +197,8 @@ Result<void> BindMountDirect(const std::string& source, const std::string& targe
 Result<void> BindMount(const std::string& source, const std::string& target) {
   // Don't bind-mount repeatedly.
   CHECK(!PathStartsWith(source, DexoptChrootSetup::CHROOT_DIR));
+  // Don't follow symlinks.
+  CHECK(!OR_RETURN(IsSelfOrParentSymlink(target))) << target;
   // system_server has a different mount namespace from init, and it uses slave mounts. E.g:
   //
   //    a: init mount ns: shared(1):          /foo
@@ -282,7 +314,21 @@ Result<void> BindMountRecursive(const std::string& source, const std::string& ta
       // `source` itself. Already mounted.
       continue;
     }
-    OR_RETURN(BindMount(entry.mount_point, std::string(target).append(sub_dir)));
+    if (Result<void> result = BindMount(entry.mount_point, std::string(target).append(sub_dir));
+        !result.ok()) {
+      // Match paths for the "u:object_r:apk_tmp_file:s0" file context in
+      // system/sepolicy/private/file_contexts.
+      std::regex apk_tmp_file_re(R"re((/data|/mnt/expand/[^/]+)/app/vmdl[^/]+\.tmp(/.*)?)re");
+      std::smatch match;
+      if (std::regex_match(entry.mount_point, match, apk_tmp_file_re)) {
+        // Don't bother. The mount point is a temporary directory created by Package Manager during
+        // app install. We won't be able to dexopt the app there anyway because it's not in the
+        // Package Manager's snapshot.
+        LOG(INFO) << ART_FORMAT("Skipped temporary mount point '{}'", entry.mount_point);
+        continue;
+      }
+      return result;
+    }
   }
   return {};
 }
@@ -530,11 +576,24 @@ Result<void> DexoptChrootSetup::SetUpChroot(const std::optional<std::string>& ot
   OR_RETURN(CreateDir(CHROOT_DIR));
   LOG(INFO) << ART_FORMAT("Created '{}'", CHROOT_DIR);
 
-  std::vector<std::string> additional_system_partitions = {
-      "system_ext",
-      "vendor",
-      "product",
+  std::vector<std::tuple<std::string, std::string>> additional_system_partitions = {
+      {"system_ext", "/system_ext"},
+      {"vendor", "/vendor"},
+      {"product", "/product"},
   };
+
+  std::string partitions_from_sysprop =
+      GetProperty(kAdditionalPartitionsSysprop, /*default_value=*/"");
+  std::vector<std::string_view> partitions_from_sysprop_entries;
+  art::Split(partitions_from_sysprop, ',', &partitions_from_sysprop_entries);
+  for (std::string_view entry : partitions_from_sysprop_entries) {
+    std::vector<std::string_view> pair;
+    art::Split(entry, ':', &pair);
+    if (pair.size() != 2 || pair[0].empty() || pair[1].empty() || !pair[1].starts_with('/')) {
+      return Errorf("Malformed entry in '{}': '{}'", kAdditionalPartitionsSysprop, entry);
+    }
+    additional_system_partitions.emplace_back(std::string(pair[0]), std::string(pair[1]));
+  }
 
   if (!IsOtaUpdate(ota_slot)) {  // Mainline update
     OR_RETURN(BindMount("/", CHROOT_DIR));
@@ -543,11 +602,12 @@ Result<void> DexoptChrootSetup::SetUpChroot(const std::optional<std::string>& ot
     // "/system", so we need to bind-mount "/system" to handle this case. On devices where readonly
     // partitions are not remounted, bind-mounting "/system" doesn't hurt.
     OR_RETURN(BindMount("/system", PathInChroot("/system")));
-    for (const std::string& partition : additional_system_partitions) {
-      // Some additional partitions are optional, but that's okay. The root filesystem (mounted at
-      // `/`) has empty directories for additional partitions. If additional partitions don't exist,
-      // we'll just be bind-mounting empty directories.
-      OR_RETURN(BindMount("/" + partition, PathInChroot("/" + partition)));
+    for (const auto& [partition, mount_point] : additional_system_partitions) {
+      // Some additional partitions are optional. On a device where an additional partition doesn't
+      // exist, the mount point of the partition is a symlink to a directory inside /system.
+      if (!OR_RETURN(IsSymlink(mount_point))) {
+        OR_RETURN(BindMount(mount_point, PathInChroot(mount_point)));
+      }
     }
   } else {
     CHECK(ota_slot.value() == "_a" || ota_slot.value() == "_b");
@@ -577,9 +637,9 @@ Result<void> DexoptChrootSetup::SetUpChroot(const std::optional<std::string>& ot
       OR_RETURN(BindMount("/postinstall", CHROOT_DIR));
     }
 
-    for (const std::string& partition : additional_system_partitions) {
+    for (const auto& [partition, mount_point] : additional_system_partitions) {
       OR_RETURN(Mount(GetBlockDeviceName(partition, ota_slot.value()),
-                      PathInChroot("/" + partition),
+                      PathInChroot(mount_point),
                       /*is_optional=*/true));
     }
   }

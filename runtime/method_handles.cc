@@ -463,11 +463,13 @@ ArtMethod* RefineTargetMethod(Thread* self,
           target_method, kRuntimePointerSize);
     }
   } else if (handle_kind == mirror::MethodHandle::Kind::kInvokeDirect) {
-    // String constructors are a special case, they are replaced with
-    // StringFactory methods.
-    if (target_method->IsStringConstructor()) {
-      DCHECK(handle_type->GetRType()->IsStringClass());
-      return WellKnownClasses::StringInitToStringFactory(target_method);
+    // String constructors are replaced with static StringFactory methods when a MethodHandle
+    // object is created.
+    DCHECK(!target_method->IsStringConstructor());
+    ObjPtr<mirror::Object> receiver(shadow_frame.GetVRegReference(receiver_reg));
+    if (receiver == nullptr) {
+      ThrowNullPointerException("null receiver");
+      return nullptr;
     }
   } else if (handle_kind == mirror::MethodHandle::Kind::kInvokeSuper) {
     // Note that we're not dynamically dispatching on the type of the receiver
@@ -721,9 +723,8 @@ bool DoVarHandleInvokeTranslation(Thread* self,
 
   // Determine the accessor kind to dispatch
   ArtMethod* target_method = method_handle->GetTargetMethod();
-  int intrinsic_index = target_method->GetIntrinsic();
   mirror::VarHandle::AccessMode access_mode =
-      mirror::VarHandle::GetAccessModeByIntrinsic(static_cast<Intrinsics>(intrinsic_index));
+      mirror::VarHandle::GetAccessModeByIntrinsic(target_method->GetIntrinsic());
   Handle<mirror::MethodType> vh_type =
       hs.NewHandle(vh->GetMethodTypeForAccessMode(self, access_mode));
   Handle<mirror::MethodType> mh_invoke_type = hs.NewHandle(
@@ -773,11 +774,17 @@ static bool DoMethodHandleInvokeMethod(Thread* self,
     first_dest_reg = num_regs - accessor.InsSize();
     // Parameter registers go at the end of the shadow frame.
     DCHECK_NE(first_dest_reg, (size_t)-1);
-  } else {
+  } else if (called_method->IsNative() || called_method->IsProxyMethod()) {
     // No local regs for proxy and native methods.
-    DCHECK(called_method->IsNative() || called_method->IsProxyMethod());
     num_regs = GetInsForProxyOrNativeMethod(called_method);
     first_dest_reg = 0;
+  } else {
+    if (called_method->IsDefaultConflicting()) {
+      ThrowIncompatibleClassChangeErrorForMethodConflict(called_method);
+    } else {
+      ThrowAbstractMethodError(called_method);
+    }
+    return false;
   }
 
   const char* old_cause = self->StartAssertNoThreadSuspension("DoMethodHandleInvokeMethod");

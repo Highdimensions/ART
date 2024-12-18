@@ -95,6 +95,7 @@ ArtMethod* WellKnownClasses::java_lang_ThreadGroup_add;
 ArtMethod* WellKnownClasses::java_lang_ThreadGroup_threadTerminated;
 ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandle_asType;
 ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandle_invokeExact;
+ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandleImpl_init;
 ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandles_lookup;
 ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandles_makeIdentity;
 ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandles_Lookup_findConstructor;
@@ -171,6 +172,9 @@ ArtField* WellKnownClasses::java_lang_Short_ShortCache_cache;
 ArtField* WellKnownClasses::java_lang_Integer_IntegerCache_cache;
 ArtField* WellKnownClasses::java_lang_Long_LongCache_cache;
 
+ArtField* WellKnownClasses::java_lang_Boolean_value;
+ArtField* WellKnownClasses::java_lang_Float_value;
+ArtField* WellKnownClasses::java_lang_Double_value;
 ArtField* WellKnownClasses::java_lang_Byte_value;
 ArtField* WellKnownClasses::java_lang_Character_value;
 ArtField* WellKnownClasses::java_lang_Short_value;
@@ -406,6 +410,12 @@ void WellKnownClasses::InitFieldsAndMethodsOnly(JNIEnv* env) {
   java_lang_Long_LongCache_cache = CacheBoxingCacheField(
       class_linker, self, "Ljava/lang/Long$LongCache;", "[Ljava/lang/Long;");
 
+  java_lang_Boolean_value = CacheValueInBoxField(
+      class_linker, self, "Ljava/lang/Boolean;", "Z");
+  java_lang_Float_value = CacheValueInBoxField(
+      class_linker, self, "Ljava/lang/Float;", "F");
+  java_lang_Double_value = CacheValueInBoxField(
+      class_linker, self, "Ljava/lang/Double;", "D");
   java_lang_Byte_value = CacheValueInBoxField(
       class_linker, self, "Ljava/lang/Byte;", "B");
   java_lang_Character_value = CacheValueInBoxField(
@@ -417,7 +427,7 @@ void WellKnownClasses::InitFieldsAndMethodsOnly(JNIEnv* env) {
   java_lang_Long_value = CacheValueInBoxField(
       class_linker, self, "Ljava/lang/Long;", "J");
 
-  StackHandleScope<44u> hs(self);
+  StackHandleScope<45u> hs(self);
   Handle<mirror::Class> d_s_bdcl =
       hs.NewHandle(FindSystemClass(class_linker, self, "Ldalvik/system/BaseDexClassLoader;"));
   Handle<mirror::Class> d_s_dlcl =
@@ -464,6 +474,8 @@ void WellKnownClasses::InitFieldsAndMethodsOnly(JNIEnv* env) {
       hs.NewHandle(FindSystemClass(class_linker, self, "Ljava/lang/ThreadGroup;"));
   Handle<mirror::Class> j_l_i_MethodHandle =
       hs.NewHandle(FindSystemClass(class_linker, self, "Ljava/lang/invoke/MethodHandle;"));
+  Handle<mirror::Class> j_l_i_MethodHandleImpl =
+      hs.NewHandle(FindSystemClass(class_linker, self, "Ljava/lang/invoke/MethodHandleImpl;"));
   Handle<mirror::Class> j_l_i_MethodHandles =
       hs.NewHandle(FindSystemClass(class_linker, self, "Ljava/lang/invoke/MethodHandles;"));
   Handle<mirror::Class> j_l_i_MethodHandles_Lookup =
@@ -629,6 +641,12 @@ void WellKnownClasses::InitFieldsAndMethodsOnly(JNIEnv* env) {
       /*is_static=*/ false,
       "invokeExact",
       "([Ljava/lang/Object;)Ljava/lang/Object;",
+      pointer_size);
+  java_lang_invoke_MethodHandleImpl_init = CacheMethod(
+      j_l_i_MethodHandleImpl.Get(),
+      /*is_static=*/ false,
+      "<init>",
+      "(JILjava/lang/invoke/MethodType;)V",
       pointer_size);
   java_lang_invoke_MethodHandles_lookup = CacheMethod(
       j_l_i_MethodHandles.Get(),
@@ -923,6 +941,7 @@ void WellKnownClasses::Clear() {
   java_lang_ThreadGroup_threadTerminated = nullptr;
   java_lang_invoke_MethodHandle_asType = nullptr;
   java_lang_invoke_MethodHandle_invokeExact = nullptr;
+  java_lang_invoke_MethodHandleImpl_init = nullptr;
   java_lang_invoke_MethodHandles_lookup = nullptr;
   java_lang_invoke_MethodHandles_makeIdentity = nullptr;
   java_lang_invoke_MethodHandles_Lookup_findConstructor = nullptr;

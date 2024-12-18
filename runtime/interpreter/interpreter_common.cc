@@ -62,7 +62,7 @@ bool CheckStackOverflow(Thread* self, size_t frame_size)
   bool implicit_check = Runtime::Current()->GetImplicitStackOverflowChecks();
   uint8_t* stack_end = self->GetStackEndForInterpreter(implicit_check);
   if (UNLIKELY(__builtin_frame_address(0) < stack_end + frame_size)) {
-    ThrowStackOverflowError(self);
+    ThrowStackOverflowError<kNativeStackType>(self);
     return false;
   }
   return true;
@@ -189,14 +189,7 @@ bool MoveToExceptionHandler(Thread* self,
   } else {
     shadow_frame.SetDexPC(found_dex_pc);
     if (!skip_listeners && instrumentation->HasExceptionHandledListeners()) {
-      self->ClearException();
-      instrumentation->ExceptionHandledEvent(self, exception.Get());
-      if (UNLIKELY(self->IsExceptionPending())) {
-        // Exception handled event threw an exception. Try to find the handler for this one.
-        return MoveToExceptionHandler(self, shadow_frame, skip_listeners, skip_throw_listener);
-      } else if (!clear_exception) {
-        self->SetException(exception.Get());
-      }
+      shadow_frame.SetNotifyExceptionHandledEvent(/*enable=*/ true);
     } else if (clear_exception) {
       self->ClearException();
     }
@@ -439,12 +432,10 @@ static bool DoVarHandleInvokeCommon(Thread* self,
   bool is_var_args = inst->HasVarArgs();
   const uint32_t vRegC = is_var_args ? inst->VRegC_45cc() : inst->VRegC_4rcc();
   const uint16_t vRegH = is_var_args ? inst->VRegH_45cc() : inst->VRegH_4rcc();
-  StackHandleScope<4> hs(self);
+  StackHandleScope<1> hs(self);
   Handle<mirror::VarHandle> var_handle = hs.NewHandle(
       ObjPtr<mirror::VarHandle>::DownCast(shadow_frame.GetVRegReference(vRegC)));
   ArtMethod* method = shadow_frame.GetMethod();
-  Handle<mirror::DexCache> dex_cache = hs.NewHandle(method->GetDexCache());
-  Handle<mirror::ClassLoader> class_loader = hs.NewHandle(method->GetClassLoader());
   uint32_t var_args[Instruction::kMaxVarArgRegs];
   std::optional<VarArgsInstructionOperands> var_args_operands(std::nullopt);
   std::optional<RangeInstructionOperands> range_operands(std::nullopt);
@@ -458,63 +449,12 @@ static bool DoVarHandleInvokeCommon(Thread* self,
     all_operands = &range_operands.value();
   }
   NoReceiverInstructionOperands operands(all_operands);
-  ClassLinker* const class_linker = Runtime::Current()->GetClassLinker();
 
-  // If the `ThreadLocalRandom` class is not yet initialized, do the `VarHandle` operation
-  // without creating a managed `MethodType` object. This avoids a circular initialization
-  // issue when `ThreadLocalRandom.<clinit>` indirectly calls `AtomicLong.compareAndSet()`
-  // (implemented with a `VarHandle`) and the `MethodType` caching circles back to the
-  // `ThreadLocalRandom` with uninitialized `seeder` and throws NPE.
-  //
-  // Do a quick test for "visibly initialized" without a read barrier and, if that fails,
-  // do a thorough test for "initialized" (including load acquire) with the read barrier.
-  ArtField* field = WellKnownClasses::java_util_concurrent_ThreadLocalRandom_seeder;
-  if (LIKELY(field->GetDeclaringClass<kWithoutReadBarrier>()->IsVisiblyInitialized()) ||
-      field->GetDeclaringClass()->IsInitialized()) {
-    Handle<mirror::MethodType> callsite_type(hs.NewHandle(
-        class_linker->ResolveMethodType(self, dex::ProtoIndex(vRegH), dex_cache, class_loader)));
-    if (LIKELY(callsite_type != nullptr)) {
-      return VarHandleInvokeAccessor(self,
-                                     shadow_frame,
-                                     var_handle,
-                                     callsite_type,
-                                     access_mode,
-                                     &operands,
-                                     result);
-    }
-    // This implies we couldn't resolve one or more types in this VarHandle,
-    // or we could not allocate the `MethodType` object.
-    CHECK(self->IsExceptionPending());
-    if (self->GetException()->GetClass() != WellKnownClasses::java_lang_OutOfMemoryError.Get()) {
-      return false;
-    }
-    // Clear the OOME and retry without creating an actual `MethodType` object.
-    // This prevents unexpected OOME for trivial `VarHandle` operations.
-    // It also prevents odd situations where a `VarHandle` operation succeeds but the same
-    // operation fails later because the `MethodType` object was evicted from the `DexCache`
-    // and we suddenly run out of memory to allocate a new one.
-    //
-    // We have previously seen OOMEs in the run-test `183-rmw-stress-test` with
-    // `--optimizng --no-image` (boot class path methods run in interpreter without JIT)
-    // but it probably happened on the first execution of a trivial `VarHandle` operation
-    // and not due to the `DexCache` eviction mentioned above.
-    self->ClearException();
-  }
-
-  VariableSizedHandleScope callsite_type_hs(self);
-  mirror::RawMethodType callsite_type(&callsite_type_hs);
-  if (!class_linker->ResolveMethodType(self,
-                                       dex::ProtoIndex(vRegH),
-                                       dex_cache,
-                                       class_loader,
-                                       callsite_type)) {
-    CHECK(self->IsExceptionPending());
-    return false;
-  }
   return VarHandleInvokeAccessor(self,
                                  shadow_frame,
                                  var_handle,
-                                 callsite_type,
+                                 method,
+                                 dex::ProtoIndex(vRegH),
                                  access_mode,
                                  &operands,
                                  result);
@@ -573,14 +513,14 @@ bool DoInvokePolymorphic(Thread* self,
   const int invoke_method_idx = inst->VRegB();
   ClassLinker* class_linker = Runtime::Current()->GetClassLinker();
   ArtMethod* invoke_method =
-      class_linker->ResolveMethod<ClassLinker::ResolveMode::kCheckICCEAndIAE>(
-          self, invoke_method_idx, shadow_frame.GetMethod(), kPolymorphic);
+      class_linker->ResolveMethodWithChecks(
+          invoke_method_idx, shadow_frame.GetMethod(), kPolymorphic);
 
   // Ensure intrinsic identifiers are initialized.
   DCHECK(invoke_method->IsIntrinsic());
 
   // Dispatch based on intrinsic identifier associated with method.
-  switch (static_cast<art::Intrinsics>(invoke_method->GetIntrinsic())) {
+  switch (invoke_method->GetIntrinsic()) {
 #define CASE_SIGNATURE_POLYMORPHIC_INTRINSIC(Name, ...) \
     case Intrinsics::k##Name:                           \
       return Do ## Name(self, shadow_frame, inst, inst_data, result);

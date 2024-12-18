@@ -243,8 +243,7 @@ class JniCompilerTest : public CommonCompilerTest {
     Handle<mirror::ClassLoader> loader(
         hs.NewHandle(soa.Decode<mirror::ClassLoader>(class_loader)));
     // Compile the native method before starting the runtime
-    Handle<mirror::Class> c =
-        hs.NewHandle(class_linker_->FindClass(self, "LMyClassNatives;", loader));
+    Handle<mirror::Class> c = hs.NewHandle(FindClass("LMyClassNatives;", loader));
     const auto pointer_size = class_linker_->GetImagePointerSize();
     ArtMethod* method = c->FindClassMethod(method_name, method_sig, pointer_size);
     ASSERT_TRUE(method != nullptr) << method_name << " " << method_sig;
@@ -913,14 +912,14 @@ void JniCompilerTest::CompileAndRun_fooJJ_synchronizedImpl() {
   gLogVerbosity.systrace_lock_logging = true;
   InitEntryPoints(&self->tlsPtr_.jni_entrypoints,
                   &self->tlsPtr_.quick_entrypoints,
-                  self->ReadFlag(ThreadFlag::kMonitorJniEntryExit));
+                  self->ReadFlag(ThreadFlag::kMonitorJniEntryExit, std::memory_order_relaxed));
   result = env_->CallNonvirtualLongMethod(jobj_, jklass_, jmethod_, a, b);
   EXPECT_EQ(a | b, result);
   EXPECT_EQ(5, gJava_MyClassNatives_fooJJ_synchronized_calls[gCurrentJni]);
   gLogVerbosity.systrace_lock_logging = false;
   InitEntryPoints(&self->tlsPtr_.jni_entrypoints,
                   &self->tlsPtr_.quick_entrypoints,
-                  self->ReadFlag(ThreadFlag::kMonitorJniEntryExit));
+                  self->ReadFlag(ThreadFlag::kMonitorJniEntryExit, std::memory_order_relaxed));
 
   gJava_MyClassNatives_fooJJ_synchronized_calls[gCurrentJni] = 0;
 }

@@ -18,7 +18,6 @@ package com.android.server.art.model;
 
 import android.annotation.IntDef;
 import android.annotation.NonNull;
-import android.annotation.SuppressLint;
 import android.annotation.SystemApi;
 import android.app.job.JobScheduler;
 
@@ -86,7 +85,6 @@ public class ArtFlags {
      * useful when the compiler filter is not explicitly specified (i.e., is inferred from the
      * compilation reason).
      */
-    @SuppressLint("UnflaggedApi") // Flag support for mainline is not available.
     public static final int FLAG_IGNORE_PROFILE = 1 << 7;
     /**
      * Whether to force merge profiles even if the difference between before and after the merge
@@ -174,6 +172,7 @@ public class ArtFlags {
             case ReasonMapping.REASON_BOOT_AFTER_MAINLINE_UPDATE:
                 return FLAG_FOR_PRIMARY_DEX | FLAG_SHOULD_INCLUDE_DEPENDENCIES;
             case ReasonMapping.REASON_BG_DEXOPT:
+            case ReasonMapping.REASON_PRE_REBOOT_DEXOPT:
                 return FLAG_FOR_PRIMARY_DEX | FLAG_FOR_SECONDARY_DEX
                         | FLAG_SHOULD_INCLUDE_DEPENDENCIES | FLAG_SKIP_IF_STORAGE_LOW;
             case ReasonMapping.REASON_CMDLINE:

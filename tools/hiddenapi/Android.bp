@@ -41,7 +41,7 @@ cc_defaults {
     stl: "c++_static",
     static_libs: [
         "libbase",
-        "libcrypto_for_art",
+        "libcrypto_static", // Not FIPS tested - for SHA-1 checksumming of build ID only.
     ],
 }
 
@@ -80,7 +80,7 @@ art_cc_test {
     defaults: [
         "art_gtest_defaults",
     ],
-    data: [
+    device_common_data: [
         ":art-gtest-jars-HiddenApi",
         ":art-gtest-jars-HiddenApiStubs",
     ],

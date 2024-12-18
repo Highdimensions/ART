@@ -56,6 +56,7 @@
 #include "base/utils.h"
 #include "class_linker-inl.h"
 #include "class_root-inl.h"
+#include "com_android_art_flags.h"
 #include "debugger.h"
 #include "dex/descriptors_names.h"
 #include "dex/dex_file-inl.h"
@@ -63,6 +64,7 @@
 #include "dex/dex_file_types.h"
 #include "entrypoints/entrypoint_utils.h"
 #include "entrypoints/quick/quick_alloc_entrypoints.h"
+#include "entrypoints/quick/runtime_entrypoints_list.h"
 #include "gc/accounting/card_table-inl.h"
 #include "gc/accounting/heap_bitmap-inl.h"
 #include "gc/allocator/rosalloc.h"
@@ -110,6 +112,7 @@
 #include "thread-inl.h"
 #include "thread_list.h"
 #include "trace.h"
+#include "trace_profile.h"
 #include "verify_object.h"
 #include "well_known_classes-inl.h"
 
@@ -128,6 +131,8 @@
 extern "C" __attribute__((weak)) void* __hwasan_tag_pointer(const volatile void* p,
                                                             unsigned char tag);
 
+namespace art_flags = com::android::art::flags;
+
 namespace art HIDDEN {
 
 using android::base::StringAppendV;
@@ -136,7 +141,8 @@ using android::base::StringPrintf;
 bool Thread::is_started_ = false;
 pthread_key_t Thread::pthread_key_self_;
 ConditionVariable* Thread::resume_cond_ = nullptr;
-const size_t Thread::kStackOverflowImplicitCheckSize = GetStackOverflowReservedBytes(kRuntimeISA);
+const size_t Thread::kStackOverflowImplicitCheckSize =
+    GetStackOverflowReservedBytes(kRuntimeQuickCodeISA);
 bool (*Thread::is_sensitive_thread_hook_)() = nullptr;
 Thread* Thread::jit_sensitive_thread_ = nullptr;
 std::atomic<Mutex*> Thread::cp_placeholder_mutex_(nullptr);
@@ -160,6 +166,11 @@ void InitEntryPoints(JniEntryPoints* jpoints,
                      QuickEntryPoints* qpoints,
                      bool monitor_jni_entry_exit);
 void UpdateReadBarrierEntrypoints(QuickEntryPoints* qpoints, bool is_active);
+void UpdateLowOverheadTraceEntrypoints(QuickEntryPoints* qpoints, bool enable);
+
+void Thread::UpdateTlsLowOverheadTraceEntrypoints(bool enable) {
+  UpdateLowOverheadTraceEntrypoints(&tlsPtr_.quick_entrypoints, enable);
+}
 
 void Thread::SetIsGcMarkingAndUpdateEntrypoints(bool is_marking) {
   CHECK(gUseReadBarrier);
@@ -622,7 +633,7 @@ void* Thread::CreateCallback(void* arg) {
     // while threads are being born).
     CHECK(!runtime->IsShuttingDownLocked());
     // Note: given that the JNIEnv is created in the parent thread, the only failure point here is
-    //       a mess in InitStackHwm. We do not have a reasonable way to recover from that, so abort
+    //       a mess in InitStack. We do not have a reasonable way to recover from that, so abort
     //       the runtime in such a case. In case this ever changes, we need to make sure here to
     //       delete the tmp_jni_env, as we own it at this point.
     CHECK(self->Init(runtime->GetThreadList(), runtime->GetJavaVM(), self->tlsPtr_.tmp_jni_env));
@@ -715,12 +726,12 @@ static size_t FixStackSize(size_t stack_size) {
     // If we are going to use implicit stack checks, allocate space for the protected
     // region at the bottom of the stack.
     stack_size += Thread::kStackOverflowImplicitCheckSize +
-        GetStackOverflowReservedBytes(kRuntimeISA);
+        GetStackOverflowReservedBytes(kRuntimeQuickCodeISA);
   } else {
     // It's likely that callers are trying to ensure they have at least a certain amount of
     // stack space, so we should add our reserved space on top of what they requested, rather
     // than implicitly take it away from them.
-    stack_size += GetStackOverflowReservedBytes(kRuntimeISA);
+    stack_size += GetStackOverflowReservedBytes(kRuntimeQuickCodeISA);
   }
 
   // Some systems require the stack size to be a multiple of the system page size, so round up.
@@ -729,26 +740,26 @@ static size_t FixStackSize(size_t stack_size) {
   return stack_size;
 }
 
-// Return the nearest page-aligned address below the current stack top.
-NO_INLINE
-static uint8_t* FindStackTop() {
+template <>
+NO_INLINE uint8_t* Thread::FindStackTop<StackType::kHardware>() {
   return reinterpret_cast<uint8_t*>(
       AlignDown(__builtin_frame_address(0), gPageSize));
 }
 
 // Install a protected region in the stack.  This is used to trigger a SIGSEGV if a stack
 // overflow is detected.  It is located right below the stack_begin_.
+template <StackType stack_type>
 ATTRIBUTE_NO_SANITIZE_ADDRESS
 void Thread::InstallImplicitProtection() {
-  uint8_t* pregion = tlsPtr_.stack_begin - GetStackOverflowProtectedSize();
+  uint8_t* pregion = GetStackBegin<stack_type>() - GetStackOverflowProtectedSize();
   // Page containing current top of stack.
-  uint8_t* stack_top = FindStackTop();
+  uint8_t* stack_top = FindStackTop<stack_type>();
 
   // Try to directly protect the stack.
   VLOG(threads) << "installing stack protected region at " << std::hex <<
         static_cast<void*>(pregion) << " to " <<
         static_cast<void*>(pregion + GetStackOverflowProtectedSize() - 1);
-  if (ProtectStack(/* fatal_on_error= */ false)) {
+  if (ProtectStack<stack_type>(/* fatal_on_error= */ false)) {
     // Tell the kernel that we won't be needing these pages any more.
     // NB. madvise will probably write zeroes into the memory (on linux it does).
     size_t unwanted_size =
@@ -778,7 +789,7 @@ void Thread::InstallImplicitProtection() {
 
   // (Defensively) first remove the protection on the protected region as we'll want to read
   // and write it. Ignore errors.
-  UnprotectStack();
+  UnprotectStack<stack_type>();
 
   VLOG(threads) << "Need to map in stack for thread at " << std::hex <<
       static_cast<void*>(pregion);
@@ -821,7 +832,7 @@ void Thread::InstallImplicitProtection() {
       static_cast<void*>(pregion + GetStackOverflowProtectedSize() - 1);
 
   // Protect the bottom of the stack to prevent read/write to it.
-  ProtectStack(/* fatal_on_error= */ true);
+  ProtectStack<stack_type>(/* fatal_on_error= */ true);
 
   // Tell the kernel that we won't be needing these pages any more.
   // NB. madvise will probably write zeroes into the memory (on linux it does).
@@ -948,6 +959,62 @@ void Thread::CreateNativeThread(JNIEnv* env, jobject java_peer, size_t stack_siz
   }
 }
 
+static void GetThreadStack(pthread_t thread,
+                           void** stack_base,
+                           size_t* stack_size,
+                           size_t* guard_size) {
+#if defined(__APPLE__)
+  *stack_size = pthread_get_stacksize_np(thread);
+  void* stack_addr = pthread_get_stackaddr_np(thread);
+
+  // Check whether stack_addr is the base or end of the stack.
+  // (On Mac OS 10.7, it's the end.)
+  int stack_variable;
+  if (stack_addr > &stack_variable) {
+    *stack_base = reinterpret_cast<uint8_t*>(stack_addr) - *stack_size;
+  } else {
+    *stack_base = stack_addr;
+  }
+
+  // This is wrong, but there doesn't seem to be a way to get the actual value on the Mac.
+  pthread_attr_t attributes;
+  CHECK_PTHREAD_CALL(pthread_attr_init, (&attributes), __FUNCTION__);
+  CHECK_PTHREAD_CALL(pthread_attr_getguardsize, (&attributes, guard_size), __FUNCTION__);
+  CHECK_PTHREAD_CALL(pthread_attr_destroy, (&attributes), __FUNCTION__);
+#else
+  pthread_attr_t attributes;
+  CHECK_PTHREAD_CALL(pthread_getattr_np, (thread, &attributes), __FUNCTION__);
+  CHECK_PTHREAD_CALL(pthread_attr_getstack, (&attributes, stack_base, stack_size), __FUNCTION__);
+  CHECK_PTHREAD_CALL(pthread_attr_getguardsize, (&attributes, guard_size), __FUNCTION__);
+  CHECK_PTHREAD_CALL(pthread_attr_destroy, (&attributes), __FUNCTION__);
+
+#if defined(__GLIBC__)
+  // If we're the main thread, check whether we were run with an unlimited stack. In that case,
+  // glibc will have reported a 2GB stack for our 32-bit process, and our stack overflow detection
+  // will be broken because we'll die long before we get close to 2GB.
+  bool is_main_thread = (::art::GetTid() == static_cast<uint32_t>(getpid()));
+  if (is_main_thread) {
+    rlimit stack_limit;
+    if (getrlimit(RLIMIT_STACK, &stack_limit) == -1) {
+      PLOG(FATAL) << "getrlimit(RLIMIT_STACK) failed";
+    }
+    if (stack_limit.rlim_cur == RLIM_INFINITY) {
+      size_t old_stack_size = *stack_size;
+
+      // Use the kernel default limit as our size, and adjust the base to match.
+      *stack_size = 8 * MB;
+      *stack_base = reinterpret_cast<uint8_t*>(*stack_base) + (old_stack_size - *stack_size);
+
+      VLOG(threads) << "Limiting unlimited stack (reported as " << PrettySize(old_stack_size) << ")"
+                    << " to " << PrettySize(*stack_size)
+                    << " with base " << *stack_base;
+    }
+  }
+#endif
+
+#endif
+}
+
 bool Thread::Init(ThreadList* thread_list, JavaVMExt* java_vm, JNIEnvExt* jni_env_ext) {
   // This function does all the initialization that must be run by the native thread it applies to.
   // (When we create a new thread from managed code, we allocate the Thread* in Thread::Create so
@@ -963,7 +1030,14 @@ bool Thread::Init(ThreadList* thread_list, JavaVMExt* java_vm, JNIEnvExt* jni_en
   ScopedTrace trace("Thread::Init");
 
   SetUpAlternateSignalStack();
-  if (!InitStackHwm()) {
+
+  void* read_stack_base = nullptr;
+  size_t read_stack_size = 0;
+  size_t read_guard_size = 0;
+  GetThreadStack(tlsPtr_.pthread_self, &read_stack_base, &read_stack_size, &read_guard_size);
+  if (!InitStack<kNativeStackType>(reinterpret_cast<uint8_t*>(read_stack_base),
+                                   read_stack_size,
+                                   read_guard_size)) {
     return false;
   }
   InitCpu();
@@ -997,6 +1071,9 @@ bool Thread::Init(ThreadList* thread_list, JavaVMExt* java_vm, JNIEnvExt* jni_en
 
   ScopedTrace trace3("ThreadList::Register");
   thread_list->Register(this);
+  if (art_flags::always_enable_profile_code()) {
+    UpdateTlsLowOverheadTraceEntrypoints(!Trace::IsTracingEnabled());
+  }
   return true;
 }
 
@@ -1054,6 +1131,7 @@ Thread* Thread::Attach(const char* thread_name,
     self->Dump(LOG_STREAM(INFO));
   }
 
+  TraceProfiler::AllocateBuffer(self);
   if (should_run_callbacks) {
     ScopedObjectAccess soa(self);
     runtime->GetRuntimeCallbacks()->ThreadStart(self);
@@ -1275,71 +1353,12 @@ void Thread::SetThreadName(const char* name) {
   Dbg::DdmSendThreadNotification(this, CHUNK_TYPE("THNM"));
 }
 
-static void GetThreadStack(pthread_t thread,
-                           void** stack_base,
-                           size_t* stack_size,
-                           size_t* guard_size) {
-#if defined(__APPLE__)
-  *stack_size = pthread_get_stacksize_np(thread);
-  void* stack_addr = pthread_get_stackaddr_np(thread);
+template <StackType stack_type>
+bool Thread::InitStack(uint8_t* read_stack_base, size_t read_stack_size, size_t read_guard_size) {
+  ScopedTrace trace("InitStack");
 
-  // Check whether stack_addr is the base or end of the stack.
-  // (On Mac OS 10.7, it's the end.)
-  int stack_variable;
-  if (stack_addr > &stack_variable) {
-    *stack_base = reinterpret_cast<uint8_t*>(stack_addr) - *stack_size;
-  } else {
-    *stack_base = stack_addr;
-  }
-
-  // This is wrong, but there doesn't seem to be a way to get the actual value on the Mac.
-  pthread_attr_t attributes;
-  CHECK_PTHREAD_CALL(pthread_attr_init, (&attributes), __FUNCTION__);
-  CHECK_PTHREAD_CALL(pthread_attr_getguardsize, (&attributes, guard_size), __FUNCTION__);
-  CHECK_PTHREAD_CALL(pthread_attr_destroy, (&attributes), __FUNCTION__);
-#else
-  pthread_attr_t attributes;
-  CHECK_PTHREAD_CALL(pthread_getattr_np, (thread, &attributes), __FUNCTION__);
-  CHECK_PTHREAD_CALL(pthread_attr_getstack, (&attributes, stack_base, stack_size), __FUNCTION__);
-  CHECK_PTHREAD_CALL(pthread_attr_getguardsize, (&attributes, guard_size), __FUNCTION__);
-  CHECK_PTHREAD_CALL(pthread_attr_destroy, (&attributes), __FUNCTION__);
-
-#if defined(__GLIBC__)
-  // If we're the main thread, check whether we were run with an unlimited stack. In that case,
-  // glibc will have reported a 2GB stack for our 32-bit process, and our stack overflow detection
-  // will be broken because we'll die long before we get close to 2GB.
-  bool is_main_thread = (::art::GetTid() == static_cast<uint32_t>(getpid()));
-  if (is_main_thread) {
-    rlimit stack_limit;
-    if (getrlimit(RLIMIT_STACK, &stack_limit) == -1) {
-      PLOG(FATAL) << "getrlimit(RLIMIT_STACK) failed";
-    }
-    if (stack_limit.rlim_cur == RLIM_INFINITY) {
-      size_t old_stack_size = *stack_size;
-
-      // Use the kernel default limit as our size, and adjust the base to match.
-      *stack_size = 8 * MB;
-      *stack_base = reinterpret_cast<uint8_t*>(*stack_base) + (old_stack_size - *stack_size);
-
-      VLOG(threads) << "Limiting unlimited stack (reported as " << PrettySize(old_stack_size) << ")"
-                    << " to " << PrettySize(*stack_size)
-                    << " with base " << *stack_base;
-    }
-  }
-#endif
-
-#endif
-}
-
-bool Thread::InitStackHwm() {
-  ScopedTrace trace("InitStackHwm");
-  void* read_stack_base;
-  size_t read_stack_size;
-  size_t read_guard_size;
-  GetThreadStack(tlsPtr_.pthread_self, &read_stack_base, &read_stack_size, &read_guard_size);
-
-  tlsPtr_.stack_begin = reinterpret_cast<uint8_t*>(read_stack_base);
-  tlsPtr_.stack_size = read_stack_size;
+  SetStackBegin<stack_type>(read_stack_base);
+  SetStackSize<stack_type>(read_stack_size);
 
   // The minimum stack size we can cope with is the protected region size + stack overflow check
   // region size + some memory for normal stack usage.
@@ -1362,7 +1381,7 @@ bool Thread::InitStackHwm() {
   DCHECK_ALIGNED_PARAM(static_cast<size_t>(GetStackOverflowProtectedSize()),
                        static_cast<int32_t>(gPageSize));
   size_t min_stack = GetStackOverflowProtectedSize() +
-      RoundUp(GetStackOverflowReservedBytes(kRuntimeISA) + 4 * KB, gPageSize);
+      RoundUp(GetStackOverflowReservedBytes(kRuntimeQuickCodeISA) + 4 * KB, gPageSize);
   if (read_stack_size <= min_stack) {
     // Note, as we know the stack is small, avoid operations that could use a lot of stack.
     LogHelper::LogLineLowStack(__PRETTY_FUNCTION__,
@@ -1372,8 +1391,16 @@ bool Thread::InitStackHwm() {
     return false;
   }
 
+  const char* stack_type_str = "";
+  if constexpr (stack_type == kNativeStackType) {
+    stack_type_str = "Native";
+  } else if constexpr (stack_type == kQuickStackType) {
+    stack_type_str = "Quick";
+  }
+
   // This is included in the SIGQUIT output, but it's useful here for thread debugging.
-  VLOG(threads) << StringPrintf("Native stack is at %p (%s with %s guard)",
+  VLOG(threads) << StringPrintf("%s stack is at %p (%s with %s guard)",
+                                stack_type_str,
                                 read_stack_base,
                                 PrettySize(read_stack_size).c_str(),
                                 PrettySize(read_guard_size).c_str());
@@ -1384,7 +1411,7 @@ bool Thread::InitStackHwm() {
   bool implicit_stack_check =
       runtime->GetImplicitStackOverflowChecks() && !runtime->IsAotCompiler();
 
-  ResetDefaultStackEnd();
+  ResetDefaultStackEnd<stack_type>();
 
   // Install the protected region if we are doing implicit overflow checks.
   if (implicit_stack_check) {
@@ -1392,15 +1419,18 @@ bool Thread::InitStackHwm() {
     // to install our own region so we need to move the limits
     // of the stack to make room for it.
 
-    tlsPtr_.stack_begin += read_guard_size + GetStackOverflowProtectedSize();
-    tlsPtr_.stack_end += read_guard_size + GetStackOverflowProtectedSize();
-    tlsPtr_.stack_size -= read_guard_size + GetStackOverflowProtectedSize();
+    SetStackBegin<stack_type>(
+        GetStackBegin<stack_type>() + read_guard_size + GetStackOverflowProtectedSize());
+    SetStackEnd<stack_type>(
+        GetStackEnd<stack_type>() + read_guard_size + GetStackOverflowProtectedSize());
+    SetStackSize<stack_type>(
+        GetStackSize<stack_type>() - (read_guard_size + GetStackOverflowProtectedSize()));
 
-    InstallImplicitProtection();
+    InstallImplicitProtection<stack_type>();
   }
 
   // Consistency check.
-  CHECK_GT(FindStackTop(), reinterpret_cast<void*>(tlsPtr_.stack_end));
+  CHECK_GT(FindStackTop<stack_type>(), reinterpret_cast<void*>(GetStackEnd<stack_type>()));
 
   return true;
 }
@@ -1500,7 +1530,7 @@ bool Thread::PassActiveSuspendBarriers() {
   std::vector<AtomicInteger*> pass_barriers{};
   {
     MutexLock mu(this, *Locks::thread_suspend_count_lock_);
-    if (!ReadFlag(ThreadFlag::kActiveSuspendBarrier)) {
+    if (!ReadFlag(ThreadFlag::kActiveSuspendBarrier, std::memory_order_relaxed)) {
       // Quick exit test: The barriers have already been claimed - this is possible as there may
       // be a race to claim and it doesn't matter who wins.  All of the callers of this function
       // (except SuspendAllInternal) will first test the kActiveSuspendBarrier flag without the
@@ -1574,7 +1604,8 @@ void Thread::RunEmptyCheckpoint() {
   // Note: Empty checkpoint does not access the thread's stack,
   // so we do not need to check for the flip function.
   DCHECK_EQ(Thread::Current(), this);
-  AtomicClearFlag(ThreadFlag::kEmptyCheckpointRequest);
+  // See mutator_gc_coord.md and b/382722942 for memory ordering discussion.
+  AtomicClearFlag(ThreadFlag::kEmptyCheckpointRequest, std::memory_order_release);
   Runtime::Current()->GetThreadList()->EmptyCheckpointBarrier()->Pass(this);
 }
 
@@ -1596,7 +1627,7 @@ bool Thread::RequestCheckpoint(Closure* function) {
   } else {
     checkpoint_overflow_.push_back(function);
   }
-  DCHECK(ReadFlag(ThreadFlag::kCheckpointRequest));
+  DCHECK(ReadFlag(ThreadFlag::kCheckpointRequest, std::memory_order_relaxed));
   TriggerSuspend();
   return true;
 }
@@ -1760,7 +1791,8 @@ bool Thread::RequestSynchronousCheckpoint(Closure* function, ThreadState wait_st
     // Since we're runnable, and kPendingFlipFunction is set with all threads suspended, it
     // cannot be set again here. Thus kRunningFlipFunction is either already set after the
     // EnsureFlipFunctionStarted call, or will not be set before we call Run().
-    if (ReadFlag(ThreadFlag::kRunningFlipFunction)) {
+    // See mutator_gc_coord.md for a discussion of memory ordering for thread flags.
+    if (ReadFlag(ThreadFlag::kRunningFlipFunction, std::memory_order_acquire)) {
       WaitForFlipFunction(self);
     }
     function->Run(this);
@@ -1801,7 +1833,8 @@ bool Thread::EnsureFlipFunctionStarted(Thread* self,
   DCHECK(self == Current());
   bool check_exited = (tef != nullptr);
   // Check that the thread can't unexpectedly exit while we are running.
-  DCHECK(self == target || check_exited || target->ReadFlag(ThreadFlag::kSuspendRequest) ||
+  DCHECK(self == target || check_exited ||
+         target->ReadFlag(ThreadFlag::kSuspendRequest, std::memory_order_relaxed) ||
          Locks::thread_list_lock_->IsExclusiveHeld(self))
       << *target;
   bool become_runnable;
@@ -1827,6 +1860,8 @@ bool Thread::EnsureFlipFunctionStarted(Thread* self,
   target->VerifyState();
   if (old_state_and_flags.GetValue() == 0) {
     become_runnable = false;
+    // Memory_order_relaxed is OK here, since we re-check with memory_order_acquire below before
+    // acting on a pending flip function.
     old_state_and_flags = target->GetStateAndFlags(std::memory_order_relaxed);
   } else {
     become_runnable = true;
@@ -1838,8 +1873,12 @@ bool Thread::EnsureFlipFunctionStarted(Thread* self,
   while (true) {
     DCHECK(!check_exited || (Locks::thread_list_lock_->IsExclusiveHeld(self) && !tef->HasExited()));
     if (!old_state_and_flags.IsFlagSet(ThreadFlag::kPendingFlipFunction)) {
+      // Re-read kRunningFlipFunction flag with acquire ordering to ensure that if we claim
+      // flip function has run then its execution happened-before our return.
+      bool running_flip =
+          target->ReadFlag(ThreadFlag::kRunningFlipFunction, std::memory_order_acquire);
       maybe_release();
-      set_finished(!old_state_and_flags.IsFlagSet(ThreadFlag::kRunningFlipFunction));
+      set_finished(!running_flip);
       return false;
     }
     DCHECK(!old_state_and_flags.IsFlagSet(ThreadFlag::kRunningFlipFunction));
@@ -1870,7 +1909,8 @@ bool Thread::EnsureFlipFunctionStarted(Thread* self,
       // Let caller retry.
       return false;
     }
-    old_state_and_flags = target->GetStateAndFlags(std::memory_order_acquire);
+    // Again, we re-read with memory_order_acquire before acting on the flags.
+    old_state_and_flags = target->GetStateAndFlags(std::memory_order_relaxed);
   }
   // Unreachable.
 }
@@ -1878,14 +1918,14 @@ bool Thread::EnsureFlipFunctionStarted(Thread* self,
 void Thread::RunFlipFunction(Thread* self) {
   // This function is called either by the thread running `ThreadList::FlipThreadRoots()` or when
   // a thread becomes runnable, after we've successfully set the kRunningFlipFunction ThreadFlag.
-  DCHECK(ReadFlag(ThreadFlag::kRunningFlipFunction));
+  DCHECK(ReadFlag(ThreadFlag::kRunningFlipFunction, std::memory_order_relaxed));
 
   Closure* flip_function = GetFlipFunction();
   tlsPtr_.flip_function.store(nullptr, std::memory_order_relaxed);
   DCHECK(flip_function != nullptr);
   VerifyState();
   flip_function->Run(this);
-  DCHECK(!ReadFlag(ThreadFlag::kPendingFlipFunction));
+  DCHECK(!ReadFlag(ThreadFlag::kPendingFlipFunction, std::memory_order_relaxed));
   VerifyState();
   AtomicClearFlag(ThreadFlag::kRunningFlipFunction, std::memory_order_release);
   // From here on this thread may go away, and it is no longer safe to access.
@@ -1903,12 +1943,12 @@ void Thread::WaitForFlipFunction(Thread* self) const {
   // Repeat the check after waiting to guard against spurious wakeups (and because
   // we share the `thread_suspend_count_lock_` and `resume_cond_` with other code).
   // Check that the thread can't unexpectedly exit while we are running.
-  DCHECK(self == this || ReadFlag(ThreadFlag::kSuspendRequest) ||
+  DCHECK(self == this || ReadFlag(ThreadFlag::kSuspendRequest, std::memory_order_relaxed) ||
          Locks::thread_list_lock_->IsExclusiveHeld(self));
   MutexLock mu(self, *Locks::thread_suspend_count_lock_);
   while (true) {
-    StateAndFlags old_state_and_flags = GetStateAndFlags(std::memory_order_acquire);
-    if (!old_state_and_flags.IsFlagSet(ThreadFlag::kRunningFlipFunction)) {
+    // See mutator_gc_coord.md for a discussion of memory ordering for thread flags.
+    if (!ReadFlag(ThreadFlag::kRunningFlipFunction, std::memory_order_acquire)) {
       return;
     }
     // We sometimes hold mutator lock here. OK since the flip function must complete quickly.
@@ -1928,9 +1968,10 @@ void Thread::WaitForFlipFunctionTestingExited(Thread* self, ThreadExitFlag* tef)
   // complicated locking dance.
   MutexLock mu(self, *Locks::thread_suspend_count_lock_);
   while (true) {
-    StateAndFlags old_state_and_flags = GetStateAndFlags(std::memory_order_acquire);
+    // See mutator_gc_coord.md for a discussion of memory ordering for thread flags.
+    bool running_flip = ReadFlag(ThreadFlag::kRunningFlipFunction, std::memory_order_acquire);
     Locks::thread_list_lock_->Unlock(self);  // So we can wait or return.
-    if (!old_state_and_flags.IsFlagSet(ThreadFlag::kRunningFlipFunction)) {
+    if (!running_flip) {
       return;
     }
     resume_cond_->WaitHoldingLocks(self);
@@ -1946,7 +1987,7 @@ void Thread::WaitForFlipFunctionTestingExited(Thread* self, ThreadExitFlag* tef)
 
 void Thread::FullSuspendCheck(bool implicit) {
   ScopedTrace trace(__FUNCTION__);
-  DCHECK(!ReadFlag(ThreadFlag::kSuspensionImmune));
+  DCHECK(!ReadFlag(ThreadFlag::kSuspensionImmune, std::memory_order_relaxed));
   DCHECK(this == Thread::Current());
   VLOG(threads) << this << " self-suspending";
   // Make thread appear suspended to other threads, release mutator_lock_.
@@ -2115,9 +2156,10 @@ void Thread::DumpState(std::ostream& os, const Thread* thread, pid_t tid) {
      << " core=" << task_cpu
      << " HZ=" << sysconf(_SC_CLK_TCK) << "\n";
   if (thread != nullptr) {
-    os << "  | stack=" << reinterpret_cast<void*>(thread->tlsPtr_.stack_begin) << "-"
-        << reinterpret_cast<void*>(thread->tlsPtr_.stack_end) << " stackSize="
-        << PrettySize(thread->tlsPtr_.stack_size) << "\n";
+    // TODO(Simulator): Also dump the simulated stack if one exists.
+    os << "  | stack=" << reinterpret_cast<void*>(thread->GetStackBegin<kNativeStackType>())
+        << "-" << reinterpret_cast<void*>(thread->GetStackEnd<kNativeStackType>())
+        << " stackSize=" << PrettySize(thread->GetStackSize<kNativeStackType>()) << "\n";
     // Dump the held mutexes.
     os << "  | held mutexes=";
     for (size_t i = 0; i < kLockLevelCount; ++i) {
@@ -2676,9 +2718,9 @@ Thread::~Thread() {
     tlsPtr_.jni_env = nullptr;
   }
   CHECK_NE(GetState(), ThreadState::kRunnable);
-  CHECK(!ReadFlag(ThreadFlag::kCheckpointRequest));
-  CHECK(!ReadFlag(ThreadFlag::kEmptyCheckpointRequest));
-  CHECK(!ReadFlag(ThreadFlag::kSuspensionImmune));
+  CHECK(!ReadFlag(ThreadFlag::kCheckpointRequest, std::memory_order_relaxed));
+  CHECK(!ReadFlag(ThreadFlag::kEmptyCheckpointRequest, std::memory_order_relaxed));
+  CHECK(!ReadFlag(ThreadFlag::kSuspensionImmune, std::memory_order_relaxed));
   CHECK(tlsPtr_.checkpoint_function == nullptr);
   CHECK_EQ(checkpoint_overflow_.size(), 0u);
   // A pending flip function request is OK. FlipThreadRoots will have been notified that we
@@ -2804,12 +2846,17 @@ class JniTransitionReferenceVisitor : public StackVisitor {
   bool found_;
 };
 
+bool Thread::IsRawObjOnQuickStack(uint8_t* raw_obj) const {
+  return (static_cast<size_t>(raw_obj - GetStackBegin<kQuickStackType>()) <
+          GetStackSize<kQuickStackType>());
+}
+
 bool Thread::IsJniTransitionReference(jobject obj) const {
   DCHECK(obj != nullptr);
   // We need a non-const pointer for stack walk even if we're not modifying the thread state.
   Thread* thread = const_cast<Thread*>(this);
   uint8_t* raw_obj = reinterpret_cast<uint8_t*>(obj);
-  if (static_cast<size_t>(raw_obj - tlsPtr_.stack_begin) < tlsPtr_.stack_size) {
+  if (IsRawObjOnQuickStack(raw_obj)) {
     JniTransitionReferenceVisitor</*kPointsToStack=*/ true> visitor(thread, raw_obj);
     visitor.WalkStack();
     return visitor.Found();
@@ -3606,7 +3653,8 @@ void Thread::ThrowNewWrappedException(const char* exception_class_descriptor,
   Runtime* runtime = Runtime::Current();
   auto* cl = runtime->GetClassLinker();
   Handle<mirror::Class> exception_class(
-      hs.NewHandle(cl->FindClass(this, exception_class_descriptor, class_loader)));
+      hs.NewHandle(cl->FindClass(
+          this, exception_class_descriptor, strlen(exception_class_descriptor), class_loader)));
   if (UNLIKELY(exception_class == nullptr)) {
     CHECK(IsExceptionPending());
     LOG(ERROR) << "No exception class " << PrettyDescriptor(exception_class_descriptor);
@@ -3867,6 +3915,7 @@ void Thread::DumpThreadOffset(std::ostream& os, uint32_t offset) {
   QUICK_ENTRY_POINT_INFO(pInvokeSuperTrampolineWithAccessCheck)
   QUICK_ENTRY_POINT_INFO(pInvokeVirtualTrampolineWithAccessCheck)
   QUICK_ENTRY_POINT_INFO(pInvokePolymorphic)
+  QUICK_ENTRY_POINT_INFO(pInvokePolymorphicWithHiddenReceiver)
   QUICK_ENTRY_POINT_INFO(pTestSuspend)
   QUICK_ENTRY_POINT_INFO(pDeliverException)
   QUICK_ENTRY_POINT_INFO(pThrowArrayBounds)
@@ -4213,8 +4262,7 @@ class ReferenceMapVisitor : public StackVisitor {
     if (m->IsNative()) {
       // TODO: Spill the `this` reference in the AOT-compiled String.charAt()
       // slow-path for throwing SIOOBE, so that we can remove this carve-out.
-      if (UNLIKELY(m->IsIntrinsic()) &&
-          m->GetIntrinsic() == enum_cast<uint32_t>(Intrinsics::kStringCharAt)) {
+      if (UNLIKELY(m->IsIntrinsic()) && m->GetIntrinsic() == Intrinsics::kStringCharAt) {
         // The String.charAt() method is AOT-compiled with an intrinsic implementation
         // instead of a JNI stub. It has a slow path that constructs a runtime frame
         // for throwing SIOOBE and in that path we do not get the `this` pointer
@@ -4622,28 +4670,6 @@ void Thread::VerifyStackImpl() {
   }
 }
 
-// Set the stack end to that to be used during a stack overflow
-void Thread::SetStackEndForStackOverflow() {
-  // During stack overflow we allow use of the full stack.
-  if (tlsPtr_.stack_end == tlsPtr_.stack_begin) {
-    // However, we seem to have already extended to use the full stack.
-    LOG(ERROR) << "Need to increase kStackOverflowReservedBytes (currently "
-               << GetStackOverflowReservedBytes(kRuntimeISA) << ")?";
-    DumpStack(LOG_STREAM(ERROR));
-    LOG(FATAL) << "Recursive stack overflow.";
-  }
-
-  tlsPtr_.stack_end = tlsPtr_.stack_begin;
-
-  // Remove the stack overflow protection if is it set up.
-  bool implicit_stack_check = Runtime::Current()->GetImplicitStackOverflowChecks();
-  if (implicit_stack_check) {
-    if (!UnprotectStack()) {
-      LOG(ERROR) << "Unable to remove stack protection for stack overflow";
-    }
-  }
-}
-
 void Thread::SetTlab(uint8_t* start, uint8_t* end, uint8_t* limit) {
   DCHECK_LE(start, end);
   DCHECK_LE(end, limit);
@@ -4691,8 +4717,9 @@ std::ostream& operator<<(std::ostream& os, const Thread& thread) {
   return os;
 }
 
+template <StackType stack_type>
 bool Thread::ProtectStack(bool fatal_on_error) {
-  void* pregion = tlsPtr_.stack_begin - GetStackOverflowProtectedSize();
+  void* pregion = GetStackBegin<stack_type>() - GetStackOverflowProtectedSize();
   VLOG(threads) << "Protecting stack at " << pregion;
   if (mprotect(pregion, GetStackOverflowProtectedSize(), PROT_NONE) == -1) {
     if (fatal_on_error) {
@@ -4707,8 +4734,9 @@ bool Thread::ProtectStack(bool fatal_on_error) {
   return true;
 }
 
+template <StackType stack_type>
 bool Thread::UnprotectStack() {
-  void* pregion = tlsPtr_.stack_begin - GetStackOverflowProtectedSize();
+  void* pregion = GetStackBegin<stack_type>() - GetStackOverflowProtectedSize();
   VLOG(threads) << "Unprotecting stack at " << pregion;
   return mprotect(pregion, GetStackOverflowProtectedSize(), PROT_READ|PROT_WRITE) == 0;
 }
@@ -4801,11 +4829,11 @@ mirror::Object* Thread::GetPeerFromOtherThread() {
   // mutator lock in exclusive mode, and we should not have a pending flip function.
   if (kIsDebugBuild && Locks::thread_list_lock_->IsExclusiveHeld(self)) {
     Locks::mutator_lock_->AssertExclusiveHeld(self);
-    CHECK(!ReadFlag(ThreadFlag::kPendingFlipFunction));
+    CHECK(!ReadFlag(ThreadFlag::kPendingFlipFunction, std::memory_order_relaxed));
   }
   // Ensure that opeer is not obsolete.
   EnsureFlipFunctionStarted(self, this);
-  if (ReadFlag(ThreadFlag::kRunningFlipFunction)) {
+  if (ReadFlag(ThreadFlag::kRunningFlipFunction, std::memory_order_acquire)) {
     // Does not release mutator lock. Hence no new flip requests can be issued.
     WaitForFlipFunction(self);
   }
@@ -4816,7 +4844,8 @@ mirror::Object* Thread::LockedGetPeerFromOtherThread(ThreadExitFlag* tef) {
   DCHECK(tlsPtr_.jpeer == nullptr);
   Thread* self = Thread::Current();
   Locks::thread_list_lock_->AssertHeld(self);
-  if (ReadFlag(ThreadFlag::kPendingFlipFunction)) {
+  // memory_order_relaxed is OK here, because we recheck it later with acquire order.
+  if (ReadFlag(ThreadFlag::kPendingFlipFunction, std::memory_order_relaxed)) {
     // It is unsafe to call EnsureFlipFunctionStarted with thread_list_lock_. Thus we temporarily
     // release it, taking care to handle the case in which "this" thread disapppears while we no
     // longer hold it.
@@ -4827,7 +4856,7 @@ mirror::Object* Thread::LockedGetPeerFromOtherThread(ThreadExitFlag* tef) {
       return nullptr;
     }
   }
-  if (ReadFlag(ThreadFlag::kRunningFlipFunction)) {
+  if (ReadFlag(ThreadFlag::kRunningFlipFunction, std::memory_order_acquire)) {
     // Does not release mutator lock. Hence no new flip requests can be issued.
     WaitForFlipFunction(self);
   }

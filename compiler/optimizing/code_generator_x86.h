@@ -94,9 +94,12 @@ static constexpr size_t kRuntimeParameterFpuRegistersLength =
   V(StringBuilderAppendDouble)              \
   V(StringBuilderLength)                    \
   V(StringBuilderToString)                  \
+  V(UnsafeArrayBaseOffset)                  \
   /* 1.8 */                                 \
   V(MethodHandleInvokeExact)                \
-  V(MethodHandleInvoke)
+  V(MethodHandleInvoke)                     \
+  /* OpenJDK 11 */                          \
+  V(JdkUnsafeArrayBaseOffset)
 
 class InvokeRuntimeCallingConvention : public CallingConvention<Register, XmmRegister> {
  public:
@@ -246,6 +249,7 @@ class LocationsBuilderX86 : public HGraphVisitor {
   void HandleBitwiseOperation(HBinaryOperation* instruction);
   void HandleInvoke(HInvoke* invoke);
   void HandleCondition(HCondition* condition);
+  void HandleRotate(HBinaryOperation* rotate);
   void HandleShift(HBinaryOperation* instruction);
   void HandleFieldSet(HInstruction* instruction,
                       const FieldInfo& field_info,
@@ -336,6 +340,7 @@ class InstructionCodeGeneratorX86 : public InstructionCodeGenerator {
                       bool value_can_be_null,
                       WriteBarrierKind write_barrier_kind);
   void HandleFieldGet(HInstruction* instruction, const FieldInfo& field_info);
+  void HandleRotate(HBinaryOperation* rotate);
 
   // Generate a heap reference load using one register `out`:
   //
@@ -543,6 +548,7 @@ class CodeGeneratorX86 : public CodeGenerator {
   void RecordBootImageRelRoPatch(HX86ComputeBaseMethodAddress* method_address,
                                  uint32_t boot_image_offset);
   void RecordBootImageMethodPatch(HInvoke* invoke);
+  void RecordAppImageMethodPatch(HInvoke* invoke);
   void RecordMethodBssEntryPatch(HInvoke* invoke);
   void RecordBootImageTypePatch(HLoadClass* load_class);
   void RecordAppImageTypePatch(HLoadClass* load_class);
@@ -778,6 +784,8 @@ class CodeGeneratorX86 : public CodeGenerator {
 
   // PC-relative method patch info for kBootImageLinkTimePcRelative.
   ArenaDeque<X86PcRelativePatchInfo> boot_image_method_patches_;
+  // PC-relative method patch info for kAppImageRelRo.
+  ArenaDeque<X86PcRelativePatchInfo> app_image_method_patches_;
   // PC-relative method patch info for kBssEntry.
   ArenaDeque<X86PcRelativePatchInfo> method_bss_entry_patches_;
   // PC-relative type patch info for kBootImageLinkTimePcRelative.

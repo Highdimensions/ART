@@ -83,7 +83,11 @@ inline void Thread::AllowThreadSuspension() {
 inline void Thread::CheckSuspend(bool implicit) {
   DCHECK_EQ(Thread::Current(), this);
   while (true) {
-    StateAndFlags state_and_flags = GetStateAndFlags(std::memory_order_relaxed);
+    // Memory_order_relaxed should be OK, since RunCheckpointFunction shares a lock with the
+    // requestor, and FullSuspendCheck() re-checks later. But we currently need memory_order_acquire
+    // for the empty checkpoint path.
+    // TODO (b/382722942): Revisit after we fix RunEmptyCheckpoint().
+    StateAndFlags state_and_flags = GetStateAndFlags(std::memory_order_acquire);
     if (LIKELY(!state_and_flags.IsAnyOfFlagsSet(SuspendOrCheckpointRequestFlags()))) {
       break;
     } else if (state_and_flags.IsFlagSet(ThreadFlag::kCheckpointRequest)) {
@@ -110,7 +114,8 @@ inline void Thread::CheckEmptyCheckpointFromWeakRefAccess(BaseMutex* cond_var_mu
   Thread* self = Thread::Current();
   DCHECK_EQ(self, this);
   for (;;) {
-    if (ReadFlag(ThreadFlag::kEmptyCheckpointRequest)) {
+    // TODO (b/382722942): Revisit memory ordering after we fix RunEmptyCheckpoint().
+    if (ReadFlag(ThreadFlag::kEmptyCheckpointRequest, std::memory_order_acquire)) {
       RunEmptyCheckpoint();
       // Check we hold only an expected mutex when accessing weak ref.
       if (kIsDebugBuild) {
@@ -135,7 +140,8 @@ inline void Thread::CheckEmptyCheckpointFromWeakRefAccess(BaseMutex* cond_var_mu
 inline void Thread::CheckEmptyCheckpointFromMutex() {
   DCHECK_EQ(Thread::Current(), this);
   for (;;) {
-    if (ReadFlag(ThreadFlag::kEmptyCheckpointRequest)) {
+    // TODO (b/382722942): Revisit memory ordering after we fix RunEmptyCheckpoint().
+    if (ReadFlag(ThreadFlag::kEmptyCheckpointRequest, std::memory_order_acquire)) {
       RunEmptyCheckpoint();
     } else {
       break;
@@ -234,7 +240,11 @@ inline void Thread::AssertThreadSuspensionIsAllowable(bool check_locks) const {
 inline void Thread::TransitionToSuspendedAndRunCheckpoints(ThreadState new_state) {
   DCHECK_NE(new_state, ThreadState::kRunnable);
   while (true) {
-    StateAndFlags old_state_and_flags = GetStateAndFlags(std::memory_order_relaxed);
+    // memory_order_relaxed is OK for ordinary checkpoints, which enforce ordering via
+    // thread_suspend_count_lock_ . It is not currently OK for empty checkpoints.
+    // TODO (b/382722942): Consider changing back to memory_order_relaxed after fixing empty
+    // checkpoints.
+    StateAndFlags old_state_and_flags = GetStateAndFlags(std::memory_order_acquire);
     DCHECK_EQ(old_state_and_flags.GetState(), ThreadState::kRunnable);
     if (UNLIKELY(old_state_and_flags.IsFlagSet(ThreadFlag::kCheckpointRequest))) {
       IncrementStatsCounter(&checkpoint_count_);
@@ -265,6 +275,8 @@ inline void Thread::TransitionToSuspendedAndRunCheckpoints(ThreadState new_state
 inline void Thread::CheckActiveSuspendBarriers() {
   DCHECK_NE(GetState(), ThreadState::kRunnable);
   while (true) {
+    // memory_order_relaxed is OK here, since PassActiveSuspendBarriers() rechecks with
+    // thread_suspend_count_lock_ .
     StateAndFlags state_and_flags = GetStateAndFlags(std::memory_order_relaxed);
     if (LIKELY(!state_and_flags.IsFlagSet(ThreadFlag::kCheckpointRequest) &&
                !state_and_flags.IsFlagSet(ThreadFlag::kEmptyCheckpointRequest) &&
@@ -540,7 +552,7 @@ inline void Thread::IncrementSuspendCount(Thread* self) {
 }
 
 inline void Thread::DecrementSuspendCount(Thread* self, bool for_user_code) {
-  DCHECK(ReadFlag(ThreadFlag::kSuspendRequest));
+  DCHECK(ReadFlag(ThreadFlag::kSuspendRequest, std::memory_order_relaxed));
   Locks::thread_suspend_count_lock_->AssertHeld(self);
   if (UNLIKELY(tls32_.suspend_count <= 0)) {
     UnsafeLogFatalForSuspendCount(self, this);
@@ -572,24 +584,66 @@ inline ShadowFrame* Thread::PopShadowFrame() {
   return tlsPtr_.managed_stack.PopShadowFrame();
 }
 
+template <>
+inline uint8_t* Thread::GetStackEnd<StackType::kHardware>() const {
+  return tlsPtr_.stack_end;
+}
+template <>
+inline void Thread::SetStackEnd<StackType::kHardware>(uint8_t* new_stack_end) {
+  tlsPtr_.stack_end = new_stack_end;
+}
+template <>
+inline uint8_t* Thread::GetStackBegin<StackType::kHardware>() const {
+  return tlsPtr_.stack_begin;
+}
+template <>
+inline void Thread::SetStackBegin<StackType::kHardware>(uint8_t* new_stack_begin) {
+  tlsPtr_.stack_begin = new_stack_begin;
+}
+template <>
+inline size_t Thread::GetStackSize<StackType::kHardware>() const {
+  return tlsPtr_.stack_size;
+}
+template <>
+inline void Thread::SetStackSize<StackType::kHardware>(size_t new_stack_size) {
+  tlsPtr_.stack_size = new_stack_size;
+}
+
 inline uint8_t* Thread::GetStackEndForInterpreter(bool implicit_overflow_check) const {
-  uint8_t* end = tlsPtr_.stack_end + (implicit_overflow_check
-      ? GetStackOverflowReservedBytes(kRuntimeISA)
+  uint8_t* end = GetStackEnd<kNativeStackType>() + (implicit_overflow_check
+      ? GetStackOverflowReservedBytes(kRuntimeQuickCodeISA)
           : 0);
   if (kIsDebugBuild) {
     // In a debuggable build, but especially under ASAN, the access-checks interpreter has a
     // potentially humongous stack size. We don't want to take too much of the stack regularly,
     // so do not increase the regular reserved size (for compiled code etc) and only report the
     // virtually smaller stack to the interpreter here.
-    end += GetStackOverflowReservedBytes(kRuntimeISA);
+    end += GetStackOverflowReservedBytes(kRuntimeQuickCodeISA);
   }
   return end;
 }
 
+template <StackType stack_type>
 inline void Thread::ResetDefaultStackEnd() {
   // Our stacks grow down, so we want stack_end_ to be near there, but reserving enough room
   // to throw a StackOverflowError.
-  tlsPtr_.stack_end = tlsPtr_.stack_begin + GetStackOverflowReservedBytes(kRuntimeISA);
+  SetStackEnd<stack_type>(
+      GetStackBegin<stack_type>() + GetStackOverflowReservedBytes(kRuntimeQuickCodeISA));
+}
+
+template <StackType stack_type>
+inline void Thread::SetStackEndForStackOverflow()
+    REQUIRES_SHARED(Locks::mutator_lock_) {
+  // During stack overflow we allow use of the full stack.
+  if (GetStackEnd<stack_type>() == GetStackBegin<stack_type>()) {
+    // However, we seem to have already extended to use the full stack.
+    LOG(ERROR) << "Need to increase kStackOverflowReservedBytes (currently "
+               << GetStackOverflowReservedBytes(kRuntimeQuickCodeISA) << ")?";
+    DumpStack(LOG_STREAM(ERROR));
+    LOG(FATAL) << "Recursive stack overflow.";
+  }
+
+  SetStackEnd<stack_type>(GetStackBegin<stack_type>());
 }
 
 inline void Thread::NotifyOnThreadExit(ThreadExitFlag* tef) {

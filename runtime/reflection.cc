@@ -262,13 +262,13 @@ class ArgArray {
 #define DO_FIRST_ARG(boxed, get_fn, append) { \
           if (LIKELY(arg != nullptr && \
                      arg->GetClass() == WellKnownClasses::java_lang_##boxed)) { \
-            ArtField* primitive_field = arg->GetClass()->GetInstanceField(0); \
+            ArtField* primitive_field = WellKnownClasses::java_lang_##boxed##_value; \
             append(primitive_field-> get_fn(arg.Get()));
 
 #define DO_ARG(boxed, get_fn, append) \
           } else if (LIKELY(arg != nullptr && \
                             arg->GetClass() == WellKnownClasses::java_lang_##boxed)) { \
-            ArtField* primitive_field = arg->GetClass()->GetInstanceField(0); \
+            ArtField* primitive_field = WellKnownClasses::java_lang_##boxed##_value; \
             append(primitive_field-> get_fn(arg.Get()));
 
 #define DO_FAIL(expected) \
@@ -532,8 +532,8 @@ JValue InvokeWithVarArgs(const ScopedObjectAccessAlreadyRunnable& soa,
   // We want to make sure that the stack is not within a small distance from the
   // protected region in case we are calling into a leaf function whose stack
   // check has been elided.
-  if (UNLIKELY(__builtin_frame_address(0) < soa.Self()->GetStackEnd())) {
-    ThrowStackOverflowError(soa.Self());
+  if (UNLIKELY(__builtin_frame_address(0) < soa.Self()->GetStackEnd<kNativeStackType>())) {
+    ThrowStackOverflowError<kNativeStackType>(soa.Self());
     return JValue();
   }
   bool is_string_init = method->IsStringConstructor();
@@ -574,8 +574,8 @@ JValue InvokeWithJValues(const ScopedObjectAccessAlreadyRunnable& soa,
   // We want to make sure that the stack is not within a small distance from the
   // protected region in case we are calling into a leaf function whose stack
   // check has been elided.
-  if (UNLIKELY(__builtin_frame_address(0) < soa.Self()->GetStackEnd())) {
-    ThrowStackOverflowError(soa.Self());
+  if (UNLIKELY(__builtin_frame_address(0) < soa.Self()->GetStackEnd<kNativeStackType>())) {
+    ThrowStackOverflowError<kNativeStackType>(soa.Self());
     return JValue();
   }
   bool is_string_init = method->IsStringConstructor();
@@ -615,8 +615,8 @@ JValue InvokeVirtualOrInterfaceWithJValues(const ScopedObjectAccessAlreadyRunnab
   // We want to make sure that the stack is not within a small distance from the
   // protected region in case we are calling into a leaf function whose stack
   // check has been elided.
-  if (UNLIKELY(__builtin_frame_address(0) < soa.Self()->GetStackEnd())) {
-    ThrowStackOverflowError(soa.Self());
+  if (UNLIKELY(__builtin_frame_address(0) < soa.Self()->GetStackEnd<kNativeStackType>())) {
+    ThrowStackOverflowError<kNativeStackType>(soa.Self());
     return JValue();
   }
   ObjPtr<mirror::Object> receiver = soa.Decode<mirror::Object>(obj);
@@ -658,8 +658,8 @@ JValue InvokeVirtualOrInterfaceWithVarArgs(const ScopedObjectAccessAlreadyRunnab
   // We want to make sure that the stack is not within a small distance from the
   // protected region in case we are calling into a leaf function whose stack
   // check has been elided.
-  if (UNLIKELY(__builtin_frame_address(0) < soa.Self()->GetStackEnd())) {
-    ThrowStackOverflowError(soa.Self());
+  if (UNLIKELY(__builtin_frame_address(0) < soa.Self()->GetStackEnd<kNativeStackType>())) {
+    ThrowStackOverflowError<kNativeStackType>(soa.Self());
     return JValue();
   }
 
@@ -702,7 +702,7 @@ jobject InvokeMethod(const ScopedObjectAccessAlreadyRunnable& soa, jobject javaM
   // check has been elided.
   if (UNLIKELY(__builtin_frame_address(0) <
                soa.Self()->GetStackEndForInterpreter(true))) {
-    ThrowStackOverflowError(soa.Self());
+    ThrowStackOverflowError<kNativeStackType>(soa.Self());
     return nullptr;
   }
 
@@ -797,7 +797,7 @@ void InvokeConstructor(const ScopedObjectAccessAlreadyRunnable& soa,
   // protected region in case we are calling into a leaf function whose stack
   // check has been elided.
   if (UNLIKELY(__builtin_frame_address(0) < soa.Self()->GetStackEndForInterpreter(true))) {
-    ThrowStackOverflowError(soa.Self());
+    ThrowStackOverflowError<kNativeStackType>(soa.Self());
     return;
   }
 
@@ -952,31 +952,30 @@ static bool UnboxPrimitive(ObjPtr<mirror::Object> o,
   JValue boxed_value;
   ObjPtr<mirror::Class> klass = o->GetClass();
   Primitive::Type primitive_type;
-  ArtField* primitive_field = &klass->GetIFieldsPtr()->At(0);
   if (klass == WellKnownClasses::java_lang_Boolean) {
     primitive_type = Primitive::kPrimBoolean;
-    boxed_value.SetZ(primitive_field->GetBoolean(o));
+    boxed_value.SetZ(WellKnownClasses::java_lang_Boolean_value->GetBoolean(o));
   } else if (klass == WellKnownClasses::java_lang_Byte) {
     primitive_type = Primitive::kPrimByte;
-    boxed_value.SetB(primitive_field->GetByte(o));
+    boxed_value.SetB(WellKnownClasses::java_lang_Byte_value->GetByte(o));
   } else if (klass == WellKnownClasses::java_lang_Character) {
     primitive_type = Primitive::kPrimChar;
-    boxed_value.SetC(primitive_field->GetChar(o));
+    boxed_value.SetC(WellKnownClasses::java_lang_Character_value->GetChar(o));
   } else if (klass == WellKnownClasses::java_lang_Float) {
     primitive_type = Primitive::kPrimFloat;
-    boxed_value.SetF(primitive_field->GetFloat(o));
+    boxed_value.SetF(WellKnownClasses::java_lang_Float_value->GetFloat(o));
   } else if (klass == WellKnownClasses::java_lang_Double) {
     primitive_type = Primitive::kPrimDouble;
-    boxed_value.SetD(primitive_field->GetDouble(o));
+    boxed_value.SetD(WellKnownClasses::java_lang_Double_value->GetDouble(o));
   } else if (klass == WellKnownClasses::java_lang_Integer) {
     primitive_type = Primitive::kPrimInt;
-    boxed_value.SetI(primitive_field->GetInt(o));
+    boxed_value.SetI(WellKnownClasses::java_lang_Integer_value->GetInt(o));
   } else if (klass == WellKnownClasses::java_lang_Long) {
     primitive_type = Primitive::kPrimLong;
-    boxed_value.SetJ(primitive_field->GetLong(o));
+    boxed_value.SetJ(WellKnownClasses::java_lang_Long_value->GetLong(o));
   } else if (klass == WellKnownClasses::java_lang_Short) {
     primitive_type = Primitive::kPrimShort;
-    boxed_value.SetS(primitive_field->GetShort(o));
+    boxed_value.SetS(WellKnownClasses::java_lang_Short_value->GetShort(o));
   } else {
     std::string temp;
     ThrowIllegalArgumentException(

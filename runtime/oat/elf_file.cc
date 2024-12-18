@@ -1116,9 +1116,9 @@ bool ElfFileImpl<ElfTypes>::Load(File* file,
 
   if (executable) {
     InstructionSet elf_ISA = GetInstructionSetFromELF(GetHeader().e_machine, GetHeader().e_flags);
-    if (elf_ISA != kRuntimeISA) {
+    if (elf_ISA != kRuntimeQuickCodeISA) {
       std::ostringstream oss;
-      oss << "Expected ISA " << kRuntimeISA << " but found " << elf_ISA;
+      oss << "Expected ISA " << kRuntimeQuickCodeISA << " but found " << elf_ISA;
       *error_msg = oss.str();
       return false;
     }
@@ -1687,6 +1687,8 @@ bool ElfFile::GetLoadedSize(size_t* size, std::string* error_msg) const {
 size_t ElfFile::GetElfSegmentAlignmentFromFile() const {
   DELEGATE_TO_IMPL(GetElfSegmentAlignmentFromFile);
 }
+
+const uint8_t* ElfFile::GetBaseAddress() const { DELEGATE_TO_IMPL(GetBaseAddress); }
 
 bool ElfFile::Strip(File* file, std::string* error_msg) {
   std::unique_ptr<ElfFile> elf_file(ElfFile::Open(file, true, false, /*low_4gb=*/false, error_msg));

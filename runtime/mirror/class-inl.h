@@ -596,6 +596,9 @@ inline ArtMethod* Class::FindVirtualMethodForInterface(ArtMethod* method,
 inline ArtMethod* Class::FindVirtualMethodForVirtual(ArtMethod* method, PointerSize pointer_size) {
   // Only miranda or default methods may come from interfaces and be used as a virtual.
   DCHECK(!method->GetDeclaringClass()->IsInterface() || method->IsDefault() || method->IsMiranda());
+  DCHECK(method->GetDeclaringClass()->IsAssignableFrom(this))
+      << "Method " << method->PrettyMethod()
+      << " is not declared in " << PrettyDescriptor() << " or its super classes";
   // The argument method may from a super class.
   // Use the index to a potentially overridden one for this instance's class.
   return GetVTableEntry(method->GetMethodIndex(), pointer_size);
@@ -603,6 +606,9 @@ inline ArtMethod* Class::FindVirtualMethodForVirtual(ArtMethod* method, PointerS
 
 inline ArtMethod* Class::FindVirtualMethodForSuper(ArtMethod* method, PointerSize pointer_size) {
   DCHECK(!method->GetDeclaringClass()->IsInterface());
+  DCHECK(method->GetDeclaringClass()->IsAssignableFrom(this))
+      << "Method " << method->PrettyMethod()
+      << " is not declared in " << PrettyDescriptor() << " or its super classes";
   return GetSuperClass()->GetVTableEntry(method->GetMethodIndex(), pointer_size);
 }
 
@@ -953,26 +959,26 @@ inline std::string_view Class::GetDescriptorView() {
   return GetDexFile().GetTypeDescriptorView(GetDexTypeIndex());
 }
 
-inline bool Class::DescriptorEquals(const char* match) {
+inline bool Class::DescriptorEquals(std::string_view match) {
   ObjPtr<mirror::Class> klass = this;
   while (klass->IsArrayClass()) {
-    if (match[0] != '[') {
+    if (UNLIKELY(match.empty()) || match[0] != '[') {
       return false;
     }
-    ++match;
+    match.remove_prefix(1u);
     // No read barrier needed, we're reading a chain of constant references for comparison
     // with null. Then we follow up below with reading constant references to read constant
     // primitive data in both proxy and non-proxy paths. See ReadBarrierOption.
     klass = klass->GetComponentType<kDefaultVerifyFlags, kWithoutReadBarrier>();
   }
   if (klass->IsPrimitive()) {
-    return strcmp(Primitive::Descriptor(klass->GetPrimitiveType()), match) == 0;
-  } else if (klass->IsProxyClass()) {
+    return match.length() == 1u && match[0] == Primitive::Descriptor(klass->GetPrimitiveType())[0];
+  } else if (UNLIKELY(klass->IsProxyClass())) {
     return klass->ProxyDescriptorEquals(match);
   } else {
     const DexFile& dex_file = klass->GetDexFile();
     const dex::TypeId& type_id = dex_file.GetTypeId(klass->GetDexTypeIndex());
-    return strcmp(dex_file.GetTypeDescriptor(type_id), match) == 0;
+    return dex_file.GetTypeDescriptorView(type_id) == match;
   }
 }
 
@@ -1278,7 +1284,7 @@ inline void Class::FixupNativePointers(Class* dest,
 }
 
 inline bool Class::CanAccess(ObjPtr<Class> that) {
-  return that->IsPublic() || this->IsInSamePackage(that);
+  return this == that || that->IsPublic() || this->IsInSamePackage(that);
 }
 
 
