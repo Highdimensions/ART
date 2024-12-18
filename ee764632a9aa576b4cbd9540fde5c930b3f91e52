@@ -1,0 +1,268 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "daf16bd9_c9671ee6",
+        "filename": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2024-12-18T00:35:19Z",
+      "side": 1,
+      "message": "You could call this in \u0027addFrame\u0027 instead of requiring a separate call to addMethodMapping?",
+      "range": {
+        "startLine": 162,
+        "startChar": 5,
+        "endLine": 162,
+        "endChar": 60
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "048279b0_e354050e",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
+              "range": {
+                "startLine": 144,
+                "startChar": 0,
+                "endLine": 144,
+                "endChar": 0
+              },
+              "replacement": "        mMethodMap.put(obfuscatedMethodName, clearMethodName);\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
+              "range": {
+                "startLine": 160,
+                "startChar": 0,
+                "endLine": 164,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
+              "range": {
+                "startLine": 356,
+                "startChar": 0,
+                "endLine": 357,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "ee764632a9aa576b4cbd9540fde5c930b3f91e52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4ebda9b_e7ea551d",
+        "filename": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2024-12-18T00:35:19Z",
+      "side": 1,
+      "message": "Is it gauranteed that all methods with the same obfuscatedName will have the same clearName? Is it possible that the obfuscated name is a function of the method signature as well?",
+      "range": {
+        "startLine": 356,
+        "startChar": 53,
+        "endLine": 356,
+        "endChar": 62
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "d37b0833_bde147fb",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
+              "range": {
+                "startLine": 104,
+                "startChar": 0,
+                "endLine": 107,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
+              "range": {
+                "startLine": 156,
+                "startChar": 0,
+                "endLine": 164,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
+              "range": {
+                "startLine": 356,
+                "startChar": 0,
+                "endLine": 357,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
+              "range": {
+                "startLine": 364,
+                "startChar": 0,
+                "endLine": 381,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "ee764632a9aa576b4cbd9540fde5c930b3f91e52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9898ed1_ca5656c2",
+        "filename": "tools/ahat/src/test/com/android/ahat/ProguardMapTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2024-12-18T00:35:19Z",
+      "side": 1,
+      "message": "Move this to runNewProguardMap along side the other \"// An empty proguard map should not deobfuscate anything.\" tests instead of adding a separate test case?",
+      "range": {
+        "startLine": 200,
+        "startChar": 4,
+        "endLine": 201,
+        "endChar": 57
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e9fca4f4_cb7c8102",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/test/com/android/ahat/ProguardMapTest.java",
+              "range": {
+                "startLine": 72,
+                "startChar": 0,
+                "endLine": 72,
+                "endChar": 0
+              },
+              "replacement": "    assertEquals(\"mymethod\", map.getClearMethodName(\"foo.bar.Sludge\", \"mymethod\"));\n    assertEquals(\"mymethod\", map.getClearMethodName(\"fooBarSludge\", \"mymethod\"));\n"
+            },
+            {
+              "path": "tools/ahat/src/test/com/android/ahat/ProguardMapTest.java",
+              "range": {
+                "startLine": 87,
+                "startChar": 0,
+                "endLine": 87,
+                "endChar": 0
+              },
+              "replacement": "    assertEquals(\"mymethod\", map.getClearMethodName(\"foo.bar.Sludge\", \"mymethod\"));\n    assertEquals(\"mymethod\", map.getClearMethodName(\"fooBarSludge\", \"mymethod\"));\n"
+            },
+            {
+              "path": "tools/ahat/src/test/com/android/ahat/ProguardMapTest.java",
+              "range": {
+                "startLine": 193,
+                "startChar": 0,
+                "endLine": 203,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/test/com/android/ahat/ProguardMapTest.java",
+              "range": {
+                "startLine": 225,
+                "startChar": 0,
+                "endLine": 225,
+                "endChar": 0
+              },
+              "replacement": "    assertEquals(\"mymethod\", map.getClearMethodName(\"foo.bar.Sludge\", \"mymethod\"));\n    assertEquals(\"mymethod\", map.getClearMethodName(\"fooBarSludge\", \"mymethod\"));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ee764632a9aa576b4cbd9540fde5c930b3f91e52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a43d0a6_34a2ade7",
+        "filename": "tools/ahat/src/test/com/android/ahat/ProguardMapTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2024-12-18T00:35:19Z",
+      "side": 1,
+      "message": "Move into runNewProguardMap so it\u0027s covered for both test map formats?",
+      "range": {
+        "startLine": 213,
+        "startChar": 5,
+        "endLine": 214,
+        "endChar": 54
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e145fa94_af40e63e",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/test/com/android/ahat/ProguardMapTest.java",
+              "range": {
+                "startLine": 181,
+                "startChar": 0,
+                "endLine": 181,
+                "endChar": 0
+              },
+              "replacement": "    // Test deobfuscation of methods\n    assertEquals(\"prim_type_field\", map.getFieldName(\"class.with.only.Fields\", \"a\"));\n    assertEquals(\"prim_array_type_field\", map.getFieldName(\"class.with.only.Fields\", \"b\"));\n    assertEquals(\"class_type_field\", map.getFieldName(\"class.with.only.Fields\", \"c\"));\n    assertEquals(\"array_type_field\", map.getFieldName(\"class.with.only.Fields\", \"d\"));\n    assertEquals(\"longObfuscatedNameField\", map.getFieldName(\"class.with.only.Fields\", \"abc\"));\n    assertEquals(\"some_field\", map.getFieldName(\"class.with.Methods\", \"a\"));\n\n"
+            },
+            {
+              "path": "tools/ahat/src/test/com/android/ahat/ProguardMapTest.java",
+              "range": {
+                "startLine": 186,
+                "startChar": 0,
+                "endLine": 186,
+                "endChar": 0
+              },
+              "replacement": "\n    // Test deobfuscation of methods\n    assertEquals(\"prim_type_field\", map.getFieldName(\"class.with.only.Fields\", \"a\"));\n    assertEquals(\"prim_array_type_field\", map.getFieldName(\"class.with.only.Fields\", \"b\"));\n    assertEquals(\"class_type_field\", map.getFieldName(\"class.with.only.Fields\", \"c\"));\n    assertEquals(\"array_type_field\", map.getFieldName(\"class.with.only.Fields\", \"d\"));\n    assertEquals(\"longObfuscatedNameField\", map.getFieldName(\"class.with.only.Fields\", \"abc\"));\n    assertEquals(\"some_field\", map.getFieldName(\"class.with.Methods\", \"a\"));\n\n    // Test deobfuscation of methods\n    assertEquals(\"boringMethod\", map.getClearMethodName(\"class.with.Methods\", \"m\"));\n"
+            },
+            {
+              "path": "tools/ahat/src/test/com/android/ahat/ProguardMapTest.java",
+              "range": {
+                "startLine": 334,
+                "startChar": 0,
+                "endLine": 334,
+                "endChar": 0
+              },
+              "replacement": "    // Test deobfuscation of methods\n    assertEquals(\"boringMethod\", map.getClearMethodName(\"class.with.Methods\", \"m\"));\n\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ee764632a9aa576b4cbd9540fde5c930b3f91e52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
