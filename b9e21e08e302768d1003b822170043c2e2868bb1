@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb280e98_687cc013",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 6001,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2024-12-18T12:50:27Z",
+      "side": 1,
+      "message": "Is it used?",
+      "revId": "b9e21e08e302768d1003b822170043c2e2868bb1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
