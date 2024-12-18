@@ -608,13 +608,13 @@ class RosAlloc {
     DCHECK_LE(base_, addr);
     DCHECK_LT(addr, base_ + capacity_);
     size_t byte_offset = reinterpret_cast<const uint8_t*>(addr) - base_;
-    DCHECK_EQ(ModuloPageSize(byte_offset), static_cast<size_t>(0));
-    return DivideByPageSize(byte_offset);
+    DCHECK_EQ(ModuloKernelPageSize(byte_offset), static_cast<size_t>(0));
+    return DivideByKernelPageSize(byte_offset);
   }
   // Returns the page map index from an address with rounding.
   size_t RoundDownToPageMapIndex(const void* addr) const {
     DCHECK(base_ <= addr && addr < reinterpret_cast<uint8_t*>(base_) + capacity_);
-    return DivideByPageSize(reinterpret_cast<uintptr_t>(addr) - reinterpret_cast<uintptr_t>(base_));
+    return DivideByKernelPageSize(reinterpret_cast<uintptr_t>(addr) - reinterpret_cast<uintptr_t>(base_));
   }
 
   // A memory allocation request larger than this size is treated as a large object and allocated

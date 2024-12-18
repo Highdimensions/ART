@@ -725,9 +725,9 @@ static bool IsAddressKnownBackedByFileOrShared(const void* addr) {
   // We use the Linux pagemap interface for knowing if an address is backed
   // by a file or is shared. See:
   // https://www.kernel.org/doc/Documentation/vm/pagemap.txt
-  const size_t page_size = MemMap::GetPageSize();
-  uintptr_t vmstart = reinterpret_cast<uintptr_t>(AlignDown(addr, page_size));
-  off_t index = (vmstart / page_size) * sizeof(uint64_t);
+  const size_t kernel_page_size = KernelPageSize();
+  uintptr_t vmstart = reinterpret_cast<uintptr_t>(AlignDown(addr, kernel_page_size));
+  off_t index = (vmstart / kernel_page_size) * sizeof(uint64_t);
   android::base::unique_fd pagemap(open("/proc/self/pagemap", O_RDONLY | O_CLOEXEC));
   if (pagemap == -1) {
     return false;

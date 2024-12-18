@@ -107,6 +107,24 @@ static constexpr ALWAYS_INLINE size_t ModuloPageSize(size_t num) {
   return (num & (gPageSize-1));
 }
 
+#if defined(__x86_64__)
+static constexpr ALWAYS_INLINE size_t KernelPageSize() {
+  return 4096;
+}
+#else
+static constexpr ALWAYS_INLINE size_t KernelPageSize() {
+  return gPageSize;
+}
+#endif
+
+static constexpr ALWAYS_INLINE size_t DivideByKernelPageSize(size_t num) {
+  return (num >> WhichPowerOf2(static_cast<size_t>(KernelPageSize())));
+}
+
+static constexpr ALWAYS_INLINE size_t ModuloKernelPageSize(size_t num) {
+  return (num & (KernelPageSize()-1));
+}
+
 // Returns whether the given memory offset can be used for generating
 // an implicit null check.
 static inline bool CanDoImplicitNullCheckOn(uintptr_t offset) {
