@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0fc1adee_934fd696",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2024-12-18T19:40:58Z",
+      "side": 1,
+      "message": "Responded on the other CL. Let\u0027s see what the NDK API review has to say about it.",
+      "parentUuid": "5cd03c7f_a7721f54",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 69
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4bc4c838_5a42ecff",
         "filename": "libartpalette/include/palette/palette_method_list.h",
         "patchSetId": 1

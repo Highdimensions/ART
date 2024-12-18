@@ -16,6 +16,120 @@
       "message": "Fixed a bunch of things. Thanks!\nI have the same recurring question about whether each new function is intended to have its own section in a bunch of places.",
       "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6db27ed2_98d1b84f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2024-12-18T19:40:58Z",
+      "side": 1,
+      "message": "Presubmits show some compilation errors in the test.",
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aed9b25b_5b46380d",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2024-12-18T19:40:58Z",
+      "side": 1,
+      "message": "Please fix copy\u0027n\u0027paste errors.",
+      "range": {
+        "startLine": 188,
+        "startChar": 19,
+        "endLine": 188,
+        "endChar": 29
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e87afb77_b3583f99",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartpalette/apex/palette_test.cc",
+              "range": {
+                "startLine": 188,
+                "startChar": 0,
+                "endLine": 189,
+                "endChar": 0
+              },
+              "replacement": "  GTEST_SKIP() \u003c\u003c \"GetPriorityMapping is only supported on Android\";\n"
+            },
+            {
+              "path": "libartpalette/apex/palette_test.cc",
+              "range": {
+                "startLine": 193,
+                "startChar": 0,
+                "endLine": 194,
+                "endChar": 0
+              },
+              "replacement": "    GTEST_SKIP() \u003c\u003c \"GetPriorityMapping is only supported on API 36+\";\n"
+            }
+          ]
+        }
+      ],
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bf37e6b_8a546a26",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2024-12-18T19:40:58Z",
+      "side": 1,
+      "message": "Is this correct? The check seems to contradict it.",
+      "range": {
+        "startLine": 199,
+        "startChar": 47,
+        "endLine": 199,
+        "endChar": 95
+      },
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "887a258d_15c46bc3",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2024-12-18T19:40:58Z",
+      "side": 1,
+      "message": "I\u0027ll take your word for that these strict order relations (and those on lines 198-199) are guaranteed valid.",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 210,
+        "endChar": 32
+      },
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
