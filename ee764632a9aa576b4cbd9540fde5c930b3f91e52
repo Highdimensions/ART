@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a34e7584_2fbae260",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2024-12-18T00:35:47Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 7,
+        "startChar": 20,
+        "endLine": 7,
+        "endChar": 35
+      },
+      "revId": "ee764632a9aa576b4cbd9540fde5c930b3f91e52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "daf16bd9_c9671ee6",
         "filename": "tools/ahat/src/main/com/android/ahat/proguard/ProguardMap.java",
         "patchSetId": 2
