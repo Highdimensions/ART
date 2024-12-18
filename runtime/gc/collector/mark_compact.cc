@@ -288,6 +288,13 @@ static bool SysPropSaysUffdGc() {
       cached_properties, "persist.device_config.runtime_native_boot.enable_uffd_gc_2", false);
   bool phenotype_force_disable = GetCachedBoolProperty(
       cached_properties, "persist.device_config.runtime_native_boot.force_disable_uffd_gc", false);
+#if defined(__x86_64__)
+  // If emulating larger page size on x86_64, disable UFFD GC, which needs to operate on
+  // per-page (PTE) level.
+  if (getpagesize() > 4096) {
+    phenotype_force_disable = true;
+  }
+#endif
   bool build_enable = GetBoolProperty("ro.dalvik.vm.enable_uffd_gc", false);
   bool is_at_most_u = !IsAtLeastV();
   return (phenotype_enable || build_enable || is_at_most_u) && !phenotype_force_disable;
