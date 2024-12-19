@@ -34,8 +34,8 @@
 namespace art HIDDEN {
 
 const uint8_t ImageHeader::kImageMagic[] = { 'a', 'r', 't', '\n' };
-// Revert dex cache change.
-const uint8_t ImageHeader::kImageVersion[] = { '1', '1', '8', '\0' };
+// Reduce alignment for .rodata section in OAT files.
+const uint8_t ImageHeader::kImageVersion[] = { '1', '1', '9', '\0' };
 
 ImageHeader::ImageHeader(uint32_t image_reservation_size,
                          uint32_t component_count,
@@ -72,7 +72,6 @@ ImageHeader::ImageHeader(uint32_t image_reservation_size,
   CHECK_EQ(image_begin, RoundUp(image_begin, kElfSegmentAlignment));
   if (oat_checksum != 0u) {
     CHECK_EQ(oat_file_begin, RoundUp(oat_file_begin, kElfSegmentAlignment));
-    CHECK_EQ(oat_data_begin, RoundUp(oat_data_begin, kElfSegmentAlignment));
     CHECK_LT(image_roots, oat_file_begin);
     CHECK_LE(oat_file_begin, oat_data_begin);
     CHECK_LT(oat_data_begin, oat_data_end);
