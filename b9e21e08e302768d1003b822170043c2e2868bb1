@@ -52,6 +52,24 @@
       "parentUuid": "7b7be989_ca96dec9",
       "revId": "b9e21e08e302768d1003b822170043c2e2868bb1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0a88b6b_025f207c",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 6001,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2024-12-19T12:04:18Z",
+      "side": 1,
+      "message": "Sorry, I forgot that it\u0027s implicitly used with the macro.",
+      "parentUuid": "7b7be989_ca96dec9",
+      "revId": "b9e21e08e302768d1003b822170043c2e2868bb1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
