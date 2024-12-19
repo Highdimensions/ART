@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0006d564_1274b813",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-19T00:06:55Z",
+      "side": 1,
+      "message": "Is this really going to be useful? IIUC, the emulation very fundamentally exports a libc/kernel API that fails to meet its spec. /proc/self/pagemap has semantics that are defined in terms of the system page size. Client code cannot be expected to consider the fact that the results are expressed in terms of a different kernel page size. Userfaultfd has similar issues. Basically it looks to me like the 16KB page emulation is incorrect, and we\u0027re trying to get around this by patching user code. There\u0027s a lot of the latter, so I have my doubts about it. And there\u0027s a potential to introduce lots of subtle hard-to-diagnose bugs.\n\nMy intuition here is that it would make more sense to pursue some combination of the following:\n\n1) Correctly emulate the 16K page API. Make /proc/self/pagemap return the right thing. I\u0027m not sure whether it\u0027s sufficiently feasible to intercept reads for pagemap, and it seems at least really hard for userfaultfd.\n\n2) Return ENOSYS or ENOENT from the troublesome calls, and make user-level deal with that, possibly with the help of a differently-name facility that exports the 4K-page primitives. This should at least cause naive user code to fail cleanly, rather than silently returning an incorrect answer. ART may already have fallbacks for that case; I\u0027m not sure.",
+      "revId": "b96b27419527da6fb77ff291db5913a179650e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
