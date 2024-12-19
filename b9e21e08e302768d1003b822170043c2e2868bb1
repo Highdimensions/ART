@@ -34,6 +34,24 @@
       "parentUuid": "eb280e98_687cc013",
       "revId": "b9e21e08e302768d1003b822170043c2e2868bb1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f49153cf_491cfc0e",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 6001,
+      "author": {
+        "id": 3788076
+      },
+      "writtenOn": "2024-12-19T11:48:58Z",
+      "side": 1,
+      "message": "Hello comrade Anton.\n\nIt\u0027s used in `__` macro defined in [1] (please note that `__` is defined twice in that file). AFAIK unused variables / arguments are treated as an error in ART\u0027s build configuration.\n\nDoes it cause any issues? \n\nFYI: I am OOO till 2025, answers might be delayed, sorry.\n\n[1] https://android.googlesource.com/platform/art/+/refs/changes/23/3368023/8/compiler/optimizing/intrinsics_arm64.cc#209",
+      "parentUuid": "7b7be989_ca96dec9",
+      "revId": "b9e21e08e302768d1003b822170043c2e2868bb1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
