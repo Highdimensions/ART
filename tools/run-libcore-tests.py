@@ -151,8 +151,6 @@ LIBCORE_TEST_NAMES = [
   "test.java.lang.ref.EnqueuePollRaceTest",
   "test.java.lang.ref.ReferenceCloneTest",
   "test.java.lang.ref.ReferenceEnqueuePendingTest",
-  # test.java.lang.runtime
-  "test.java.lang.runtime.SwitchBootstrapsTest",
   # test.java.math
   "test.java.math.BigDecimal",
   # Sharded test.java.math.BigInteger
