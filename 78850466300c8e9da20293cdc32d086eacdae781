@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84de0826_19dc6397",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1065473
+      },
+      "writtenOn": "2024-12-19T17:36:01Z",
+      "side": 1,
+      "message": "PTAL (the test issues were resolved in separate CLs)",
+      "revId": "78850466300c8e9da20293cdc32d086eacdae781",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
