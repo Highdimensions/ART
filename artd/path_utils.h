@@ -19,6 +19,7 @@
 
 #include <string>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "aidl/com/android/server/art/BnArtd.h"
@@ -112,7 +113,7 @@ std::conditional_t<std::is_const_v<T>, bool, bool&> PreRebootFlag(T& profile_pat
   }
   // This should never happen. Just in case we get a non-enumerator value.
   LOG(FATAL) << ART_FORMAT("Unexpected writable profile path type {}",
-                           fmt::underlying(profile_path.getTag()));
+                           std::to_underlying(profile_path.getTag()));
 }
 
 template bool PreRebootFlag(

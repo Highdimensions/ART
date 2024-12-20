@@ -20,7 +20,8 @@
 #include <stddef.h>  // for size_t
 #include <unistd.h>  // for TEMP_FAILURE_RETRY
 
-#include "android-base/format.h"
+#include <format>
+
 #include "android-base/macros.h"
 #include "android-base/thread_annotations.h"
 
@@ -34,7 +35,7 @@ friend class test_set_name##_##individual_test##_Test
 template<typename T> ART_FRIEND_TEST(test_set_name, individual_test)
 
 // Shorthand for formatting with compile time checking of the format string
-#define ART_FORMAT(str, ...) ::fmt::format(FMT_STRING(str), __VA_ARGS__)
+#define ART_FORMAT(str, ...) ::std::format((str), __VA_ARGS__)
 
 // A macro to disallow new and delete operators for a class. It goes in the private: declarations.
 // NOTE: Providing placement new (and matching delete) for constructing container elements.
