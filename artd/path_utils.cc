@@ -18,6 +18,7 @@
 
 #include <filesystem>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "aidl/com/android/server/art/ArtConstants.h"
@@ -257,7 +258,7 @@ Result<std::string> BuildWritableProfilePath(const WritableProfilePath& profile_
   }
   // This should never happen. Just in case we get a non-enumerator value.
   LOG(FATAL) << ART_FORMAT("Unexpected writable profile path type {}",
-                           fmt::underlying(profile_path.getTag()));
+                           std::to_underlying(profile_path.getTag()));
 }
 
 Result<std::string> BuildFinalProfilePath(const TmpProfilePath& tmp_profile_path) {
@@ -295,7 +296,7 @@ Result<std::string> BuildProfileOrDmPath(const ProfilePath& profile_path) {
   }
   // This should never happen. Just in case we get a non-enumerator value.
   LOG(FATAL) << ART_FORMAT("Unexpected profile path type {}",
-                           fmt::underlying(profile_path.getTag()));
+                           std::to_underlying(profile_path.getTag()));
 }
 
 Result<std::string> BuildVdexPath(const VdexPath& vdex_path) {
@@ -320,7 +321,7 @@ bool PreRebootFlag(const ProfilePath& profile_path) {
   }
   // This should never happen. Just in case we get a non-enumerator value.
   LOG(FATAL) << ART_FORMAT("Unexpected profile path type {}",
-                           fmt::underlying(profile_path.getTag()));
+                           std::to_underlying(profile_path.getTag()));
 }
 
 bool PreRebootFlag(const TmpProfilePath& tmp_profile_path) {

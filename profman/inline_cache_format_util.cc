@@ -16,6 +16,8 @@
 
 #include "inline_cache_format_util.h"
 
+#include <sstream>
+
 #include "profile/profile_compilation_info.h"
 
 namespace art {
