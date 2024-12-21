@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a78cb04_f9067d80",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-21T01:02:34Z",
+      "side": 1,
+      "message": "Yes. I was still trying to deal with a problem with my build setup. Hopefully all fixed now.",
+      "parentUuid": "6db27ed2_98d1b84f",
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aed9b25b_5b46380d",
@@ -86,6 +104,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ba30c47_39a1e080",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-21T01:02:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aed9b25b_5b46380d",
+      "range": {
+        "startLine": 188,
+        "startChar": 19,
+        "endLine": 188,
+        "endChar": 29
+      },
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2bf37e6b_8a546a26",
@@ -111,6 +153,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "a6292d10_4c867296",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-21T01:02:34Z",
+      "side": 1,
+      "message": "No. Fixed. Thanks!",
+      "parentUuid": "2bf37e6b_8a546a26",
+      "range": {
+        "startLine": 199,
+        "startChar": 47,
+        "endLine": 199,
+        "endChar": 95
+      },
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "887a258d_15c46bc3",
         "filename": "libartpalette/apex/palette_test.cc",
         "patchSetId": 2
@@ -122,6 +188,30 @@
       "writtenOn": "2024-12-18T19:40:58Z",
       "side": 1,
       "message": "I\u0027ll take your word for that these strict order relations (and those on lines 198-199) are guaranteed valid.",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 210,
+        "endChar": 32
+      },
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb3d68cc_83584f72",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-21T01:02:34Z",
+      "side": 1,
+      "message": "Actually, I believe there was a typo. Mostly to convince myself. since this confusing:\nThe first five elements sould be replaced by the smaller elements 2 to the right. The new result[0] is the old result[2], which must be \u003c old result[1], since niceness values are strictly monotoncally decreasing.\nresult[5] should not be affected. Fixed that.",
+      "parentUuid": "887a258d_15c46bc3",
       "range": {
         "startLine": 209,
         "startChar": 0,
