@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a7f9239_6f0152ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-21T01:36:10Z",
+      "side": 1,
+      "message": "This is presumably analternative/replacement for aosp/2308886, which doesn\u0027t otherwise perturb the LOS data structure? Can you say roughly how much time these apps spend in SweepLargeObjects?",
+      "revId": "e3d7738e6130b12fa3f1e45bce1d98e1508a926e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
