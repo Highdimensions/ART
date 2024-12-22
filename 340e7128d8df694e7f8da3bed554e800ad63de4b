@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "35c6b522_64034e25",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1334152
+      },
+      "writtenOn": "2024-12-22T15:13:54Z",
+      "side": 1,
+      "message": "I don\u0027t really have enough context here about fmtlib, but at a minimum the build errors need addressing.",
+      "revId": "340e7128d8df694e7f8da3bed554e800ad63de4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
