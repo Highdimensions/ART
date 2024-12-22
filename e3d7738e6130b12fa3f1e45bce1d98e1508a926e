@@ -16,6 +16,46 @@
       "message": "This is presumably analternative/replacement for aosp/2308886, which doesn\u0027t otherwise perturb the LOS data structure? Can you say roughly how much time these apps spend in SweepLargeObjects?",
       "revId": "e3d7738e6130b12fa3f1e45bce1d98e1508a926e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c44e785d_0954d0fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-22T05:23:27Z",
+      "side": 1,
+      "message": "There may be a real failure here in the 175-alloc-big-bignums run-test with hwasan. I did not investigate:\n\nThe actual standard output does not match the expected standard output for test `art-run-test-175-alloc-big-bignums`:\n--- expected-stdout.txt\n+++ stdout\n@@ -1,1 +1,1 @@\n-Test complete\n+Wrong answer length: 15",
+      "revId": "e3d7738e6130b12fa3f1e45bce1d98e1508a926e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adbf28c9_f92098fa",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-22T05:23:27Z",
+      "side": 1,
+      "message": "I\u0027d prefer to increment i only in the loop body, rather than in both lopp body and header. It seems clearer to me, but I don\u0027t feel that strongly about it.",
+      "range": {
+        "startLine": 460,
+        "startChar": 35,
+        "endLine": 460,
+        "endChar": 38
+      },
+      "revId": "e3d7738e6130b12fa3f1e45bce1d98e1508a926e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
