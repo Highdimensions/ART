@@ -193,6 +193,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b4234915_fda3c619",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-23T17:43:15Z",
+      "side": 1,
+      "message": "Sorry for the confusion. This is intended to be submitted with aosp/3312350. And I put them together in the same topic again for reviewing purposes. I was rearranging the topics to try to make sure there were not unintended dependencies. There are other CLs around that actually use the new API.",
+      "parentUuid": "53e7f215_7c378efd",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 69
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4bc4c838_5a42ecff",
         "filename": "libartpalette/include/palette/palette_method_list.h",
         "patchSetId": 1
