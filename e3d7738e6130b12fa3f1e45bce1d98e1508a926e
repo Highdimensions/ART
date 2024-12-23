@@ -35,6 +35,42 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "41858f8b_a1ac4f28",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1963346
+      },
+      "writtenOn": "2024-12-23T11:25:34Z",
+      "side": 1,
+      "message": "Yes, The time spent in SweepLargeObjects was roughly reduced from 2.3ms to 1.2ms",
+      "parentUuid": "0a7f9239_6f0152ef",
+      "revId": "e3d7738e6130b12fa3f1e45bce1d98e1508a926e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "796d5522_0673a180",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1963346
+      },
+      "writtenOn": "2024-12-23T11:25:34Z",
+      "side": 1,
+      "message": "This issue has been fixed",
+      "parentUuid": "c44e785d_0954d0fb",
+      "revId": "e3d7738e6130b12fa3f1e45bce1d98e1508a926e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "adbf28c9_f92098fa",
@@ -48,6 +84,30 @@
       "writtenOn": "2024-12-22T05:23:27Z",
       "side": 1,
       "message": "I\u0027d prefer to increment i only in the loop body, rather than in both lopp body and header. It seems clearer to me, but I don\u0027t feel that strongly about it.",
+      "range": {
+        "startLine": 460,
+        "startChar": 35,
+        "endLine": 460,
+        "endChar": 38
+      },
+      "revId": "e3d7738e6130b12fa3f1e45bce1d98e1508a926e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df43e662_e4b24a42",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1963346
+      },
+      "writtenOn": "2024-12-23T11:25:34Z",
+      "side": 1,
+      "message": "Modified as suggested",
+      "parentUuid": "adbf28c9_f92098fa",
       "range": {
         "startLine": 460,
         "startChar": 35,
