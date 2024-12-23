@@ -121,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "60e6d8ef_6534a0d7",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-23T01:39:05Z",
+      "side": 1,
+      "message": "I did add another header, and made them all consistent, sticking with level 36 for now.",
+      "parentUuid": "0fc1adee_934fd696",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 69
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4bc4c838_5a42ecff",
         "filename": "libartpalette/include/palette/palette_method_list.h",
         "patchSetId": 1
@@ -327,6 +351,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bfac1249_37b27445",
+        "filename": "libartpalette/libartpalette.map",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-23T01:39:05Z",
+      "side": 1,
+      "message": "Left this for now, because it would otherwise be inconsistent if the level doesn\u0027t change.",
+      "parentUuid": "61e28c59_0c2f1943",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 33
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7d815afa_ced29cba",
         "filename": "libartpalette/libartpalette.map",
         "patchSetId": 1
@@ -409,6 +457,30 @@
       "side": 1,
       "message": "Same question ...",
       "parentUuid": "fac0f50d_93b1a5f2",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 62
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b72a5d91_48975762",
+        "filename": "libartpalette/system/palette_fake.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-23T01:39:05Z",
+      "side": 1,
+      "message": "Done, as in the other version.",
+      "parentUuid": "ebcedddf_5677f5cb",
       "range": {
         "startLine": 144,
         "startChar": 0,

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32ea32ee_8001c0b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-23T01:39:05Z",
+      "side": 1,
+      "message": "Added a comment fix I had missed.\n\nRerunning presubmit with just this CL to make sure things don\u0027t preak without the libartpalette change.",
+      "revId": "84bd37b9375c64998ad81d2a98708a88e0af4595",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
