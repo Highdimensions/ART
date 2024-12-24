@@ -26,10 +26,15 @@ import static com.android.server.art.model.ArtFlags.DexoptFlags;
 import static com.android.server.art.model.Config.Callback;
 import static com.android.server.art.model.DexoptResult.DexContainerFileDexoptResult;
 
+import android.annotation.FlaggedApi;
 import android.annotation.NonNull;
 import android.annotation.Nullable;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.SigningInfo;
+import android.content.pm.SigningInfoException;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.os.RemoteException;
@@ -37,6 +42,8 @@ import android.os.ServiceSpecificException;
 import android.os.SystemProperties;
 import android.os.UserManager;
 import android.os.storage.StorageManager;
+import android.system.ErrnoException;
+import android.system.Os;
 
 import androidx.annotation.RequiresApi;
 
@@ -56,6 +63,7 @@ import dalvik.system.DexFile;
 
 import com.google.auto.value.AutoValue;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,6 +124,24 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                 String compilerFilter = adjustCompilerFilter(mParams.getCompilerFilter(), dexInfo);
                 DexMetadataInfo dmInfo =
                         mInjector.getDexMetadataHelper().getDexMetadataInfo(buildDmPath(dexInfo));
+
+                if (!mInjector.isPreReboot()) {
+                    for (Abi abi : getAllAbis(dexInfo)) {
+                        var target = DexoptTarget.<DexInfoType>builder()
+                                             .setDexInfo(dexInfo)
+                                             .setIsa(abi.isa())
+                                             .setIsInDalvikCache(isInDalvikCache)
+                                             .setCompilerFilter(compilerFilter)
+                                             .setDmPath(dmInfo.dmPath())
+                                             .build();
+
+                        PermissionSettings permissionSettings =
+                                getPermissionSettings(dexInfo, false /* canBePublic */);
+
+                        maybeCreateSdc(target, permissionSettings);
+                    }
+                }
+
                 if (compilerFilter.equals(DexoptParams.COMPILER_FILTER_NOOP)) {
                     mInjector.getReporterExecutor().execute(
                             ()
@@ -669,6 +695,24 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
     private void cleanupCurProfiles(@NonNull DexInfoType dexInfo) throws RemoteException {
         for (ProfilePath profile : getCurProfiles(dexInfo)) {
             mInjector.getArtd().deleteProfile(profile);
+        }
+    }
+
+    private void maybeCreateSdc(@NonNull DexoptTarget<DexInfoType> target,
+            @NonNull PermissionSettings permissionSettings) throws RemoteException {
+        if (!android.content.pm.Flags.cloudCompilationPm()) {
+            return;
+        }
+
+        String dexPath = target.dexInfo().dexPath();
+        OutputArtifacts outputArtifacts = AidlUtils.buildOutputArtifacts(dexPath, target.isa(),
+                target.isInDalvikCache(), permissionSettings, false /* isPreReboot */);
+        SecureDexMetadataPath sdmPath = AidlUtils.buildSecureDexMetadataPath(dexPath, target.isa());
+
+        try {
+            mInjector.getArtd().maybeCreateSdc(outputArtifacts, sdmPath);
+        } catch (ServiceSpecificException e) {
+            AsLog.e("Failed to create sdc for " + sdmPath, e);
         }
     }
 
