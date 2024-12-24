@@ -191,6 +191,12 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                                                                   oat_file_name,
                                                                   /*is_oat_location=*/true,
                                                                   /*use_fd=*/false));
+    info_list_.push_back(
+        std::make_unique<OatFileInfoBackedBySdm>(this,
+                                                 GetSdmFilename(dex_location_, isa),
+                                                 /*is_oat_location=*/true,
+                                                 GetDmFilename(dex_location_),
+                                                 GetSdcFilename(oat_file_name)));
   }
 
   if (!odex_file_name.empty()) {
@@ -202,6 +208,12 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                                                                   zip_fd,
                                                                   vdex_fd,
                                                                   oat_fd));
+    info_list_.push_back(
+        std::make_unique<OatFileInfoBackedBySdm>(this,
+                                                 GetSdmFilename(dex_location_, isa),
+                                                 /*is_oat_location=*/false,
+                                                 GetDmFilename(dex_location_),
+                                                 GetSdcFilename(odex_file_name)));
   }
 
   // When there is no odex/oat available (e.g., they are both out of date), we look for a useable
@@ -967,6 +979,10 @@ bool OatFileAssistant::OatFileInfoBackedByOat::FileExists() const {
   return use_fd_ || OatFileInfo::FileExists();
 }
 
+bool OatFileAssistant::OatFileInfoBackedBySdm::FileExists() const {
+  return OatFileInfo::FileExists() && OS::FileExists(sdc_filename_.c_str());
+}
+
 bool OatFileAssistant::OatFileInfoBackedByVdex::FileExists() const {
   return use_fd_ || OatFileInfo::FileExists();
 }
@@ -1024,6 +1040,51 @@ std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByOat::LoadFile(
                                                   oat_file_assistant_->dex_location_,
                                                   error_msg));
   }
+}
+
+static std::string GetFileDigest(const std::string& filename, std::string* error_msg) {
+  std::unique_ptr<File> file(OS::OpenFileForReading(filename.c_str()));
+  if (file == nullptr) {
+    *error_msg = ART_FORMAT("Failed to open file '{}': {}", filename, strerror(errno));
+    return "";
+  }
+
+  // If the file is in incremental-fs, the digest in the sdc file in the incremental-fs signature.
+  std::optional<bool> is_in_inc_fs = IsInIncFs(file->Fd(), error_msg);
+  if (!is_in_inc_fs.has_value()) {
+    return "";
+  }
+  if (*is_in_inc_fs) {
+    return GetIncFsSignature(file->Fd(), error_msg);
+  }
+
+  // Use fs-verity.
+  return GetFsVerityDigest(file->Fd(), error_msg);
+}
+
+std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedBySdm::LoadFile(
+    std::string* error_msg) const {
+  bool executable = oat_file_assistant_->load_executable_;
+  if (executable && oat_file_assistant_->only_load_trusted_executable_) {
+    executable = LocationIsTrusted(filename_, /*trust_art_apex_data_files=*/true);
+  }
+
+  std::string expected_digest;
+  if (!android::base::ReadFileToString(sdc_filename_, &expected_digest)) {
+    *error_msg = ART_FORMAT("Cannot open sdc file: {}", strerror(errno));
+    return nullptr;
+  }
+  std::string actual_digest = GetFileDigest(filename_, error_msg);
+  if (actual_digest.empty()) {
+    return nullptr;
+  }
+  if (actual_digest != expected_digest) {
+    *error_msg =
+        ART_FORMAT("Digest mismatch (expected: {}, actual: {})", expected_digest, actual_digest);
+    return nullptr;
+  }
+  return std::unique_ptr<OatFile>(OatFile::OpenFromSdm(
+      filename_, dm_filename_, oat_file_assistant_->dex_location_, executable, error_msg));
 }
 
 std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByVdex::LoadFile(

@@ -82,6 +82,7 @@
 #include "exec_utils.h"
 #include "file_utils.h"
 #include "fstab/fstab.h"
+#include "oat/oat_file.h"
 #include "oat/oat_file_assistant.h"
 #include "oat/oat_file_assistant_context.h"
 #include "odrefresh/odrefresh.h"
@@ -118,6 +119,7 @@ using ::aidl::com::android::server::art::OutputProfile;
 using ::aidl::com::android::server::art::PriorityClass;
 using ::aidl::com::android::server::art::ProfilePath;
 using ::aidl::com::android::server::art::RuntimeArtifactsPath;
+using ::aidl::com::android::server::art::SecureDexMetadataPath;
 using ::aidl::com::android::server::art::VdexPath;
 using ::android::base::Basename;
 using ::android::base::Dirname;
@@ -988,6 +990,89 @@ ndk::ScopedAStatus Artd::getDexoptNeeded(const std::string& in_dexFile,
     return NonFatal("Failed to open dex file: " + error_msg);
   }
   _aidl_return->hasDexCode = *has_dex_files;
+
+  return ScopedAStatus::ok();
+}
+
+static Result<std::string> GetFileDigest(int fd, bool enable_fsverify_if_needed) {
+  std::string error_msg;
+
+  // If the file is in incremental-fs, use the incremental-fs signature, as it contains a digest.
+  std::optional<bool> is_in_inc_fs = IsInIncFs(fd, &error_msg);
+  if (!is_in_inc_fs.has_value()) {
+    return Errorf("{}", error_msg);
+  }
+  if (*is_in_inc_fs) {
+    std::string signature = GetIncFsSignature(fd, &error_msg);
+    if (signature.empty()) {
+      return Errorf("{}", error_msg);
+    }
+    return signature;
+  }
+
+  // Use fs-verity.
+  if (enable_fsverify_if_needed) {
+    if (!EnableFsVerity(fd, &error_msg)) {
+      return Errorf("{}", error_msg);
+    }
+  }
+  std::string digest = GetFsVerityDigest(fd, &error_msg);
+  if (digest.empty()) {
+    return Errorf("{}", error_msg);
+  }
+  return digest;
+}
+
+ndk::ScopedAStatus Artd::checkSdc(const ArtifactsPath& in_sdcFile,
+                                  const SecureDexMetadataPath& in_sdmFile,
+                                  bool* _aidl_return) {
+  RETURN_FATAL_IF_PRE_REBOOT(options_);
+  RETURN_FATAL_IF_ARG_IS_PRE_REBOOT(in_sdcFile, "sdcFile");
+
+  std::string sdm_path = OR_RETURN_FATAL(BuildSecureDexMetadataPath(in_sdmFile));
+  std::string sdc_path = OR_RETURN_FATAL(BuildSecureDexMetadataCompanionPath(in_sdcFile));
+
+  std::string expected_digest;
+  if (!ReadFileToString(sdc_path, &expected_digest)) {
+    if (errno == ENOENT) {
+      *_aidl_return = false;
+      return ScopedAStatus::ok();
+    }
+    return NonFatal(ART_FORMAT("Failed to load sdc file '{}': {}", sdc_path, strerror(errno)));
+  }
+
+  std::unique_ptr<File> sdm_file = OR_RETURN_NON_FATAL(OpenFileForReading(sdm_path));
+  std::string actual_digest =
+      OR_RETURN_NON_FATAL(GetFileDigest(sdm_file->Fd(), /*enable_fsverify_if_needed=*/false));
+
+  *_aidl_return = expected_digest == actual_digest;
+  return ScopedAStatus::ok();
+}
+
+ndk::ScopedAStatus Artd::createSdc(const OutputArtifacts& in_outputSdcFile,
+                                   const SecureDexMetadataPath& in_sdmFile) {
+  RETURN_FATAL_IF_PRE_REBOOT(options_);
+  RETURN_FATAL_IF_ARG_IS_PRE_REBOOT(in_outputSdcFile, "outputSdcFile");
+
+  std::string sdm_path = OR_RETURN_FATAL(BuildSecureDexMetadataPath(in_sdmFile));
+  std::string sdc_path =
+      OR_RETURN_FATAL(BuildSecureDexMetadataCompanionPath(in_outputSdcFile.artifactsPath));
+
+  std::unique_ptr<File> sdm_file = OR_RETURN_NON_FATAL(OpenFileForReading(sdm_path));
+  std::string digest =
+      OR_RETURN_NON_FATAL(GetFileDigest(sdm_file->Fd(), /*enable_fsverify_if_needed=*/true));
+
+  std::string oat_dir_path;  // For restorecon, can be empty if the artifacts are in dalvik-cache.
+  OR_RETURN_NON_FATAL(PrepareArtifactsDirs(in_outputSdcFile, &oat_dir_path));
+  if (!in_outputSdcFile.artifactsPath.isInDalvikCache) {
+    OR_RETURN_NON_FATAL(
+        restorecon_(oat_dir_path, in_outputSdcFile.permissionSettings.seContext, /*recurse=*/true));
+  }
+
+  const FsPermission& fs_permission = in_outputSdcFile.permissionSettings.fileFsPermission;
+  std::unique_ptr<NewFile> sdc_file = OR_RETURN_NON_FATAL(NewFile::Create(sdc_path, fs_permission));
+  WriteStringToFd(digest, sdc_file->Fd());
+  OR_RETURN_NON_FATAL(sdc_file->CommitOrAbandon());
 
   return ScopedAStatus::ok();
 }
