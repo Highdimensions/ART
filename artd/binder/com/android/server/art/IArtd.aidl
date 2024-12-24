@@ -152,6 +152,10 @@ interface IArtd {
             @nullable @utf8InCpp String classLoaderContext, @utf8InCpp String compilerFilter,
             int dexoptTrigger);
 
+    void maybeCreateSdc(
+            in com.android.server.art.OutputArtifacts outputSdcFile,
+            in com.android.server.art.SecureDexMetadataPath sdmFile);
+
     /**
      * Dexopts a dex file for the given instruction set.
      *
