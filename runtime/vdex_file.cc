@@ -16,15 +16,15 @@
 
 #include "vdex_file.h"
 
-#include <sys/mman.h>  // For the PROT_* and MAP_* constants.
-#include <sys/stat.h>  // for mkdir()
-
-#include <memory>
-#include <unordered_set>
-
 #include <android-base/logging.h>
 #include <android-base/stringprintf.h>
 #include <log/log.h>
+#include <sys/mman.h>  // For the PROT_* and MAP_* constants.
+#include <sys/stat.h>  // for mkdir()
+
+#include <cstdint>
+#include <memory>
+#include <unordered_set>
 
 #include "base/bit_utils.h"
 #include "base/leb128.h"
@@ -39,8 +39,8 @@
 #include "dex/dex_file_loader.h"
 #include "gc/heap.h"
 #include "gc/space/image_space.h"
-#include "mirror/class-inl.h"
 #include "handle_scope-inl.h"
+#include "mirror/class-inl.h"
 #include "runtime.h"
 #include "verifier/verifier_deps.h"
 
@@ -150,7 +150,8 @@ std::unique_ptr<VdexFile> VdexFile::OpenAtAddress(uint8_t* mmap_addr,
 }
 
 std::unique_ptr<VdexFile> VdexFile::OpenFromDm(const std::string& filename,
-                                               const ZipArchive& archive) {
+                                               const ZipArchive& archive,
+                                               uint8_t* addr) {
   std::string error_msg;
   std::unique_ptr<ZipEntry> zip_entry(archive.Find(VdexFile::kVdexNameInDmFile, &error_msg));
   if (zip_entry == nullptr) {
@@ -158,11 +159,13 @@ std::unique_ptr<VdexFile> VdexFile::OpenFromDm(const std::string& filename,
               << "Not doing fast verification.";
     return nullptr;
   }
-  MemMap input_file = zip_entry->MapDirectlyOrExtract(
-      filename.c_str(),
-      VdexFile::kVdexNameInDmFile,
-      &error_msg,
-      alignof(VdexFile));
+  MemMap input_file;
+  if (addr != nullptr) {
+    input_file = zip_entry->MapDirectlyFromFile(filename.c_str(), addr, &error_msg);
+  } else {
+    input_file = zip_entry->MapDirectlyOrExtract(
+        filename.c_str(), VdexFile::kVdexNameInDmFile, &error_msg, alignof(VdexFile));
+  }
   if (!input_file.IsValid()) {
     LOG(WARNING) << "Could not open vdex file in DexMetadata archive: " << error_msg;
     return nullptr;
