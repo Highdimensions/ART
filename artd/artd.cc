@@ -82,6 +82,7 @@
 #include "exec_utils.h"
 #include "file_utils.h"
 #include "fstab/fstab.h"
+#include "oat/oat_file.h"
 #include "oat/oat_file_assistant.h"
 #include "oat/oat_file_assistant_context.h"
 #include "odrefresh/odrefresh.h"
@@ -118,6 +119,7 @@ using ::aidl::com::android::server::art::OutputProfile;
 using ::aidl::com::android::server::art::PriorityClass;
 using ::aidl::com::android::server::art::ProfilePath;
 using ::aidl::com::android::server::art::RuntimeArtifactsPath;
+using ::aidl::com::android::server::art::SecureDexMetadataPath;
 using ::aidl::com::android::server::art::VdexPath;
 using ::android::base::Basename;
 using ::android::base::Dirname;
@@ -988,6 +990,33 @@ ndk::ScopedAStatus Artd::getDexoptNeeded(const std::string& in_dexFile,
     return NonFatal("Failed to open dex file: " + error_msg);
   }
   _aidl_return->hasDexCode = *has_dex_files;
+
+  return ScopedAStatus::ok();
+}
+
+ndk::ScopedAStatus Artd::maybeCreateSdc(const OutputArtifacts& in_outputSdcFile,
+                                        const SecureDexMetadataPath& in_sdmFile) {
+  RETURN_FATAL_IF_PRE_REBOOT(options_);
+  RETURN_FATAL_IF_ARG_IS_PRE_REBOOT(in_outputSdcFile, "outputSdcFile");
+
+  std::string sdm_path = OR_RETURN_FATAL(BuildSecureDexMetadataPath(in_sdmFile));
+  std::string sdc_path =
+      OR_RETURN_FATAL(BuildSecureDexMetadataCompanionPath(in_outputSdcFile.artifactsPath));
+  if (!OS::FileExists(sdm_path.c_str()) || OS::FileExists(sdc_path.c_str())) {
+    return ScopedAStatus::ok();
+  }
+
+  std::string oat_dir_path;  // For restorecon, can be empty if the artifacts are in dalvik-cache.
+  OR_RETURN_NON_FATAL(PrepareArtifactsDirs(in_outputSdcFile, &oat_dir_path));
+  if (!in_outputSdcFile.artifactsPath.isInDalvikCache) {
+    OR_RETURN_NON_FATAL(
+        restorecon_(oat_dir_path, in_outputSdcFile.permissionSettings.seContext, /*recurse=*/true));
+  }
+
+  const FsPermission& fs_permission = in_outputSdcFile.permissionSettings.fileFsPermission;
+  std::unique_ptr<NewFile> sdc_file = OR_RETURN_NON_FATAL(NewFile::Create(sdc_path, fs_permission));
+  WriteStringToFd("placeholder", sdc_file->Fd());
+  OR_RETURN_NON_FATAL(sdc_file->CommitOrAbandon());
 
   return ScopedAStatus::ok();
 }
