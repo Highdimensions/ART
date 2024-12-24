@@ -20,20 +20,27 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <optional>
 #include <sstream>
+#include <string>
 #include <type_traits>
 
+#include "android-base/file.h"
 #include "android-base/logging.h"
 #include "android-base/stringprintf.h"
 #include "arch/instruction_set_features.h"
 #include "art_method.h"
+#include "base/array_ref.h"
 #include "base/bit_vector.h"
 #include "base/file_utils.h"
+#include "base/globals.h"
 #include "base/logging.h"  // For VLOG_IS_ON.
+#include "base/macros.h"
 #include "base/mem_map.h"
 #include "base/os.h"
 #include "base/pointer_size.h"
@@ -174,6 +181,13 @@ class OatFileBase : public OatFile {
                                   /*inout*/ MemMap* reservation,  // Where to load if not null.
                                   /*out*/ std::string* error_msg);
 
+  template <typename kOatFileBaseSubType>
+  static OatFileBase* OpenOatFileFromSdm(const std::string& sdm_filename,
+                                         const std::string& dm_filename,
+                                         const std::string& dex_filename,
+                                         bool executable,
+                                         /*out*/ std::string* error_msg);
+
  protected:
   OatFileBase(const std::string& filename, bool executable) : OatFile(filename, executable) {}
 
@@ -312,6 +326,94 @@ OatFileBase* OatFileBase::OpenOatFile(int zip_fd,
   if (!ret->Setup(zip_fd, dex_filenames, dex_files, error_msg)) {
     return nullptr;
   }
+
+  return ret.release();
+}
+
+template <typename kOatFileBaseSubType>
+OatFileBase* OatFileBase::OpenOatFileFromSdm(const std::string& sdm_filename,
+                                             const std::string& dm_filename,
+                                             const std::string& dex_filename,
+                                             bool executable,
+                                             /*out*/ std::string* error_msg) {
+  std::string elf_filename = sdm_filename + kZipSeparator + "primary.odex";
+  std::unique_ptr<OatFileBase> ret(new kOatFileBaseSubType(elf_filename, executable));
+
+  LOG(ERROR) << "Opening " << elf_filename;
+
+  if (!ret->Load(elf_filename, executable, /*low_4gb=*/false, /*reservation=*/nullptr, error_msg)) {
+    return nullptr;
+  }
+
+  LOG(ERROR) << "Load successful";
+
+  if (!ret->ComputeFields(elf_filename, error_msg)) {
+    return nullptr;
+  }
+
+  LOG(ERROR) << "ComputeFields successful";
+
+  ret->PreSetup(elf_filename);
+
+  LOG(ERROR) << "PreSetup successful";
+
+  LOG(ERROR) << ART_FORMAT("begin_={}, end_={}, vdex_begin_={}, vdex_end_={}",
+                           (void*)ret->begin_,
+                           (void*)ret->end_,
+                           (void*)ret->vdex_begin_,
+                           (void*)ret->vdex_end_);
+
+  if (ret->begin_ == nullptr || ret->vdex_begin_ == nullptr) {
+    *error_msg = "Invalid offset";
+    return nullptr;
+  }
+
+  if (ret->end_ - ret->begin_ >= 4) {
+    LOG(ERROR) << ART_FORMAT("OAT: {:#x} {:#x} {:#x} {:#x}",
+                             ret->begin_[0],
+                             ret->begin_[1],
+                             ret->begin_[2],
+                             ret->begin_[3]);
+  }
+
+  ret->vdex_ = VdexFile::OpenFromDm(dm_filename, ret->vdex_begin_, ret->vdex_end_, error_msg);
+  if (ret->vdex_ == nullptr) {
+    return nullptr;
+  }
+
+  LOG(ERROR) << "Open vdex successful";
+
+  if (ret->vdex_end_ - ret->vdex_begin_ >= 4) {
+    LOG(ERROR) << ART_FORMAT("VDEX: {:#x} {:#x} {:#x} {:#x}",
+                             ret->vdex_begin_[0],
+                             ret->vdex_begin_[1],
+                             ret->vdex_begin_[2],
+                             ret->vdex_begin_[3]);
+  }
+
+  if (!ret->Setup(/*zip_fd=*/-1,
+                  ArrayRef<const std::string>(&dex_filename, /*size=*/1u),
+                  /*dex_files=*/{},
+                  error_msg)) {
+    return nullptr;
+  }
+
+  LOG(ERROR) << "Open dex successful";
+
+  if (!ret->GetOatDexFiles().empty() && ret->GetOatDexFiles()[0]->FileSize() >= 4) {
+    LOG(ERROR) << ART_FORMAT("DEX: {:#x} {:#x} {:#x} {:#x}",
+                             ret->GetOatDexFiles()[0]->GetDexFilePointer()[0],
+                             ret->GetOatDexFiles()[0]->GetDexFilePointer()[1],
+                             ret->GetOatDexFiles()[0]->GetDexFilePointer()[2],
+                             ret->GetOatDexFiles()[0]->GetDexFilePointer()[3]);
+  }
+
+  // std::string maps;
+  // if (android::base::ReadFileToString("/proc/self/maps", &maps)) {
+  //   LOG(ERROR) << maps;
+  // } else {
+  //   LOG(ERROR) << "Failed to read /proc/self/maps";
+  // }
 
   return ret.release();
 }
@@ -1330,7 +1432,8 @@ bool DlOpenOatFile::Dlopen(const std::string& elf_filename,
   return false;
 #else
   {
-    UniqueCPtr<char> absolute_path(realpath(elf_filename.c_str(), nullptr));
+    std::string t = DexFileLoader::GetDexCanonicalLocation(elf_filename.c_str());
+    UniqueCPtr<char> absolute_path(strdup(t.c_str()));
     if (absolute_path == nullptr) {
       *error_msg = StringPrintf("Failed to find absolute path for '%s'", elf_filename.c_str());
       return false;
@@ -2032,6 +2135,36 @@ OatFile* OatFile::OpenFromVdex(int zip_fd,
                                std::string* error_msg) {
   CheckLocation(location);
   return OatFileBackedByVdex::Open(zip_fd, std::move(vdex_file), location, context, error_msg);
+}
+
+OatFile* OatFile::OpenFromSdm(const std::string& sdm_filename,
+                              const std::string& dm_filename,
+                              const std::string& dex_filename,
+                              bool executable,
+                              /*out*/ std::string* error_msg) {
+  ScopedTrace trace("Open sdm file " + sdm_filename);
+  CHECK(!sdm_filename.empty());
+  CHECK(!dm_filename.empty());
+  CHECK(!dex_filename.empty());
+
+  // Check if the dm file exists, to fail fast. The dm file contains the vdex that is essential for
+  // using the odex in the sdm file.
+  if (!OS::FileExists(dm_filename.c_str())) {
+    *error_msg =
+        ART_FORMAT("Not loading sdm file because dm file '{}' does not exist", dm_filename);
+    return nullptr;
+  }
+
+  // Try dlopen first, as it is required for native debuggability. This will fail fast if dlopen is
+  // disabled.
+  OatFile* with_dlopen = OatFileBase::OpenOatFileFromSdm<DlOpenOatFile>(
+      sdm_filename, dm_filename, dex_filename, executable, error_msg);
+  if (with_dlopen != nullptr) {
+    return with_dlopen;
+  }
+
+  return OatFileBase::OpenOatFileFromSdm<ElfOatFile>(
+      sdm_filename, dm_filename, dex_filename, executable, error_msg);
 }
 
 OatFile::OatFile(const std::string& location, bool is_executable)
