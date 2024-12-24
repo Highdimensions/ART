@@ -167,6 +167,13 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                                                      zip_fd,
                                                      vdex_fd,
                                                      oat_fd);
+    if (!UseFdToReadFiles()) {
+      sdm_for_odex_ = std::make_unique<OatFileInfoBackedBySdm>(this,
+                                                               /*is_oat_location=*/false,
+                                                               GetSdmFilename(dex_location_, isa),
+                                                               GetDmFilename(dex_location_),
+                                                               GetSdcFilename(odex_file_name));
+    }
     // We dup FDs as the odex_ will claim ownership.
     vdex_for_odex_ = std::make_unique<OatFileInfoBackedByVdex>(this,
                                                                /*is_oat_location=*/false,
@@ -190,6 +197,11 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                                                       /*is_oat_location=*/true,
                                                       oat_file_name,
                                                       /*use_fd=*/false);
+      sdm_for_oat_ = std::make_unique<OatFileInfoBackedBySdm>(this,
+                                                              /*is_oat_location=*/true,
+                                                              GetSdmFilename(dex_location_, isa),
+                                                              GetDmFilename(dex_location_),
+                                                              GetSdcFilename(oat_file_name));
       vdex_for_oat_ = std::make_unique<OatFileInfoBackedByVdex>(this,
                                                                 /*is_oat_location=*/true,
                                                                 GetVdexFilename(oat_file_name),
@@ -819,6 +831,18 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
     }
   }
 
+  VLOG(oat) << ART_FORMAT("GetBestInfo checking sdm with sdc in dalvik-cache ({})",
+                          sdm_for_oat_->DisplayFilename());
+  if (sdm_for_oat_->IsUseable()) {
+    return *sdm_for_oat_;
+  }
+
+  VLOG(oat) << ART_FORMAT("GetBestInfo checking sdm with sdc next to the dex file ({})",
+                          sdm_for_odex_->DisplayFilename());
+  if (sdm_for_odex_->IsUseable()) {
+    return *sdm_for_odex_;
+  }
+
   // No odex/oat available, look for a useable vdex file.
   if (vdex_for_oat_->FileExists()) {
     VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex in dalvik-cache ({})",
@@ -1007,6 +1031,29 @@ std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByOat::LoadFile(
   }
 }
 
+std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedBySdm::LoadFile(
+    std::string* error_msg) {
+  std::string expected_digest;
+  if (!android::base::ReadFileToString(sdc_filename_, &expected_digest)) {
+    *error_msg = ART_FORMAT("Cannot open sdc file: {}", strerror(errno));
+    return nullptr;
+  }
+  std::string actual_digest = GetFsVerityDigest(filename_, error_msg);
+  if (actual_digest.empty()) {
+    return nullptr;
+  }
+  if (actual_digest != expected_digest) {
+    *error_msg =
+        ART_FORMAT("Digest mismatch (expected: {}, actual: {})", expected_digest, actual_digest);
+    return nullptr;
+  }
+  return std::unique_ptr<OatFile>(
+      OatFile::OpenFromSdm(filename_,
+                           ReplaceFileExtension(oat_file_assistant_->dex_location_, kDmExtension),
+                           oat_file_assistant_->dex_location_,
+                           error_msg));
+}
+
 std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByVdex::LoadFile(
     std::string* error_msg) {
   // Check to see if there is a vdex file we can make use of.
@@ -1050,7 +1097,8 @@ std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByDm::LoadFile(std::
   if (dm_file == nullptr) {
     return nullptr;
   }
-  std::unique_ptr<VdexFile> vdex(VdexFile::OpenFromDm(filename_, *dm_file, error_msg));
+  std::unique_ptr<VdexFile> vdex(
+      VdexFile::OpenFromDm(filename_, *dm_file, /*addr=*/nullptr, error_msg));
   if (vdex == nullptr) {
     return nullptr;
   }
