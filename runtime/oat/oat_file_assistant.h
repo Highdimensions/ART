@@ -372,7 +372,10 @@ class OatFileAssistant {
                                              std::string_view oat_boot_class_path,
                                              /*out*/ std::string* error_msg);
 
- private:
+  // Return the status for a given opened oat file with respect to the dex
+  // location.
+  EXPORT OatStatus GivenOatFileStatus(const OatFile& file);
+
   class OatFileInfo {
    public:
     // Initially the info is for no file in particular. It will treat the
@@ -424,6 +427,8 @@ class OatFileAssistant {
                int vdex_fd = -1,
                int oat_fd = -1);
 
+    void ResetToSdm(const std::string& sdm_filename, const std::string& sdc_filename);
+
     // Release the loaded oat file for runtime use.
     // Returns null if the oat file hasn't been loaded or is out of date.
     // Ensures the returned file is not loaded executable if it has unuseable
@@ -438,6 +443,11 @@ class OatFileAssistant {
     // deprecation.
     // TODO(b/256664509): Clean this up.
     bool CheckDisableCompactDex();
+
+    EXPORT static bool ShouldRecompileForFilter(OatFileAssistant* oat_file_assistant,
+                                                const OatFile* oat_file,
+                                                CompilerFilter::Filter target,
+                                                const DexOptTrigger dexopt_trigger);
 
    private:
     // Returns true if the oat file is usable but at least one dexopt trigger is matched. This
@@ -459,6 +469,9 @@ class OatFileAssistant {
     bool filename_provided_ = false;
     std::string filename_;
 
+    // The corresponding SDC file, only applicable of `filename_` represents an SDM file.
+    std::string sdc_filename_;
+
     int zip_fd_ = -1;
     int oat_fd_ = -1;
     int vdex_fd_ = -1;
@@ -476,6 +489,7 @@ class OatFileAssistant {
     bool file_released_ = false;
   };
 
+ private:
   // Return info for the best oat file.
   OatFileInfo& GetBestInfo();
 
@@ -489,10 +503,6 @@ class OatFileAssistant {
   // with respect to the dex location. If the dex checksums are not up to
   // date, error_msg is updated with a message describing the problem.
   bool DexChecksumUpToDate(const OatFile& file, std::string* error_msg);
-
-  // Return the status for a given opened oat file with respect to the dex
-  // location.
-  OatStatus GivenOatFileStatus(const OatFile& file);
 
   // Gets the dex checksum required for an up-to-date oat file.
   // Returns cached result from GetMultiDexChecksum.
@@ -565,6 +575,13 @@ class OatFileAssistant {
   // The AOT-compiled file of an app when the APK of the app is on a read-only partition
   // (for example /system).
   OatFileInfo oat_;
+
+  // The SDM file containing the AOT-compiled file of an app when the APK of the app is in /data.
+  OatFileInfo sdm_for_odex_;
+
+  // The SDM file containing the AOT-compiled file of an app when the APK of the app is on a
+  // read-only filesystem (for example IncFS).
+  OatFileInfo sdm_for_oat_;
 
   // The vdex-only file next to `odex_` when `odex_' cannot be used (for example
   // it is out of date).

@@ -17,6 +17,7 @@
 #include "artd.h"
 
 #include <fcntl.h>
+#include <linux/fsverity.h>
 #include <sys/inotify.h>
 #include <sys/mount.h>
 #include <sys/poll.h>
@@ -55,6 +56,7 @@
 #include "aidl/com/android/server/art/IArtdNotification.h"
 #include "android-base/errors.h"
 #include "android-base/file.h"
+#include "android-base/hex.h"
 #include "android-base/logging.h"
 #include "android-base/parseint.h"
 #include "android-base/result.h"
@@ -82,6 +84,7 @@
 #include "exec_utils.h"
 #include "file_utils.h"
 #include "fstab/fstab.h"
+#include "oat/oat_file.h"
 #include "oat/oat_file_assistant.h"
 #include "oat/oat_file_assistant_context.h"
 #include "odrefresh/odrefresh.h"
@@ -118,11 +121,13 @@ using ::aidl::com::android::server::art::OutputProfile;
 using ::aidl::com::android::server::art::PriorityClass;
 using ::aidl::com::android::server::art::ProfilePath;
 using ::aidl::com::android::server::art::RuntimeArtifactsPath;
+using ::aidl::com::android::server::art::SecureDexMetadataPath;
 using ::aidl::com::android::server::art::VdexPath;
 using ::android::base::Basename;
 using ::android::base::Dirname;
 using ::android::base::ErrnoError;
 using ::android::base::Error;
+using ::android::base::HexString;
 using ::android::base::Join;
 using ::android::base::make_scope_guard;
 using ::android::base::ParseInt;
@@ -991,6 +996,112 @@ ndk::ScopedAStatus Artd::getDexoptNeeded(const std::string& in_dexFile,
     return NonFatal("Failed to open dex file: " + error_msg);
   }
   _aidl_return->hasDexCode = *has_dex_files;
+
+  return ScopedAStatus::ok();
+}
+
+ndk::ScopedAStatus Artd::verifySdmUsability(const std::string& in_dexFile,
+                                            const std::string& in_instructionSet,
+                                            const std::optional<std::string>& in_classLoaderContext,
+                                            const std::string& in_compilerFilter,
+                                            bool* _aidl_return) {
+  std::string error_msg;
+  std::unique_ptr<OatFile> oat_file(
+      OatFile::OpenFromSdm(ReplaceFileExtension(in_dexFile, kSdmExtension),
+                           ReplaceFileExtension(in_dexFile, kDmExtension),
+                           in_dexFile,
+                           &error_msg));
+  if (oat_file == nullptr) {
+    LOG(ERROR) << error_msg;
+    *_aidl_return = false;
+    return ScopedAStatus::ok();
+  }
+
+  Result<OatFileAssistantContext*> ofa_context = GetOatFileAssistantContext();
+  if (!ofa_context.ok()) {
+    return NonFatal("Failed to get runtime options: " + ofa_context.error().message());
+  }
+
+  std::unique_ptr<ClassLoaderContext> context;
+  auto oat_file_assistant = OatFileAssistant::Create(in_dexFile,
+                                                     in_instructionSet,
+                                                     in_classLoaderContext,
+                                                     /*load_executable=*/false,
+                                                     /*only_load_trusted_executable=*/true,
+                                                     ofa_context.value(),
+                                                     &context,
+                                                     &error_msg);
+  if (oat_file_assistant == nullptr) {
+    return NonFatal("Failed to create OatFileAssistant: " + error_msg);
+  }
+
+  if (OatFileAssistant::OatStatus status = oat_file_assistant->GivenOatFileStatus(*oat_file);
+      status != OatFileAssistant::kOatUpToDate) {
+    *_aidl_return = false;
+    return ScopedAStatus::ok();
+  }
+
+  OatFileAssistant::DexOptTrigger dexopt_trigger{
+      .targetFilterIsBetter = true,
+      .primaryBootImageBecomesUsable = true,
+      .needExtraction = true,
+  };
+  if (OatFileAssistant::OatFileInfo::ShouldRecompileForFilter(
+          oat_file_assistant.get(),
+          oat_file.get(),
+          OR_RETURN_FATAL(ParseCompilerFilter(in_compilerFilter)),
+          dexopt_trigger)) {
+    *_aidl_return = false;
+    return ScopedAStatus::ok();
+  }
+
+  *_aidl_return = true;
+  return ScopedAStatus::ok();
+}
+
+static Result<std::string> enableFsVerityAndGetDigest(int fd) {
+  struct fsverity_enable_arg arg = {
+      .version = 1, .hash_algorithm = FS_VERITY_HASH_ALG_SHA256, .block_size = 4096};
+  if (ioctl(fd, FS_IOC_ENABLE_VERITY, &arg) != 0) {
+    return ErrnoErrorf("Failed to FS_IOC_ENABLE_VERITY");
+  }
+
+  const int kDigestSize = 32;  // Size of SHA-256 digest.
+  std::unique_ptr<uint8_t[]> buf(new (std::align_val_t(alignof(struct fsverity_digest)))
+                                     uint8_t[sizeof(struct fsverity_digest) + kDigestSize]);
+  auto fsverity_digest = reinterpret_cast<struct fsverity_digest*>(buf.get());
+  fsverity_digest->digest_size = kDigestSize;
+
+  if (ioctl(fd, FS_IOC_MEASURE_VERITY, fsverity_digest) != 0) {
+    return ErrnoErrorf("Failed to FS_IOC_MEASURE_VERITY");
+  }
+
+  return HexString(fsverity_digest->digest, fsverity_digest->digest_size);
+}
+
+ndk::ScopedAStatus Artd::createSdc(const OutputArtifacts& in_outputArtifacts,
+                                   const SecureDexMetadataPath& in_sdmFile) {
+  RETURN_FATAL_IF_PRE_REBOOT(options_);
+  RETURN_FATAL_IF_ARG_IS_PRE_REBOOT(in_outputArtifacts, "outputArtifacts");
+
+  std::string sdm_path = OR_RETURN_FATAL(BuildSecureDexMetadataPath(in_sdmFile));
+  std::string sdc_path =
+      OR_RETURN_FATAL(BuildSecureDexMetadataCompanionPath(in_outputArtifacts.artifactsPath));
+
+  std::unique_ptr<File> sdm_file = OR_RETURN_NON_FATAL(OpenFileForReading(sdm_path));
+  std::string digest = OR_RETURN_NON_FATAL(enableFsVerityAndGetDigest(sdm_file->Fd()));
+
+  std::string oat_dir_path;  // For restorecon, can be empty if the artifacts are in dalvik-cache.
+  OR_RETURN_NON_FATAL(PrepareArtifactsDirs(in_outputArtifacts, &oat_dir_path));
+  if (!in_outputArtifacts.artifactsPath.isInDalvikCache) {
+    OR_RETURN_NON_FATAL(restorecon_(
+        oat_dir_path, in_outputArtifacts.permissionSettings.seContext, /*recurse=*/true));
+  }
+
+  const FsPermission& fs_permission = in_outputArtifacts.permissionSettings.fileFsPermission;
+  std::unique_ptr<NewFile> sdc_file = OR_RETURN_NON_FATAL(NewFile::Create(sdc_path, fs_permission));
+  WriteStringToFd(digest, sdc_file->Fd());
+  OR_RETURN_NON_FATAL(sdc_file->CommitOrAbandon());
 
   return ScopedAStatus::ok();
 }
