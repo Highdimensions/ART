@@ -35,6 +35,7 @@
 #include <utility>
 #include <vector>
 
+#include "aidl/com/android/server/art/ArtifactsPath.h"
 #include "aidl/com/android/server/art/BnArtd.h"
 #include "aidl/com/android/server/art/BnArtdCancellationSignal.h"
 #include "aidl/com/android/server/art/BnArtdNotification.h"
@@ -216,6 +217,15 @@ class Artd : public aidl::com::android::server::art::BnArtd {
       const std::string& in_compilerFilter,
       int32_t in_dexoptTrigger,
       aidl::com::android::server::art::GetDexoptNeededResult* _aidl_return) override;
+
+  ndk::ScopedAStatus checkSdc(
+      const aidl::com::android::server::art::ArtifactsPath& in_sdcFile,
+      const aidl::com::android::server::art::SecureDexMetadataPath& in_sdmFile,
+      bool* _aidl_return) override;
+
+  ndk::ScopedAStatus createSdc(
+      const aidl::com::android::server::art::OutputArtifacts& in_outputSdcFile,
+      const aidl::com::android::server::art::SecureDexMetadataPath& in_sdmFile) override;
 
   ndk::ScopedAStatus dexopt(
       const aidl::com::android::server::art::OutputArtifacts& in_outputArtifacts,
