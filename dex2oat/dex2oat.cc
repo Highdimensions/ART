@@ -1374,7 +1374,8 @@ class Dex2Oat final {
     if (dm_file_ != nullptr) {
       if (input_vdex_file_ == nullptr) {
         std::string error_msg;
-        input_vdex_file_ = VdexFile::OpenFromDm(dm_file_location_, *dm_file_, &error_msg);
+        input_vdex_file_ =
+            VdexFile::OpenFromDm(dm_file_location_, *dm_file_, /*addr=*/nullptr, &error_msg);
         LOG(WARNING) << error_msg;
         if (input_vdex_file_ != nullptr) {
           VLOG(verifier) << "Doing fast verification with vdex from DexMetadata archive";
