@@ -16,6 +16,8 @@
 
 package com.android.ahat.heapdump;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractList;
 import java.util.Collections;
@@ -402,5 +404,24 @@ public class AhatArrayInstance extends AhatInstance {
 
   byte[] asByteArray() {
     return mByteArray;
+  }
+
+  /**
+   * Whether this array instance has an underlying byte array.
+   */
+  public boolean hasByteArray() {
+    return mByteArray != null;
+  }
+
+  /**
+   * Writes the underlying byte array to the given output stream.
+   *
+   * @throws IOException if this array instance is not a byte array.
+   */
+  public void writeByteArray(OutputStream os) throws IOException {
+    if (mByteArray == null) {
+      throw new IOException(String.format("Array 0x%08x is not a byte array", getId()));
+    }
+    os.write(mByteArray);
   }
 }
