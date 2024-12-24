@@ -59,7 +59,12 @@ class ZipEntry {
   //
   // Will only succeed if the entry is stored uncompressed.
   // Returns invalid MemMap on failure and sets error_msg.
-  MemMap MapDirectlyFromFile(const char* zip_filename, /*out*/std::string* error_msg);
+  MemMap MapDirectlyFromFile(const char* zip_filename, /*out*/ std::string* error_msg) {
+    return MapDirectlyFromFile(zip_filename, /*addr=*/nullptr, error_msg);
+  }
+  MemMap MapDirectlyFromFile(const char* zip_filename,
+                             uint8_t* addr,
+                             /*out*/ std::string* error_msg);
   virtual ~ZipEntry();
 
   MemMap MapDirectlyOrExtract(const char* zip_filename,

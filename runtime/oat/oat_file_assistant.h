@@ -372,7 +372,10 @@ class OatFileAssistant {
                                              std::string_view oat_boot_class_path,
                                              /*out*/ std::string* error_msg);
 
- private:
+  // Return the status for a given opened oat file with respect to the dex
+  // location.
+  EXPORT OatStatus GivenOatFileStatus(const OatFile& file);
+
   class OatFileInfo {
    public:
     // Initially the info is for no file in particular. It will treat the
@@ -439,6 +442,11 @@ class OatFileAssistant {
     // TODO(b/256664509): Clean this up.
     bool CheckDisableCompactDex();
 
+    EXPORT static bool ShouldRecompileForFilter(OatFileAssistant* oat_file_assistant,
+                                         const OatFile* oat_file,
+                                         CompilerFilter::Filter target,
+                                         const DexOptTrigger dexopt_trigger);
+
    private:
     // Returns true if the oat file is usable but at least one dexopt trigger is matched. This
     // function should only be called if the oat file is usable.
@@ -476,6 +484,7 @@ class OatFileAssistant {
     bool file_released_ = false;
   };
 
+ private:
   // Return info for the best oat file.
   OatFileInfo& GetBestInfo();
 
@@ -489,10 +498,6 @@ class OatFileAssistant {
   // with respect to the dex location. If the dex checksums are not up to
   // date, error_msg is updated with a message describing the problem.
   bool DexChecksumUpToDate(const OatFile& file, std::string* error_msg);
-
-  // Return the status for a given opened oat file with respect to the dex
-  // location.
-  OatStatus GivenOatFileStatus(const OatFile& file);
 
   // Gets the dex checksum required for an up-to-date oat file.
   // Returns cached result from GetMultiDexChecksum.

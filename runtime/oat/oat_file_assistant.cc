@@ -1146,11 +1146,10 @@ const OatFile* OatFileAssistant::OatFileInfo::GetFile() {
   return file_.get();
 }
 
-bool OatFileAssistant::OatFileInfo::ShouldRecompileForFilter(CompilerFilter::Filter target,
+bool OatFileAssistant::OatFileInfo::ShouldRecompileForFilter(OatFileAssistant* oat_file_assistant,
+                                                             const OatFile* file,
+                                                             CompilerFilter::Filter target,
                                                              const DexOptTrigger dexopt_trigger) {
-  const OatFile* file = GetFile();
-  DCHECK(file != nullptr);
-
   if (CompilerFilter::IsBetter(target, CompilerFilter::kVerify) && gPageSize != kMinPageSize) {
     // Prevent infinite recompilations during background dexopt on 16K page devices.
     VLOG(oat) << "Adjusting target filter to 'verify' because loading odex files is only supported "
@@ -1195,9 +1194,8 @@ bool OatFileAssistant::OatFileInfo::ShouldRecompileForFilter(CompilerFilter::Fil
     // is verified by "ab-ota", we don't want it to be re-verified by "boot-after-ota".
     const char* oat_boot_class_path_checksums =
         file->GetOatHeader().GetStoreValueByKey(OatHeader::kBootClassPathChecksumsKey);
-    if (oat_boot_class_path_checksums != nullptr &&
-        oat_boot_class_path_checksums[0] != 'i' &&
-        oat_file_assistant_->IsPrimaryBootImageUsable()) {
+    if (oat_boot_class_path_checksums != nullptr && oat_boot_class_path_checksums[0] != 'i' &&
+        oat_file_assistant->IsPrimaryBootImageUsable()) {
       DCHECK(!file->GetOatHeader().RequiresImage());
       VLOG(oat) << "Should recompile: primaryBootImageBecomesUsable";
       return true;
@@ -1205,13 +1203,20 @@ bool OatFileAssistant::OatFileInfo::ShouldRecompileForFilter(CompilerFilter::Fil
   }
 
   if (dexopt_trigger.needExtraction && !file->ContainsDexCode() &&
-      !oat_file_assistant_->ZipFileOnlyContainsUncompressedDex()) {
+      !oat_file_assistant->ZipFileOnlyContainsUncompressedDex()) {
     VLOG(oat) << "Should recompile: needExtraction";
     return true;
   }
 
   VLOG(oat) << "Should not recompile";
   return false;
+}
+
+bool OatFileAssistant::OatFileInfo::ShouldRecompileForFilter(CompilerFilter::Filter target,
+                                                             const DexOptTrigger dexopt_trigger) {
+  const OatFile* file = GetFile();
+  DCHECK(file != nullptr);
+  return ShouldRecompileForFilter(oat_file_assistant_, file, target, dexopt_trigger);
 }
 
 bool OatFileAssistant::ClassLoaderContextIsOkay(const OatFile& oat_file) const {

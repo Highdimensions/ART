@@ -26,10 +26,15 @@ import static com.android.server.art.model.ArtFlags.DexoptFlags;
 import static com.android.server.art.model.Config.Callback;
 import static com.android.server.art.model.DexoptResult.DexContainerFileDexoptResult;
 
+import android.annotation.FlaggedApi;
 import android.annotation.NonNull;
 import android.annotation.Nullable;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.SigningInfo;
+import android.content.pm.SigningInfoException;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.os.RemoteException;
@@ -37,6 +42,8 @@ import android.os.ServiceSpecificException;
 import android.os.SystemProperties;
 import android.os.UserManager;
 import android.os.storage.StorageManager;
+import android.system.ErrnoException;
+import android.system.Os;
 
 import androidx.annotation.RequiresApi;
 
@@ -56,6 +63,7 @@ import dalvik.system.DexFile;
 
 import com.google.auto.value.AutoValue;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -238,6 +246,10 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                         }
 
                         if (!getDexoptNeededResult.isDexoptNeeded) {
+                            continue;
+                        }
+
+                        if (verifySdm(target)) {
                             continue;
                         }
 
@@ -668,6 +680,79 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
         }
     }
 
+    private boolean verifySdm(@NonNull DexoptTarget<DexInfoType> target) throws RemoteException {
+        if (!android.content.pm.Flags.cloudCompilationPm()) {
+            return false;
+        }
+
+        String dexPath = target.dexInfo().dexPath();
+        String sdmPath = getSdmPath(dexPath);
+        if (!mInjector.fileExists(sdmPath)) {
+            return false;
+        }
+
+        try {
+            Os.chmod(sdmPath, 0755);
+        } catch (ErrnoException e) {
+            AsLog.e("Failed to chmod", e);
+            return false;
+        }
+
+        try (var tracing = new Utils.TracingWithTimingLogging("jiakaiz", "verifySdmSignature")) {
+            if (!verifySdmSignature(dexPath, sdmPath)) {
+                return false;
+            }
+        }
+
+        try (var tracing = new Utils.TracingWithTimingLogging("jiakaiz", "verifySdmUsability")) {
+            if (!verifySdmUsability(target)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @FlaggedApi(android.content.pm.Flags.FLAG_CLOUD_COMPILATION_PM)
+    @SuppressLint("NewApi")
+    @NonNull
+    private boolean verifySdmSignature(@NonNull String dexPath, @NonNull String sdmPath) {
+        SigningInfo sdmSigningInfo;
+        try {
+            sdmSigningInfo =
+                    mInjector.getVerifiedSigningInfo(sdmPath, SigningInfo.VERSION_SIGNING_BLOCK_V3);
+        } catch (SigningInfoException e) {
+            AsLog.w("Failed to verify SDM signature", e);
+            return false;
+        }
+
+        SigningInfo apkSigningInfo;
+        try {
+            apkSigningInfo =
+                    mInjector.getVerifiedSigningInfo(dexPath, SigningInfo.VERSION_SIGNING_BLOCK_V3);
+        } catch (SigningInfoException e) {
+            AsLog.w("Failed to verify SDM signature", e);
+            return false;
+        }
+
+        if (!sdmSigningInfo.signersMatchExactly(apkSigningInfo)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean verifySdmUsability(@NonNull DexoptTarget<DexInfoType> target)
+            throws RemoteException {
+        return mInjector.getArtd().verifySdmUsability(target.dexInfo().dexPath(), target.isa(),
+                target.dexInfo().classLoaderContext(), target.compilerFilter());
+    }
+
+    @NonNull
+    private static String getSdmPath(@NonNull String dexPath) {
+        return Utils.replaceFileExtension(dexPath, ArtConstants.SECURE_DEX_METADATA_FILE_EXT);
+    }
+
     // Methods to be implemented by child classes.
 
     /** Returns true if the artifacts should be written to the global dalvik-cache directory. */
@@ -861,6 +946,19 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
 
         public boolean isPreReboot() {
             return GlobalInjector.getInstance().isPreReboot();
+        }
+
+        public boolean fileExists(@NonNull String path) {
+            return new File(path).exists();
+        }
+
+        // TODO(jiakaiz): See another comment about "NewApi" above.
+        @FlaggedApi(android.content.pm.Flags.FLAG_CLOUD_COMPILATION_PM)
+        @SuppressLint("NewApi")
+        @NonNull
+        public SigningInfo getVerifiedSigningInfo(
+                @NonNull String path, int minAppSigningSchemeVersion) throws SigningInfoException {
+            return PackageManager.getVerifiedSigningInfo(path, minAppSigningSchemeVersion);
         }
     }
 }

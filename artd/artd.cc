@@ -82,6 +82,7 @@
 #include "exec_utils.h"
 #include "file_utils.h"
 #include "fstab/fstab.h"
+#include "oat/oat_file.h"
 #include "oat/oat_file_assistant.h"
 #include "oat/oat_file_assistant_context.h"
 #include "odrefresh/odrefresh.h"
@@ -992,6 +993,65 @@ ndk::ScopedAStatus Artd::getDexoptNeeded(const std::string& in_dexFile,
   }
   _aidl_return->hasDexCode = *has_dex_files;
 
+  return ScopedAStatus::ok();
+}
+
+ndk::ScopedAStatus Artd::verifySdmUsability(const std::string& in_dexFile,
+                                            const std::string& in_instructionSet,
+                                            const std::optional<std::string>& in_classLoaderContext,
+                                            const std::string& in_compilerFilter,
+                                            bool* _aidl_return) {
+  std::string error_msg;
+  std::unique_ptr<OatFile> oat_file(
+      OatFile::OpenFromSdm(ReplaceFileExtension(in_dexFile, kSdmExtension),
+                           ReplaceFileExtension(in_dexFile, kDmExtension),
+                           in_dexFile,
+                           &error_msg));
+  if (oat_file == nullptr) {
+    LOG(ERROR) << error_msg;
+    *_aidl_return = false;
+    return ScopedAStatus::ok();
+  }
+
+  Result<OatFileAssistantContext*> ofa_context = GetOatFileAssistantContext();
+  if (!ofa_context.ok()) {
+    return NonFatal("Failed to get runtime options: " + ofa_context.error().message());
+  }
+
+  std::unique_ptr<ClassLoaderContext> context;
+  auto oat_file_assistant = OatFileAssistant::Create(in_dexFile,
+                                                     in_instructionSet,
+                                                     in_classLoaderContext,
+                                                     /*load_executable=*/false,
+                                                     /*only_load_trusted_executable=*/true,
+                                                     ofa_context.value(),
+                                                     &context,
+                                                     &error_msg);
+  if (oat_file_assistant == nullptr) {
+    return NonFatal("Failed to create OatFileAssistant: " + error_msg);
+  }
+
+  if (OatFileAssistant::OatStatus status = oat_file_assistant->GivenOatFileStatus(*oat_file);
+      status != OatFileAssistant::kOatUpToDate) {
+    *_aidl_return = false;
+    return ScopedAStatus::ok();
+  }
+
+  OatFileAssistant::DexOptTrigger dexopt_trigger{
+      .targetFilterIsBetter = true,
+      .primaryBootImageBecomesUsable = true,
+      .needExtraction = true,
+  };
+  if (OatFileAssistant::OatFileInfo::ShouldRecompileForFilter(
+          oat_file_assistant.get(),
+          oat_file.get(),
+          OR_RETURN_FATAL(ParseCompilerFilter(in_compilerFilter)),
+          dexopt_trigger)) {
+    *_aidl_return = false;
+    return ScopedAStatus::ok();
+  }
+
+  *_aidl_return = true;
   return ScopedAStatus::ok();
 }
 
