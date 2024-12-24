@@ -18,6 +18,7 @@
 
 #include <sys/stat.h>
 
+#include <cstring>
 #include <memory>
 #include <optional>
 #include <sstream>
@@ -116,6 +117,8 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
       only_load_trusted_executable_(only_load_trusted_executable),
       odex_(this, /*is_oat_location=*/false),
       oat_(this, /*is_oat_location=*/true),
+      sdm_for_odex_(this, /*is_oat_location=*/false),
+      sdm_for_oat_(this, /*is_oat_location=*/true),
       vdex_for_odex_(this, /*is_oat_location=*/false),
       vdex_for_oat_(this, /*is_oat_location=*/true),
       dm_for_odex_(this, /*is_oat_location=*/false),
@@ -168,6 +171,9 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
   std::string odex_file_name;
   if (DexLocationToOdexFilename(dex_location_, isa_, &odex_file_name, &error_msg)) {
     odex_.Reset(odex_file_name, UseFdToReadFiles(), zip_fd, vdex_fd, oat_fd);
+    if (!UseFdToReadFiles()) {
+      sdm_for_odex_.ResetToSdm(GetSdmFilename(dex_location_, isa), GetSdcFilename(odex_file_name));
+    }
     std::string vdex_file_name = GetVdexFilename(odex_file_name);
     // We dup FDs as the odex_ will claim ownership.
     vdex_for_odex_.Reset(vdex_file_name,
@@ -195,6 +201,7 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                                  &oat_file_name,
                                  &error_msg)) {
       oat_.Reset(oat_file_name, /*use_fd=*/false);
+      sdm_for_oat_.ResetToSdm(GetSdmFilename(dex_location_, isa), GetSdcFilename(oat_file_name));
       std::string vdex_file_name = GetVdexFilename(oat_file_name);
       vdex_for_oat_.Reset(vdex_file_name, UseFdToReadFiles(), zip_fd, vdex_fd, oat_fd);
       std::string dm_file_name = GetDmFilename(dex_location);
@@ -882,6 +889,11 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
     VLOG(oat) << ART_FORMAT("GetBestInfo checking odex next to the dex file ({})",
                             odex_.DisplayFilename());
     if (!odex_.IsUseable()) {
+      VLOG(oat) << ART_FORMAT("GetBestInfo checking sdm next to the dex file ({})",
+                              sdm_for_odex_.DisplayFilename());
+      if (sdm_for_odex_.IsUseable()) {
+        return sdm_for_odex_;
+      }
       VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex next to the dex file ({})",
                               vdex_for_odex_.DisplayFilename());
       if (vdex_for_odex_.IsUseable()) {
@@ -910,6 +922,18 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
                           odex_.DisplayFilename());
   if (odex_.IsUseable()) {
     return odex_;
+  }
+
+  VLOG(oat) << ART_FORMAT("GetBestInfo checking sdm with sdc in dalvik-cache ({})",
+                          sdm_for_oat_.DisplayFilename());
+  if (sdm_for_oat_.IsUseable()) {
+    return sdm_for_oat_;
+  }
+
+  VLOG(oat) << ART_FORMAT("GetBestInfo checking sdm with sdc next to the dex file ({})",
+                          sdm_for_odex_.DisplayFilename());
+  if (sdm_for_odex_.IsUseable()) {
+    return sdm_for_odex_;
   }
 
   // Look for a useable vdex file.
@@ -1102,6 +1126,25 @@ const OatFile* OatFileAssistant::OatFileInfo::GetFile() {
                                           &error_msg));
       }
     }
+  } else if (filename_.ends_with(kSdmExtension)) {
+    std::string expected_digest;
+    if (android::base::ReadFileToString(sdc_filename_, &expected_digest)) {
+      std::string actual_digest = GetFsVerityDigest(filename_, &error_msg);
+      if (!actual_digest.empty()) {
+        if (actual_digest == expected_digest) {
+          file_.reset(OatFile::OpenFromSdm(
+              filename_,
+              ReplaceFileExtension(oat_file_assistant_->dex_location_, kDmExtension),
+              oat_file_assistant_->dex_location_,
+              &error_msg));
+        } else {
+          error_msg = ART_FORMAT(
+              "Digest mismatch (expected: {}, actual: {})", expected_digest, actual_digest);
+        }
+      }
+    } else {
+      error_msg = ART_FORMAT("Cannot open sdc file '{}': {}", sdc_filename_, strerror(errno));
+    }
   } else {
     if (executable && oat_file_assistant_->only_load_trusted_executable_) {
       executable = LocationIsTrusted(filename_, /*trust_art_apex_data_files=*/true);
@@ -1259,10 +1302,25 @@ void OatFileAssistant::OatFileInfo::Reset(
     const std::string& filename, bool use_fd, int zip_fd, int vdex_fd, int oat_fd) {
   filename_provided_ = true;
   filename_ = filename;
+  sdc_filename_ = "";
   use_fd_ = use_fd;
   zip_fd_ = zip_fd;
   vdex_fd_ = vdex_fd;
   oat_fd_ = oat_fd;
+  Reset();
+}
+
+void OatFileAssistant::OatFileInfo::ResetToSdm(const std::string& sdm_filename,
+                                               const std::string& sdc_filename) {
+  filename_provided_ = true;
+  filename_ = sdm_filename;
+  sdc_filename_ = sdc_filename;
+  // No need to use FDs. FDs are only used in dexoptanalyzer, on Android T-, while SDM is a new
+  // feature on Android B+.
+  use_fd_ = false;
+  zip_fd_ = -1;
+  vdex_fd_ = -1;
+  oat_fd_ = -1;
   Reset();
 }
 

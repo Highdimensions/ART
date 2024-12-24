@@ -39,6 +39,7 @@ static constexpr const char* kVdexExtension = ".vdex";
 static constexpr const char* kArtExtension = ".art";
 static constexpr const char* kDmExtension = ".dm";
 static constexpr const char* kSdmExtension = ".sdm";
+static constexpr const char* kSdcExtension = ".sdc";
 
 // These methods return the Android Root, which is the historical location of
 // the Android "system" directory, containing the built Android artifacts. On
@@ -174,6 +175,12 @@ std::string GetVdexFilename(const std::string& oat_filename);
 // Returns the dm filename for the given dex location.
 std::string GetDmFilename(const std::string& dex_location);
 
+// Returns the sdm filename for the given dex location.
+std::string GetSdmFilename(const std::string& dex_location, InstructionSet isa);
+
+// Returns the sdc filename for the given oat filename.
+std::string GetSdcFilename(const std::string& oat_filename);
+
 // Returns the odex location on /system for a DEX file on /apex. The caller must make sure that
 // `location` is on /apex.
 std::string GetSystemOdexFilenameForApex(std::string_view location, InstructionSet isa);
@@ -233,6 +240,12 @@ int DupCloexec(int fd);
 
 // Returns true if `path` begins with a slash.
 inline bool IsAbsoluteLocation(const std::string& path) { return !path.empty() && path[0] == '/'; }
+
+std::string GetFsVerityDigest(const std::string& filename,
+                              /*out*/ std::string* error_msg);
+
+std::string GetFsVerityDigest(int fd,
+                              /*out*/ std::string* error_msg);
 
 }  // namespace art
 

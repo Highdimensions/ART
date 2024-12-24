@@ -424,6 +424,8 @@ class OatFileAssistant {
                int vdex_fd = -1,
                int oat_fd = -1);
 
+    void ResetToSdm(const std::string& sdm_filename, const std::string& sdc_filename);
+
     // Release the loaded oat file for runtime use.
     // Returns null if the oat file hasn't been loaded or is out of date.
     // Ensures the returned file is not loaded executable if it has unuseable
@@ -458,6 +460,9 @@ class OatFileAssistant {
 
     bool filename_provided_ = false;
     std::string filename_;
+
+    // The corresponding SDC file, only applicable of `filename_` represents an SDM file.
+    std::string sdc_filename_;
 
     int zip_fd_ = -1;
     int oat_fd_ = -1;
@@ -565,6 +570,13 @@ class OatFileAssistant {
   // The AOT-compiled file of an app when the APK of the app is on a read-only partition
   // (for example /system).
   OatFileInfo oat_;
+
+  // The SDM file containing the AOT-compiled file of an app when the APK of the app is in /data.
+  OatFileInfo sdm_for_odex_;
+
+  // The SDM file containing the AOT-compiled file of an app when the APK of the app is on a
+  // read-only filesystem (for example IncFS).
+  OatFileInfo sdm_for_oat_;
 
   // The vdex-only file next to `odex_` when `odex_' cannot be used (for example
   // it is out of date).
