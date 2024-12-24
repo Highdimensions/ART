@@ -529,6 +529,34 @@ class OatFileAssistant {
     const int oat_fd_;
   };
 
+  class OatFileInfoBackedBySdm : public OatFileInfo {
+   public:
+    OatFileInfoBackedBySdm(OatFileAssistant* oat_file_assistant,
+                           const std::string& sdm_filename,
+                           bool is_oat_location,
+                           const std::string& dm_filename,
+                           const std::string& sdc_filename)
+        : OatFileInfo(oat_file_assistant, sdm_filename, is_oat_location),
+          dm_filename_(dm_filename),
+          sdc_filename_(sdc_filename) {}
+
+    static const char* const kType;
+    const char* GetType() override { return kType; }
+
+    const char* GetLocationDebugString() override {
+      return IsOatLocation() ? "sdm with sdc in dalvik-cache" : "sdm with sdc next to the dex file";
+    }
+
+    bool FileExists() const override;
+
+   protected:
+    std::unique_ptr<OatFile> LoadFile(std::string* error_msg) const override;
+
+   private:
+    const std::string dm_filename_;
+    const std::string sdc_filename_;
+  };
+
   class OatFileInfoBackedByVdex : public OatFileInfo {
    public:
     OatFileInfoBackedByVdex(OatFileAssistant* oat_file_assistant,
