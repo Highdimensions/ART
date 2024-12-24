@@ -48,6 +48,8 @@ class SizeTable {
     cols.add(new Column("Δ", Column.Align.RIGHT, showDiff));
     cols.add(new Column("Registered Native Size", Column.Align.RIGHT));
     cols.add(new Column("Δ", Column.Align.RIGHT, showDiff));
+    cols.add(new Column("Retained Size", Column.Align.RIGHT));
+    cols.add(new Column("Δ", Column.Align.RIGHT, showDiff));
     cols.add(new Column("Total Size", Column.Align.RIGHT));
     cols.add(new Column("Δ", Column.Align.RIGHT, showDiff));
     cols.addAll(Arrays.asList(columns));
@@ -67,6 +69,8 @@ class SizeTable {
     vals.add(DocString.size(size.getRegisteredNativeSize(), false));
     vals.add(DocString.delta(false, false,
           size.getRegisteredNativeSize(), base.getRegisteredNativeSize()));
+    vals.add(DocString.size(size.getRetainedSize(), false));
+    vals.add(DocString.delta(false, false, size.getRetainedSize(), base.getRetainedSize()));
     vals.add(DocString.size(size.getSize(), false));
     vals.add(DocString.delta(false, false, size.getSize(), base.getSize()));
     vals.addAll(Arrays.asList(values));
