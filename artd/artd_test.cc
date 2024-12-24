@@ -2413,6 +2413,8 @@ TEST_F(ArtdTest, deleteRuntimeArtifactsAndroidDataNotExist) {
   EXPECT_EQ(aidl_return, 0);
 }
 
+// Verifies that `deleteRuntimeArtifacts` doesn't treat "*" as a wildcard. It should either treat it
+// as a normal character in the path or reject it. The caller is never supposed to use a wildcard.
 TEST_F(ArtdTest, deleteRuntimeArtifactsSpecialChars) {
   std::vector<std::string> removed_files;
   std::vector<std::string> kept_files;
@@ -2430,25 +2432,18 @@ TEST_F(ArtdTest, deleteRuntimeArtifactsSpecialChars) {
   CreateKeptFile(android_data_ + "/user/0/com.android.foo/cache/oat_primary/arm64/base.art");
 
   CreateRemovedFile(android_data_ + "/user/0/*/cache/oat_primary/arm64/base.art");
-  CreateRemovedFile(android_data_ + "/user/0/com.android.foo/cache/oat_primary/*/base.art");
   CreateRemovedFile(android_data_ + "/user/0/com.android.foo/cache/oat_primary/arm64/*.art");
 
   int64_t aidl_return;
-  ASSERT_TRUE(
-      artd_
-          ->deleteRuntimeArtifacts({.packageName = "*", .dexPath = "/a/b/base.apk", .isa = "arm64"},
-                                   &aidl_return)
-          .isOk());
-  ASSERT_TRUE(artd_
-                  ->deleteRuntimeArtifacts(
-                      {.packageName = "com.android.foo", .dexPath = "/a/b/*.apk", .isa = "arm64"},
-                      &aidl_return)
-                  .isOk());
-  ASSERT_TRUE(artd_
-                  ->deleteRuntimeArtifacts(
-                      {.packageName = "com.android.foo", .dexPath = "/a/b/base.apk", .isa = "*"},
-                      &aidl_return)
-                  .isOk());
+  ASSERT_STATUS_OK(artd_->deleteRuntimeArtifacts(
+      {.packageName = "*", .dexPath = "/a/b/base.apk", .isa = "arm64"}, &aidl_return));
+  ASSERT_STATUS_OK(artd_->deleteRuntimeArtifacts(
+      {.packageName = "com.android.foo", .dexPath = "/a/b/*.apk", .isa = "arm64"}, &aidl_return));
+  ASSERT_FALSE(artd_
+                   ->deleteRuntimeArtifacts(
+                       {.packageName = "com.android.foo", .dexPath = "/a/b/base.apk", .isa = "*"},
+                       &aidl_return)
+                   .isOk());
 
   for (const std::string& path : removed_files) {
     EXPECT_FALSE(std::filesystem::exists(path)) << ART_FORMAT("'{}' should be removed", path);

@@ -191,6 +191,12 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                                                                   oat_file_name,
                                                                   /*is_oat_location=*/true,
                                                                   /*use_fd=*/false));
+    info_list_.push_back(
+        std::make_unique<OatFileInfoBackedBySdm>(this,
+                                                 GetSdmFilename(dex_location_, isa),
+                                                 /*is_oat_location=*/true,
+                                                 GetDmFilename(dex_location_),
+                                                 GetSdcFilename(oat_file_name)));
   }
 
   if (!odex_file_name.empty()) {
@@ -202,6 +208,12 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                                                                   zip_fd,
                                                                   vdex_fd,
                                                                   oat_fd));
+    info_list_.push_back(
+        std::make_unique<OatFileInfoBackedBySdm>(this,
+                                                 GetSdmFilename(dex_location_, isa),
+                                                 /*is_oat_location=*/false,
+                                                 GetDmFilename(dex_location_),
+                                                 GetSdcFilename(odex_file_name)));
   }
 
   // When there is no odex/oat available (e.g., they are both out of date), we look for a useable
@@ -964,6 +976,10 @@ bool OatFileAssistant::OatFileInfoBackedByOat::FileExists() const {
   return use_fd_ || OatFileInfo::FileExists();
 }
 
+bool OatFileAssistant::OatFileInfoBackedBySdm::FileExists() const {
+  return OatFileInfo::FileExists() && OS::FileExists(sdc_filename_.c_str());
+}
+
 bool OatFileAssistant::OatFileInfoBackedByVdex::FileExists() const {
   return use_fd_ || OatFileInfo::FileExists();
 }
@@ -1021,6 +1037,21 @@ std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByOat::LoadFile(
                                                   oat_file_assistant_->dex_location_,
                                                   error_msg));
   }
+}
+
+std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedBySdm::LoadFile(
+    std::string* error_msg) const {
+  bool executable = oat_file_assistant_->load_executable_;
+  if (executable && oat_file_assistant_->only_load_trusted_executable_) {
+    executable = LocationIsTrusted(filename_, /*trust_art_apex_data_files=*/true);
+  }
+
+  return std::unique_ptr<OatFile>(OatFile::OpenFromSdm(filename_,
+                                                       sdc_filename_,
+                                                       dm_filename_,
+                                                       oat_file_assistant_->dex_location_,
+                                                       executable,
+                                                       error_msg));
 }
 
 std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByVdex::LoadFile(
