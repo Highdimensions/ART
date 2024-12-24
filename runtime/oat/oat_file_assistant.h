@@ -513,6 +513,27 @@ class OatFileAssistant {
     const int oat_fd_;
   };
 
+  class OatFileInfoBackedBySdm : public OatFileInfo {
+   public:
+    OatFileInfoBackedBySdm(OatFileAssistant* oat_file_assistant,
+                           const std::string& sdm_filename,
+                           bool is_oat_location,
+                           const std::string& dm_filename,
+                           const std::string& sdc_filename)
+        : OatFileInfo(oat_file_assistant, sdm_filename, is_oat_location),
+          dm_filename_(dm_filename),
+          sdc_filename_(sdc_filename) {}
+
+    bool FileExists() const override;
+
+   protected:
+    std::unique_ptr<OatFile> LoadFile(std::string* error_msg) const override;
+
+   private:
+    const std::string dm_filename_;
+    const std::string sdc_filename_;
+  };
+
   class OatFileInfoBackedByVdex : public OatFileInfo {
    public:
     OatFileInfoBackedByVdex(OatFileAssistant* oat_file_assistant,
@@ -634,6 +655,13 @@ class OatFileAssistant {
   // The AOT-compiled file of an app when the APK of the app is on a read-only partition
   // (for example /system).
   std::optional<OatFileInfoBackedByOat> oat_ = std::nullopt;
+
+  // The SDM file containing the AOT-compiled file of an app when the APK of the app is in /data.
+  std::optional<OatFileInfoBackedBySdm> sdm_for_odex_ = std::nullopt;
+  // The SDM file containing the AOT-compiled file of an app when the APK of the app is on a
+  // read-only filesystem (for example IncFS).
+  std::optional<OatFileInfoBackedBySdm> sdm_for_oat_ = std::nullopt;
+
   // The vdex-only file next to `odex_` when `odex_' cannot be used (for example
   // it is out of date).
   std::optional<OatFileInfoBackedByVdex> vdex_for_odex_ = std::nullopt;
