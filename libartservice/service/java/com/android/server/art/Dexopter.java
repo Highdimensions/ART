@@ -116,6 +116,13 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                 String compilerFilter = adjustCompilerFilter(mParams.getCompilerFilter(), dexInfo);
                 DexMetadataInfo dmInfo =
                         mInjector.getDexMetadataHelper().getDexMetadataInfo(buildDmPath(dexInfo));
+
+                if (!mInjector.isPreReboot() && android.content.pm.Flags.cloudCompilationPm()) {
+                    for (Abi abi : getAllAbis(dexInfo)) {
+                        maybeCreateSdc(dexInfo, abi.isa(), isInDalvikCache);
+                    }
+                }
+
                 if (compilerFilter.equals(DexoptParams.COMPILER_FILTER_NOOP)) {
                     mInjector.getReporterExecutor().execute(
                             ()
@@ -669,6 +676,22 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
     private void cleanupCurProfiles(@NonNull DexInfoType dexInfo) throws RemoteException {
         for (ProfilePath profile : getCurProfiles(dexInfo)) {
             mInjector.getArtd().deleteProfile(profile);
+        }
+    }
+
+    private void maybeCreateSdc(@NonNull DexInfoType dexInfo, @NonNull String isa,
+            boolean isInDalvikCache) throws RemoteException {
+        // SDC file doesn't contain sensitive data, so it can always to public.
+        PermissionSettings permissionSettings =
+                getPermissionSettings(dexInfo, true /* canBePublic */);
+        OutputSecureDexMetadataCompanion outputSdc =
+                AidlUtils.buildOutputSecureDexMetadataCompanion(
+                        dexInfo.dexPath(), isa, isInDalvikCache, permissionSettings);
+
+        try {
+            mInjector.getArtd().maybeCreateSdc(outputSdc);
+        } catch (ServiceSpecificException e) {
+            AsLog.e("Failed to create sdc for " + AidlUtils.toString(outputSdc.sdcPath), e);
         }
     }
 
