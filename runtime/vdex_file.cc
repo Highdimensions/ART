@@ -19,6 +19,7 @@
 #include <sys/mman.h>  // For the PROT_* and MAP_* constants.
 #include <sys/stat.h>  // for mkdir()
 
+#include <cstdint>
 #include <memory>
 #include <unordered_set>
 
@@ -141,6 +142,7 @@ std::unique_ptr<VdexFile> VdexFile::OpenAtAddress(uint8_t* mmap_addr,
 
 std::unique_ptr<VdexFile> VdexFile::OpenFromDm(const std::string& filename,
                                                const ZipArchive& archive,
+                                               uint8_t* addr,
                                                std::string* error_msg) {
   std::unique_ptr<ZipEntry> zip_entry(archive.Find(VdexFile::kVdexNameInDmFile, error_msg));
   if (zip_entry == nullptr) {
@@ -149,8 +151,13 @@ std::unique_ptr<VdexFile> VdexFile::OpenFromDm(const std::string& filename,
                             *error_msg);
     return nullptr;
   }
-  MemMap input_file = zip_entry->MapDirectlyOrExtract(
-      filename.c_str(), VdexFile::kVdexNameInDmFile, error_msg, alignof(VdexFile));
+  MemMap input_file;
+  if (addr != nullptr) {
+    input_file = zip_entry->MapDirectlyFromFile(filename.c_str(), addr, error_msg);
+  } else {
+    input_file = zip_entry->MapDirectlyOrExtract(
+        filename.c_str(), VdexFile::kVdexNameInDmFile, error_msg, alignof(VdexFile));
+  }
   if (!input_file.IsValid()) {
     *error_msg = "Could not open vdex file in DexMetadata archive: " + *error_msg;
     return nullptr;
