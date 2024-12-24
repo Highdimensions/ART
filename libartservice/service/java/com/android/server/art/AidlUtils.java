@@ -223,6 +223,15 @@ public final class AidlUtils {
     }
 
     @NonNull
+    public static SecureDexMetadataPath buildSecureDexMetadataPath(
+            @NonNull String dexPath, @NonNull String isa) {
+        var secureDexMetadataPath = new SecureDexMetadataPath();
+        secureDexMetadataPath.dexPath = dexPath;
+        secureDexMetadataPath.isa = isa;
+        return secureDexMetadataPath;
+    }
+
+    @NonNull
     public static WritableProfilePath toWritableProfilePath(@NonNull ProfilePath profile) {
         switch (profile.getTag()) {
             case ProfilePath.primaryRefProfilePath:
