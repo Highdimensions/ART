@@ -45,6 +45,7 @@ using ::aidl::com::android::server::art::OutputArtifacts;
 using ::aidl::com::android::server::art::OutputProfile;
 using ::aidl::com::android::server::art::ProfilePath;
 using ::aidl::com::android::server::art::RuntimeArtifactsPath;
+using ::aidl::com::android::server::art::SecureDexMetadataPath;
 using ::aidl::com::android::server::art::VdexPath;
 using ::android::base::Error;
 using ::android::base::Result;
@@ -148,9 +149,17 @@ std::vector<std::string> ListRuntimeArtifactsFiles(
   return tools::Glob(patterns, gListRootDir);
 }
 
+static Result<InstructionSet> ValidateAndGetIsa(const std::string& isa_str) {
+  InstructionSet isa = GetInstructionSetFromString(isa_str.c_str());
+  if (isa == InstructionSet::kNone) {
+    return Errorf("Instruction set '{}' is invalid", isa_str);
+  }
+  return isa;
+}
+
 Result<void> ValidateRuntimeArtifactsPath(const RuntimeArtifactsPath& runtime_artifacts_path) {
   OR_RETURN(ValidatePathElement(runtime_artifacts_path.packageName, "packageName"));
-  OR_RETURN(ValidatePathElement(runtime_artifacts_path.isa, "isa"));
+  OR_RETURN(ValidateAndGetIsa(runtime_artifacts_path.isa));
   OR_RETURN(ValidateDexPath(runtime_artifacts_path.dexPath));
   return {};
 }
@@ -159,32 +168,34 @@ Result<std::string> BuildArtBinPath(const std::string& binary_name) {
   return ART_FORMAT("{}/bin/{}", OR_RETURN(GetArtRootOrError()), binary_name);
 }
 
-Result<RawArtifactsPath> BuildArtifactsPath(const ArtifactsPath& artifacts_path) {
+Result<std::string> BuildOatPath(const ArtifactsPath& artifacts_path) {
   OR_RETURN(ValidateDexPath(artifacts_path.dexPath));
+  InstructionSet isa = OR_RETURN(ValidateAndGetIsa(artifacts_path.isa));
 
-  InstructionSet isa = GetInstructionSetFromString(artifacts_path.isa.c_str());
-  if (isa == InstructionSet::kNone) {
-    return Errorf("Instruction set '{}' is invalid", artifacts_path.isa);
-  }
-
+  std::string oat_path;
   std::string error_msg;
-  RawArtifactsPath path;
   if (artifacts_path.isInDalvikCache) {
     // Apps' OAT files are never in ART APEX data.
     if (!OatFileAssistant::DexLocationToOatFilename(artifacts_path.dexPath,
                                                     isa,
                                                     /*deny_art_apex_data_files=*/true,
-                                                    &path.oat_path,
+                                                    &oat_path,
                                                     &error_msg)) {
-      return Error() << error_msg;
+      return Errorf("{}", error_msg);
     }
   } else {
     if (!OatFileAssistant::DexLocationToOdexFilename(
-            artifacts_path.dexPath, isa, &path.oat_path, &error_msg)) {
-      return Error() << error_msg;
+            artifacts_path.dexPath, isa, &oat_path, &error_msg)) {
+      return Errorf("{}", error_msg);
     }
   }
 
+  return oat_path;
+}
+
+Result<RawArtifactsPath> BuildArtifactsPath(const ArtifactsPath& artifacts_path) {
+  RawArtifactsPath path;
+  path.oat_path = OR_RETURN(BuildOatPath(artifacts_path));
   path.vdex_path = ReplaceFileExtension(path.oat_path, kVdexExtension);
   path.art_path = ReplaceFileExtension(path.oat_path, kArtExtension);
 
@@ -301,6 +312,19 @@ Result<std::string> BuildProfileOrDmPath(const ProfilePath& profile_path) {
 Result<std::string> BuildVdexPath(const VdexPath& vdex_path) {
   DCHECK(vdex_path.getTag() == VdexPath::artifactsPath);
   return OR_RETURN(BuildArtifactsPath(vdex_path.get<VdexPath::artifactsPath>())).vdex_path;
+}
+
+Result<std::string> BuildSecureDexMetadataPath(
+    const SecureDexMetadataPath& secure_dex_metadata_path) {
+  OR_RETURN(ValidateDexPath(secure_dex_metadata_path.dexPath));
+  OR_RETURN(ValidateAndGetIsa(secure_dex_metadata_path.isa));
+  return ReplaceFileExtension(secure_dex_metadata_path.dexPath,
+                              ART_FORMAT(".{}{}", secure_dex_metadata_path.isa, kSdmExtension));
+}
+
+Result<std::string> BuildSecureDexMetadataCompanionPath(const ArtifactsPath& artifacts_path) {
+  std::string oat_path = OR_RETURN(BuildOatPath(artifacts_path));
+  return ReplaceFileExtension(oat_path, ".sdc");
 }
 
 bool PreRebootFlag(const ProfilePath& profile_path) {

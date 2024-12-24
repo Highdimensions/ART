@@ -522,6 +522,27 @@ class OatFileAssistant {
     const int oat_fd_;
   };
 
+  class OatFileInfoBackedBySdm : public OatFileInfo {
+   public:
+    OatFileInfoBackedBySdm(OatFileAssistant* oat_file_assistant,
+                           const std::string& sdm_filename,
+                           bool is_oat_location,
+                           const std::string& dm_filename,
+                           const std::string& sdc_filename)
+        : OatFileInfo(oat_file_assistant, sdm_filename, is_oat_location),
+          dm_filename_(dm_filename),
+          sdc_filename_(sdc_filename) {}
+
+    bool FileExists() const override;
+
+   protected:
+    std::unique_ptr<OatFile> LoadFile(std::string* error_msg) const override;
+
+   private:
+    const std::string dm_filename_;
+    const std::string sdc_filename_;
+  };
+
   class OatFileInfoBackedByVdex : public OatFileInfo {
    public:
     OatFileInfoBackedByVdex(OatFileAssistant* oat_file_assistant,
