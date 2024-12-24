@@ -170,6 +170,13 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                   zip_fd,
                   vdex_fd,
                   oat_fd);
+    if (!UseFdToReadFiles()) {
+      sdm_for_odex_.emplace(this,
+                            GetSdmFilename(dex_location_, isa),
+                            /*is_oat_location=*/false,
+                            GetDmFilename(dex_location_),
+                            GetSdcFilename(odex_file_name));
+    }
     // We dup FDs as the odex_ will claim ownership.
     vdex_for_odex_.emplace(this,
                            GetVdexFilename(odex_file_name),
@@ -193,6 +200,11 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                    oat_file_name,
                    /*is_oat_location=*/true,
                    /*use_fd=*/false);
+      sdm_for_oat_.emplace(this,
+                           GetSdmFilename(dex_location_, isa),
+                           /*is_oat_location=*/true,
+                           GetDmFilename(dex_location_),
+                           GetSdcFilename(oat_file_name));
       vdex_for_oat_.emplace(this,
                             GetVdexFilename(oat_file_name),
                             /*is_oat_location=*/true,
@@ -838,6 +850,20 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
     }
   }
 
+  if (sdm_for_oat_.has_value() && sdm_for_oat_->FileExists()) {
+    log_status("sdm with sdc in dalvik-cache", &sdm_for_oat_.value());
+    if (sdm_for_oat_->IsUseable()) {
+      return *sdm_for_oat_;
+    }
+  }
+
+  if (sdm_for_odex_.has_value() && sdm_for_odex_->FileExists()) {
+    log_status("sdm with sdc next to the dex file", &sdm_for_odex_.value());
+    if (sdm_for_odex_->IsUseable()) {
+      return *sdm_for_odex_;
+    }
+  }
+
   // No odex/oat available, look for a useable vdex file.
   if (vdex_for_oat_.has_value() && vdex_for_oat_->FileExists()) {
     log_status("vdex in dalvik-cache", &vdex_for_oat_.value());
@@ -963,6 +989,10 @@ bool OatFileAssistant::OatFileInfoBackedByOat::FileExists() const {
   return use_fd_ || OatFileInfo::FileExists();
 }
 
+bool OatFileAssistant::OatFileInfoBackedBySdm::FileExists() const {
+  return OatFileInfo::FileExists() && OS::FileExists(sdc_filename_.c_str());
+}
+
 bool OatFileAssistant::OatFileInfoBackedByVdex::FileExists() const {
   return use_fd_ || OatFileInfo::FileExists();
 }
@@ -1022,6 +1052,31 @@ std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByOat::LoadFile(
   }
 }
 
+std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedBySdm::LoadFile(
+    std::string* error_msg) const {
+  bool executable = oat_file_assistant_->load_executable_;
+  if (executable && oat_file_assistant_->only_load_trusted_executable_) {
+    executable = LocationIsTrusted(filename_, /*trust_art_apex_data_files=*/true);
+  }
+
+  std::string expected_digest;
+  if (!android::base::ReadFileToString(sdc_filename_, &expected_digest)) {
+    *error_msg = ART_FORMAT("Cannot open sdc file: {}", strerror(errno));
+    return nullptr;
+  }
+  std::string actual_digest = GetFsVerityDigest(filename_, error_msg);
+  if (actual_digest.empty()) {
+    return nullptr;
+  }
+  if (actual_digest != expected_digest) {
+    *error_msg =
+        ART_FORMAT("Digest mismatch (expected: {}, actual: {})", expected_digest, actual_digest);
+    return nullptr;
+  }
+  return std::unique_ptr<OatFile>(OatFile::OpenFromSdm(
+      filename_, dm_filename_, oat_file_assistant_->dex_location_, executable, error_msg));
+}
+
 std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByVdex::LoadFile(
     std::string* error_msg) const {
   // Check to see if there is a vdex file we can make use of.
@@ -1064,7 +1119,8 @@ std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByDm::LoadFile(
   if (dm_file == nullptr) {
     return nullptr;
   }
-  std::unique_ptr<VdexFile> vdex(VdexFile::OpenFromDm(filename_, *dm_file, error_msg));
+  std::unique_ptr<VdexFile> vdex(
+      VdexFile::OpenFromDm(filename_, *dm_file, /*addr=*/nullptr, error_msg));
   if (vdex == nullptr) {
     return nullptr;
   }
