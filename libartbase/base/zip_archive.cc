@@ -101,7 +101,9 @@ bool ZipEntry::ExtractToMemory(/*out*/uint8_t* buffer, /*out*/std::string* error
   return true;
 }
 
-MemMap ZipEntry::MapDirectlyFromFile(const char* zip_filename, std::string* error_msg) {
+MemMap ZipEntry::MapDirectlyFromFile(const char* zip_filename,
+                                     uint8_t* addr,
+                                     std::string* error_msg) {
   const int zip_fd = GetFileDescriptor(handle_);
   const char* entry_filename = entry_name_.c_str();
 
@@ -139,15 +141,29 @@ MemMap ZipEntry::MapDirectlyFromFile(const char* zip_filename, std::string* erro
     LOG(INFO) << "zip_archive: " << "make mmap of " << name << " @ offset = " << offset;
   }
 
-  MemMap map =
-      MemMap::MapFile(GetUncompressedLength(),  // Byte count
-                      PROT_READ | PROT_WRITE,
-                      MAP_PRIVATE,
-                      zip_fd,
-                      offset,
-                      /*low_4gb=*/ false,
-                      name.c_str(),
-                      error_msg);
+  MemMap map;
+  if (addr != nullptr) {
+    map = MemMap::MapFileAtAddress(addr,
+                                   GetUncompressedLength(),  // Byte count
+                                   PROT_READ | PROT_WRITE,
+                                   MAP_PRIVATE,
+                                   zip_fd,
+                                   offset,
+                                   /*low_4gb=*/false,
+                                   name.c_str(),
+                                   /*reuse=*/true,
+                                   /*reservation=*/nullptr,
+                                   error_msg);
+  } else {
+    map = MemMap::MapFile(GetUncompressedLength(),  // Byte count
+                          PROT_READ | PROT_WRITE,
+                          MAP_PRIVATE,
+                          zip_fd,
+                          offset,
+                          /*low_4gb=*/false,
+                          name.c_str(),
+                          error_msg);
+  }
 
   if (!map.IsValid()) {
     DCHECK(!error_msg->empty());

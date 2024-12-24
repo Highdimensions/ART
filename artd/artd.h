@@ -215,6 +215,12 @@ class Artd : public aidl::com::android::server::art::BnArtd {
       int32_t in_dexoptTrigger,
       aidl::com::android::server::art::GetDexoptNeededResult* _aidl_return) override;
 
+  ndk::ScopedAStatus verifySdmUsability(const std::string& in_dexFile,
+                                        const std::string& in_instructionSet,
+                                        const std::optional<std::string>& in_classLoaderContext,
+                                        const std::string& in_compilerFilter,
+                                        bool* _aidl_return) override;
+
   ndk::ScopedAStatus dexopt(
       const aidl::com::android::server::art::OutputArtifacts& in_outputArtifacts,
       const std::string& in_dexFile,

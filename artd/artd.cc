@@ -82,6 +82,7 @@
 #include "exec_utils.h"
 #include "file_utils.h"
 #include "fstab/fstab.h"
+#include "oat/oat_file.h"
 #include "oat/oat_file_assistant.h"
 #include "oat/oat_file_assistant_context.h"
 #include "odrefresh/odrefresh.h"
@@ -992,6 +993,29 @@ ndk::ScopedAStatus Artd::getDexoptNeeded(const std::string& in_dexFile,
   }
   _aidl_return->hasDexCode = *has_dex_files;
 
+  return ScopedAStatus::ok();
+}
+
+ndk::ScopedAStatus Artd::verifySdmUsability(const std::string& in_dexFile,
+                                            const std::string& in_instructionSet,
+                                            const std::optional<std::string>& in_classLoaderContext,
+                                            const std::string& in_compilerFilter,
+                                            bool* _aidl_return) {
+  (void)in_dexFile;
+  (void)in_instructionSet;
+  (void)in_classLoaderContext;
+  (void)in_compilerFilter;
+  std::string error_msg;
+  OatFile* oat_file = OatFile::OpenFromSdm(ReplaceFileExtension(in_dexFile, kSdmExtension),
+                                           ReplaceFileExtension(in_dexFile, kDmExtension),
+                                           in_dexFile,
+                                           &error_msg);
+  if (oat_file == nullptr) {
+    LOG(ERROR) << error_msg;
+    *_aidl_return = false;
+    return ScopedAStatus::ok();
+  }
+  *_aidl_return = true;
   return ScopedAStatus::ok();
 }
 

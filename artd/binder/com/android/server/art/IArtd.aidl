@@ -152,6 +152,10 @@ interface IArtd {
             @nullable @utf8InCpp String classLoaderContext, @utf8InCpp String compilerFilter,
             int dexoptTrigger);
 
+    boolean verifySdmUsability(
+            @utf8InCpp String dexFile, @utf8InCpp String instructionSet,
+            @nullable @utf8InCpp String classLoaderContext, @utf8InCpp String compilerFilter);
+
     /**
      * Dexopts a dex file for the given instruction set.
      *

@@ -181,6 +181,11 @@ class OatFile {
                                ClassLoaderContext* context,
                                std::string* error_msg);
 
+  EXPORT static OatFile* OpenFromSdm(const std::string& sdm_filename,
+                                     const std::string& dm_filename,
+                                     const std::string& dex_filename,
+                                     /*out*/ std::string* error_msg);
+
   // Set the start of the app image.
   // Needed for initializing app image relocations in the .data.img.rel.ro section.
   void SetAppImageBegin(uint8_t* app_image_begin) const {
