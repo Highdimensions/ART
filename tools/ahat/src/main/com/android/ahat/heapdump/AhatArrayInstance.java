@@ -42,6 +42,7 @@ public class AhatArrayInstance extends AhatInstance {
   private byte[] mByteArray;    // null if not a byte array.
   private char[] mCharArray;    // null if not a char array.
   private final int mRefSize;
+  private boolean mIsPrimitiveArray = false;
 
   AhatArrayInstance(long id, int refSize) {
     super(id);
@@ -52,6 +53,7 @@ public class AhatArrayInstance extends AhatInstance {
    * Initialize the array elements for a primitive boolean array.
    */
   void initialize(final boolean[] bools) {
+    mIsPrimitiveArray = true;
     mValues = new AbstractList<Value>() {
       @Override public int size() {
         return bools.length;
@@ -67,6 +69,7 @@ public class AhatArrayInstance extends AhatInstance {
    * Initialize the array elements for a primitive char array.
    */
   void initialize(final char[] chars) {
+    mIsPrimitiveArray = true;
     mCharArray = chars;
     mValues = new AbstractList<Value>() {
       @Override public int size() {
@@ -83,6 +86,7 @@ public class AhatArrayInstance extends AhatInstance {
    * Initialize the array elements for a primitive float array.
    */
   void initialize(final float[] floats) {
+    mIsPrimitiveArray = true;
     mValues = new AbstractList<Value>() {
       @Override public int size() {
         return floats.length;
@@ -98,6 +102,7 @@ public class AhatArrayInstance extends AhatInstance {
    * Initialize the array elements for a primitive double array.
    */
   void initialize(final double[] doubles) {
+    mIsPrimitiveArray = true;
     mValues = new AbstractList<Value>() {
       @Override public int size() {
         return doubles.length;
@@ -113,6 +118,7 @@ public class AhatArrayInstance extends AhatInstance {
    * Initialize the array elements for a primitive byte array.
    */
   void initialize(final byte[] bytes) {
+    mIsPrimitiveArray = true;
     mByteArray = bytes;
     mValues = new AbstractList<Value>() {
       @Override public int size() {
@@ -129,6 +135,7 @@ public class AhatArrayInstance extends AhatInstance {
    * Initialize the array elements for a primitive short array.
    */
   void initialize(final short[] shorts) {
+    mIsPrimitiveArray = true;
     mValues = new AbstractList<Value>() {
       @Override public int size() {
         return shorts.length;
@@ -144,6 +151,7 @@ public class AhatArrayInstance extends AhatInstance {
    * Initialize the array elements for a primitive int array.
    */
   void initialize(final int[] ints) {
+    mIsPrimitiveArray = true;
     mValues = new AbstractList<Value>() {
       @Override public int size() {
         return ints.length;
@@ -159,6 +167,7 @@ public class AhatArrayInstance extends AhatInstance {
    * Initialize the array elements for a primitive long array.
    */
   void initialize(final long[] longs) {
+    mIsPrimitiveArray = true;
     mValues = new AbstractList<Value>() {
       @Override public int size() {
         return longs.length;
@@ -259,6 +268,10 @@ public class AhatArrayInstance extends AhatInstance {
 
   @Override public boolean isArrayInstance() {
     return true;
+  }
+
+  public boolean isPrimitiveArray() {
+    return mIsPrimitiveArray;
   }
 
   @Override public AhatArrayInstance asArrayInstance() {
