@@ -118,16 +118,19 @@ class ObjectsHandler implements AhatHandler {
     if (insts.isEmpty()) {
       doc.println(DocString.text("(none)"));
     } else {
-      SizeTable.table(doc, mSnapshot.isDiffed(),
+      SizeTable.table(doc, new Column(""), mSnapshot.isDiffed(),
           new Column("Heap"),
           new Column("Object"));
 
       SubsetSelector<AhatInstance> selector = new SubsetSelector(query, OBJECTS_ID, insts);
       for (AhatInstance inst : selector.selected()) {
         AhatInstance base = inst.getBaseline();
-        SizeTable.row(doc, inst.getSize(), base.getSize(),
-            DocString.text(inst.getHeap().getName()),
-            Summarizer.summarize(inst));
+        SizeTable.row(doc, DocString.text("Shallow"),
+            inst.getSize(), base.getSize(),
+            DocString.text(inst.getHeap().getName()), Summarizer.summarize(inst));
+        SizeTable.row(doc, DocString.text("Retained"),
+            inst.getTotalRetainedSize(), base.getTotalRetainedSize(),
+            new DocString(), new DocString());
       }
       SizeTable.end(doc);
       selector.render(doc);
