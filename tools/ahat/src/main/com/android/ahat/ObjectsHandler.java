@@ -20,6 +20,7 @@ import com.android.ahat.heapdump.AhatHeap;
 import com.android.ahat.heapdump.AhatInstance;
 import com.android.ahat.heapdump.AhatSnapshot;
 import com.android.ahat.heapdump.Site;
+import com.android.ahat.heapdump.Size;
 import com.android.ahat.heapdump.Sort;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -118,16 +119,46 @@ class ObjectsHandler implements AhatHandler {
     if (insts.isEmpty()) {
       doc.println(DocString.text("(none)"));
     } else {
-      SizeTable.table(doc, mSnapshot.isDiffed(),
-          new Column("Heap"),
-          new Column("Object"));
+
+      final AhatInstance first = insts.get(0);
+      final boolean isPrimitiveArray =
+          first.isArrayInstance() && first.asArrayInstance().isPrimitiveArray();
+      if (isPrimitiveArray) {
+        SizeTable.table(doc,
+            mSnapshot.isDiffed(),
+            new Column("Heap"),
+            new Column("Object"));
+      } else {
+        SizeTable.table(doc, new Column("") /* Shallow / Retained */,
+            mSnapshot.isDiffed(),
+            new Column("Heap"),
+            new Column("Object"));
+      }
 
       SubsetSelector<AhatInstance> selector = new SubsetSelector(query, OBJECTS_ID, insts);
+
+      final DocString shallow = DocString.text("Shallow");
+      final DocString retained = DocString.text("Retained");
+      final DocString empty = new DocString();
       for (AhatInstance inst : selector.selected()) {
         AhatInstance base = inst.getBaseline();
-        SizeTable.row(doc, inst.getSize(), base.getSize(),
-            DocString.text(inst.getHeap().getName()),
-            Summarizer.summarize(inst));
+        Size size = inst.getSize();
+        Size baseSize = base.getSize();
+        Size retainedSize = inst.getTotalRetainedSize();
+        Size baseRetainedSize = base.getTotalRetainedSize();
+
+        if (inst.isArrayInstance() && inst.asArrayInstance().isPrimitiveArray()) {
+          SizeTable.row(doc,
+              size, baseSize,
+              DocString.text(inst.getHeap().getName()), Summarizer.summarize(inst));
+        } else {
+          SizeTable.row(doc, shallow,
+              size, baseSize,
+              DocString.text(inst.getHeap().getName()), Summarizer.summarize(inst));
+          SizeTable.row(doc, retained,
+              retainedSize, baseRetainedSize,
+              empty, empty);
+        }
       }
       SizeTable.end(doc);
       selector.render(doc);
