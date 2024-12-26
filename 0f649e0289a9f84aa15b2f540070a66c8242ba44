@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "25ea35a8_b1ac292c",
+        "filename": "runtime/gc/accounting/card_table.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-26T22:29:10Z",
+      "side": 1,
+      "message": "This also seems like a fairly weird encoding. Would it make sense to have dirty \u003d 4, aged \u003d 2, aged2 \u003d 1, and have aging do a right shift? You\u0027d have to be a bit more careful in interpreting the bits when you read the cards. But it feels more intuitive and faster, given that we\u0027re already trading bits for cheaper atomicity. (Which is probably the right trade-off for code size reasons, though it\u0027s not 100% clear.)",
+      "parentUuid": "b41ae166_dada4d9c",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 0
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4c1412f9_bb023033",
         "filename": "runtime/gc/accounting/card_table.h",
         "patchSetId": 16
@@ -119,6 +143,29 @@
           ]
         }
       ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6f86c2e_9de87a11",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1152,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-26T22:29:10Z",
+      "side": 1,
+      "message": "Move this to the mid_gen_end_ declaration in the .h file. It would also be nice to quicly explain the 3 generation scheme there.",
+      "range": {
+        "startLine": 1150,
+        "startChar": 4,
+        "endLine": 1152,
+        "endChar": 78
+      },
       "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -848,6 +895,29 @@
           ]
         }
       ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46f75c2b_bb1566b0",
+        "filename": "runtime/gc/heap.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 2571,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-26T22:29:10Z",
+      "side": 1,
+      "message": "This now seems to be misnamed. And the heading comment in heap.h also seems to be wrong. Or did you mean something else here?\nI\u0027m also not a fan of the PreZygoteFork() function name, since it\u0027s only called before the first zygote fork, I believe. It\u0027s really tied to zygote space creation, right?",
+      "range": {
+        "startLine": 2571,
+        "startChar": 31,
+        "endLine": 2571,
+        "endChar": 51
+      },
       "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
