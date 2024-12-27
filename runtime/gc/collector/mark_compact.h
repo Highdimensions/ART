@@ -619,6 +619,8 @@ class MarkCompact final : public GarbageCollector {
   // returns. Returns number of bytes (multiple of page-size) mapped.
   size_t CopyIoctl(
       void* dst, void* buffer, size_t length, bool return_on_contention, bool tolerate_enoent);
+  // Move 'len/page-size' pages from 'src' to 'dst'.
+  size_t MoveIoctl(void* dst, void* src, size_t len, bool tolerate_enoent);
 
   // Called after updating linear-alloc page(s) to map the page. It first
   // updates the state of the pages to kProcessedAndMapping and after ioctl to
@@ -885,6 +887,7 @@ class MarkCompact final : public GarbageCollector {
   // When using SIGBUS feature, this counter is used by mutators to claim a page
   // out of compaction buffers to be used for the entire compaction cycle.
   std::atomic<uint16_t> compaction_buffer_counter_;
+  bool use_move_ioctl_;
   // Set to true in MarkingPause() to indicate when allocation_stack_ should be
   // checked in IsMarked() for black allocations.
   bool marking_done_;
