@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "299561ae_b6903fa7",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1963346
+      },
+      "writtenOn": "2024-12-27T12:27:19Z",
+      "side": 1,
+      "message": "There is no help here, here just increment idx only in the loop body according to your suggestion",
+      "parentUuid": "2dc35c12_dea71c2e",
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cd4da986_cd58cdfe",
         "filename": "runtime/gc/space/large_object_space.cc",
         "patchSetId": 6
@@ -31,6 +49,30 @@
       "writtenOn": "2024-12-27T00:25:11Z",
       "side": 1,
       "message": "Why is this correct? obj was not adjusted when we merged with the preceding block.",
+      "range": {
+        "startLine": 545,
+        "startChar": 12,
+        "endLine": 545,
+        "endChar": 15
+      },
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecec195c_3e536f41",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1963346
+      },
+      "writtenOn": "2024-12-27T12:27:19Z",
+      "side": 1,
+      "message": "It only integrate the adjacent chunks backwards so there is no need to adjust obj.",
+      "parentUuid": "cd4da986_cd58cdfe",
       "range": {
         "startLine": 545,
         "startChar": 12,
@@ -66,6 +108,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a711d06a_817d5e4c",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1963346
+      },
+      "writtenOn": "2024-12-27T12:27:19Z",
+      "side": 1,
+      "message": "To fix the failure of 175-alloc-big-bignums, madvice should be called first and then new_free_info should be inserted into free_blocks_.\n\nIf new_free_info is inserted into free_blocks_ first, it may be allocated at this time. Then calling madvice will release it, and a null pointer error will occur during subsequent accesses.",
+      "parentUuid": "47e0de7e_e20acf10",
+      "range": {
+        "startLine": 547,
+        "startChar": 4,
+        "endLine": 550,
+        "endChar": 5
+      },
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a190e619_0ac35fc8",
         "filename": "runtime/gc/space/large_object_space.h",
         "patchSetId": 6
@@ -77,6 +143,30 @@
       "writtenOn": "2024-12-27T00:25:11Z",
       "side": 1,
       "message": "AFAICT, you\u0027re assuming for performance reasons that ptrs is address ordered? If so, please document that here, as in \"Deallocate all num_ptrs objects referenced by ptrs. Performance is much better if ptrs is address-ordered.\"\n\nAlso please add enough documentation to the caller(s) to make it plausible to the reader that the list is in fact address-ordered.\n\nAlso please check and document here that Free() and FreeList() are only ever called during a GC, and thus can never be called concurrently. Your changes rely on that to avoid races in the data structure access. Unfortunately, there are no GUARDED_BY annotations to check any of this.",
+      "range": {
+        "startLine": 208,
+        "startChar": 2,
+        "endLine": 208,
+        "endChar": 81
+      },
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd9b6fd3_776e53d8",
+        "filename": "runtime/gc/space/large_object_space.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1963346
+      },
+      "writtenOn": "2024-12-27T12:27:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a190e619_0ac35fc8",
       "range": {
         "startLine": 208,
         "startChar": 2,
