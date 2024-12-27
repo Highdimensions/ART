@@ -63,6 +63,13 @@ static bool art_sigbus_handler(int sig, siginfo_t* info, void* context) {
   return fault_manager.HandleSigbusFault(sig, info, context);
 }
 
+static bool art_sigsys_handler(int sig, siginfo_t* info, void* context) {
+  if (Runtime::Current()->GetHeap()->MarkCompactCollector()->SigsysHandler(info, context)) {
+    return true;
+  }
+  return false;
+}
+
 FaultManager::FaultManager()
     : generated_code_ranges_lock_("FaultHandler generated code ranges lock",
                                   LockLevel::kGenericBottomLock),
@@ -123,6 +130,9 @@ void FaultManager::Init(bool use_sig_chain) {
     if (gUseUserfaultfd) {
       sa.sc_sigaction = art_sigbus_handler;
       AddSpecialSignalHandlerFn(SIGBUS, &sa);
+
+      sa.sc_sigaction = art_sigsys_handler;
+      AddSpecialSignalHandlerFn(SIGSYS, &sa);
     }
 
     // Notify the kernel that we intend to use a specific `membarrier()` command.
