@@ -62,30 +62,6 @@ bool Instruction::CanFlowThrough() const {
   return  FlagsOf(opcode) & Instruction::kContinue;
 }
 
-size_t Instruction::SizeInCodeUnitsComplexOpcode() const {
-  const uint16_t* insns = reinterpret_cast<const uint16_t*>(this);
-  // Handle special NOP encoded variable length sequences.
-  switch (*insns) {
-    case kPackedSwitchSignature:
-      return (4 + insns[1] * 2);
-    case kSparseSwitchSignature:
-      return (2 + insns[1] * 4);
-    case kArrayDataSignature: {
-      uint16_t element_size = insns[1];
-      uint32_t length = insns[2] | (((uint32_t)insns[3]) << 16);
-      // The plus 1 is to round up for odd size and width.
-      return (4 + (element_size * length + 1) / 2);
-    }
-    default:
-      if ((*insns & 0xFF) == 0) {
-        return 1;  // NOP.
-      } else {
-        LOG(FATAL) << "Unreachable: " << DumpString(nullptr);
-        UNREACHABLE();
-      }
-  }
-}
-
 size_t Instruction::CodeUnitsRequiredForSizeOfComplexOpcode() const {
   const uint16_t* insns = reinterpret_cast<const uint16_t*>(this);
   // Handle special NOP encoded variable length sequences.

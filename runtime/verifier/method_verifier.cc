@@ -218,23 +218,6 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
   }
 
   /*
-   * Compute the width of the instruction at each address in the instruction stream, and store it in
-   * insn_flags_. Addresses that are in the middle of an instruction, or that are part of switch
-   * table data, are not touched (so the caller should probably initialize "insn_flags" to zero).
-   *
-   * The "new_instance_count_" and "monitor_enter_count_" fields in vdata are also set.
-   *
-   * Performs some static checks, notably:
-   * - opcode of first instruction begins at index 0
-   * - only documented instructions may appear
-   * - each instruction follows the last
-   * - last byte of last instruction is at (code_length-1)
-   *
-   * Logs an error and returns "false" on failure.
-   */
-  bool ComputeWidthsAndCountOps();
-
-  /*
    * Set the "in try" flags for all instructions protected by "try" statements. Also sets the
    * "branch target" flags for exception handlers.
    *
@@ -246,6 +229,20 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
   bool ScanTryCatchBlocks() REQUIRES_SHARED(Locks::mutator_lock_);
 
   /*
+   FIXME
+   * Compute the width of the instruction at each address in the instruction stream, and store it in
+   * insn_flags_. Addresses that are in the middle of an instruction, or that are part of switch
+   * table data, are not touched (so the caller should probably initialize "insn_flags" to zero).
+   *
+   * Performs some static checks, notably:
+   * - opcode of first instruction begins at index 0
+   * - only documented instructions may appear
+   * - each instruction follows the last
+   * - last byte of last instruction is at (code_length-1)
+   *
+   * Logs an error and returns "false" on failure.
+
+
    * Perform static verification on all instructions in a method.
    *
    * Walks through instructions in a method calling VerifyInstruction on each.
@@ -1500,46 +1497,14 @@ bool MethodVerifier<kVerifierDebug>::Verify() {
       insn_flags_.get(),
       insn_flags_.get() + code_item_accessor_.InsnsSizeInCodeUnits(),
       [](const InstructionFlags& flags) { return flags.Equals(InstructionFlags()); }));
-  // Run through the instructions and see if the width checks out.
-  bool result = ComputeWidthsAndCountOps();
+  // Perform static instruction verification.
+  bool result = VerifyInstructions();
   // Flag instructions guarded by a "try" block and check exception handlers.
   result = result && ScanTryCatchBlocks();
-  // Perform static instruction verification.
-  result = result && VerifyInstructions();
   // Perform code-flow analysis and return.
   result = result && VerifyCodeFlow();
 
   return result;
-}
-
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::ComputeWidthsAndCountOps() {
-  // We can't assume the instruction is well formed, handle the case where calculating the size
-  // goes past the end of the code item.
-  SafeDexInstructionIterator it(code_item_accessor_.begin(), code_item_accessor_.end());
-  if (it == code_item_accessor_.end()) {
-    Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "code item has no opcode";
-    return false;
-  }
-  for ( ; !it.IsErrorState() && it < code_item_accessor_.end(); ++it) {
-    // In case the instruction goes past the end of the code item, make sure to not process it.
-    SafeDexInstructionIterator next = it;
-    ++next;
-    if (next.IsErrorState()) {
-      break;
-    }
-    GetModifiableInstructionFlags(it.DexPc()).SetIsOpcode();
-  }
-
-  if (it != code_item_accessor_.end()) {
-    const size_t insns_size = code_item_accessor_.InsnsSizeInCodeUnits();
-    Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "code did not end where expected ("
-                                      << it.DexPc() << " vs. " << insns_size << ")";
-    return false;
-  }
-  DCHECK(GetInstructionFlags(0).IsOpcode());
-
-  return true;
 }
 
 template <bool kVerifierDebug>
@@ -1607,9 +1572,52 @@ bool MethodVerifier<kVerifierDebug>::VerifyInstructions() {
   // Flag the start of the method as a branch target.
   GetModifiableInstructionFlags(0).SetBranchTarget();
   const Instruction* inst = Instruction::At(code_item_accessor_.Insns());
+  uint32_t remaining_code_units = code_item_accessor_.InsnsSizeInCodeUnits();
+  if (UNLIKELY(remaining_code_units == 0u)) {
+    Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "code item has no opcode";
+    return false;
+  }
   uint32_t dex_pc = 0u;
-  const uint32_t end_dex_pc = code_item_accessor_.InsnsSizeInCodeUnits();
-  while (dex_pc != end_dex_pc) {
+  while (remaining_code_units != 0u) {
+    uint16_t inst_data = inst->Fetch16(0);
+    Instruction::Code opcode = inst->Opcode(inst_data);
+
+    // We can't assume the instruction is well formed, handle the case where calculating
+    // the size goes past the end of the code item.
+    uint32_t instruction_size = 0u;
+    if (opcode == Instruction::NOP) {
+      auto complex_opcode_size = [&](size_t code_unit_for_size_of) ALWAYS_INLINE {
+        DCHECK_EQ(code_unit_for_size_of, inst->CodeUnitsRequiredForSizeOfComplexOpcode());
+        return LIKELY(remaining_code_units >= code_unit_for_size_of)
+            ? inst->SizeInCodeUnitsComplexOpcode(inst_data)
+            : code_unit_for_size_of;
+      };
+      switch (inst_data) {
+        case Instruction::kPackedSwitchSignature:
+          FALLTHROUGH_INTENDED;
+        case Instruction::kSparseSwitchSignature:
+          instruction_size = complex_opcode_size(2u);
+          break;
+        case Instruction::kArrayDataSignature:
+          instruction_size = complex_opcode_size(4u);
+          break;
+        default:
+          instruction_size = 1u;  // NOP.
+          break;
+      }
+    } else {
+      instruction_size = Instruction::SizeInCodeUnits(Instruction::FormatOf(opcode));
+      DCHECK_EQ(instruction_size, inst->SizeInCodeUnits());
+    }
+    if (UNLIKELY(instruction_size > remaining_code_units)) {
+      uint32_t insns_size = dex_pc + remaining_code_units;
+      DCHECK_EQ(insns_size, code_item_accessor_.InsnsSizeInCodeUnits());
+      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "code did not end where expected ("
+                                        << dex_pc << " vs. " << insns_size << ")";
+      return false;
+    }
+    GetModifiableInstructionFlags(dex_pc).SetIsOpcode();
+
     auto find_dispatch_opcode = [](Instruction::Code opcode) constexpr {
       // NOP needs its own dipatch because it needs special code for instruction size.
       if (opcode == Instruction::NOP) {
@@ -1632,9 +1640,8 @@ bool MethodVerifier<kVerifierDebug>::VerifyInstructions() {
       return opcode;
     };
 
-    uint16_t inst_data = inst->Fetch16(0);
     Instruction::Code dispatch_opcode = Instruction::NOP;
-    switch (inst->Opcode(inst_data)) {
+    switch (opcode) {
 #define DEFINE_CASE(opcode, c, p, format, index, flags, eflags, vflags) \
       case opcode: {                                                    \
         /* Enforce compile-time evaluation. */                          \
@@ -1647,7 +1654,6 @@ bool MethodVerifier<kVerifierDebug>::VerifyInstructions() {
 #undef DEFINE_CASE
     }
     bool is_return = false;
-    uint32_t instruction_size = 0u;
     switch (dispatch_opcode) {
 #define DEFINE_CASE(opcode, c, p, format, index, flags, eflags, vflags)             \
       case opcode: {                                                                \
@@ -1671,10 +1677,13 @@ bool MethodVerifier<kVerifierDebug>::VerifyInstructions() {
       GetModifiableInstructionFlags(dex_pc).SetReturn();
     }
     DCHECK_NE(instruction_size, 0u);
-    DCHECK_LE(instruction_size, end_dex_pc - dex_pc);
+    DCHECK_EQ(instruction_size, inst->SizeInCodeUnits());
+    DCHECK_LE(instruction_size, remaining_code_units);
     dex_pc += instruction_size;
+    remaining_code_units -= instruction_size;
     inst = inst->RelativeAt(instruction_size);
   }
+  DCHECK(GetInstructionFlags(0).IsOpcode());
   return true;
 }
 

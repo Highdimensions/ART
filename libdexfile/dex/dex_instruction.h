@@ -213,14 +213,7 @@ class Instruction {
   static constexpr bool kHaveExperimentalInstructions = false;
 
   // Returns the size (in 2 byte code units) of this instruction.
-  size_t SizeInCodeUnits() const {
-    int8_t result = InstructionDescriptorOf(Opcode()).size_in_code_units;
-    if (UNLIKELY(result < 0)) {
-      return SizeInCodeUnitsComplexOpcode();
-    } else {
-      return static_cast<size_t>(result);
-    }
-  }
+  size_t SizeInCodeUnits() const;
 
   // Returns the size (in 2 byte code units) of the given instruction format.
   ALWAYS_INLINE static constexpr size_t SizeInCodeUnits(Format format);
@@ -674,15 +667,16 @@ class Instruction {
     return insns[offset];
   }
 
+  size_t SizeInCodeUnitsComplexOpcode(uint16_t inst_data) const;
   size_t SizeInCodeUnitsComplexOpcode() const;
+
+  // Return how many code unit words are required to compute the size of the opcode.
+  size_t CodeUnitsRequiredForSizeOfComplexOpcode() const;
 
  private:
   static constexpr const InstructionDescriptor& InstructionDescriptorOf(Code opcode) {
     return kInstructionDescriptors[opcode];
   }
-
-  // Return how many code unit words are required to compute the size of the opcode.
-  size_t CodeUnitsRequiredForSizeOfComplexOpcode() const;
 
   uint32_t Fetch32(size_t offset) const {
     return (Fetch16(offset) | ((uint32_t) Fetch16(offset + 1) << 16));

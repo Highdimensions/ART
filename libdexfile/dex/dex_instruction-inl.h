@@ -53,6 +53,39 @@ inline constexpr size_t Instruction::SizeInCodeUnits(Format format) {
   }
 }
 
+inline size_t Instruction::SizeInCodeUnitsComplexOpcode(uint16_t inst_data) const {
+  DCHECK_EQ(inst_data, Fetch16(0));
+  DCHECK_EQ(inst_data & 0xffu, 0u) << DumpString(nullptr);
+  // Handle special NOP encoded variable length sequences.
+  switch (inst_data) {
+    case kPackedSwitchSignature:
+      return (4 + Fetch16(1) * 2);
+    case kSparseSwitchSignature:
+      return (2 + Fetch16(1) * 4);
+    case kArrayDataSignature: {
+      uint16_t element_size = Fetch16(1);
+      uint32_t length = Fetch16(2) | (((uint32_t)Fetch16(3)) << 16);
+      // The plus 1 is to round up for odd size and width.
+      return (4 + (element_size * length + 1) / 2);
+    }
+    default:
+      return 1;  // NOP.
+  }
+}
+
+inline size_t Instruction::SizeInCodeUnitsComplexOpcode() const {
+  return SizeInCodeUnitsComplexOpcode(Fetch16(0));
+}
+
+inline size_t Instruction::SizeInCodeUnits() const {
+  int8_t result = InstructionDescriptorOf(Opcode()).size_in_code_units;
+  if (UNLIKELY(result < 0)) {
+    return SizeInCodeUnitsComplexOpcode();
+  } else {
+    return static_cast<size_t>(result);
+  }
+}
+
 //------------------------------------------------------------------------------
 // VRegA
 //------------------------------------------------------------------------------
