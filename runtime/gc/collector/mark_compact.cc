@@ -68,6 +68,32 @@
 #ifndef MREMAP_DONTUNMAP
 #define MREMAP_DONTUNMAP 4
 #endif
+#ifndef UFFD_FEATURE_MOVE
+// Values picked from linux kernel source
+#define UFFD_FEATURE_MOVE (1 << 16)
+struct uffdio_move {
+  uint64_t dst;
+  uint64_t src;
+  uint64_t len;
+  uint64_t mode;
+  int64_t move;
+};
+#ifndef _UFFDIO_MOVE
+#define _UFFDIO_MOVE (0x05)
+#else
+#error "_UFFDIO_MOVE must be undefined if UFFD_FEATURE_MOVE is undefined"
+#endif
+#ifndef UFFDIO_MOVE
+#define UFFDIO_MOVE _IOWR(UFFDIO, _UFFDIO_MOVE, struct uffdio_move)
+#else
+#error "UFFDIO_MOVE must be undefined if UFFD_FEATURE_MOVE is undefined"
+#endif
+#ifndef UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES
+#define UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES (static_cast<uint64_t>(1) << 1)
+#else
+#error "UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES must be undefined if UFFD_FEATURE_MOVE is undefined"
+#endif
+#endif  // UFFD_FEATURE_MOVE
 #endif  // __BIONIC__
 
 // See aosp/2996596 for where these values came from.
@@ -103,6 +129,14 @@ static bool HaveMremapDontunmap() {
     return false;
   }
 }
+
+// TODO (move ioctl):
+// 1. Code to call move ioctl and deal with failures
+// 2. Check if we have the ioctl during runtime of the first GC
+// 3. Obtain a 'used' page from from-space
+// 4. Deal with the case where 'used' pages are unavailable
+// 5. memset zero remaining memory? It should be needed only in black-pages as
+// from there mutators allocate objects.
 
 static bool gUffdSupportsMmapTrylock = false;
 // We require MREMAP_DONTUNMAP functionality of the mremap syscall, which was
@@ -486,7 +520,8 @@ MarkCompact::MarkCompact(Heap* heap)
       uffd_(kFdUnused),
       marking_done_(false),
       uffd_initialized_(false),
-      clamp_info_map_status_(ClampInfoStatus::kClampInfoNotDone) {
+      clamp_info_map_status_(ClampInfoStatus::kClampInfoNotDone),
+      use_move_ioctl_(false) {
   if (kIsDebugBuild) {
     updated_roots_.reset(new std::unordered_set<void*>());
   }
@@ -547,12 +582,6 @@ MarkCompact::MarkCompact(Heap* heap)
   if (UNLIKELY(!compaction_buffers_map_.IsValid())) {
     LOG(FATAL) << "Failed to allocate concurrent mark-compact compaction buffers" << err_msg;
   }
-  // We also use the first page-sized buffer for the purpose of terminating concurrent compaction.
-  conc_compaction_termination_page_ = compaction_buffers_map_.Begin();
-  // Touch the page deliberately to avoid userfaults on it. We madvise it in
-  // CompactionPhase() before using it to terminate concurrent compaction.
-  ForceRead(conc_compaction_termination_page_);
-
   // In most of the cases, we don't expect more than one LinearAlloc space.
   linear_alloc_spaces_data_.reserve(1);
 
@@ -1255,8 +1284,37 @@ bool MarkCompact::PrepareForCompaction() {
   // The chunk-info vector entries for the post marking-pause allocations will be
   // also updated in the pre-compaction pause.
 
-  if (!uffd_initialized_) {
-    CreateUserfaultfd(/*post_fork=*/false);
+  if (!uffd_initialized_ && CreateUserfaultfd(/*post_fork=*/false)) {
+    // Check if the app supports/allows MOVE ioctl in their seccomp config.
+    // TODO: check if phenotype flag allows us to use move-ioctl
+    if ((gUffdFeatures & UFFD_FEATURE_MOVE) != 0) {
+      if (Runtime::Current()->IsZygote()) {
+        // No need to check for zygote.
+        use_move_ioctl_ = true;
+      } else {
+        // This will be done only once during the first GC after fork.
+        // TODO: remove this code we are comfortable that app-compat issues are
+        // taken care of.
+        DCHECK_GE(compaction_buffers_map_.Size(), 2 * gPageSize);
+        uint8_t* buf = compaction_buffers_map_.Begin();
+        RegisterUffd(buf, gPageSize);
+        CHECK_EQ(madvise(buf, gPageSize, MADV_DONTNEED), 0);
+        struct uffdio_move move_buf = {.dst = reinterpret_cast<uintptr_t>(buf),
+                                       .src = reinterpret_cast<uintptr_t>(buf) + gPageSize,
+                                       .len = gPageSize,
+                                       .mode = UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES,
+                                       .move = 0};
+        use_move_ioctl_ = ioctl(uffd_, UFFDIO_MOVE, &move_buf) == 0;
+        if (!use_move_ioctl_) {
+          // TODO: add logic to also get reported on pitot as the below log
+          // message will get lost in the logcat.
+          LOG(ERROR) << "userfaultfd: MOVE ioctl seems unsupported: " << strerror(errno);
+        }
+        UnregisterUffd(buf, gPageSize);
+      }
+    } else {
+      use_move_ioctl_ = false;
+    }
   }
   return true;
 }
@@ -2098,6 +2156,40 @@ size_t MarkCompact::ZeropageIoctl(void* addr,
       return 0;
     }
   }
+}
+
+size_t MarkCompact::MoveIoctl(void* dst, void* src, size_t len, bool tolerate_enoent) {
+  DCHECK_PARAM_ALIGNED(dst, gPageSize);
+  DCHECK_PARAM_ALIGNED(src, gPageSize);
+  DCHECK_PARAM_ALIGNED(len, gPageSize);
+  struct uffdio_move uffd_move{.dst = reinterpret_cast<uintptr_t>(dst),
+                               .src = reinterpret_cast<uintptr_t>(src),
+                               .len = len,
+                               .mode = 0,
+                               .move = 0};
+  while (ioctl(uffd_, UFFDIO_MOVE, &uffd_move) != 0) {
+    if (errno == EEXIST) {
+      DCHECK_EQ(uffd_move.move, -EEXIST);
+      uffd_move.move = gPageSize;
+      break;
+    } else if (errno == EAGAIN) {
+      DCHECK_LT(uffd_move.move, len);
+      DCHECK_NE(uffd_move.move, 0);
+      if (uffd_move.move < 0) {
+        uffd_move.move = 0;
+      } else {
+        break;
+      }
+    } else {
+      CHECK(tolerate_enoent && errno == ENOENT)
+          << "ioctl_userfaultfd: move failed: " << strerror(errno) << ". src:" << src
+          << " dst:" << dst << " length:" << len;
+      CHECK_EQ(uffd_move.move, -errno);
+      return 0;
+    }
+  }
+  DCHECK_PARAM_ALIGNED(uffd_move.move, gPageSize);
+  return uffd_move.move;
 }
 
 size_t MarkCompact::CopyIoctl(
@@ -4847,7 +4939,7 @@ void MarkCompact::FinishPhase() {
   }
   CHECK(mark_stack_->IsEmpty());  // Ensure that the mark stack is empty.
   mark_stack_->Reset();
-  ZeroAndReleaseMemory(compaction_buffers_map_.Begin(), compaction_buffers_map_.Size());
+  compaction_buffers_map_.MadviseDontNeedAndZero();
   info_map_.MadviseDontNeedAndZero();
   live_words_bitmap_->ClearBitmap();
   DCHECK_EQ(thread_running_gc_, Thread::Current());
