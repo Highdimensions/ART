@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dc35c12_dea71c2e",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-27T00:25:11Z",
+      "side": 1,
+      "message": "I don\u0027t understand why moving the declaration out helps. Please reply to explain, or add a comment if you think that\u0027s useful.",
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd4da986_cd58cdfe",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-27T00:25:11Z",
+      "side": 1,
+      "message": "Why is this correct? obj was not adjusted when we merged with the preceding block.",
+      "range": {
+        "startLine": 545,
+        "startChar": 12,
+        "endLine": 545,
+        "endChar": 15
+      },
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47e0de7e_e20acf10",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-27T00:25:11Z",
+      "side": 1,
+      "message": "Same comment here. Why not where the value is set?",
+      "range": {
+        "startLine": 547,
+        "startChar": 4,
+        "endLine": 550,
+        "endChar": 5
+      },
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a190e619_0ac35fc8",
+        "filename": "runtime/gc/space/large_object_space.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2024-12-27T00:25:11Z",
+      "side": 1,
+      "message": "AFAICT, you\u0027re assuming for performance reasons that ptrs is address ordered? If so, please document that here, as in \"Deallocate all num_ptrs objects referenced by ptrs. Performance is much better if ptrs is address-ordered.\"\n\nAlso please add enough documentation to the caller(s) to make it plausible to the reader that the list is in fact address-ordered.\n\nAlso please check and document here that Free() and FreeList() are only ever called during a GC, and thus can never be called concurrently. Your changes rely on that to avoid races in the data structure access. Unfortunately, there are no GUARDED_BY annotations to check any of this.",
+      "range": {
+        "startLine": 208,
+        "startChar": 2,
+        "endLine": 208,
+        "endChar": 81
+      },
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
