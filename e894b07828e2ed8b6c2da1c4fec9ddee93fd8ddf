@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0aa71cc_2c08397f",
+        "filename": "runtime/class_linker-inl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-27T08:30:02Z",
+      "side": 1,
+      "message": "Ambiguous - this function is also called `ResolveField`.",
+      "range": {
+        "startLine": 367,
+        "startChar": 42,
+        "endLine": 367,
+        "endChar": 54
+      },
+      "revId": "e894b07828e2ed8b6c2da1c4fec9ddee93fd8ddf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec0d4a02_be015b0e",
+        "filename": "test/734-duplicate-fields/smali/Cls.smali",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-27T08:30:02Z",
+      "side": 1,
+      "message": "I\u0027d prefer to reject the entire dex file (in `DexFileVerifier`), assuming we can confirm with the APK scanner that there are no apps with classes that define both static and instance field with the same name and type.",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 36
+      },
+      "revId": "e894b07828e2ed8b6c2da1c4fec9ddee93fd8ddf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
