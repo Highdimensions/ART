@@ -117,7 +117,7 @@ class MarkCompact final : public GarbageCollector {
   using SigbusCounterType = uint32_t;
 
   static constexpr size_t kAlignment = kObjectAlignment;
-  static constexpr int kCopyMode = -1;
+  static constexpr int kUffdMode = -1;
   // Fake file descriptor for fall back mode (when uffd isn't available)
   static constexpr int kFallbackMode = -3;
   static constexpr int kFdUnused = -2;
@@ -640,6 +640,8 @@ class MarkCompact final : public GarbageCollector {
   // returns. Returns number of bytes (multiple of page-size) mapped.
   size_t CopyIoctl(
       void* dst, void* buffer, size_t length, bool return_on_contention, bool tolerate_enoent);
+  // Move 'len/page-size' pages from 'src' to 'dst'.
+  size_t MoveIoctl(void* dst, void* src, size_t len, bool tolerate_enoent);
 
   // Called after updating linear-alloc page(s) to map the page. It first
   // updates the state of the pages to kProcessedAndMapping and after ioctl to
@@ -841,6 +843,7 @@ class MarkCompact final : public GarbageCollector {
   // Set to true when doing young gen collection.
   bool young_gen_;
   const bool use_generational_;
+  bool use_move_ioctl_;
   // True while compacting.
   bool compacting_;
   // Mark bits for main space
@@ -899,7 +902,6 @@ class MarkCompact final : public GarbageCollector {
   // END HOT FIELDS: accessed per reference update
   // END HOT FIELDS: accessed per object
 
-  uint8_t* conc_compaction_termination_page_;
   PointerSize pointer_size_;
   // Userfault file descriptor, accessed only by the GC itself.
   // kFallbackMode value indicates that we are in the fallback mode.
