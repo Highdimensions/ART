@@ -192,6 +192,10 @@ static void VMDebug_startLowOverheadTraceImpl(JNIEnv*, jclass) {
   TraceProfiler::Start();
 }
 
+static void VMDebug_startTraceLongRunningMethodsImpl(JNIEnv*, jclass, jlong trace_duration) {
+  TraceProfiler::StartTraceLongRunningMethods(trace_duration);
+}
+
 static jboolean VMDebug_isDebuggerConnected(JNIEnv*, jclass) {
   // This function will be replaced by the debugger when it's connected. See
   // external/oj-libjdwp/src/share/vmDebug.c for implementation when debugger is connected.
@@ -702,6 +706,7 @@ static JNINativeMethod gMethods[] = {
     NATIVE_METHOD(VMDebug, stopLowOverheadTraceImpl, "()V"),
     NATIVE_METHOD(VMDebug, dumpLowOverheadTraceImpl, "(Ljava/lang/String;)V"),
     NATIVE_METHOD(VMDebug, dumpLowOverheadTraceFdImpl, "(I)V"),
+    NATIVE_METHOD(VMDebug, startTraceLongRunningMethodsImpl, "(J)V"),
     NATIVE_METHOD(
         VMDebug,
         getExecutableMethodFileOffsetsNative,

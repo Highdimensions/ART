@@ -2576,6 +2576,79 @@ ENTRY art_quick_record_exit_trace_event
     ret
 END art_quick_record_exit_trace_event
 
+ENTRY art_quick_record_long_running_entry_trace_event
+    ldr xIP1, [xSELF, #TRACE_BUFFER_CURRENT_OFFSET]
+    sub xIP1, xIP1, 16
+    // xIP0 has the trace buffer pointer. This is loaded on the fast path before
+    // checking if we need to call this method. This will be still valid here.
+    cmp xIP0, xIP1
+    bhi .Lhandle_overflow
+    // Store the method pointer
+    str x0, [xIP1, 8]
+    // Store the timestamp with the last bit set to 0 to indicate method entry event
+    mrs xIP0, cntvct_el0
+    bfc xIP0, 0, 1
+    str xIP0, [xIP1]
+    str xIP1, [xSELF, #TRACE_BUFFER_CURRENT_OFFSET]
+    ret
+.Lhandle_overflow:
+    // Call runtime to flush buffer. We expect the frequency of this case to be low. For ANR it
+    // might be interesting to record the past data instead of overwriting with new entries.
+    SETUP_SAVE_EVERYTHING_FRAME
+    ldr x0, [sp, #FRAME_SIZE_SAVE_EVERYTHING] // pass ArtMethod*
+    mov x1, xSELF                             // pass Thread::Current
+    mov x2, 1                                 // set to true for entry events
+    bl  artRecordLongRunningMethodTraceEvent // (ArtMethod*, Thread*, is_entry)
+    RESTORE_SAVE_EVERYTHING_FRAME             // Note: will restore xSELF
+    REFRESH_MARKING_REGISTER
+    ret
+END art_quick_record_long_running_entry_trace_event
+
+ENTRY art_quick_record_long_running_exit_trace_event
+    ldr xIP1, [xSELF, #TRACE_BUFFER_CURRENT_OFFSET]
+    // xIP0 has the trace buffer pointer. This is loaded on the fast path before checking if we
+    // need to call this method. This will be still valid here.
+    // We just need one entry for the method exit. We only record the timestamp. Method will be
+    // available from the corresponding method entry event.
+    cmp xIP0, xIP1
+    bhs .Lhandle_overflow_exit
+    // Load the previous entry.
+    ldr xIP1, [xIP1]
+    // If lsb is set for the previous event, then it's an exit event just record the entry.
+    tst xIP1, 1
+    bne .Lrecord_exit_get_timestamp
+    // Compare the timestamp diff
+    mrs xIP0, cntvct_el0
+    sub xIP1, xIP0, xIP1
+    cmp xIP1, #LONG_RUNNING_METHOD_THRESHOLD
+    bhs .Lrecord_exit_event
+    // Not a long running method. Erase method entry event.
+    ldr xIP1, [xSELF, #TRACE_BUFFER_CURRENT_OFFSET]
+    add xIP1, xIP1, 16
+    str xIP1, [xSELF, #TRACE_BUFFER_CURRENT_OFFSET]
+    ret
+.Lrecord_exit_get_timestamp:
+    mrs xIP0, cntvct_el0
+.Lrecord_exit_event:
+    ldr xIP1, [xSELF, #TRACE_BUFFER_CURRENT_OFFSET]
+    sub xIP1, xIP1, 8
+    orr xIP0, xIP0, #1
+    str xIP0, [xIP1]
+    str xIP1, [xSELF, #TRACE_BUFFER_CURRENT_OFFSET]
+    ret
+.Lhandle_overflow_exit:
+    // Call runtime to flush buffer. We expect the frequency of this case to be low. For ANR it
+    // might be interesting to record the past data instead of overwriting with new entries.
+    SETUP_SAVE_EVERYTHING_FRAME
+    ldr xzr, [sp, #FRAME_SIZE_SAVE_EVERYTHING] // pass nullptr. ArtMethod* isn't required for exits
+    mov x1, xSELF                              // pass Thread::Current
+    mov x2, 0                                  // set to false for exit events
+    bl  artRecordLongRunningMethodTraceEvent   // (ArtMethod*, Thread*, is_entry)
+    RESTORE_SAVE_EVERYTHING_FRAME              // Note: will restore xSELF
+    REFRESH_MARKING_REGISTER
+    ret
+END art_quick_record_long_running_exit_trace_event
+
     .extern artMethodEntryHook
 ENTRY art_quick_method_entry_hook
     SETUP_SAVE_EVERYTHING_FRAME
