@@ -15,6 +15,16 @@
 package: "com.android.art.flags"
 container: "com.android.art"
 
+# Flag for using userfaultfd move ioctl in CMC
+flag {
+  name: "use_uffd_move_ioctl"
+  namespace: "art_performance"
+  description: "Flag to control whether userfaultfd's move ioctl should be used or not"
+  bug: "343220989"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
 # Flag for generational CMC feature
 flag {
   name: "use_generational_cmc"

@@ -69,6 +69,37 @@
 #ifndef MREMAP_DONTUNMAP
 #define MREMAP_DONTUNMAP 4
 #endif
+
+#ifndef SYS_SECCOMP
+#define SYS_SECCOMP 1
+#endif
+
+#ifndef UFFD_FEATURE_MOVE
+// Values picked from linux kernel source
+#define UFFD_FEATURE_MOVE (1 << 16)
+struct uffdio_move {
+  uint64_t dst;
+  uint64_t src;
+  uint64_t len;
+  uint64_t mode;
+  int64_t move;
+};
+#ifndef _UFFDIO_MOVE
+#define _UFFDIO_MOVE (0x05)
+#else
+#error "_UFFDIO_MOVE must be undefined if UFFD_FEATURE_MOVE is undefined"
+#endif
+#ifndef UFFDIO_MOVE
+#define UFFDIO_MOVE _IOWR(UFFDIO, _UFFDIO_MOVE, struct uffdio_move)
+#else
+#error "UFFDIO_MOVE must be undefined if UFFD_FEATURE_MOVE is undefined"
+#endif
+#ifndef UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES
+#define UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES (static_cast<uint64_t>(1) << 1)
+#else
+#error "UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES must be undefined if UFFD_FEATURE_MOVE is undefined"
+#endif
+#endif  // UFFD_FEATURE_MOVE
 #endif  // __BIONIC__
 
 // See aosp/2996596 for where these values came from.
@@ -328,8 +359,12 @@ bool ShouldUseGenerationalGC() {
   // can pick a different values than zygote and will be able to execute.
   return GetBoolProperty("persist.device_config.runtime_native_boot.use_generational_gc", true);
 }
+static const bool gUseMoveIoctl =
+    com::android::art::flags::use_uffd_move_ioctl() &&
+    GetBoolProperty("persist.device_config.runtime_native_boot.use_uffd_move_ioctl", true);
 #else
 bool ShouldUseGenerationalGC() { return true; }
+static const bool gUseMoveIoctl = true;
 #endif
 
 namespace gc {
@@ -489,6 +524,7 @@ MarkCompact::MarkCompact(Heap* heap)
       post_compact_end_(nullptr),
       young_gen_(false),
       use_generational_(heap->GetUseGenerational()),
+      use_move_ioctl_(false),
       compacting_(false),
       moving_space_bitmap_(bump_pointer_space_->GetMarkBitmap()),
       moving_space_begin_(bump_pointer_space_->Begin()),
@@ -559,15 +595,15 @@ MarkCompact::MarkCompact(Heap* heap)
   if (UNLIKELY(!compaction_buffers_map_.IsValid())) {
     LOG(FATAL) << "Failed to allocate concurrent mark-compact compaction buffers" << err_msg;
   }
-  // We also use the first page-sized buffer for the purpose of terminating concurrent compaction.
-  conc_compaction_termination_page_ = compaction_buffers_map_.Begin();
-  // Touch the page deliberately to avoid userfaults on it. We madvise it in
-  // CompactionPhase() before using it to terminate concurrent compaction.
-  ForceRead(conc_compaction_termination_page_);
-
   // In most of the cases, we don't expect more than one LinearAlloc space.
   linear_alloc_spaces_data_.reserve(1);
 
+  if (gUseMoveIoctl) {
+    // MOVE ioctl is not compatible with mTHP yet. Until the ioctl code in the
+    // kernel is appropraitely changed, disable mTHP.
+    int ret = madvise(moving_space_begin, moving_space_size, MADV_NOHUGEPAGE);
+    CHECK(ret == 0) << strerror(errno);
+  }
   // Initialize GC metrics.
   metrics::ArtMetrics* metrics = GetMetrics();
   gc_time_histogram_ = metrics->FullGcCollectionTime();
@@ -797,6 +833,8 @@ void MarkCompact::InitializePhase() {
   DCHECK_EQ(moving_space_begin_, bump_pointer_space_->Begin());
   from_space_slide_diff_ = from_space_begin_ - moving_space_begin_;
   moving_space_end_ = bump_pointer_space_->Limit();
+  last_reclaimable_page_ = moving_space_end_;
+  cur_reclaimable_page_.store(moving_space_begin_, std::memory_order_relaxed);
   if (use_generational_ && !young_gen_) {
     class_after_obj_map_.clear();
   }
@@ -1274,8 +1312,36 @@ bool MarkCompact::PrepareForCompaction() {
   // The chunk-info vector entries for the post marking-pause allocations will be
   // also updated in the pre-compaction pause.
 
-  if (!uffd_initialized_) {
-    CreateUserfaultfd(/*post_fork=*/false);
+  if (!uffd_initialized_ && CreateUserfaultfd(/*post_fork=*/false)) {
+    // Check if the app supports/allows MOVE ioctl in their seccomp config.
+    if ((gUffdFeatures & UFFD_FEATURE_MOVE) != 0 && gUseMoveIoctl) {
+      if (Runtime::Current()->IsZygote()) {
+        // No need to check for zygote.
+        use_move_ioctl_ = true;
+      } else {
+        // This will be done only once during the first GC after fork.
+        // TODO (b/398036867): remove this code once we are sure that app-compat
+        // issues are taken care of.
+        DCHECK_GE(compaction_buffers_map_.Size(), 2 * gPageSize);
+        uint8_t* buf = compaction_buffers_map_.Begin();
+        RegisterUffd(buf, gPageSize);
+        CHECK_EQ(madvise(buf, gPageSize, MADV_DONTNEED), 0);
+        struct uffdio_move move_buf = {.dst = reinterpret_cast<uintptr_t>(buf),
+                                       .src = reinterpret_cast<uintptr_t>(buf) + gPageSize,
+                                       .len = gPageSize,
+                                       .mode = UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES,
+                                       .move = 0};
+        use_move_ioctl_ = ioctl(uffd_, UFFDIO_MOVE, &move_buf) == 0;
+        if (!use_move_ioctl_) {
+          // TODO: add logic to also get reported on pitot as the below log
+          // message will get lost in the logcat.
+          LOG(ERROR) << "userfaultfd: MOVE ioctl seems unsupported: " << strerror(errno);
+        }
+        UnregisterUffd(buf, gPageSize);
+      }
+    } else {
+      use_move_ioctl_ = false;
+    }
   }
   return true;
 }
@@ -2147,6 +2213,55 @@ size_t MarkCompact::ZeropageIoctl(void* addr,
   }
 }
 
+size_t MarkCompact::MoveIoctl(void* dst, void* src, size_t len, bool tolerate_enoent) {
+  DCHECK_ALIGNED_PARAM(dst, gPageSize);
+  DCHECK_ALIGNED_PARAM(src, gPageSize);
+  DCHECK_ALIGNED_PARAM(len, gPageSize);
+  struct uffdio_move uffd_move{.dst = reinterpret_cast<uintptr_t>(dst),
+                               .src = reinterpret_cast<uintptr_t>(src),
+                               .len = len,
+                               .mode = 0,
+                               .move = 0};
+  while (ioctl(uffd_, UFFDIO_MOVE, &uffd_move) != 0) {
+    if (errno == EEXIST) {
+      DCHECK_EQ(uffd_move.move, -EEXIST);
+      uffd_move.move = gPageSize;
+      break;
+    } else if (errno == ENOENT) {
+      if (uffd_move.move > 0) {
+        uffd_move.move += gPageSize;
+      } else {
+        DCHECK_EQ(uffd_move.move, -ENOENT);
+        uffd_move.move = gPageSize;
+      }
+      break;
+    } else if (errno == EAGAIN) {
+      DCHECK_LT(uffd_move.move, static_cast<ssize_t>(len));
+      DCHECK_NE(uffd_move.move, 0);
+      if (uffd_move.move < 0) {
+        uffd_move.move = 0;
+      } else {
+        break;
+      }
+    } else if (errno == EINVAL && tolerate_enoent) {
+      // Unlike other ioctls, MOVE returns EINVAL when the memory range is found
+      // to be not registered with userfaultfd context associated with 'uffd_'
+      // file descriptor.
+      if (uffd_move.move < 0) {
+        uffd_move.move = 0;
+      }
+      break;
+    } else {
+      CHECK_EQ(uffd_move.move, -errno);
+      LOG(FATAL) << "ioctl_userfaultfd: move failed: " << strerror(errno) << ". src:" << src
+                 << " dst:" << dst << " length:" << len;
+      UNREACHABLE();
+    }
+  }
+  DCHECK_ALIGNED_PARAM(uffd_move.move, gPageSize);
+  return uffd_move.move;
+}
+
 size_t MarkCompact::CopyIoctl(
     void* dst, void* buffer, size_t length, bool return_on_contention, bool tolerate_enoent) {
   int32_t backoff_count = -1;
@@ -2227,13 +2342,20 @@ bool MarkCompact::DoPageCompactionWithStateChange(size_t page_idx,
   if (kMode == kFallbackMode || moving_pages_status_[page_idx].compare_exchange_strong(
                                     expected_state, desired_state, std::memory_order_acquire)) {
     func();
-    if (kMode == kCopyMode) {
+    if (kMode == kUffdMode) {
       if (map_immediately) {
-        CopyIoctl(to_space_page,
-                  page,
-                  gPageSize,
-                  /*return_on_contention=*/false,
-                  /*tolerate_enoent=*/false);
+        if (use_move_ioctl_) {
+          MoveIoctl(to_space_page,
+                    page,
+                    gPageSize,
+                    /*tolerate_enoent=*/false);
+        } else {
+          CopyIoctl(to_space_page,
+                    page,
+                    gPageSize,
+                    /*return_on_contention=*/false,
+                    /*tolerate_enoent=*/false);
+        }
         // Store is sufficient as no other thread could modify the status at this
         // point. Relaxed order is sufficient as the ioctl will act as a fence.
         moving_pages_status_[page_idx].store(static_cast<uint8_t>(PageState::kProcessedAndMapped),
@@ -2376,7 +2498,7 @@ bool MarkCompact::FreeFromSpacePages(size_t cur_page_idx, int mode, size_t end_i
   ssize_t size = last_reclaimed_page_ - reclaim_begin;
   if (size > kMinFromSpaceMadviseSize) {
     // Map all the pages in the range.
-    if (mode == kCopyMode && cur_page_idx < end_idx_for_mapping) {
+    if (mode == kUffdMode && cur_page_idx < end_idx_for_mapping) {
       if (MapMovingSpacePages(cur_page_idx,
                               end_idx_for_mapping,
                               /*from_ioctl=*/false,
@@ -2391,20 +2513,49 @@ bool MarkCompact::FreeFromSpacePages(size_t cur_page_idx, int mode, size_t end_i
     // If not all pages are mapped, then take it as a hint that mmap_lock is
     // contended and hence don't madvise as that also needs the same lock.
     if (all_mapped) {
-      // Retain a few pages for subsequent compactions.
-      const ssize_t gBufferPages = 4 * gPageSize;
-      DCHECK_LT(gBufferPages, kMinFromSpaceMadviseSize);
-      size -= gBufferPages;
-      uint8_t* addr = last_reclaimed_page_ - size;
-      CHECK_EQ(madvise(addr + from_space_slide_diff_, size, MADV_DONTNEED), 0)
-          << "madvise of from-space failed: " << strerror(errno);
-      last_reclaimed_page_ = addr;
-      cur_reclaimable_page_ = addr;
+      if (!use_move_ioctl_) {
+        // Retain a few pages for subsequent compactions.
+        const ssize_t gBufferPages = 4 * gPageSize;
+        DCHECK_LT(gBufferPages, kMinFromSpaceMadviseSize);
+        size -= gBufferPages;
+        uint8_t* addr = last_reclaimed_page_ - size;
+        CHECK_EQ(madvise(addr + from_space_slide_diff_, size, MADV_DONTNEED), 0)
+            << "madvise of from-space failed: " << strerror(errno);
+        last_reclaimed_page_ = addr;
+        cur_reclaimable_page_ = addr;
+      } else {
+        last_reclaimed_page_ -= size;
+      }
     }
   }
-  last_reclaimable_page_ = std::min(reclaim_begin, last_reclaimable_page_);
+  if (reclaim_begin < last_reclaimable_page_) {
+    last_reclaimable_page_ = reclaim_begin;
+  }
   last_checked_reclaim_page_idx_ = idx;
   return all_mapped;
+}
+
+uint8_t* MarkCompact::GetFreePageForMapping(size_t size, bool atomic) {
+  DCHECK_ALIGNED_PARAM(size, gPageSize);
+  uint8_t* expected = cur_reclaimable_page_.load(std::memory_order_relaxed);
+  if (atomic) {
+    DCHECK(use_move_ioctl_);
+    while (expected - last_reclaimable_page_ >= static_cast<ssize_t>(size)) {
+      uint8_t* desired = expected - size;
+      // 'expected' gets updated by compare_exchange_strong() on failure
+      if (cur_reclaimable_page_.compare_exchange_strong(
+              expected, desired, std::memory_order_relaxed)) {
+        return desired;
+      }
+    }
+  } else {
+    if (expected - last_reclaimable_page_ >= static_cast<ssize_t>(size)) {
+      uint8_t* desired = expected - size;
+      cur_reclaimable_page_.store(desired, std::memory_order_relaxed);
+      return desired;
+    }
+  }
+  return nullptr;
 }
 
 template <int kMode>
@@ -2431,7 +2582,7 @@ void MarkCompact::CompactMovingSpace(uint8_t* page) {
   // These variables are maintained by FreeFromSpacePages().
   last_reclaimed_page_ = pre_compact_page;
   last_reclaimable_page_ = last_reclaimed_page_;
-  cur_reclaimable_page_ = last_reclaimed_page_;
+  cur_reclaimable_page_.store(last_reclaimed_page_, std::memory_order_relaxed);
   last_checked_reclaim_page_idx_ = idx;
   class_after_obj_iter_ = class_after_obj_map_.rbegin();
   // Allocated-black pages
@@ -2456,7 +2607,7 @@ void MarkCompact::CompactMovingSpace(uint8_t* page) {
                                                               first_chunk_size,
                                                               pre_compact_page,
                                                               page,
-                                                              kMode == kCopyMode);
+                                                              kMode == kUffdMode);
                                              });
       // We are sliding here, so no point attempting to madvise for every
       // page. Wait for enough pages to be done.
@@ -2476,12 +2627,12 @@ void MarkCompact::CompactMovingSpace(uint8_t* page) {
     if (kMode == kFallbackMode) {
       page = to_space_end;
     } else {
-      DCHECK_EQ(kMode, kCopyMode);
-      if (cur_reclaimable_page_ > last_reclaimable_page_) {
-        cur_reclaimable_page_ -= gPageSize;
-        page = cur_reclaimable_page_ + from_space_slide_diff_;
-      } else {
+      DCHECK_EQ(kMode, kUffdMode);
+      page = GetFreePageForMapping(gPageSize, use_move_ioctl_);
+      if (page == nullptr) {
         page = reserve_page;
+      } else {
+        page += from_space_slide_diff_;
       }
     }
     mirror::Object* first_obj = first_objs_moving_space_[idx].AsMirrorPtr();
@@ -2496,16 +2647,16 @@ void MarkCompact::CompactMovingSpace(uint8_t* page) {
                                                         pre_compact_offset_moving_space_[idx],
                                                         page,
                                                         to_space_end,
-                                                        kMode == kCopyMode);
+                                                        kMode == kUffdMode);
           } else {
             CompactPage</*kSetupForGenerational=*/false>(first_obj,
                                                          pre_compact_offset_moving_space_[idx],
                                                          page,
                                                          to_space_end,
-                                                         kMode == kCopyMode);
+                                                         kMode == kUffdMode);
           }
         });
-    if (kMode == kCopyMode && (!success || page == reserve_page) && end_idx_for_mapping - idx > 1) {
+    if (kMode == kUffdMode && (!success || page == reserve_page) && end_idx_for_mapping - idx > 1) {
       // map the pages in the following address as they can't be mapped with the
       // pages yet-to-be-compacted as their src-side pages won't be contiguous.
       MapMovingSpacePages(idx + 1,
@@ -2554,7 +2705,7 @@ void MarkCompact::CompactMovingSpace(uint8_t* page) {
     }
   }
   // map one last time to finish anything left.
-  if (kMode == kCopyMode && end_idx_for_mapping > 0) {
+  if (kMode == kUffdMode && end_idx_for_mapping > 0) {
     MapMovingSpacePages(idx,
                         end_idx_for_mapping,
                         /*from_fault=*/false,
@@ -2605,11 +2756,18 @@ size_t MarkCompact::MapMovingSpacePages(size_t start_idx,
       uint8_t* from_space_start = from_space_begin_ + from_space_offset;
       DCHECK_ALIGNED_PARAM(to_space_start, gPageSize);
       DCHECK_ALIGNED_PARAM(from_space_start, gPageSize);
-      size_t mapped_len = CopyIoctl(to_space_start,
-                                    from_space_start,
-                                    map_count * gPageSize,
-                                    return_on_contention,
-                                    tolerate_enoent);
+      size_t mapped_len;
+      // TODO: Black-dense/old-gen pages need to use COPY ioctl for now.
+      if (use_move_ioctl_ && to_space_start >= black_dense_end_) {
+        mapped_len =
+            MoveIoctl(to_space_start, from_space_start, map_count * gPageSize, tolerate_enoent);
+      } else {
+        mapped_len = CopyIoctl(to_space_start,
+                               from_space_start,
+                               map_count * gPageSize,
+                               return_on_contention,
+                               tolerate_enoent);
+      }
       for (size_t l = 0; l < mapped_len; l += gPageSize, arr_idx++) {
         // Store is sufficient as anyone storing is doing it with the same value.
         moving_pages_status_[arr_idx].store(static_cast<uint8_t>(PageState::kProcessedAndMapped),
@@ -3449,8 +3607,40 @@ void MarkCompact::KernelPreparation() {
 }
 
 bool MarkCompact::SigsysHandler(siginfo_t* info, void* context) {
+// Arch-specific register access
+#if defined(__aarch64__)
+#define REG(ctxt, reg)  ((ctxt)->uc_mcontext.regs[(reg)])
+#define PARM2_REG(ctxt) REG(ctxt, 1)
+#define RET_REG(ctxt)   REG(ctxt, 0)
+#elif defined(__arm__)
+#define REG(ctxt, reg)  ((ctxt)->uc_mcontext.arm_r##reg)
+#define PARM2_REG(ctxt) REG(ctxt, 1)
+#define RET_REG(ctxt)   REG(ctxt, 0)
+#elif defined(__i386__)
+#define REG(ctxt, reg)  ((ctxt)->uc_mcontext.gregs[(reg)])
+#define PARM2_REG(ctxt) REG(ctxt, REG_ECX)
+#define RET_REG(ctxt)   REG(ctxt, REG_EAX)
+#elif defined(__x86_64__)
+#define REG(ctxt, reg)  ((ctxt)->uc_mcontext.gregs[(reg)])
+#define PARM2_REG(ctxt) REG(ctxt, REG_RSI)
+#define RET_REG(ctxt)   REG(ctxt, REG_RAX)
+#elif defined(__riscv)
+#define REG(ctxt, reg)  ((ctxt)->uc_mcontext.__gregs[(reg)])
+#define PARM2_REG(ctxt) REG(ctxt, 11)
+#define RET_REG(ctxt)   REG(ctxt, 10)
+#else
+#error "unsupported architecture"
+#endif
   CHECK_EQ(info->si_signo, SIGSYS);
-  DCHECK_NE(context, nullptr);
+  // Detect if the MOVE ioctl was prevented from execution by seccomp filter.
+  if (info->si_code == SYS_SECCOMP && info->si_syscall == __NR_ioctl) {
+    ucontext_t* uctxt = static_cast<ucontext_t*>(context);
+    // Second parameter of the ioctl has the command passed to the kernel.
+    if (static_cast<uint64_t>(PARM2_REG(uctxt)) == UFFDIO_MOVE) {
+      RET_REG(uctxt) = -EINVAL;
+      return true;
+    }
+  }
   return false;
 }
 
@@ -3549,6 +3739,19 @@ void MarkCompact::ConcurrentlyProcessMovingPage(uint8_t* fault_page,
   mirror::Object* first_obj = first_objs_moving_space_[page_idx].AsMirrorPtr();
   if (first_obj == nullptr) {
     DCHECK_GT(fault_page, post_compact_end_);
+    if (use_move_ioctl_) {
+      uint8_t* free_page = GetFreePageForMapping(gPageSize, /*atomic=*/true);
+      if (free_page != nullptr) {
+        DCHECK_ALIGNED_PARAM(free_page, gPageSize);
+        free_page += from_space_slide_diff_;
+        std::memset(free_page, 0x0, gPageSize);
+        if (MoveIoctl(fault_page, free_page, gPageSize, tolerate_enoent) == gPageSize) {
+          moving_pages_status_[page_idx].store(static_cast<uint8_t>(PageState::kProcessedAndMapped),
+                                               std::memory_order_release);
+        }
+        return;
+      }
+    }
     // Install zero-page in the entire remaining tlab to avoid multiple ioctl invocations.
     uint8_t* end = AlignDown(self->GetTlabEnd(), gPageSize);
     if (fault_page < self->GetTlabStart() || fault_page >= end) {
@@ -3616,6 +3819,12 @@ void MarkCompact::ConcurrentlyProcessMovingPage(uint8_t* fault_page,
           }
 
           if (fault_page < post_compact_end_) {
+            if (use_move_ioctl_) {
+              uint8_t* free_page = GetFreePageForMapping(gPageSize, /*atomic=*/true);
+              if (free_page != nullptr) {
+                buf = free_page + from_space_slide_diff_;
+              }
+            }
             // The page has to be compacted.
             if (use_generational_ && fault_page < mid_gen_end_) {
               CompactPage</*kSetupGenerational=*/true>(first_obj,
@@ -3656,7 +3865,12 @@ void MarkCompact::ConcurrentlyProcessMovingPage(uint8_t* fault_page,
         // to immediately map the page, so that info is not needed.
         moving_pages_status_[page_idx].store(static_cast<uint8_t>(PageState::kProcessedAndMapping),
                                              std::memory_order_release);
-        CopyIoctl(fault_page, buf, gPageSize, /*return_on_contention=*/false, tolerate_enoent);
+        // TODO: Black-dense/old-gen pages need to use COPY ioctl for now.
+        if (use_move_ioctl_ && fault_page >= black_dense_end_) {
+          MoveIoctl(fault_page, buf, gPageSize, tolerate_enoent);
+        } else {
+          CopyIoctl(fault_page, buf, gPageSize, /*return_on_contention=*/false, tolerate_enoent);
+        }
         // Store is sufficient as no other thread modifies the status at this stage.
         moving_pages_status_[page_idx].store(static_cast<uint8_t>(PageState::kProcessedAndMapped),
                                              std::memory_order_release);
@@ -4050,7 +4264,7 @@ void MarkCompact::CompactionPhase() {
     RecordFree(ObjectBytePair(freed_objects_, freed_bytes));
   }
 
-  CompactMovingSpace<kCopyMode>(compaction_buffers_map_.Begin());
+  CompactMovingSpace<kUffdMode>(compaction_buffers_map_.Begin());
 
   ProcessLinearAlloc();
 
@@ -4973,7 +5187,7 @@ void MarkCompact::FinishPhase(bool performed_compaction) {
   }
   CHECK(mark_stack_->IsEmpty());  // Ensure that the mark stack is empty.
   mark_stack_->Reset();
-  ZeroAndReleaseMemory(compaction_buffers_map_.Begin(), compaction_buffers_map_.Size());
+  compaction_buffers_map_.MadviseDontNeedAndZero();
   info_map_.MadviseDontNeedAndZero();
   live_words_bitmap_->ClearBitmap();
   DCHECK_EQ(thread_running_gc_, Thread::Current());
