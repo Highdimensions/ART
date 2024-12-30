@@ -1,0 +1,394 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1acb4f5c_79e322b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "Another partial review: `assembler_x86_64.cc` and `disassembler_x86.cc` partially reviewed, `assembler_x86_64_test.cc` reviewed except for disassembler tests; other files fully reviewed.",
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64dbd93a_30120371",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 3095,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "No auto-forwarding to `vphaddd()`?",
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49c812f3_95bd1e9d",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "Move before the load/store overloads of `movaps`/`movups`.",
+      "range": {
+        "startLine": 487,
+        "startChar": 2,
+        "endLine": 487,
+        "endChar": 48
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff71b83c_e461b18d",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "Move before the load/store overloads of `vmovaps`/`vmovups`.",
+      "range": {
+        "startLine": 494,
+        "startChar": 2,
+        "endLine": 494,
+        "endChar": 49
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01bbb25e_dd20c1b0",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "Do we need the `is64bit` argument when we have `vmovq`? This argument prevents easy testing of the 32-bit versions. See also https://android-review.googlesource.com/3430961 .",
+      "range": {
+        "startLine": 512,
+        "startChar": 2,
+        "endLine": 513,
+        "endChar": 69
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e48961e_0c7210e1",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "Remove underscore.",
+      "range": {
+        "startLine": 171,
+        "startChar": 73,
+        "endLine": 171,
+        "endChar": 74
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba113368_a8f75aa2",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1383,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "For consistency, remove the `R2R` suffix - the corresponding MOVAPS tests do not have the `R2R` suffix.\n\nAdd `TEST_F(AssemblerX86_64Test, Movups)` (non-AVX) and move these tests before the load/store MOVAPS/MOVUPS tests.",
+      "range": {
+        "startLine": 1383,
+        "startChar": 37,
+        "endLine": 1383,
+        "endChar": 40
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7c8f427_f35382be",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1388,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "You should add `TEST_F(AssemblerX86_64AVXTest, Movss)` with `RepeatVV` to test the added auto-forwading to `vmovss()`. Similar for other `movss`, `movsd`, `p{add,sub}{,u}s{b,w}`, `cvtdq2ps`, `pavg{b,w}`, `p{min,max}{{s,u}{s,w,d},s,d}`, `pcmp{eqb,gtq}` and `p{{sll,srl}{w,d,q},sra{w,d}}` instructions.",
+      "range": {
+        "startLine": 1388,
+        "startChar": 28,
+        "endLine": 1388,
+        "endChar": 33
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a78ce2a9_63fe417b",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 2210,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "Should these `VMovs{s,d}` tests be interleaved with the `Movs{s,d}` tests? (Similar to how we interleave tests for `movaps` and `movups`.)\n\nSimilar for the `p{add,sub}{,u}s{b,w}`, `cvtdq2ps`, `pavg{b,w}`, `p{min,max}{{s,u}{s,w,d},s,d}`, `pcmp{eqb,gtq}` and `p{{sll,srl}{w,d,q},sra{w,d}}` tests.",
+      "range": {
+        "startLine": 2210,
+        "startChar": 0,
+        "endLine": 2210,
+        "endChar": 42
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2991695_18fbfdcd",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 2229,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "Why are these tests commented-out?",
+      "range": {
+        "startLine": 2223,
+        "startChar": 0,
+        "endLine": 2229,
+        "endChar": 4
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b56e8a63_34e56b8d",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 2236,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "These two tests should be `VMovq`. Two other `VMovd` tests should be added but the `is64bit` argument prevents easy testing of `vmovd()`.",
+      "range": {
+        "startLine": 2236,
+        "startChar": 31,
+        "endLine": 2236,
+        "endChar": 36
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fae970f8_1f68517f",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 2424,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "You\u0027re adding new non-AVX funtions `pabs{b,w,d}()`, so you should add non-AVX tests for them as well. And we should also test the auto-forwarding to the `vpabs{b,w,d}()` functions (with `RepeatVV`) and maybe interleave these tests the same way we do for other auto-forwarding instructions.",
+      "range": {
+        "startLine": 2424,
+        "startChar": 0,
+        "endLine": 2424,
+        "endChar": 37
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e7288c1_85e7bca7",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 2447,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "No tests for `vpunpcklbw`? (Neither direct test, nor auto-forwarding from `punpcklbw`.)",
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1bce7ee1_d7b3c2f3",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 2449,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "We should test a wider set of constants.\n\n(Note: Pre-exsting tests for corresponding non-V instructions shall be cleaned up in https://android-review.googlesource.com/3430965 .)",
+      "range": {
+        "startLine": 2449,
+        "startChar": 56,
+        "endLine": 2449,
+        "endChar": 58
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd8f3b51_8cbe7fe3",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 2489,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "Test wider range of values?",
+      "range": {
+        "startLine": 2489,
+        "startChar": 57,
+        "endLine": 2489,
+        "endChar": 59
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8175ae24_f9fb8448",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "`has_3_operands \u003d ctxt.hasVex();`\n\n(I\u0027d prefer to correctly disassemble VPHADDW even if the assembler cannot generate such instruction.)",
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b962e182_cdabc832",
+        "filename": "disassembler/disassembler_x86.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "Remove useless top-level `const`. Mark as output arguent with `/*out*/`.",
+      "range": {
+        "startLine": 54,
+        "startChar": 24,
+        "endLine": 54,
+        "endChar": 51
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6602c77_12156069",
+        "filename": "disassembler/disassembler_x86.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-30T16:56:44Z",
+      "side": 1,
+      "message": "Move before the output argument.",
+      "range": {
+        "startLine": 55,
+        "startChar": 24,
+        "endLine": 55,
+        "endChar": 48
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
