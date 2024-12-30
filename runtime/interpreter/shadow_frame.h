@@ -108,9 +108,7 @@ class ShadowFrame {
     return number_of_vregs_;
   }
 
-  uint32_t GetDexPC() const {
-    return (dex_pc_ptr_ == nullptr) ? dex_pc_ : dex_pc_ptr_ - dex_instructions_;
-  }
+  uint32_t GetDexPC() const { return dex_pc_; }
 
   int16_t GetCachedHotnessCountdown() const {
     return cached_hotness_countdown_;
@@ -128,10 +126,7 @@ class ShadowFrame {
     hotness_countdown_ = hotness_countdown;
   }
 
-  void SetDexPC(uint32_t dex_pc) {
-    dex_pc_ = dex_pc;
-    dex_pc_ptr_ = nullptr;
-  }
+  void SetDexPC(uint32_t dex_pc) { dex_pc_ = dex_pc; }
 
   ShadowFrame* GetLink() const {
     return link_;
@@ -165,10 +160,6 @@ class ShadowFrame {
   uint32_t* GetShadowRefAddr(size_t i) {
     DCHECK_LT(i, NumberOfVRegs());
     return &vregs_[i + NumberOfVRegs()];
-  }
-
-  const uint16_t* GetDexInstructions() const {
-    return dex_instructions_;
   }
 
   float GetVRegFloat(size_t i) const {
@@ -304,14 +295,6 @@ class ShadowFrame {
     return OFFSETOF_MEMBER(ShadowFrame, vregs_);
   }
 
-  static constexpr size_t DexPCPtrOffset() {
-    return OFFSETOF_MEMBER(ShadowFrame, dex_pc_ptr_);
-  }
-
-  static constexpr size_t DexInstructionsOffset() {
-    return OFFSETOF_MEMBER(ShadowFrame, dex_instructions_);
-  }
-
   static constexpr size_t CachedHotnessCountdownOffset() {
     return OFFSETOF_MEMBER(ShadowFrame, cached_hotness_countdown_);
   }
@@ -326,14 +309,6 @@ class ShadowFrame {
                                             uint32_t dex_pc,
                                             void* memory) {
     return new (memory) ShadowFrame(num_vregs, method, dex_pc);
-  }
-
-  const uint16_t* GetDexPCPtr() {
-    return dex_pc_ptr_;
-  }
-
-  void SetDexPCPtr(uint16_t* dex_pc_ptr) {
-    dex_pc_ptr_ = dex_pc_ptr;
   }
 
   bool NeedsNotifyPop() const {
@@ -407,8 +382,6 @@ class ShadowFrame {
   ShadowFrame(uint32_t num_vregs, ArtMethod* method, uint32_t dex_pc)
       : link_(nullptr),
         method_(method),
-        dex_pc_ptr_(nullptr),
-        dex_instructions_(nullptr),
         number_of_vregs_(num_vregs),
         dex_pc_(dex_pc),
         cached_hotness_countdown_(0),
@@ -442,9 +415,6 @@ class ShadowFrame {
   // Link to previous shadow frame or null.
   ShadowFrame* link_;
   ArtMethod* method_;
-  const uint16_t* dex_pc_ptr_;
-  // Dex instruction base of the code item.
-  const uint16_t* dex_instructions_;
   LockCountData lock_count_data_;  // This may contain GC roots when lock counting is active.
   const uint32_t number_of_vregs_;
   uint32_t dex_pc_;
