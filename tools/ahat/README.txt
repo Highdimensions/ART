@@ -55,6 +55,10 @@ Known Issues:
  * Line number decoding for allocations in proguarded classes.
 
 Release History:
+ 1.7.4 January 02, 2025
+   Add option to download the contents of a byte[] as a file.
+   Add retained size column to allocations view.
+
  1.7.3 June 27, 2024
    Add support to display bitmaps included in heapdump. To use this
    functionality, collect the heapdump with `adb shell am dumpheap -b <fmt>`,
