@@ -18,6 +18,138 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "58dc0c0b_8bb1748f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-31T14:03:57Z",
+      "side": 1,
+      "message": "Another partial review.",
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "760bbbd8_73dd9736",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-31T14:03:57Z",
+      "side": 1,
+      "message": "Update existing comments for the added 256-bit functionality.",
+      "range": {
+        "startLine": 443,
+        "startChar": 7,
+        "endLine": 443,
+        "endChar": 10
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e771706_8ae09650",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-31T14:03:57Z",
+      "side": 1,
+      "message": "Lower case. Maybe `vex_len` or `vex_length`.",
+      "range": {
+        "startLine": 450,
+        "startChar": 10,
+        "endLine": 450,
+        "endChar": 15
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1c126a4_bf17edc8",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-31T14:03:57Z",
+      "side": 1,
+      "message": "This differs from the definition in `movaps()`. Is this actually supposed to be different?",
+      "range": {
+        "startLine": 690,
+        "startChar": 2,
+        "endLine": 690,
+        "endChar": 51
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28de02e8_2c0a5c18",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-31T14:03:57Z",
+      "side": 1,
+      "message": "This condition differs from the `is_twobyte_form \u0026\u0026 store` in `movaps()`. I would expect `movups()` and `movaps()` implementations to be closer.\n\nThis seems to be because operands with `!src.NeedsRex() \u0026\u0026 !dst.NeedsRex()` can be expressed with both 0xf 0x11 and 0xf 0x10 for `movups()` (both 0xf 0x29 and 0xf 0x28 for `movaps()`) and it does not matter which we choose. Even in that case, I\u0027d prefer to make the same choice in `movaps()` and `movups()` and make these functions more similar, maybe using a shared helper function.\n\n(Disabling the disassembly fallback in assembler tests, I can see that the new \"movups\" implementation actually generates the same code as the `clang` assembler but the old `movaps` implementation does not. I\u0027d prefer to update `movaps()` to avoid the disassembler fallback which slows down the tests.)",
+      "range": {
+        "startLine": 714,
+        "startChar": 6,
+        "endLine": 714,
+        "endChar": 13
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee286640_395e7c0d",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-31T14:03:57Z",
+      "side": 1,
+      "message": "Please avoid implicit conversion to `bool`. Use `(rex \u0026 GET_REX_X) !\u003d 0`.\n\nPlease wait for the cleanup https://android-review.googlesource.com/3432363 to be merged, then rebase, resolve conflicts and simplify this code.",
+      "range": {
+        "startLine": 775,
+        "startChar": 15,
+        "endLine": 775,
+        "endChar": 30
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "64dbd93a_30120371",
@@ -31,6 +163,29 @@
       "writtenOn": "2024-12-30T16:56:44Z",
       "side": 1,
       "message": "No auto-forwarding to `vphaddd()`?",
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a116813_5ab7a9fa",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 6079,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2024-12-31T14:03:57Z",
+      "side": 1,
+      "message": "I wrote a refactoring CL for the VEX Prefix writing for arithmetic operations as https://android-review.googlesource.com/3430938 PS1. But seeing this function, I decided to use this function\u0027s signature but only refactor the existing code, see PS2 in that CL.\n\nYou shall need to rebase and resolve conflicts after that CL is submitted. Please keep the `/*opcode\u003d*/` and `/*is_commutative\u003d*/` comments from that CL when resolving conflicts.",
+      "range": {
+        "startLine": 6079,
+        "startChar": 22,
+        "endLine": 6079,
+        "endChar": 53
+      },
       "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
