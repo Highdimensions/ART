@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd4526c1_162a9e7a",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/AhatBitmapInstance.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1059977
+      },
+      "writtenOn": "2025-01-02T21:42:11Z",
+      "side": 1,
+      "message": "I think this works:\n```suggestion\n          List\u003cAhatBitmapInstance\u003e values \u003d result.instances.computeIfAbsent(info, k -\u003e new ArrayList\u003c\u003e());\n```",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 11
+      },
+      "revId": "889d77c3ff41835c9d03e3f973b9c1fbb0421ea7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
