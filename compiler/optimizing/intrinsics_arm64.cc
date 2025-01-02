@@ -1019,8 +1019,8 @@ void IntrinsicLocationsBuilderARM64::VisitUnsafePut(HInvoke* invoke) {
 void IntrinsicLocationsBuilderARM64::VisitUnsafePutAbsolute(HInvoke* invoke) {
   VisitJdkUnsafePutAbsolute(invoke);
 }
-void IntrinsicLocationsBuilderARM64::VisitUnsafePutOrdered(HInvoke* invoke) {
-  VisitJdkUnsafePutOrdered(invoke);
+void IntrinsicLocationsBuilderARM64::VisitUnsafePutOrderedInt(HInvoke* invoke) {
+  VisitJdkUnsafePutOrderedInt(invoke);
 }
 void IntrinsicLocationsBuilderARM64::VisitUnsafePutVolatile(HInvoke* invoke) {
   VisitJdkUnsafePutVolatile(invoke);
@@ -1028,8 +1028,8 @@ void IntrinsicLocationsBuilderARM64::VisitUnsafePutVolatile(HInvoke* invoke) {
 void IntrinsicLocationsBuilderARM64::VisitUnsafePutObject(HInvoke* invoke) {
   VisitJdkUnsafePutReference(invoke);
 }
-void IntrinsicLocationsBuilderARM64::VisitUnsafePutObjectOrdered(HInvoke* invoke) {
-  VisitJdkUnsafePutObjectOrdered(invoke);
+void IntrinsicLocationsBuilderARM64::VisitUnsafePutOrderedObject(HInvoke* invoke) {
+  VisitJdkUnsafePutOrderedObject(invoke);
 }
 void IntrinsicLocationsBuilderARM64::VisitUnsafePutObjectVolatile(HInvoke* invoke) {
   VisitJdkUnsafePutReferenceVolatile(invoke);
@@ -1053,7 +1053,7 @@ void IntrinsicLocationsBuilderARM64::VisitJdkUnsafePut(HInvoke* invoke) {
 void IntrinsicLocationsBuilderARM64::VisitJdkUnsafePutAbsolute(HInvoke* invoke) {
   CreateUnsafePutAbsoluteLocations(allocator_, invoke);
 }
-void IntrinsicLocationsBuilderARM64::VisitJdkUnsafePutOrdered(HInvoke* invoke) {
+void IntrinsicLocationsBuilderARM64::VisitJdkUnsafePutOrderedInt(HInvoke* invoke) {
   CreateUnsafePutLocations(allocator_, invoke);
 }
 void IntrinsicLocationsBuilderARM64::VisitJdkUnsafePutVolatile(HInvoke* invoke) {
@@ -1065,7 +1065,7 @@ void IntrinsicLocationsBuilderARM64::VisitJdkUnsafePutRelease(HInvoke* invoke) {
 void IntrinsicLocationsBuilderARM64::VisitJdkUnsafePutReference(HInvoke* invoke) {
   CreateUnsafePutLocations(allocator_, invoke);
 }
-void IntrinsicLocationsBuilderARM64::VisitJdkUnsafePutObjectOrdered(HInvoke* invoke) {
+void IntrinsicLocationsBuilderARM64::VisitJdkUnsafePutOrderedObject(HInvoke* invoke) {
   CreateUnsafePutLocations(allocator_, invoke);
 }
 void IntrinsicLocationsBuilderARM64::VisitJdkUnsafePutReferenceVolatile(HInvoke* invoke) {
@@ -1165,8 +1165,8 @@ void IntrinsicCodeGeneratorARM64::VisitUnsafePut(HInvoke* invoke) {
 void IntrinsicCodeGeneratorARM64::VisitUnsafePutAbsolute(HInvoke* invoke) {
   VisitJdkUnsafePutAbsolute(invoke);
 }
-void IntrinsicCodeGeneratorARM64::VisitUnsafePutOrdered(HInvoke* invoke) {
-  VisitJdkUnsafePutOrdered(invoke);
+void IntrinsicCodeGeneratorARM64::VisitUnsafePutOrderedInt(HInvoke* invoke) {
+  VisitJdkUnsafePutOrderedInt(invoke);
 }
 void IntrinsicCodeGeneratorARM64::VisitUnsafePutVolatile(HInvoke* invoke) {
   VisitJdkUnsafePutVolatile(invoke);
@@ -1174,8 +1174,8 @@ void IntrinsicCodeGeneratorARM64::VisitUnsafePutVolatile(HInvoke* invoke) {
 void IntrinsicCodeGeneratorARM64::VisitUnsafePutObject(HInvoke* invoke) {
   VisitJdkUnsafePutReference(invoke);
 }
-void IntrinsicCodeGeneratorARM64::VisitUnsafePutObjectOrdered(HInvoke* invoke) {
-  VisitJdkUnsafePutObjectOrdered(invoke);
+void IntrinsicCodeGeneratorARM64::VisitUnsafePutOrderedObject(HInvoke* invoke) {
+  VisitJdkUnsafePutOrderedObject(invoke);
 }
 void IntrinsicCodeGeneratorARM64::VisitUnsafePutObjectVolatile(HInvoke* invoke) {
   VisitJdkUnsafePutReferenceVolatile(invoke);
@@ -1207,7 +1207,7 @@ void IntrinsicCodeGeneratorARM64::VisitJdkUnsafePutAbsolute(HInvoke* invoke) {
                        /*is_ordered=*/ false,
                        codegen_);
 }
-void IntrinsicCodeGeneratorARM64::VisitJdkUnsafePutOrdered(HInvoke* invoke) {
+void IntrinsicCodeGeneratorARM64::VisitJdkUnsafePutOrderedInt(HInvoke* invoke) {
   GenUnsafePut(invoke,
                DataType::Type::kInt32,
                /*is_volatile=*/ false,
@@ -1235,7 +1235,7 @@ void IntrinsicCodeGeneratorARM64::VisitJdkUnsafePutReference(HInvoke* invoke) {
                /*is_ordered=*/ false,
                codegen_);
 }
-void IntrinsicCodeGeneratorARM64::VisitJdkUnsafePutObjectOrdered(HInvoke* invoke) {
+void IntrinsicCodeGeneratorARM64::VisitJdkUnsafePutOrderedObject(HInvoke* invoke) {
   GenUnsafePut(invoke,
                DataType::Type::kReference,
                /*is_volatile=*/ false,
