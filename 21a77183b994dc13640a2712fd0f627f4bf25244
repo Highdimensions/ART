@@ -220,6 +220,30 @@
       },
       "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ddad84f4_aaa4065e",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-02T15:22:40Z",
+      "side": 1,
+      "message": "I agree it\u0027s somewhat confusing. It\u0027s perhaps a little more clear if we check the boundaries instead, i.e:\n\n```\n  EXPECT_EQ(result2, result[0]);\n  EXPECT_EQ(result6, result[4]);\n  EXPECT_EQ(result5, result[5]);\n```\n\nThe inequality relation on `result1` should then be largely superfluous given the monoticity check already done in the loop above.\n\n\u003e since niceness values are strictly monotoncally decreasing\n\nDoesn\u0027t that mean line 207 in PS5 can be strengthened to `EXPECT_LT`?",
+      "parentUuid": "fb3d68cc_83584f72",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 210,
+        "endChar": 32
+      },
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
