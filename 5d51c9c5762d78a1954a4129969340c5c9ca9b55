@@ -88,6 +88,30 @@
       },
       "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "972162c7_53ef7124",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-02T21:33:52Z",
+      "side": 1,
+      "message": "\u003e Also, where are kMinManagedThreadPriority and kNumManagedThreadPriorities defined?\n\nThat\u0027s true - they\u0027re only internal constants defined on both sides of the API. I\u0027d like to see their definitions moved into palette.h in this directory so that we can use them consistently. However that\u0027s a separate cleanup to do, so I\u0027m fine with going back to just mentioning the integer literals in the doc here.",
+      "parentUuid": "2ae9c555_4983fbd3",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 0
+      },
+      "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
