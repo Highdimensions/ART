@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "312437d7_ca406e10",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 6000,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-02T15:28:55Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "3de60118_bed22637",
+      "revId": "44eed75ac5dd4207082bb19f33355c4ed7a991c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3435de4_7e943f66",
