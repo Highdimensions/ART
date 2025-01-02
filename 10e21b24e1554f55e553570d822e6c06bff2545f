@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a0dbda8_ad4e0402",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T19:31:51Z",
+      "side": 1,
+      "message": "Looks good. I\u0027ll +2 after comments have been resolved on the dependent CLs.",
+      "revId": "10e21b24e1554f55e553570d822e6c06bff2545f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
