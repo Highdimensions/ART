@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d16f3a4_5fddd73e",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1905031
+      },
+      "writtenOn": "2025-01-02T18:14:22Z",
+      "side": 1,
+      "message": "needs @param and @return filled out. It seems the text here already describes what the params and return are, but they should be formatted as such.",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 0
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "67a8b9f3_009f058a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartpalette/include/palette/palette_method_list.h",
+              "range": {
+                "startLine": 103,
+                "startChar": 0,
+                "endLine": 103,
+                "endChar": 0
+              },
+              "replacement": "  /* */                                                                                       \\\n  /* @param result  A pointer to an array of int-size slots where the retrieved */           \\\n  /*               nice values will be stored. */                                            \\\n  /* @param managed_start_priority The starting managed priority. */                        \\\n  /* @param npriorities The number of nice values to retrieve. */                           \\\n  /* @return PALETTE_STATUS_OK if the call succeeded. */                                      \\\n  /*          PALETTE_STATUS_INVALID_ARGUMENT if the pointer is a nullptr or npriorities is */ \\\n  /*          0. */                                                                         \\\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
