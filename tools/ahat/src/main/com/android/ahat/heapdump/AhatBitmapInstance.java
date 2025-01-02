@@ -17,8 +17,8 @@
 package com.android.ahat.heapdump;
 
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import com.google.common.collect.TreeMultimap;
 
 /**
  * A java object that has `android.graphics.Bitmap` as its base class.
@@ -66,14 +65,14 @@ public class AhatBitmapInstance extends AhatClassInstance implements Comparable<
     private int format;
     private Map<Long, byte[]> buffers;
     private Set<Long> referenced;
-    private TreeMultimap<BitmapInfo, AhatBitmapInstance> instances;
+    private Map<BitmapInfo, List<AhatBitmapInstance>> instances;
 
     BitmapDumpData(int count, int format) {
       this.count = count;
       this.format = format;
       this.buffers = new HashMap<Long, byte[]>(count);
       this.referenced = new HashSet<Long>(count);
-      this.instances = TreeMultimap.create();
+      this.instances = new HashMap<>();
     }
   };
 
@@ -124,16 +123,20 @@ public class AhatBitmapInstance extends AhatClassInstance implements Comparable<
       AhatBitmapInstance bmp = obj.asBitmapInstance();
       if (bmp != null) {
         BitmapInfo info = bmp.getBitmapInfo(result);
-        if (info != null) {
-          result.instances.put(info, bmp);
+
+        // Avoiding adding instances referenced from BitmapDumpData. These
+        // instances shall *not* be counted.
+        if (info != null && !result.referenced.contains(bmp.getId())) {
+          List<AhatBitmapInstance> values = result.instances.get(info);
+          if (values == null) {
+            values = new ArrayList<>();
+            result.instances.put(info, values);
+          }
+          values.add(bmp);
         }
       }
     }
 
-    /* remove all instances referenced from BitmapDumpData,
-     * these instances shall *not* be counted
-     */
-    instances.removeIf(i -> { return result.referenced.contains(i.getId()); });
     return result;
   }
 
@@ -182,10 +185,13 @@ public class AhatBitmapInstance extends AhatClassInstance implements Comparable<
    */
   public static List<List<AhatBitmapInstance>> findDuplicates(BitmapDumpData bitmapDumpData) {
     if (bitmapDumpData != null) {
-      return bitmapDumpData.instances.keySet().stream()
-          .filter(k -> bitmapDumpData.instances.get(k).size() > 1)
-          .map(k -> new ArrayList<>(bitmapDumpData.instances.get(k)))
-          .collect(Collectors.toList());
+      List<List<AhatBitmapInstance>> duplicates = new ArrayList<>();
+      for (List<AhatBitmapInstance> values : bitmapDumpData.instances.values()) {
+        if (values.size() > 1) {
+          duplicates.add(new ArrayList<>(values));
+        }
+      }
+      return duplicates;
     }
     return null;
   }
