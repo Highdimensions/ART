@@ -1,0 +1,246 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db6d9eae_a1362493",
+        "filename": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T18:51:17Z",
+      "side": 1,
+      "message": "25?",
+      "range": {
+        "startLine": 2,
+        "startChar": 19,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "4da7539a_5e3596eb",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+              "range": {
+                "startLine": 2,
+                "startChar": 0,
+                "endLine": 3,
+                "endChar": 0
+              },
+              "replacement": " * Copyright (C) 2025 The Android Open Source Project\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9f9f8e10f475e0f870a1631a48fc6605ced1f11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b7091a6_2691f9c6",
+        "filename": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T18:51:17Z",
+      "side": 1,
+      "message": "not needed",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 51
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "156b7b3c_140746a7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+              "range": {
+                "startLine": 19,
+                "startChar": 0,
+                "endLine": 20,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "9f9f8e10f475e0f870a1631a48fc6605ced1f11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "364a2c53_2831f81a",
+        "filename": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T18:51:17Z",
+      "side": 1,
+      "message": "Use lowerCamelCase for method names, or consider inlining this function into \u0027handle\u0027 now that it is only called from one place.",
+      "range": {
+        "startLine": 35,
+        "startChar": 15,
+        "endLine": 35,
+        "endChar": 25
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6aa4ad9f_5906e390",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+              "range": {
+                "startLine": 19,
+                "startChar": 0,
+                "endLine": 20,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+              "range": {
+                "startLine": 34,
+                "startChar": 0,
+                "endLine": 43,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+              "range": {
+                "startLine": 52,
+                "startChar": 0,
+                "endLine": 53,
+                "endChar": 0
+              },
+              "replacement": "          exchange.getResponseHeaders().add(\"Content-Type\", \"text/html\");\n          exchange.sendResponseHeaders(404, 0);\n          PrintStream ps \u003d new PrintStream(exchange.getResponseBody());\n          HtmlDoc doc \u003d new HtmlDoc(ps, DocString.text(\"ahat\"), DocString.uri(\"style.css\"));\n          doc.big(DocString.text(\"No byte[] found for the given request.\"));\n          doc.close();\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9f9f8e10f475e0f870a1631a48fc6605ced1f11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9280bbb_d5294685",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/AhatArrayInstance.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T18:51:17Z",
+      "side": 1,
+      "message": "not needed",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 0
+      },
+      "revId": "9f9f8e10f475e0f870a1631a48fc6605ced1f11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bea9a3a0_b99efdfb",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/AhatArrayInstance.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T18:51:17Z",
+      "side": 1,
+      "message": "@Override \n\nI\u0027m not sure why it wasn\u0027t there before.\n\nAlso, update the method to be public in AhatInstance.java.",
+      "fixSuggestions": [
+        {
+          "fixId": "fcbf4a7e_f00f800d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/AhatArrayInstance.java",
+              "range": {
+                "startLine": 405,
+                "startChar": 0,
+                "endLine": 405,
+                "endChar": 0
+              },
+              "replacement": "  @Override\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9f9f8e10f475e0f870a1631a48fc6605ced1f11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "911b85a9_517c312a",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/AhatArrayInstance.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T18:51:17Z",
+      "side": 1,
+      "message": "Move this to AhatInstance.java. You can use asByteArray() !\u003d null there.",
+      "range": {
+        "startLine": 412,
+        "startChar": 0,
+        "endLine": 414,
+        "endChar": 3
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6dc7aab4_7cb6a4a8",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/AhatArrayInstance.java",
+              "range": {
+                "startLine": 408,
+                "startChar": 0,
+                "endLine": 415,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "9f9f8e10f475e0f870a1631a48fc6605ced1f11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
