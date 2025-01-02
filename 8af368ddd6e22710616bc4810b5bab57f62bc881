@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebb5648d_00f89e57",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1059977
+      },
+      "writtenOn": "2025-01-02T19:46:17Z",
+      "side": 1,
+      "message": "You\u0027re right.\nI\u0027ll show just the retained size.",
+      "parentUuid": "cfb31a92_76de2100",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 59
+      },
+      "revId": "8af368ddd6e22710616bc4810b5bab57f62bc881",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "231c900b_4d4cbe0d",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-01-02T19:30:00Z",
       "side": 1,
       "message": "I assume the special casing is because retained size equals shallow size for primitive arrays and you want to avoid clutter in that case? How about using a more general check for (size \u003d\u003d retainedSize \u0026\u0026 baseSize \u003d\u003d baseRetainedSize)? You could have the left column be either \u0027Shallow\u0027, \u0027Retained\u0027, or \u0027Shallow \u0026 Retained\u0027 if they are the same.",
+      "range": {
+        "startLine": 150,
+        "startChar": 61,
+        "endLine": 150,
+        "endChar": 77
+      },
+      "revId": "8af368ddd6e22710616bc4810b5bab57f62bc881",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db3d585f_a487131f",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1059977
+      },
+      "writtenOn": "2025-01-02T19:46:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "231c900b_4d4cbe0d",
       "range": {
         "startLine": 150,
         "startChar": 61,
