@@ -112,6 +112,30 @@
       },
       "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ced5ec47_3af377cb",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1905031
+      },
+      "writtenOn": "2025-01-02T22:08:30Z",
+      "side": 1,
+      "message": "We ended up agreeing to just do something like `int PaletteGetPriorityMapping(int javaPrio)` because it doesn\u0027t depend on any of this, and can just abort if accessed out of const bounds. If min and max are always just 1 and 10, we should document that here or define constants for it probably and just say it aborts if outside that. Just keep in mind header constants can\u0027t be changed ever ever for any reason ever.",
+      "parentUuid": "972162c7_53ef7124",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 0
+      },
+      "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
