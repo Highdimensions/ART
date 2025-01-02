@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6a3e909_00dab400",
+        "filename": "tools/ahat/README.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1059977
+      },
+      "writtenOn": "2025-01-02T17:28:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12494f40_7fd48641",
+      "range": {
+        "startLine": 58,
+        "startChar": 1,
+        "endLine": 58,
+        "endChar": 7
+      },
+      "revId": "ea1aefe0e8ae89b07277b3ac4b974ceca89e9291",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "97d0f3d2_d7e32478",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-01-02T17:24:35Z",
       "side": 1,
       "message": "Add:\n* Show string values of byte[] instances.\n* Fix accounting for cleaned native registrations",
+      "revId": "ea1aefe0e8ae89b07277b3ac4b974ceca89e9291",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8eed152_c29b8bdd",
+        "filename": "tools/ahat/README.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1059977
+      },
+      "writtenOn": "2025-01-02T17:28:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97d0f3d2_d7e32478",
       "revId": "ea1aefe0e8ae89b07277b3ac4b974ceca89e9291",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
