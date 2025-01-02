@@ -22,6 +22,30 @@
       },
       "revId": "889d77c3ff41835c9d03e3f973b9c1fbb0421ea7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbb21149_4c6aed7f",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/AhatBitmapInstance.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T22:30:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd4526c1_162a9e7a",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 11
+      },
+      "revId": "889d77c3ff41835c9d03e3f973b9c1fbb0421ea7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
