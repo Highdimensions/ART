@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7125e484_1c97113c",
+        "filename": "runtime/class_linker-inl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-02T18:42:12Z",
+      "side": 1,
+      "message": "Reworded",
+      "parentUuid": "c0aa71cc_2c08397f",
+      "range": {
+        "startLine": 367,
+        "startChar": 42,
+        "endLine": 367,
+        "endChar": 54
+      },
+      "revId": "e894b07828e2ed8b6c2da1c4fec9ddee93fd8ddf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec0d4a02_be015b0e",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-12-27T08:30:02Z",
       "side": 1,
       "message": "I\u0027d prefer to reject the entire dex file (in `DexFileVerifier`), assuming we can confirm with the APK scanner that there are no apps with classes that define both static and instance field with the same name and type.",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 36
+      },
+      "revId": "e894b07828e2ed8b6c2da1c4fec9ddee93fd8ddf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e3c3c6a_e50cd099",
+        "filename": "test/734-duplicate-fields/smali/Cls.smali",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-02T18:42:12Z",
+      "side": 1,
+      "message": "I couldn\u0027t find the spec explicitly saying this is either allowed or banned. For example constraint G18 says:\n```\nFor each field_id_item, both the class_idx and type_idx fields must be valid indices into the type_ids list. The entry referenced by class_idx must be a non-array reference type. In addition, the name_idx field must be a valid reference into the string_ids section, and the contents of the referenced entry must conform to the MemberName specification.\n```\nhttps://source.android.com/docs/core/runtime/constraints\n\nbut it doesn\u0027t mention this specific case. Do we want to reject it at the `DexFileVerifier` level? Or maybe in the class verifier?",
+      "parentUuid": "ec0d4a02_be015b0e",
       "range": {
         "startLine": 39,
         "startChar": 0,
