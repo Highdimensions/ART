@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e12fc510_f6e42df4",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5392,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-02T15:09:59Z",
+      "side": 1,
+      "message": "This is not declarative enough. Maybe `needs_rex`? It can be done in another CL when the `EmitVexPrefixByteOne` rename happens",
+      "range": {
+        "startLine": 5392,
+        "startChar": 72,
+        "endLine": 5392,
+        "endChar": 73
+      },
+      "revId": "5bf2cc6ac9a5686846260193109487c166d0d77a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2aae1764_cb5c4980",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5400,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-02T15:09:59Z",
+      "side": 1,
+      "message": "What does `vvvv` stands for?",
+      "range": {
+        "startLine": 5400,
+        "startChar": 26,
+        "endLine": 5400,
+        "endChar": 34
+      },
+      "revId": "5bf2cc6ac9a5686846260193109487c166d0d77a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
