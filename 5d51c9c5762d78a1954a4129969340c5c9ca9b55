@@ -40,6 +40,30 @@
       ],
       "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8045e1ed_fe8537c7",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1905031
+      },
+      "writtenOn": "2025-01-02T18:15:09Z",
+      "side": 1,
+      "message": "Ah, whoops, I forgot to disable ai suggestions for AOSP.",
+      "parentUuid": "5d16f3a4_5fddd73e",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 0
+      },
+      "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
