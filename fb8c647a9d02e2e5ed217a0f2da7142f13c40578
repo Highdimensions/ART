@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bb79e15_11a5086d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1059977
+      },
+      "writtenOn": "2025-01-02T18:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47ad5989_2400dacd",
+      "range": {
+        "startLine": 7,
+        "startChar": 5,
+        "endLine": 7,
+        "endChar": 10
+      },
+      "revId": "fb8c647a9d02e2e5ed217a0f2da7142f13c40578",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "767717fd_04e251f1",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-01-02T17:48:16Z",
       "side": 1,
       "message": "1.8",
+      "range": {
+        "startLine": 3,
+        "startChar": 24,
+        "endLine": 3,
+        "endChar": 29
+      },
+      "revId": "fb8c647a9d02e2e5ed217a0f2da7142f13c40578",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6542b831_bfb5a727",
+        "filename": "tools/ahat/etc/ahat.mf",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1059977
+      },
+      "writtenOn": "2025-01-02T18:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "767717fd_04e251f1",
       "range": {
         "startLine": 3,
         "startChar": 24,
