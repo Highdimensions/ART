@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "26c343e1_185e467b",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5392,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-02T16:00:30Z",
+      "side": 1,
+      "message": "I agree, I\u0027m just keeping this in line with the `EmitVexPrefixByteZero()` for now except for making it lower-case.",
+      "parentUuid": "e12fc510_f6e42df4",
+      "range": {
+        "startLine": 5392,
+        "startChar": 72,
+        "endLine": 5392,
+        "endChar": 73
+      },
+      "revId": "5bf2cc6ac9a5686846260193109487c166d0d77a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2aae1764_cb5c4980",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-01-02T15:09:59Z",
       "side": 1,
       "message": "What does `vvvv` stands for?",
+      "range": {
+        "startLine": 5400,
+        "startChar": 26,
+        "endLine": 5400,
+        "endChar": 34
+      },
+      "revId": "5bf2cc6ac9a5686846260193109487c166d0d77a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d203196f_cdba99e7",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5400,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-02T16:00:30Z",
+      "side": 1,
+      "message": "I don\u0027t know, I\u0027m just deduplicating a lot of code that\u0027s been using this name.",
+      "parentUuid": "2aae1764_cb5c4980",
       "range": {
         "startLine": 5400,
         "startChar": 26,
