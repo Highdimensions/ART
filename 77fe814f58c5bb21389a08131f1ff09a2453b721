@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5654fa55_fa61aae2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1059977
+      },
+      "writtenOn": "2025-01-02T18:23:12Z",
+      "side": 1,
+      "message": "https://docs.google.com/document/d/1IamfmrDuZF3fP0kdkXLz_8cSZwjL3JXCNEXI8354rzo/edit?usp\u003dsharing\nctrl+f \"download the contents\"",
+      "parentUuid": "329c85ac_04708ec8",
+      "range": {
+        "startLine": 7,
+        "startChar": 6,
+        "endLine": 7,
+        "endChar": 47
+      },
+      "revId": "77fe814f58c5bb21389a08131f1ff09a2453b721",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fda2d449_99f07ddc",
@@ -95,6 +119,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "52f3b55e_42e7bebb",
+        "filename": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1059977
+      },
+      "writtenOn": "2025-01-02T18:23:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fda2d449_99f07ddc",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 7
+      },
+      "revId": "77fe814f58c5bb21389a08131f1ff09a2453b721",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c6f32707_d7da68c7",
@@ -142,6 +190,30 @@
           ]
         }
       ],
+      "revId": "77fe814f58c5bb21389a08131f1ff09a2453b721",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9fcbdb8_fcafe12b",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/AhatArrayInstance.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1059977
+      },
+      "writtenOn": "2025-01-02T18:23:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6f32707_d7da68c7",
+      "range": {
+        "startLine": 423,
+        "startChar": 0,
+        "endLine": 425,
+        "endChar": 25
+      },
       "revId": "77fe814f58c5bb21389a08131f1ff09a2453b721",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
