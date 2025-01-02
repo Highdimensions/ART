@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c2242ab5_add227a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T18:56:10Z",
+      "side": 1,
+      "message": "Can you add a test case to InstanceTest.java for asByteArray / hasByteArray now that those are public methods? There should already be some interesting bytes arrays in the test heap dump.",
+      "revId": "9f9f8e10f475e0f870a1631a48fc6605ced1f11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "db6d9eae_a1362493",
         "filename": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
         "patchSetId": 5
