@@ -64,6 +64,30 @@
       },
       "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ae9c555_4983fbd3",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1905031
+      },
+      "writtenOn": "2025-01-02T18:29:44Z",
+      "side": 1,
+      "message": "Also, where are kMinManagedThreadPriority and kNumManagedThreadPriorities defined? What happens if managed_start_priority + npriorities is larger than the max? Or managed start is negative? There is no obvious way to retrieve the bounds.\n\nAt a higher level, though, is there a reason we care about specific subsets of the mapping? If the mapping is only like 10 entries, could we just always return the entire mapping and the associated size of the output, bypassing issues with checking the request range? I don\u0027t see a reason why the client wouldn\u0027t just call this once and cache it somewhere, and have it return npriorities as an _output_, unless this is constantly changing.\n\nAlso, there\u0027s not much context about what exactly managed priorities actually are here, though maybe that\u0027s fine for systemapi.",
+      "parentUuid": "8045e1ed_fe8537c7",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 0
+      },
+      "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
