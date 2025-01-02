@@ -16,6 +16,8 @@
 
 package com.android.ahat.heapdump;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractList;
 import java.util.Collections;
@@ -400,7 +402,14 @@ public class AhatArrayInstance extends AhatInstance {
     return String.format("%s[%d]@%08x", className, mValues.size(), getId());
   }
 
-  byte[] asByteArray() {
+  public byte[] asByteArray() {
     return mByteArray;
+  }
+
+  /**
+   * Whether this array instance has an underlying byte array.
+   */
+  public boolean hasByteArray() {
+    return mByteArray != null;
   }
 }
