@@ -1,0 +1,149 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "329c85ac_04708ec8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T17:08:21Z",
+      "side": 1,
+      "message": "Any sample use cases you can share?",
+      "range": {
+        "startLine": 7,
+        "startChar": 6,
+        "endLine": 7,
+        "endChar": 47
+      },
+      "revId": "77fe814f58c5bb21389a08131f1ff09a2453b721",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fda2d449_99f07ddc",
+        "filename": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T17:08:21Z",
+      "side": 1,
+      "message": "You can use the asByteArray method to check if there is a byte array and get the bytes. Something like:\n\n  byte[] bytes \u003d inst.asByteArray();\n  if (bytes \u003d\u003d null) { handle_404(exchange); }",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 7
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "23c631b8_6fc9040a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+              "range": {
+                "startLine": 19,
+                "startChar": 0,
+                "endLine": 20,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+              "range": {
+                "startLine": 50,
+                "startChar": 0,
+                "endLine": 51,
+                "endChar": 0
+              },
+              "replacement": "      byte[] bytes \u003d inst.asByteArray();\n      if (bytes \u003d\u003d null) {\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+              "range": {
+                "startLine": 54,
+                "startChar": 0,
+                "endLine": 65,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ArrayHandler.java",
+              "range": {
+                "startLine": 70,
+                "startChar": 0,
+                "endLine": 71,
+                "endChar": 0
+              },
+              "replacement": "      os.write(bytes);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "77fe814f58c5bb21389a08131f1ff09a2453b721",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6f32707_d7da68c7",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/AhatArrayInstance.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-02T17:08:21Z",
+      "side": 1,
+      "message": "I think this logic is better to put in ArrayHandler.",
+      "range": {
+        "startLine": 423,
+        "startChar": 0,
+        "endLine": 425,
+        "endChar": 25
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1c667bf0_7307b649",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/AhatArrayInstance.java",
+              "range": {
+                "startLine": 19,
+                "startChar": 0,
+                "endLine": 21,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/AhatArrayInstance.java",
+              "range": {
+                "startLine": 415,
+                "startChar": 0,
+                "endLine": 427,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "77fe814f58c5bb21389a08131f1ff09a2453b721",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
