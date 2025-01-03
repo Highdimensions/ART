@@ -44,6 +44,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d910760e_312bdbf3",
+        "filename": "compiler/optimizing/inliner.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 1346,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-03T15:18:04Z",
+      "side": 1,
+      "message": "It seems that with `InvokeUnresolved` it can\u0027t be devirtualized, so I removed changes in this file altogether.",
+      "parentUuid": "39f7a9cc_cd400c1a",
+      "range": {
+        "startLine": 1345,
+        "startChar": 0,
+        "endLine": 1346,
+        "endChar": 58
+      },
+      "revId": "b0d69a70b4928879e351bac98e949165686d9e07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "21a9adbd_304d9c7b",
         "filename": "compiler/optimizing/instruction_builder.cc",
         "patchSetId": 13
@@ -55,6 +79,30 @@
       "writtenOn": "2025-01-03T14:22:59Z",
       "side": 1,
       "message": "Would it make sense to just use InvokeUnresolved in that case?",
+      "range": {
+        "startLine": 1210,
+        "startChar": 0,
+        "endLine": 1211,
+        "endChar": 32
+      },
+      "revId": "b0d69a70b4928879e351bac98e949165686d9e07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c081fdac_ba8a475a",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-03T15:18:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21a9adbd_304d9c7b",
       "range": {
         "startLine": 1210,
         "startChar": 0,
