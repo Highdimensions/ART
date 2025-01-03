@@ -268,6 +268,30 @@
       },
       "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "369a6bf3_43079cf5",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-03T11:18:27Z",
+      "side": 1,
+      "message": "SG",
+      "parentUuid": "c675aba4_84882d95",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 210,
+        "endChar": 32
+      },
+      "revId": "21a77183b994dc13640a2712fd0f627f4bf25244",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
