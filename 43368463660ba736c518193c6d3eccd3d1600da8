@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4afcbde_e1ee6608",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 17
+      },
+      "lineNbr": 1132,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-03T16:57:12Z",
+      "side": 1,
+      "message": "Merge this with lines 1098-1111.",
+      "range": {
+        "startLine": 1123,
+        "startChar": 0,
+        "endLine": 1132,
+        "endChar": 3
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e67fb0e8_d7a500fc",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/instruction_builder.cc",
+              "range": {
+                "startLine": 1119,
+                "startChar": 0,
+                "endLine": 1124,
+                "endChar": 0
+              },
+              "replacement": "  if (UNLIKELY((kIsDebugBuild \u0026\u0026 IsSignaturePolymorphic(resolved_method)) ||\n                (invoke_type !\u003d kPolymorphic \u0026\u0026 IsSignaturePolymorphic(resolved_method)))) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "43368463660ba736c518193c6d3eccd3d1600da8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
