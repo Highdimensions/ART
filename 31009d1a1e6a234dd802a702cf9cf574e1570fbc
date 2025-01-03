@@ -16,6 +16,52 @@
       "message": "PTAL. Thanks!",
       "revId": "31009d1a1e6a234dd802a702cf9cf574e1570fbc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec26ee29_91fe7e91",
+        "filename": "test/2286-method-tracing-aot-code/src/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-03T14:56:50Z",
+      "side": 1,
+      "message": "callOuter",
+      "range": {
+        "startLine": 55,
+        "startChar": 22,
+        "endLine": 55,
+        "endChar": 31
+      },
+      "revId": "31009d1a1e6a234dd802a702cf9cf574e1570fbc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e120893_1cff0348",
+        "filename": "test/2286-method-tracing-aot-code/src/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-03T14:56:50Z",
+      "side": 1,
+      "message": "callOuter",
+      "range": {
+        "startLine": 62,
+        "startChar": 46,
+        "endLine": 62,
+        "endChar": 55
+      },
+      "revId": "31009d1a1e6a234dd802a702cf9cf574e1570fbc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
