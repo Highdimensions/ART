@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e8dfa0fd_d00e143d",
+        "filename": "compiler/optimizing/inliner.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-03T10:13:07Z",
+      "side": 1,
+      "message": "We can\u0027t inline native methods.\n\nThe crash in b/383057088 is a compiler crash, so it\u0027s just a matter of handling it. I think the comment is misleading, shouldn\u0027t we say something like \"instrinsics logic only recognize invoke-virtual on signature-ploymorphic, and not invoke-direct, so we do not devirtualize such calls\" ?\n .",
+      "parentUuid": "3a809513_36d0ef95",
+      "range": {
+        "startLine": 1345,
+        "startChar": 0,
+        "endLine": 1348,
+        "endChar": 3
+      },
+      "revId": "fa66bed1d3aa3ced99bee293211333c2ac4f7019",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "75857267_1f032b3f",
         "filename": "compiler/optimizing/instruction_builder.cc",
         "patchSetId": 9
