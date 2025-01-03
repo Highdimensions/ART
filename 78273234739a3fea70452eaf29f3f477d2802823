@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7528774_eafd299c",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5809,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-03T13:01:30Z",
+      "side": 1,
+      "message": "Isn\u0027t `A0` just the first argument to be passed to the target method? Shouldn\u0027t this be\n\n```\n__ Bnez(temp, slow_path-\u003eGetEntryLabel());\n```?",
+      "range": {
+        "startLine": 5809,
+        "startChar": 15,
+        "endLine": 5809,
+        "endChar": 17
+      },
+      "revId": "78273234739a3fea70452eaf29f3f477d2802823",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
