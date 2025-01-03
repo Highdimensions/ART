@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc162b34_3a99cd77",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 1220,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-03T15:21:35Z",
+      "side": 1,
+      "message": "Move this check to line 1099, adding the kind of invoke you expect it to be?",
+      "range": {
+        "startLine": 1220,
+        "startChar": 8,
+        "endLine": 1220,
+        "endChar": 46
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "d25de757_728e5625",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/instruction_builder.cc",
+              "range": {
+                "startLine": 1148,
+                "startChar": 0,
+                "endLine": 1149,
+                "endChar": 0
+              },
+              "replacement": "  if (UNLIKELY(resolved_method-\u003eIsIntrinsic()) \u0026\u0026\n      !graph_-\u003eIsDebuggable() \u0026\u0026\n      !IsSignaturePolymorphic(resolved_method)) {\n"
+            },
+            {
+              "path": "compiler/optimizing/instruction_builder.cc",
+              "range": {
+                "startLine": 1216,
+                "startChar": 0,
+                "endLine": 1240,
+                "endChar": 0
+              },
+              "replacement": "    invoke \u003d new (allocator_) HInvokeVirtual(allocator_,\n                                             number_of_arguments,\n                                             operands.GetNumberOfOperands(),\n                                             return_type,\n                                             dex_pc,\n                                             method_reference,\n                                             resolved_method,\n                                             resolved_method_reference,\n                                             /*vtable_index\u003d*/ imt_or_vtable_index,\n                                             !graph_-\u003eIsDebuggable());\n"
+            }
+          ]
+        }
+      ],
+      "revId": "cea5f0db60beab98ec7783b874f496fe6433e671",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
