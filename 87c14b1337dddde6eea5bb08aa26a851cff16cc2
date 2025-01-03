@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a33b3eba_146a1ef3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-03T08:07:01Z",
+      "side": 1,
+      "message": "Loop versioning looks like something we could do for loops processing strings, to have separate loops for ASCII and non-ASCII strings. But I\u0027m not planning to add such optimization in the near future, so I\u0027m fine with removing this.",
+      "revId": "87c14b1337dddde6eea5bb08aa26a851cff16cc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
