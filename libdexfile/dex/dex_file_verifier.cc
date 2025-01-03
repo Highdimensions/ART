@@ -76,7 +76,6 @@ constexpr uint32_t MapTypeToBitMask(DexFile::MapItemType map_item_type) {
     case DexFile::kDexTypeAnnotationsDirectoryItem: return 1 << 19;
     case DexFile::kDexTypeHiddenapiClassData:       return 1 << 20;
   }
-  return 0;
 }
 
 constexpr bool IsDataSectionType(DexFile::MapItemType map_item_type) {
@@ -105,7 +104,6 @@ constexpr bool IsDataSectionType(DexFile::MapItemType map_item_type) {
     case DexFile::kDexTypeHiddenapiClassData:
       return true;
   }
-  return true;
 }
 
 // Fields and methods may have only one of public/protected/private.
@@ -3430,7 +3428,6 @@ bool DexFileVerifier::CheckInterSection() {
     uint32_t section_offset = item->offset_;
     uint32_t section_count = item->size_;
     DexFile::MapItemType type = static_cast<DexFile::MapItemType>(item->type_);
-    bool found = false;
 
     if (type == DexFile::kDexTypeClassDataItem) {
       FindStringRangesForMethodNames();
@@ -3445,7 +3442,6 @@ bool DexFileVerifier::CheckInterSection() {
       case DexFile::kDexTypeDebugInfoItem:
       case DexFile::kDexTypeAnnotationItem:
       case DexFile::kDexTypeEncodedArrayItem:
-        found = true;
         break;
       case DexFile::kDexTypeStringIdItem:
       case DexFile::kDexTypeTypeIdItem:
@@ -3463,14 +3459,8 @@ bool DexFileVerifier::CheckInterSection() {
         if (!CheckInterSectionIterate(section_offset, section_count, type)) {
           return false;
         }
-        found = true;
         break;
       }
-    }
-
-    if (!found) {
-      ErrorStringPrintf("Unknown map item type %x", item->type_);
-      return false;
     }
 
     item++;
