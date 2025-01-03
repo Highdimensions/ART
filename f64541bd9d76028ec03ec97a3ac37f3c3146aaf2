@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cbbda23_d393051a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-03T01:36:27Z",
+      "side": 1,
+      "message": "Note that aosp/3287177 has not yet been updated to reflect the API change. But that\u0027s not needed for minimal testing of this change.",
+      "revId": "f64541bd9d76028ec03ec97a3ac37f3c3146aaf2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
