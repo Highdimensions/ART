@@ -1,0 +1,68 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39f7a9cc_cd400c1a",
+        "filename": "compiler/optimizing/inliner.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 1346,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-03T14:22:59Z",
+      "side": 1,
+      "message": "Actually I don\u0027t really understand here, as the check prevents an invoke-virtual to be devirtualized, not an invoke-polymorphic. Should you update the comment?",
+      "range": {
+        "startLine": 1345,
+        "startChar": 0,
+        "endLine": 1346,
+        "endChar": 58
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e154fad6_64f0f04d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/inliner.cc",
+              "range": {
+                "startLine": 1345,
+                "startChar": 0,
+                "endLine": 1347,
+                "endChar": 0
+              },
+              "replacement": "  // Intrinsics logic only recognize invoke-polymorphic on signature polymorphic methods, so we do not\n  // devirtualize invoke-virtual calls to signature polymorphic methods.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b0d69a70b4928879e351bac98e949165686d9e07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21a9adbd_304d9c7b",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-03T14:22:59Z",
+      "side": 1,
+      "message": "Would it make sense to just use InvokeUnresolved in that case?",
+      "range": {
+        "startLine": 1210,
+        "startChar": 0,
+        "endLine": 1211,
+        "endChar": 32
+      },
+      "revId": "b0d69a70b4928879e351bac98e949165686d9e07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
