@@ -93,6 +93,30 @@
       },
       "revId": "e894b07828e2ed8b6c2da1c4fec9ddee93fd8ddf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31f82c48_c6471ffc",
+        "filename": "test/734-duplicate-fields/smali/Cls.smali",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-03T08:31:29Z",
+      "side": 1,
+      "message": "That document does not seem to have a single word about the \"Found virtual method with same index as direct method\" error that cen be reported by `DexFileVerifier::CheckIntraClassDataItemMethods()`. (I want to add a similar error for fields.)\n\nThe constraint A14 in that document is also pretty weak. We strictly check that a method name that starts with a `\u003c` is either `\u003cclinit\u003e` or `\u003cinit\u003e`, see `DexFileVerifier::CheckClassDataItemMethod()` error \"Bad method name for method index\".\n\n(Note that this is relevant for https://android-review.googlesource.com/3380108 as well.)",
+      "parentUuid": "2e3c3c6a_e50cd099",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 36
+      },
+      "revId": "e894b07828e2ed8b6c2da1c4fec9ddee93fd8ddf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
