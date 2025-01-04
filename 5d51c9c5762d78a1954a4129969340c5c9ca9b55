@@ -136,6 +136,30 @@
       },
       "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47465daf_c2c5f26a",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-04T00:48:55Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ced5ec47_3af377cb",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 0
+      },
+      "revId": "5d51c9c5762d78a1954a4129969340c5c9ca9b55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

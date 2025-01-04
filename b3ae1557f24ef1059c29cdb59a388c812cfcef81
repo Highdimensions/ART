@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ad89839_b1e92d27",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-04T00:48:55Z",
+      "side": 1,
+      "message": "Thanks! It\u0027s already obsolete. I took out most of it, but left the pointer to that CL, since I don\u0027t expect it to be submitted in the same topic.",
+      "parentUuid": "0b9aef79_7fe532b8",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 3
+      },
+      "revId": "b3ae1557f24ef1059c29cdb59a388c812cfcef81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2a5bab15_e2bc750c",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-01-03T11:18:27Z",
       "side": 1,
       "message": "More discussion on this in the other CL. Since this is just a test fake it\u0027s perhaps easier to just leave it out here?",
+      "range": {
+        "startLine": 60,
+        "startChar": 3,
+        "endLine": 60,
+        "endChar": 43
+      },
+      "revId": "b3ae1557f24ef1059c29cdb59a388c812cfcef81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc1b0199_c6d23e4a",
+        "filename": "libartpalette/system/palette_fake.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-04T00:48:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a5bab15_e2bc750c",
       "range": {
         "startLine": 60,
         "startChar": 3,

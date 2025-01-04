@@ -215,6 +215,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed1bf670_554b9c2a",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-04T00:48:55Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "b4234915_fda3c619",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 69
+      },
+      "revId": "ba49944bd25a8686ccaba107f1d94151436a8746",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4bc4c838_5a42ecff",
