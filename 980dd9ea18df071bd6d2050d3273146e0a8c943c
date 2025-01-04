@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f9b160f_9988c804",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-04T00:29:14Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "299561ae_b6903fa7",
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cd4da986_cd58cdfe",
@@ -83,6 +101,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "210d0924_040225fb",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-04T00:29:14Z",
+      "side": 1,
+      "message": "Got it. Thanks!",
+      "parentUuid": "ecec195c_3e536f41",
+      "range": {
+        "startLine": 545,
+        "startChar": 12,
+        "endLine": 545,
+        "endChar": 15
+      },
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "47e0de7e_e20acf10",
@@ -120,6 +162,30 @@
       "side": 1,
       "message": "To fix the failure of 175-alloc-big-bignums, madvice should be called first and then new_free_info should be inserted into free_blocks_.\n\nIf new_free_info is inserted into free_blocks_ first, it may be allocated at this time. Then calling madvice will release it, and a null pointer error will occur during subsequent accesses.",
       "parentUuid": "47e0de7e_e20acf10",
+      "range": {
+        "startLine": 547,
+        "startChar": 4,
+        "endLine": 550,
+        "endChar": 5
+      },
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0db43f60_27d29442",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-04T00:29:14Z",
+      "side": 1,
+      "message": "I don\u0027t get it. The free_blocks_ data structire is a std::set allocated with the default allocator. How can an madvise on the large object space affect memory allocated with the default, presumably scudo, allocator? The free_blocks_ data structure should be completely separate from the blocks managed by FreeListSpace.",
+      "parentUuid": "a711d06a_817d5e4c",
       "range": {
         "startLine": 547,
         "startChar": 4,

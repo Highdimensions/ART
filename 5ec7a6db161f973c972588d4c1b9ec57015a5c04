@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e6406f0_793db8b2",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-04T00:29:14Z",
+      "side": 1,
+      "message": "\"ensures ptrs are\"",
+      "range": {
+        "startLine": 755,
+        "startChar": 48,
+        "endLine": 755,
+        "endChar": 64
+      },
+      "revId": "5ec7a6db161f973c972588d4c1b9ec57015a5c04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
