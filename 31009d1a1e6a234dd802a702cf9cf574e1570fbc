@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "918e9209_c7ea61c4",
+        "filename": "test/2286-method-tracing-aot-code/src/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-01-05T16:11:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec26ee29_91fe7e91",
+      "range": {
+        "startLine": 55,
+        "startChar": 22,
+        "endLine": 55,
+        "endChar": 31
+      },
+      "revId": "31009d1a1e6a234dd802a702cf9cf574e1570fbc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e120893_1cff0348",
@@ -54,6 +78,30 @@
       "writtenOn": "2025-01-03T14:56:50Z",
       "side": 1,
       "message": "callOuter",
+      "range": {
+        "startLine": 62,
+        "startChar": 46,
+        "endLine": 62,
+        "endChar": 55
+      },
+      "revId": "31009d1a1e6a234dd802a702cf9cf574e1570fbc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3db9ca0a_8d413710",
+        "filename": "test/2286-method-tracing-aot-code/src/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-01-05T16:11:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e120893_1cff0348",
       "range": {
         "startLine": 62,
         "startChar": 46,
