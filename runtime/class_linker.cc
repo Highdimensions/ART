@@ -4051,17 +4051,20 @@ void ClassLinker::LoadClass(Thread* self,
     uint16_t hotness_threshold = runtime->GetJITOptions()->GetWarmupThreshold();
     // Use the visitor since the ranged based loops are bit slower from seeking. Seeking to the
     // methods needs to decode all of the fields.
+    std::set<uint32_t> field_indexes;
     accessor.VisitFieldsAndMethods([&](
         const ClassAccessor::Field& field) REQUIRES_SHARED(Locks::mutator_lock_) {
           uint32_t field_idx = field.GetIndex();
           DCHECK_GE(field_idx, last_static_field_idx);  // Ordering enforced by DexFileVerifier.
           if (num_sfields == 0 || LIKELY(field_idx > last_static_field_idx)) {
+            field_indexes.insert(field_idx);
             LoadField(field, klass, &sfields->At(num_sfields));
             ++num_sfields;
             last_static_field_idx = field_idx;
           }
         }, [&](const ClassAccessor::Field& field) REQUIRES_SHARED(Locks::mutator_lock_) {
           uint32_t field_idx = field.GetIndex();
+          CHECK(!field_indexes.contains(field_idx));
           DCHECK_GE(field_idx, last_instance_field_idx);  // Ordering enforced by DexFileVerifier.
           if (num_ifields == 0 || LIKELY(field_idx > last_instance_field_idx)) {
             LoadField(field, klass, &ifields->At(num_ifields));
