@@ -66,6 +66,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4b58df3_1f424f89",
+        "filename": "compiler/optimizing/inliner.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 1346,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-06T12:20:30Z",
+      "side": 1,
+      "message": "Marking as resolved.",
+      "parentUuid": "d910760e_312bdbf3",
+      "range": {
+        "startLine": 1345,
+        "startChar": 0,
+        "endLine": 1346,
+        "endChar": 58
+      },
+      "revId": "b0d69a70b4928879e351bac98e949165686d9e07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "21a9adbd_304d9c7b",

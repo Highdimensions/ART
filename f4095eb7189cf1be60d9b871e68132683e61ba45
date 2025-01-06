@@ -42,6 +42,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "74a03779_5c7927a5",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 1103,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-06T12:20:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e3a1dd0_a9078a8b",
+      "range": {
+        "startLine": 1103,
+        "startChar": 9,
+        "endLine": 1103,
+        "endChar": 57
+      },
+      "revId": "f4095eb7189cf1be60d9b871e68132683e61ba45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be2b6316_79b45863",
@@ -79,6 +103,30 @@
           ]
         }
       ],
+      "revId": "f4095eb7189cf1be60d9b871e68132683e61ba45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9dc45396_af496b4d",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 1106,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-06T12:20:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be2b6316_79b45863",
+      "range": {
+        "startLine": 1106,
+        "startChar": 5,
+        "endLine": 1106,
+        "endChar": 13
+      },
       "revId": "f4095eb7189cf1be60d9b871e68132683e61ba45",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -124,6 +172,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc3e0c29_a75602fa",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 1107,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-06T12:20:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d91a1534_a80fa8dc",
+      "range": {
+        "startLine": 1107,
+        "startChar": 8,
+        "endLine": 1107,
+        "endChar": 9
+      },
+      "revId": "f4095eb7189cf1be60d9b871e68132683e61ba45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b771d581_16649e88",
@@ -137,6 +209,30 @@
       "writtenOn": "2025-01-06T11:56:35Z",
       "side": 1,
       "message": "`2025`. Same for other tests",
+      "range": {
+        "startLine": 1,
+        "startChar": 16,
+        "endLine": 1,
+        "endChar": 20
+      },
+      "revId": "f4095eb7189cf1be60d9b871e68132683e61ba45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe321adb_432c8b6c",
+        "filename": "test/2286-invokevirtual-invokeexact/smali/Test.smali",
+        "patchSetId": 21
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-06T12:20:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b771d581_16649e88",
       "range": {
         "startLine": 1,
         "startChar": 16,
