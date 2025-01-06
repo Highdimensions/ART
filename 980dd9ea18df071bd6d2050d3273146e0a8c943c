@@ -198,6 +198,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "67f19409_5a4d6c06",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1963346
+      },
+      "writtenOn": "2025-01-06T11:45:37Z",
+      "side": 1,
+      "message": "Sorry, maybe I didn\u0027t express it clearly.\n\nIf new_free_info is inserted into free_blocks_ first, the previously free allocation that new_free_info points to in FreeListSpace might subsequently be allocated by FreeListSpace::Alloc. Then calling madvice will release the allocation which be allocated, and the next access to it will cause a null pointer problem.",
+      "parentUuid": "0db43f60_27d29442",
+      "range": {
+        "startLine": 547,
+        "startChar": 4,
+        "endLine": 550,
+        "endChar": 5
+      },
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a190e619_0ac35fc8",
         "filename": "runtime/gc/space/large_object_space.h",
         "patchSetId": 6
