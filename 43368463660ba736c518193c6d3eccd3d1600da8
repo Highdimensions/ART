@@ -40,6 +40,30 @@
       ],
       "revId": "43368463660ba736c518193c6d3eccd3d1600da8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91ce5d54_58679a62",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 17
+      },
+      "lineNbr": 1132,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-06T08:32:01Z",
+      "side": 1,
+      "message": "`MaybeRecordStat` is called there and `InvokeUnresolved` is unresolved for different reason here. Are you sure it will be better to merge them?",
+      "parentUuid": "f4afcbde_e1ee6608",
+      "range": {
+        "startLine": 1123,
+        "startChar": 0,
+        "endLine": 1132,
+        "endChar": 3
+      },
+      "revId": "43368463660ba736c518193c6d3eccd3d1600da8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
