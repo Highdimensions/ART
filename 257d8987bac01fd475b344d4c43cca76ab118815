@@ -1,0 +1,86 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d32140b7_1717d730",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 1103,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-06T11:02:36Z",
+      "side": 1,
+      "message": "What does `this` reference to? Can you expand the comment?",
+      "range": {
+        "startLine": 1103,
+        "startChar": 77,
+        "endLine": 1103,
+        "endChar": 81
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "12c5411a_ec6ef007",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/instruction_builder.cc",
+              "range": {
+                "startLine": 1103,
+                "startChar": 0,
+                "endLine": 1104,
+                "endChar": 0
+              },
+              "replacement": "  // called using invoke-polymorphic and would throw an exception otherwise. We force runtime\n"
+            }
+          ]
+        }
+      ],
+      "revId": "257d8987bac01fd475b344d4c43cca76ab118815",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4d0ee0a_6a12efaf",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-06T11:02:36Z",
+      "side": 1,
+      "message": "super nit-pick, but style in this file is to put `||` or `\u0026\u0026` the line before.",
+      "range": {
+        "startLine": 1112,
+        "startChar": 15,
+        "endLine": 1112,
+        "endChar": 17
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "22b49fb2_1febba09",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/instruction_builder.cc",
+              "range": {
+                "startLine": 1112,
+                "startChar": 0,
+                "endLine": 1113,
+                "endChar": 0
+              },
+              "replacement": "               || (invoke_type !\u003d kPolymorphic\n                   \u0026\u0026 IsSignaturePolymorphic(resolved_method)))) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "257d8987bac01fd475b344d4c43cca76ab118815",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
