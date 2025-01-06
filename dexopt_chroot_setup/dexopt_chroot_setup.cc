@@ -502,6 +502,8 @@ Result<void> PrepareExternalLibDirs() {
     return result;
   }
 
+  OR_RETURN(BindMount("/system/etc", PathInChroot("/system/etc")));
+
   return {};
 }
 
