@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72751193_eedaec1e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-07T12:04:59Z",
+      "side": 1,
+      "message": "(I\u0027m getting déjà vu here, so I wonder if this has been fixed before and broke again somehow. Haven\u0027t investigated it though.)",
+      "revId": "d8077f7348774a04b73ee1065db2631512ca2595",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
