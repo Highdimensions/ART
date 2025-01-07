@@ -100,6 +100,9 @@ constexpr mode_t kChrootDefaultMode = 0755;
 constexpr std::chrono::milliseconds kSnapshotCtlTimeout = std::chrono::seconds(60);
 constexpr std::array<const char*, 4> kExternalLibDirs = {
     "/system/lib", "/system/lib64", "/system_ext/lib", "/system_ext/lib64"};
+constexpr std::array<const char*, 4> kEtcDirs = {
+    "/system/etc", "/system_ext/etc", "/vendor/etc", "/product/etc"};
+constexpr const char* kClasspathsDir = "/system/etc/classpaths";
 
 bool IsOtaUpdate(const std::optional<std::string>& ota_slot) { return ota_slot.has_value(); }
 
@@ -502,6 +505,24 @@ Result<void> PrepareExternalLibDirs() {
     return result;
   }
 
+  // Back up the new classpaths dir before bind-mounting etc dirs. We need the new classpaths dir
+  // for derive_classpath.
+  std::string classpaths_tmp_dir = PathInChroot("/mnt/classpaths");
+  OR_RETURN(CreateDir(classpaths_tmp_dir));
+  OR_RETURN(BindMount(PathInChroot("/system/etc/classpaths"), classpaths_tmp_dir));
+
+  // Old platform libraries expect old etc dirs, so we should bind-mount them as well.
+  OR_RETURN(BindMount("/system/etc", PathInChroot("/system/etc")));
+  OR_RETURN(BindMount("/system_ext/etc", PathInChroot("/system_ext/etc")));
+  OR_RETURN(BindMount("/product/etc", PathInChroot("/product/etc")));
+  // Can only BindMountDirect due to lack of SELinux permissions, and that's fine because we don't
+  // mount under it.
+  OR_RETURN(BindMountDirect("/vendor/etc", PathInChroot("/vendor/etc")));
+
+  // Restore the classpaths dir.
+  OR_RETURN(BindMount(classpaths_tmp_dir, PathInChroot("/system/etc/classpaths")));
+  OR_RETURN(Unmount(classpaths_tmp_dir));
+
   return {};
 }
 
@@ -710,14 +731,22 @@ Result<void> DexoptChrootSetup::TearDownChroot() const {
   // For mount points under "/mnt/compat_env", make sure we have unmounted them before running
   // apexd, as apexd doesn't expect apexes to be in-use.
   std::vector<FstabEntry> entries = OR_RETURN(GetProcMountsDescendantsOfPath(CHROOT_DIR));
-  for (const FstabEntry entry : entries) {
+  for (auto it = entries.rbegin(); it != entries.rend(); it++) {
+    const FstabEntry& entry = *it;
     std::string_view mount_point_in_chroot = entry.mount_point;
     CHECK(ConsumePrefix(&mount_point_in_chroot, CHROOT_DIR));
     if (mount_point_in_chroot.empty()) {
       continue;  // The root mount.
     }
     if (ContainsElement(kExternalLibDirs, mount_point_in_chroot) ||
-        PathStartsWith(mount_point_in_chroot, "/mnt/compat_env")) {
+        PathStartsWith(mount_point_in_chroot, "/mnt/compat_env") ||
+        ContainsElement({"/system/etc",
+                         "/system_ext/etc",
+                         "/product/etc",
+                         "/vendor/etc",
+                         "/system/etc/classpaths",
+                         "/mnt/classpaths"},
+                        mount_point_in_chroot)) {
       OR_RETURN(Unmount(entry.mount_point));
     }
   }
