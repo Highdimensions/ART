@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6d977cf4_313ef127",
+        "filename": "runtime/gc/accounting/card_table.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "I\u0027ll add comments in next patch.\n\nI like the idea but I think the majority of ageing is done where aged2 is not in the picture. So `dirty\u003d2, aged\u003d1, clean\u003d0` would make ageing faster with `card \u003e\u003e\u003d 1`. The `aged2\u003d4` probably can be dealth with a rotating shift.\n\nBut I think it would be better to make this change in a separate CL. This one is already too long and complex.",
+      "parentUuid": "25ea35a8_b1ac292c",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 0
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4c1412f9_bb023033",
         "filename": "runtime/gc/accounting/card_table.h",
         "patchSetId": 16
@@ -102,6 +126,30 @@
           ]
         }
       ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0e0f509_92894641",
+        "filename": "runtime/gc/accounting/card_table.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Update the comment to explain better. PTAL",
+      "parentUuid": "4c1412f9_bb023033",
+      "range": {
+        "startLine": 124,
+        "startChar": 2,
+        "endLine": 125,
+        "endChar": 60
+      },
       "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -147,6 +195,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53ae750b_041fd2e4",
+        "filename": "runtime/gc/collector/garbage_collector.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Thanks for pointing this out. It made me realize that it would be more sensible to discard null objects at line 326 above than check for that here. Fixed in latest patch.",
+      "parentUuid": "f8b730ea_2496a89c",
+      "range": {
+        "startLine": 347,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 34
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a6f86c2e_9de87a11",
@@ -160,6 +232,30 @@
       "writtenOn": "2024-12-26T22:29:10Z",
       "side": 1,
       "message": "Move this to the mid_gen_end_ declaration in the .h file. It would also be nice to quicly explain the 3 generation scheme there.",
+      "range": {
+        "startLine": 1150,
+        "startChar": 4,
+        "endLine": 1152,
+        "endChar": 78
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1deca5cd_295bc22e",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1152,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6f86c2e_9de87a11",
       "range": {
         "startLine": 1150,
         "startChar": 4,
@@ -193,6 +289,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "79280a8d_607b1cbf",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1401,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "290a454c_d50e7e07",
+      "range": {
+        "startLine": 1401,
+        "startChar": 2,
+        "endLine": 1401,
+        "endChar": 10
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c9f9b795_78a44816",
@@ -216,6 +336,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff65a90a_1cb90fa0",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1416,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9f9b795_78a44816",
+      "range": {
+        "startLine": 1416,
+        "startChar": 2,
+        "endLine": 1416,
+        "endChar": 10
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5c77cad_73af7df6",
@@ -229,6 +373,30 @@
       "writtenOn": "2024-12-06T15:17:40Z",
       "side": 1,
       "message": "const",
+      "range": {
+        "startLine": 1427,
+        "startChar": 24,
+        "endLine": 1427,
+        "endChar": 25
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50300ed1_65a25048",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1427,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5c77cad_73af7df6",
       "range": {
         "startLine": 1427,
         "startChar": 24,
@@ -420,6 +588,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b0c4ded_4f36463a",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1487,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4445c287_597563ed",
+      "range": {
+        "startLine": 1484,
+        "startChar": 0,
+        "endLine": 1487,
+        "endChar": 4
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7a1f85d2_95402154",
@@ -463,6 +655,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "44a1882f_526b898d",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1492,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Unforunately can\u0027t. There are numerous places where the visitor is passed as const. That\u0027s also the reason why all the functions defined in here are required to be const.",
+      "parentUuid": "7a1f85d2_95402154",
+      "range": {
+        "startLine": 1492,
+        "startChar": 2,
+        "endLine": 1492,
+        "endChar": 9
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8865b139_c30349dd",
         "filename": "runtime/gc/collector/mark_compact.cc",
         "patchSetId": 16
@@ -474,6 +690,30 @@
       "writtenOn": "2024-12-06T15:17:40Z",
       "side": 1,
       "message": "drop",
+      "range": {
+        "startLine": 4319,
+        "startChar": 16,
+        "endLine": 4319,
+        "endChar": 24
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "810b4f21_3a486ed9",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4319,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8865b139_c30349dd",
       "range": {
         "startLine": 4319,
         "startChar": 16,
@@ -509,6 +749,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "58f464c3_97340ff6",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4378,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Same reason as in RefsUpdateVisitor",
+      "parentUuid": "804bde5d_36df2988",
+      "range": {
+        "startLine": 4378,
+        "startChar": 2,
+        "endLine": 4378,
+        "endChar": 9
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fe722760_b6d95cd2",
         "filename": "runtime/gc/collector/mark_compact.cc",
         "patchSetId": 16
@@ -520,6 +784,30 @@
       "writtenOn": "2024-12-06T15:17:40Z",
       "side": 1,
       "message": "during",
+      "range": {
+        "startLine": 4465,
+        "startChar": 18,
+        "endLine": 4465,
+        "endChar": 23
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14577b8d_8abf8d3a",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4465,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe722760_b6d95cd2",
       "range": {
         "startLine": 4465,
         "startChar": 18,
@@ -594,6 +882,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "94587a90_6f5a7d82",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4520,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60f3a7cf_c6a21aaa",
+      "range": {
+        "startLine": 4520,
+        "startChar": 29,
+        "endLine": 4520,
+        "endChar": 31
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0de39524_0effcd3f",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4520,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4ad570c_cf0e809e",
+      "range": {
+        "startLine": 4520,
+        "startChar": 54,
+        "endLine": 4520,
+        "endChar": 59
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e054eaab_97729d62",
@@ -631,6 +967,30 @@
       "side": 1,
       "message": "[begin, end) is only used for checking, right? Can we say \"the post-compact address must be in [begin, end)\" instead? I was confused as to what this meant.",
       "parentUuid": "e054eaab_97729d62",
+      "range": {
+        "startLine": 281,
+        "startChar": 24,
+        "endLine": 281,
+        "endChar": 26
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da1c391a_da2a3f3a",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "The given range in moving-space is the only one that gets compacted. So we only need to compute post-compact address for references in this range. All other are unchanged. Updated the comment to explain this.\n\n@ngeoffray@google.com: updated the comment.",
+      "parentUuid": "f95e405c_287443fb",
       "range": {
         "startLine": 281,
         "startChar": 24,
@@ -682,6 +1042,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcb07545_9961a1bf",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6315df26_c99fa1d2",
+      "range": {
+        "startLine": 293,
+        "startChar": 64,
+        "endLine": 293,
+        "endChar": 66
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8ed85ba1_8fbc690a",
@@ -695,6 +1079,30 @@
       "writtenOn": "2024-12-06T15:17:40Z",
       "side": 1,
       "message": "Fix this TODO?",
+      "range": {
+        "startLine": 323,
+        "startChar": 0,
+        "endLine": 323,
+        "endChar": 42
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdf416aa_90a017a8",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Forgot removing it.",
+      "parentUuid": "8ed85ba1_8fbc690a",
       "range": {
         "startLine": 323,
         "startChar": 0,
@@ -730,6 +1138,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7ca26dde_3ed8e64f",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Moving `NO_THREAD_SAFETY_ANALYSIS` to UpdateNonMovingPage() definintion in mark_compact.cc is not helping with supressing the compilation error. I tried.\n\nI added this because now I\u0027m calling card_table\u0027s Scan() in this function, which expects `heap_bitmap_lock_` to be exclusively acquired. I cannot do that as UpdateNonMovingPage can be called by mutators in SIGBUS handler.\n\nIt is puzzling that card-table\u0027s Scan() needs this lock exclusively. It seems to me that the idea is to avoid getting adding/deleting bitmap(s) to the heap. But that can be achieved by acquiring read-lock also, right?\n\nBut even if we relax the constraint, is it ok to acquire read-lock in a signal handler?\n\nHow about the gc-thread acquires the lock exclusively on the behalf of all threads calling UpdateNonMovingPage() and then we use NO_THREAD_SAFETY_ANALYSIS and explain that why it\u0027s safe if multiple threads call this function simultanesously?\n\nI\u0027ll wait for your suggestion before making any changes here.",
+      "parentUuid": "6fdf268a_cb3d2a0f",
+      "range": {
+        "startLine": 376,
+        "startChar": 44,
+        "endLine": 376,
+        "endChar": 69
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5eac6a17_75fab662",
         "filename": "runtime/gc/collector/mark_compact.h",
         "patchSetId": 16
@@ -741,6 +1173,30 @@
       "writtenOn": "2024-12-13T02:19:52Z",
       "side": 1,
       "message": "What vector? Was this next to something?",
+      "range": {
+        "startLine": 711,
+        "startChar": 1,
+        "endLine": 711,
+        "endChar": 24
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8293cf1a_65fb4983",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Added a comment to say it\u0027s length of chunk_info_vec_, defined below.",
+      "parentUuid": "5eac6a17_75fab662",
       "range": {
         "startLine": 711,
         "startChar": 1,
@@ -776,6 +1232,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f64cc81b_1e6d18d9",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "I reordered performance-critical fields to reduce cache footprint. But the corresponding arrays are not separately defined. They all reside in info_map_ MemMap. These pointers are initialzied in MarkCompact\u0027s ctor.",
+      "parentUuid": "1a25ab51_afdeb957",
+      "range": {
+        "startLine": 713,
+        "startChar": 0,
+        "endLine": 718,
+        "endChar": 22
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c45c4acc_42832526",
         "filename": "runtime/gc/collector/mark_compact.h",
         "patchSetId": 16
@@ -787,6 +1267,30 @@
       "writtenOn": "2024-12-06T15:17:40Z",
       "side": 1,
       "message": "address",
+      "range": {
+        "startLine": 763,
+        "startChar": 55,
+        "endLine": 763,
+        "endChar": 59
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bdaf5ce_d1a999b0",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c45c4acc_42832526",
       "range": {
         "startLine": 763,
         "startChar": 55,
@@ -834,6 +1338,30 @@
           ]
         }
       ],
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41d3ec6b_5c2735cf",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 770,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d7de6be_18a32ed5",
+      "range": {
+        "startLine": 770,
+        "startChar": 61,
+        "endLine": 770,
+        "endChar": 65
+      },
       "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -901,6 +1429,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "751e85b5_35b8f5ef",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "I made it a union because the term `old-gen-end` is applicable in generational GCs, whereas `black-dense-end` is applicable in non-generational (and to some extent in full-heap collections). Otherwise, they are identical.\n\nI also wanted to reduce duplicate fields here in order to minimize cache footprint during performance-critical code-paths. That\u0027s also why I re-ordered some fields and some more are warranted I think, but I decided to do that in a separate CL.",
+      "parentUuid": "1259013c_2bd44f52",
+      "range": {
+        "startLine": 795,
+        "startChar": 0,
+        "endLine": 798,
+        "endChar": 4
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "46f75c2b_bb1566b0",
         "filename": "runtime/gc/heap.cc",
         "patchSetId": 16
@@ -912,6 +1464,30 @@
       "writtenOn": "2024-12-26T22:29:10Z",
       "side": 1,
       "message": "This now seems to be misnamed. And the heading comment in heap.h also seems to be wrong. Or did you mean something else here?\nI\u0027m also not a fan of the PreZygoteFork() function name, since it\u0027s only called before the first zygote fork, I believe. It\u0027s really tied to zygote space creation, right?",
+      "range": {
+        "startLine": 2571,
+        "startChar": 31,
+        "endLine": 2571,
+        "endChar": 51
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "551c02f7_abde754a",
+        "filename": "runtime/gc/heap.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 2571,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-07T04:36:09Z",
+      "side": 1,
+      "message": "I have updated the comment in heap.h. Basically I\u0027m reusing the flag `use_generational_cc_` for any concurrent collector rather than only for CC. That\u0027s because otherwise not only would I have been required to introduce another flag for CMC, the `dalvikvm`\u0027s command line args would also have required changes.\n\nNow, be it CC or CMC, the same flag can indicate whether we want to run in generational mode or not.\n\nI have renamed PreZygoteFork() to something more relevant. PTAL",
+      "parentUuid": "46f75c2b_bb1566b0",
       "range": {
         "startLine": 2571,
         "startChar": 31,
