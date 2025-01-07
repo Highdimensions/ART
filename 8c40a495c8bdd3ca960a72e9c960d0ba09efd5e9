@@ -16,6 +16,23 @@
       "message": "Sorry for the delay, and thank for the thorough review! This change is now ready for review.",
       "revId": "8c40a495c8bdd3ca960a72e9c960d0ba09efd5e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6f6c67e_d69cf5e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 23
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-07T11:43:28Z",
+      "side": 1,
+      "message": "Friendly ping.",
+      "revId": "8c40a495c8bdd3ca960a72e9c960d0ba09efd5e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
