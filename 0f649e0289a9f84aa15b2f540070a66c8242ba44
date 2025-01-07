@@ -154,6 +154,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b32dfc87_6a17004d",
+        "filename": "runtime/gc/accounting/card_table.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-07T10:19:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0e0f509_92894641",
+      "range": {
+        "startLine": 124,
+        "startChar": 2,
+        "endLine": 125,
+        "endChar": 60
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f8b730ea_2496a89c",
@@ -1441,6 +1465,30 @@
       "side": 1,
       "message": "I made it a union because the term `old-gen-end` is applicable in generational GCs, whereas `black-dense-end` is applicable in non-generational (and to some extent in full-heap collections). Otherwise, they are identical.\n\nI also wanted to reduce duplicate fields here in order to minimize cache footprint during performance-critical code-paths. That\u0027s also why I re-ordered some fields and some more are warranted I think, but I decided to do that in a separate CL.",
       "parentUuid": "1259013c_2bd44f52",
+      "range": {
+        "startLine": 795,
+        "startChar": 0,
+        "endLine": 798,
+        "endChar": 4
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7e88b31_65fc571e",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-07T10:19:02Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "751e85b5_35b8f5ef",
       "range": {
         "startLine": 795,
         "startChar": 0,
