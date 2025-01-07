@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dba1a6d_befddafe",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-07T17:23:37Z",
+      "side": 1,
+      "message": "For the sake of completeness, should we have a minimal test case for the host case, given that [the planned implementation in `system/libartpalette/palette_fake.cc`](https://android-review.git.corp.google.com/c/platform/system/libartpalette/+/3312350/7/palette_fake.cc) is non-trivial?",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 194,
+        "endChar": 68
+      },
+      "revId": "b1d6f9ba4a2dae5ef32f66d57f9a78dceee65f94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be17586c_bc0f5dcd",
+        "filename": "libartpalette/system/palette_fake.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-07T17:23:37Z",
+      "side": 1,
+      "message": "Should we add IfThisThenThat directives (go/gerrit-ifthisthenthat) here?",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 43
+      },
+      "revId": "b1d6f9ba4a2dae5ef32f66d57f9a78dceee65f94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
