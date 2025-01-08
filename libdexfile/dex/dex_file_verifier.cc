@@ -781,6 +781,27 @@ bool DexFileVerifier::CheckMap() {
                           static_cast<size_t>(item_type));
         return false;
       }
+
+      size_t alignment;
+      switch (item_type) {
+        case DexFile::kDexTypeClassDataItem:
+        case DexFile::kDexTypeStringDataItem:
+        case DexFile::kDexTypeDebugInfoItem:
+        case DexFile::kDexTypeAnnotationItem:
+        case DexFile::kDexTypeEncodedArrayItem:
+          alignment = sizeof(uint8_t);
+          break;
+        default:
+          alignment = sizeof(uint32_t);
+          break;
+      }
+      if (!CheckValidOffsetAndSize(item->offset_,
+                                   icount,
+                                   alignment,
+                                   std::format("maplist item of type {}\n", item->type_).c_str())) {
+        return false;
+      }
+
       data_items_left -= icount;
       data_item_count += icount;
     }
