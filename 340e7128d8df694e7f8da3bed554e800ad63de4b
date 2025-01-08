@@ -52,6 +52,24 @@
       "parentUuid": "07bb81e0_6f968f79",
       "revId": "340e7128d8df694e7f8da3bed554e800ad63de4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "113c58b4_0e104f58",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-01-08T17:07:51Z",
+      "side": 1,
+      "message": "yes, it\u0027s definitely allowed (and some code is already doing it) ... ironically \"ART doesn\u0027t compile as C++23\" is one of the reasons i haven\u0027t been able to bump the global default yet though.",
+      "parentUuid": "a17d60a1_5ed21f20",
+      "revId": "340e7128d8df694e7f8da3bed554e800ad63de4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
