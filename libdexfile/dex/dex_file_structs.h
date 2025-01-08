@@ -281,6 +281,7 @@ struct HiddenapiClassData {
   // as fields/methods in the class data. Returns null if the class does
   // not have class data.
   const uint8_t* GetFlagsPointer(uint32_t class_def_idx) const {
+    DCHECK_LT(class_def_idx, size_);
     if (flags_offset_[class_def_idx] == 0) {
       return nullptr;
     } else {
