@@ -520,6 +520,9 @@ art_cc_test {
         "art_gtest_defaults",
         "art_dex2oat_tests_defaults",
     ],
+    shared_libs: [
+        "libcrypto",
+    ],
     static_libs: [
         "libartd-dex2oat",
         "libartd-dex2oat-gtest",
