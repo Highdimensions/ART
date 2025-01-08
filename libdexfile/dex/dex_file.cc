@@ -317,7 +317,7 @@ void DexFile::InitializeSectionsFromMapList() {
       num_call_site_ids_ = map_item.size_;
     } else if (map_item.type_ == kDexTypeHiddenapiClassData) {
       hiddenapi_class_data_ =
-          reinterpret_cast<const dex::HiddenapiClassData*>(DataBegin() + map_item.offset_);
+          GetSection<dex::HiddenapiClassData>(&map_item.offset_, container_.get());
     } else {
       // Pointers to other sections are not necessary to retain in the DexFile struct.
       // Other items have pointers directly into their data.
