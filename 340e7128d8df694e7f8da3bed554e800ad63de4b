@@ -34,6 +34,24 @@
       "parentUuid": "35c6b522_64034e25",
       "revId": "340e7128d8df694e7f8da3bed554e800ad63de4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a17d60a1_5ed21f20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-08T16:59:07Z",
+      "side": 1,
+      "message": "It seems `std::to_underlying` is available from C++23. However, [AOSP uses C++20 by default at the moment](https://cs.android.com/android/platform/superproject/main/+/main:build/soong/cc/config/global.go;l\u003d384;drc\u003da3462597dbae6841f051cf72dd70a0ddb2ecbf35), AIUI.\n\nElliott, is it OK to use C++23 (locally) in AOSP yet?",
+      "parentUuid": "07bb81e0_6f968f79",
+      "revId": "340e7128d8df694e7f8da3bed554e800ad63de4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
