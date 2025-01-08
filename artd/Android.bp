@@ -111,6 +111,7 @@ art_cc_test {
         "libbase",
         "libdexfile",
         "libprofile",
+        "libcrypto",
     ],
 }
 
