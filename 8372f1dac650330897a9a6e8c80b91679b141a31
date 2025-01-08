@@ -16,6 +16,29 @@
       "message": "PTAL. Thanks!",
       "revId": "8372f1dac650330897a9a6e8c80b91679b141a31",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9ef4764_2b6b449f",
+        "filename": "test/knownfailures.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-08T12:10:31Z",
+      "side": 1,
+      "message": "```suggestion\n                  \"2286-method-tracing-aot-code\"],\n```",
+      "range": {
+        "startLine": 1229,
+        "startChar": 0,
+        "endLine": 1229,
+        "endChar": 1
+      },
+      "revId": "8372f1dac650330897a9a6e8c80b91679b141a31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
