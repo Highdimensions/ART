@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38b1c49f_68d08176",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-08T21:17:04Z",
+      "side": 1,
+      "message": "Isn\u0027t it better to do each etc dir together with its corresponding lib dir around line 487 above (even though vendor needs a special case)?",
+      "range": {
+        "startLine": 519,
+        "startChar": 0,
+        "endLine": 523,
+        "endChar": 65
+      },
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "303be3f4_0fea7f1a",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-08T21:17:04Z",
+      "side": 1,
+      "message": "Do we know this for all OEMs?",
+      "range": {
+        "startLine": 526,
+        "startChar": 53,
+        "endLine": 527,
+        "endChar": 71
+      },
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
