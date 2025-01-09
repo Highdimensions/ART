@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "05b1b402_aaf55009",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-09T13:20:48Z",
+      "side": 1,
+      "message": "`",
+      "revId": "4f3140fc724bca361f64bebf64493fea363249f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "880c9db9_3b2c2455",
@@ -14,6 +31,24 @@
       "writtenOn": "2025-01-09T12:56:26Z",
       "side": 1,
       "message": "If this is a hard error, shouldn\u0027t we return? If we end up below in `Fail(VERIFY_ERROR_UNRESOLVED_TYPE_CHECK` we might have a \"hard error, but last error not hard\" situation which we want to avoid.\n\nThis cleanup might be fine to land since it is not changing the present behavior but it is something to keep in mind",
+      "revId": "4f3140fc724bca361f64bebf64493fea363249f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb17a99e_25ac9faa",
+        "filename": "runtime/verifier/method_verifier.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 4189,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-09T13:20:48Z",
+      "side": 1,
+      "message": "Good point. I\u0027ll include that in another CL - I want to `return false` on hard failures in `CodeFlowVerifyInstruction()` and this fits with that theme.",
+      "parentUuid": "880c9db9_3b2c2455",
       "revId": "4f3140fc724bca361f64bebf64493fea363249f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
