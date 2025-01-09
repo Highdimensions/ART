@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "849193f0_221e989b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-09T15:38:37Z",
+      "side": 1,
+      "message": "I can\u0027t submit this yet due to b/388496637, just want to make sure it is the only thing that stops this CL from being submitted.",
+      "revId": "248ef2e35f706b552b401f2922b81d644689cd61",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
