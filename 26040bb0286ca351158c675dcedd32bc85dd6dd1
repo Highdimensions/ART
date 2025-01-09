@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "670125dc_e6d6c4c8",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-09T16:49:53Z",
+      "side": 0,
+      "message": "`const FstabEntry\u0026 entry` doesn\u0027t work?",
+      "range": {
+        "startLine": 713,
+        "startChar": 7,
+        "endLine": 713,
+        "endChar": 29
+      },
+      "revId": "26040bb0286ca351158c675dcedd32bc85dd6dd1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

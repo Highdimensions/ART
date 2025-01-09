@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "698792ea_3e07c887",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-09T16:49:53Z",
+      "side": 1,
+      "message": "Only a few more nits.",
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "38b1c49f_68d08176",
@@ -91,6 +108,114 @@
         "endLine": 527,
         "endChar": 71
       },
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b25ad9b9_ae718a1f",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-09T16:49:53Z",
+      "side": 1,
+      "message": "That\u0027s what I thought. Then I think this sentence misrepresents the situation a bit. (Besides, B isn\u0027t frozen yet so it\u0027s possible this won\u0027t even apply for Pixel there.)",
+      "parentUuid": "a6384bad_680f7e45",
+      "range": {
+        "startLine": 526,
+        "startChar": 53,
+        "endLine": 527,
+        "endChar": 71
+      },
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b233e2d_09a163f9",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-09T16:49:53Z",
+      "side": 1,
+      "message": "Please update for the `etc` mounts.",
+      "range": {
+        "startLine": 743,
+        "startChar": 5,
+        "endLine": 744,
+        "endChar": 36
+      },
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d1a083c_77f08ddc",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-09T16:49:53Z",
+      "side": 1,
+      "message": "Please use prefix increment (go/cstyle#Preincrement_and_Predecrement). (AI picked up a few more - thanks AI.)",
+      "range": {
+        "startLine": 748,
+        "startChar": 57,
+        "endLine": 748,
+        "endChar": 61
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "51acf13f_16b5f76d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+              "range": {
+                "startLine": 486,
+                "startChar": 0,
+                "endLine": 487,
+                "endChar": 0
+              },
+              "replacement": "    for (size_t i \u003d 1; i \u003c existing_lib_dirs.size(); ++i) {\n"
+            },
+            {
+              "path": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+              "range": {
+                "startLine": 748,
+                "startChar": 0,
+                "endLine": 749,
+                "endChar": 0
+              },
+              "replacement": "  for (auto it \u003d entries.rbegin(); it !\u003d entries.rend(); ++it) {\n"
+            },
+            {
+              "path": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+              "range": {
+                "startLine": 794,
+                "startChar": 0,
+                "endLine": 795,
+                "endChar": 0
+              },
+              "replacement": "  for (auto it \u003d entries.rbegin(); it !\u003d entries.rend(); ++it) {\n"
+            }
+          ]
+        }
+      ],
       "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
