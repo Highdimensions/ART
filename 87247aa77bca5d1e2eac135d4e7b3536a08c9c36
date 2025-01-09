@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2eb457d4_a0ed8017",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-09T12:50:06Z",
+      "side": 1,
+      "message": "The CDEX part is not that crucial, but getting all sections to use `GetSection` might be a good idea for robustness",
+      "revId": "87247aa77bca5d1e2eac135d4e7b3536a08c9c36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
