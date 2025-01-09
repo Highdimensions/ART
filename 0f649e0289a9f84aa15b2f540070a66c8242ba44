@@ -89,6 +89,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdc84b20_8d353d32",
+        "filename": "runtime/gc/accounting/card_table.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-09T21:48:22Z",
+      "side": 1,
+      "message": "Agreed about doing this in a follow-up CL.",
+      "parentUuid": "6d977cf4_313ef127",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 0
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4c1412f9_bb023033",
@@ -1186,6 +1210,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "88de401a_2d3f8f15",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-09T21:48:22Z",
+      "side": 1,
+      "message": "It\u0027s not safe to acquire a read lock in the signal handler, at least not if the thread processing the sigal may have the write lock.\n\nPresumably there is an actual race with a write-barrier here? That seems dubious? Any affected bytes would be \"don\u0027t cares\"?\n\nIt looks like we already sometimes mark cards with byte_cas, which seems implemented strangely? Why do we distinguish architectures? But we don\u0027t read it as an atomic? Probably the card table entries should just be atomic\u003cuint8_t\u003e arrays. Otherwise we should really use atomic_ref.\n\nIf there is no real race, I would use FakeMutexLock. It\u0027s also ugly, but I think it makes things clearer and limits the damage to checking.",
+      "parentUuid": "7ca26dde_3ed8e64f",
+      "range": {
+        "startLine": 376,
+        "startChar": 44,
+        "endLine": 376,
+        "endChar": 69
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5eac6a17_75fab662",
         "filename": "runtime/gc/collector/mark_compact.h",
         "patchSetId": 16
@@ -1268,6 +1316,30 @@
       "side": 1,
       "message": "I reordered performance-critical fields to reduce cache footprint. But the corresponding arrays are not separately defined. They all reside in info_map_ MemMap. These pointers are initialzied in MarkCompact\u0027s ctor.",
       "parentUuid": "1a25ab51_afdeb957",
+      "range": {
+        "startLine": 713,
+        "startChar": 0,
+        "endLine": 718,
+        "endChar": 22
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e14049ff_2c5b87ae",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-09T21:48:22Z",
+      "side": 1,
+      "message": "Can you add a comment identifying the hot fields?",
+      "parentUuid": "f64cc81b_1e6d18d9",
       "range": {
         "startLine": 713,
         "startChar": 0,
@@ -1536,6 +1608,30 @@
       "side": 1,
       "message": "I have updated the comment in heap.h. Basically I\u0027m reusing the flag `use_generational_cc_` for any concurrent collector rather than only for CC. That\u0027s because otherwise not only would I have been required to introduce another flag for CMC, the `dalvikvm`\u0027s command line args would also have required changes.\n\nNow, be it CC or CMC, the same flag can indicate whether we want to run in generational mode or not.\n\nI have renamed PreZygoteFork() to something more relevant. PTAL",
       "parentUuid": "46f75c2b_bb1566b0",
+      "range": {
+        "startLine": 2571,
+        "startChar": 31,
+        "endLine": 2571,
+        "endChar": 51
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54a546d8_d4f7a5b0",
+        "filename": "runtime/gc/heap.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 2571,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-09T21:48:22Z",
+      "side": 1,
+      "message": "Can we change use_generationsl_cc_ to e.g. use_generational_gc_ or use_generational_concurrent_? My concern is just that cc is generally specific to the CC collector.\nI don\u0027t see the rename yet.",
+      "parentUuid": "551c02f7_abde754a",
       "range": {
         "startLine": 2571,
         "startChar": 31,
