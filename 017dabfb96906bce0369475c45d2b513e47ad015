@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a73df61c_48544ccf",
+        "filename": "libartpalette/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-09T17:07:27Z",
+      "side": 1,
+      "message": "Martin, I think this change is superfluous, as this test module should already [be part of `mts-art` via `art_standalone_gtest_defaults`](https://cs.android.com/android/platform/superproject/main/+/main:art/test/Android.bp;l\u003d356;drc\u003dc7a572e7ec1e197e07412d6eb0fb7d7fa6f3c261).",
+      "range": {
+        "startLine": 169,
+        "startChar": 8,
+        "endLine": 169,
+        "endChar": 18
+      },
+      "revId": "017dabfb96906bce0369475c45d2b513e47ad015",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
