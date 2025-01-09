@@ -59,6 +59,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "899dd06d_cd0d08a4",
+        "filename": "runtime/verifier/method_verifier.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-09T09:37:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0144b13b_22f6a379",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 47
+      },
+      "revId": "aa6aa5eae568930916b3eae961100321ff25394f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "387de030_f0797fb7",
@@ -82,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ebca944_53e33665",
+        "filename": "runtime/verifier/method_verifier.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-09T09:37:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "387de030_f0797fb7",
+      "range": {
+        "startLine": 211,
+        "startChar": 2,
+        "endLine": 211,
+        "endChar": 14
+      },
+      "revId": "aa6aa5eae568930916b3eae961100321ff25394f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "98de4472_086b1195",
@@ -95,6 +143,30 @@
       "writtenOn": "2025-01-08T17:47:21Z",
       "side": 1,
       "message": "remove?",
+      "range": {
+        "startLine": 5378,
+        "startChar": 0,
+        "endLine": 5380,
+        "endChar": 1
+      },
+      "revId": "aa6aa5eae568930916b3eae961100321ff25394f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fedccd1_c6a84a31",
+        "filename": "runtime/verifier/method_verifier.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5380,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-09T09:37:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "98de4472_086b1195",
       "range": {
         "startLine": 5378,
         "startChar": 0,
