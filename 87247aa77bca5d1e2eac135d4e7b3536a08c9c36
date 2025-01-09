@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f815033_900e58e5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-09T18:28:25Z",
+      "side": 1,
+      "message": "`cdex` as in `compact dexfile` https://cs.android.com/android/platform/superproject/main/+/main:art/libdexfile/dex/dex_file.cc;l\u003d145-148;drc\u003db4d6320e2ae398b36f0aaafb2ecd83609d2d99af. We still have the code even though compact dex file has been deprecated",
+      "parentUuid": "c3806a0e_ea6e020e",
+      "range": {
+        "startLine": 7,
+        "startChar": 43,
+        "endLine": 7,
+        "endChar": 47
+      },
+      "revId": "87247aa77bca5d1e2eac135d4e7b3536a08c9c36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a7141ecc_448dd6cf",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-01-09T18:24:34Z",
       "side": 1,
       "message": "Is there a broken test, or a bug somewhere?",
+      "revId": "87247aa77bca5d1e2eac135d4e7b3536a08c9c36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df843281_e906d756",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-09T18:28:25Z",
+      "side": 1,
+      "message": "No, it was just something I saw when working on another bug. The CDEX part is not that crucial, but getting all sections to use GetSection might be a good idea for robustness",
+      "parentUuid": "a7141ecc_448dd6cf",
       "revId": "87247aa77bca5d1e2eac135d4e7b3536a08c9c36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
