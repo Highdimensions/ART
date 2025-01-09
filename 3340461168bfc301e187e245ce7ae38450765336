@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5434c19b_685f4c74",
+        "filename": "tools/fuzzer/libart_verify_classes_fuzzer.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-01-09T15:45:41Z",
+      "side": 1,
+      "message": "Was this required for some reason or are we just enabling more checks (verifyHeap) because of the debug version? A comment about this in CL description might be good.",
+      "range": {
+        "startLine": 142,
+        "startChar": 2,
+        "endLine": 151,
+        "endChar": 0
+      },
+      "revId": "3340461168bfc301e187e245ce7ae38450765336",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
