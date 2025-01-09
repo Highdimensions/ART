@@ -22,6 +22,30 @@
       },
       "revId": "3340461168bfc301e187e245ce7ae38450765336",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c56a45e_ae12f3ce",
+        "filename": "tools/fuzzer/libart_verify_classes_fuzzer.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-09T17:03:49Z",
+      "side": 1,
+      "message": "The methods inside the scope were needed to pass DCHECKs.\n\nThe VerifyHeap is not needed but I thought it might be a good addition. We do this on tests too.\n\nAdded information in the description.",
+      "parentUuid": "5434c19b_685f4c74",
+      "range": {
+        "startLine": 142,
+        "startChar": 2,
+        "endLine": 151,
+        "endChar": 0
+      },
+      "revId": "3340461168bfc301e187e245ce7ae38450765336",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
