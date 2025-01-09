@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "880c9db9_3b2c2455",
+        "filename": "runtime/verifier/method_verifier.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 4189,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-09T12:56:26Z",
+      "side": 1,
+      "message": "If this is a hard error, shouldn\u0027t we return? If we end up below in `Fail(VERIFY_ERROR_UNRESOLVED_TYPE_CHECK` we might have a \"hard error, but last error not hard\" situation which we want to avoid.\n\nThis cleanup might be fine to land since it is not changing the present behavior but it is something to keep in mind",
+      "revId": "4f3140fc724bca361f64bebf64493fea363249f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
