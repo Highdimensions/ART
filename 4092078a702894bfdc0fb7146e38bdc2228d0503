@@ -136,6 +136,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "62d50b50_28a6052a",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-09T17:06:35Z",
+      "side": 1,
+      "message": "Updated the comment.",
+      "parentUuid": "b25ad9b9_ae718a1f",
+      "range": {
+        "startLine": 526,
+        "startChar": 53,
+        "endLine": 527,
+        "endChar": 71
+      },
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b233e2d_09a163f9",
@@ -149,6 +173,30 @@
       "writtenOn": "2025-01-09T16:49:53Z",
       "side": 1,
       "message": "Please update for the `etc` mounts.",
+      "range": {
+        "startLine": 743,
+        "startChar": 5,
+        "endLine": 744,
+        "endChar": 36
+      },
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7ca0a80_db85cba2",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-09T17:06:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b233e2d_09a163f9",
       "range": {
         "startLine": 743,
         "startChar": 5,
@@ -216,6 +264,30 @@
           ]
         }
       ],
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a000ec1_ee8085a3",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-09T17:06:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d1a083c_77f08ddc",
+      "range": {
+        "startLine": 748,
+        "startChar": 57,
+        "endLine": 748,
+        "endChar": 61
+      },
       "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

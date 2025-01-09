@@ -22,6 +22,30 @@
       },
       "revId": "26040bb0286ca351158c675dcedd32bc85dd6dd1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39c088f4_b3666ee1",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-09T17:06:35Z",
+      "side": 0,
+      "message": "We need the loop in the reverse order because \"/system/etc/classpaths\" should be unmounted before \"/system/etc\".",
+      "parentUuid": "670125dc_e6d6c4c8",
+      "range": {
+        "startLine": 713,
+        "startChar": 7,
+        "endLine": 713,
+        "endChar": 29
+      },
+      "revId": "26040bb0286ca351158c675dcedd32bc85dd6dd1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
