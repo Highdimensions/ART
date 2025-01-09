@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d64284e_6f002a22",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-09T15:07:13Z",
+      "side": 1,
+      "message": "Those dirs don\u0027t have such correspondence. For example, `/system/lib64/libprocessgroup.so` uses `/vendor/etc/task_profiles.json`, in b/379207007.",
+      "parentUuid": "38b1c49f_68d08176",
+      "range": {
+        "startLine": 519,
+        "startChar": 0,
+        "endLine": 523,
+        "endChar": 65
+      },
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "303be3f4_0fea7f1a",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-01-08T21:17:04Z",
       "side": 1,
       "message": "Do we know this for all OEMs?",
+      "range": {
+        "startLine": 526,
+        "startChar": 53,
+        "endLine": 527,
+        "endChar": 71
+      },
+      "revId": "4092078a702894bfdc0fb7146e38bdc2228d0503",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6384bad_680f7e45",
+        "filename": "dexopt_chroot_setup/dexopt_chroot_setup.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-09T15:07:13Z",
+      "side": 1,
+      "message": "Good point. We don\u0027t. But there is nothing we can do if we can\u0027t bind-mount `/vendor/etc`. In the worst case, we fail to dexopt apps in Pre-reboot Dexopt due to crashes like b/379207007, but that\u0027s not the end of the world.",
+      "parentUuid": "303be3f4_0fea7f1a",
       "range": {
         "startLine": 526,
         "startChar": 53,
