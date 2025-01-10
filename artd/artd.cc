@@ -2009,10 +2009,21 @@ Result<void> Artd::PreRebootInitDeriveClasspath(const std::string& path) {
     return ErrnoErrorf("Failed to create '{}'", path);
   }
 
+  if (pre_reboot_build_props_ == nullptr) {
+    pre_reboot_build_props_ = std::make_unique<BuildSystemProperties>(
+        OR_RETURN(BuildSystemProperties::Create("/system/build.prop")));
+  }
+
   CmdlineBuilder args = OR_RETURN(GetArtExecCmdlineBuilder());
   args.Add("--keep-fds=%d", output->Fd())
       .Add("--")
       .Add("/apex/com.android.sdkext/bin/derive_classpath")
+      .Add("--override-device-sdk-version=%s",
+           pre_reboot_build_props_->GetOrEmpty("ro.build.version.sdk"))
+      .Add("--override-device-codename=%s",
+           pre_reboot_build_props_->GetOrEmpty("ro.build.version.codename"))
+      .Add("--override-device-known-codenames=%s",
+           pre_reboot_build_props_->GetOrEmpty("ro.build.version.known_codenames"))
       .Add("/proc/self/fd/%d", output->Fd());
 
   LOG(INFO) << "Running derive_classpath: " << Join(args.Get(), /*separator=*/" ");
