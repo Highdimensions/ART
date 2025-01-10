@@ -2224,14 +2224,9 @@ void OatDexFile::InitializeTypeLookupTable() {
             GetOatFile()->DexEnd()) {
       LOG(WARNING) << "found truncated lookup table in " << dex_file_location_;
     } else {
-      const uint8_t* dex_data = dex_file_pointer_;
       // TODO: Clean this up to create the type lookup table after the dex file has been created?
-      if (StandardDexFile::IsMagicValid(dex_header->magic_)) {
-        dex_data -= dex_header->HeaderOffset();
-      }
-      if (CompactDexFile::IsMagicValid(dex_header->magic_)) {
-        dex_data += dex_header->data_off_;
-      }
+      DCHECK(StandardDexFile::IsMagicValid(dex_header->magic_));
+      const uint8_t* dex_data = dex_file_pointer_ - dex_header->HeaderOffset();
       lookup_table_ = TypeLookupTable::Open(dex_data, lookup_table_data_, num_class_defs);
     }
   }
