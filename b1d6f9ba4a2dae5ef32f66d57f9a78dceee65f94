@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "58ce19fc_562ca432",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-10T04:06:51Z",
+      "side": 1,
+      "message": "I think this test should work with the fake. I\u0027ll try fixing this by deletion.",
+      "parentUuid": "2dba1a6d_befddafe",
+      "range": {
+        "startLine": 193,
+        "startChar": 0,
+        "endLine": 194,
+        "endChar": 68
+      },
+      "revId": "b1d6f9ba4a2dae5ef32f66d57f9a78dceee65f94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be17586c_bc0f5dcd",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-01-07T17:23:37Z",
       "side": 1,
       "message": "Should we add IfThisThenThat directives (go/gerrit-ifthisthenthat) here?",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 43
+      },
+      "revId": "b1d6f9ba4a2dae5ef32f66d57f9a78dceee65f94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "531b7b19_36576ada",
+        "filename": "libartpalette/system/palette_fake.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-10T04:06:51Z",
+      "side": 1,
+      "message": "The page suggests this doesn\u0027t currently work with multiple CLs in different git repositories. Otherwise, yes.",
+      "parentUuid": "be17586c_bc0f5dcd",
       "range": {
         "startLine": 18,
         "startChar": 0,
