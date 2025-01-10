@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "820d0f15_2a019222",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-10T12:27:32Z",
+      "side": 1,
+      "message": "Updated commit message",
+      "parentUuid": "1fe1e76b_11073e16",
+      "range": {
+        "startLine": 7,
+        "startChar": 43,
+        "endLine": 7,
+        "endChar": 47
+      },
+      "revId": "87247aa77bca5d1e2eac135d4e7b3536a08c9c36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a7141ecc_448dd6cf",
@@ -137,6 +161,30 @@
       "writtenOn": "2025-01-10T11:07:47Z",
       "side": 1,
       "message": "I have a vague collection that this was deliberately not using `GetSection` for some reason but I do not remember that reason.\n\nIf `GetSection` was wrong for cdex (and that\u0027s a big \"if\"), then it does not matter anymore and we can go ahead with this but the current commit message would be misleading.",
+      "range": {
+        "startLine": 319,
+        "startChar": 6,
+        "endLine": 319,
+        "endChar": 27
+      },
+      "revId": "87247aa77bca5d1e2eac135d4e7b3536a08c9c36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4544e96a_0916b7f3",
+        "filename": "libdexfile/dex/dex_file.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-10T12:27:32Z",
+      "side": 1,
+      "message": "I don\u0027t see a good reason to not use `GetSection` for the non-cdex case. It is using `DataBegin()` either way, and the extra check is a safety check that the DEX file is at least header-size big.\n\nUpdated commit message",
+      "parentUuid": "2ead1409_185872ed",
       "range": {
         "startLine": 319,
         "startChar": 6,
