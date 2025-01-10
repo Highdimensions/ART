@@ -137,6 +137,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86b62af8_e5af6549",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagerLocal.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-10T18:20:44Z",
+      "side": 1,
+      "message": "Thanks for the good points.\n\nThe two profile collection methods, `dumpAppProfile` and `snapshotAppProfile`, only have two users: the shell user and [a platform API](https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/android/content/pm/dex/ArtManager.java;l\u003d107;drc\u003db4d6320e2ae398b36f0aaafb2ecd83609d2d99af) that requires `READ_RUNTIME_PROFILES` and `PACKAGE_USAGE_STATS` permissions.\n\nThe shell user can switch to any user through `adb shell am switch-user` as well as [perform various interactions across users](https://source.android.com/docs/devices/admin/multi-user-testing#adb-interactions-across-users), so there is no point to restrict the method for shell.\n\nThe platform API is used by GMSCore, to collect profiles for aggregation, so it\u0027s intended to collect profiles of all users. Since this is a long-existing feature, I believe there has been a privacy review that covered it.\n\nThe profile flush method that I\u0027m adding by this CL has only one user, which is the shell user. I now have realized that there is no point to restrict it either.\n\nBesides, I agree with you that flushing profiles for one user and collecting profiles for all users is counter-intuitive.\n\nTherefore, I have removed this restriction now.\n\nRegarding the noise from other users, it\u0027s inevitable anyway. Since we also collect the ref profile, which is an aggregate of past cur profiles of all users, there isn\u0027t a way to really restrict the profile collection to the calling user. Filtering out the current cur profiles can only making things worse, as it will cause confusion why `pm dump-profiles` collects profiles of other users after a dexopt run (which merges cur profiles into ref) but not before.",
+      "parentUuid": "39ada7b6_fde429e2",
+      "range": {
+        "startLine": 1229,
+        "startChar": 42,
+        "endLine": 1229,
+        "endChar": 64
+      },
+      "revId": "8c4739ea30fc413b971274f013caee1e11e34b72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f73cfed0_fd301aaf",
@@ -362,6 +386,30 @@
       "side": 1,
       "message": "Interesting. The note about `IMPORTANCE_CACHED` behaviour is worth capturing in a comment, in case we need to adjust the condition in the future.",
       "parentUuid": "c7f9a697_60a57f0f",
+      "range": {
+        "startLine": 518,
+        "startChar": 0,
+        "endLine": 519,
+        "endChar": 92
+      },
+      "revId": "8c4739ea30fc413b971274f013caee1e11e34b72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc157fb2_9c188782",
+        "filename": "libartservice/service/java/com/android/server/art/Utils.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-10T18:20:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d039603_1806d89b",
       "range": {
         "startLine": 518,
         "startChar": 0,
