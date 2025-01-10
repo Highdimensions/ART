@@ -3220,6 +3220,16 @@ bool DexFileVerifier::CheckInterClassDataItem() {
   const dex::TypeIndex class_type_index(defining_class);
   const dex::ClassDef& class_def = dex_file_->GetClassDef(defined_class_indexes_[defining_class]);
 
+  // To check for duplicated fields in the class. A field clashes with another field if they have
+  // the same name and type. This allows e.g. for a field `foo` of type `int` and a field `foo` of
+  // type `long`.
+  auto fields_cmp = [](std::pair<dex::StringIndex, dex::TypeIndex> a,
+                       std::pair<dex::StringIndex, dex::TypeIndex> b) {
+    return a.first < b.first || (a.first == b.first && a.second < b.second);
+  };
+  std::set<std::pair<dex::StringIndex, dex::TypeIndex>, decltype(fields_cmp)> seen_fields(
+      fields_cmp);
+
   for (const ClassAccessor::Field& read_field : accessor.GetFields()) {
     // The index has already been checked in `CheckIntraClassDataItemFields()`.
     DCHECK_LE(read_field.GetIndex(), header_->field_ids_size_);
@@ -3234,11 +3244,29 @@ bool DexFileVerifier::CheckInterClassDataItem() {
                                  class_type_index)) {
       return false;
     }
+    if (seen_fields.find({field.name_idx_, field.class_idx_}) != seen_fields.end()) {
+      ErrorStringPrintf("Duplicated field %s in class %s",
+                        dex_file_->GetStringData(field.name_idx_),
+                        dex_file_->GetTypeDescriptor(field.class_idx_));
+      return false;
+    }
+    seen_fields.insert({field.name_idx_, field.class_idx_});
   }
   size_t num_direct_methods = accessor.NumDirectMethods();
   size_t num_processed_methods = 0u;
   auto methods = accessor.GetMethods();
   auto it = methods.begin();
+
+  // To check for duplicated methods. A method clashes with another one if they have the same name
+  // and signature. This means that e.g. `int foo()` and `int foo(int)` don't clash. Also note that
+  // `int foo()` and `void foo()` don't clash since they have different return type and we consider
+  // those different methods.
+  auto methods_cmp = [](std::pair<dex::StringIndex, std::string> a,
+                        std::pair<dex::StringIndex, std::string> b) {
+    return a.first < b.first || (a.first == b.first && a.second < b.second);
+  };
+  std::set<std::pair<dex::StringIndex, std::string>, decltype(methods_cmp)> seen_methods(
+      methods_cmp);
   for (; it != methods.end(); ++it, ++num_processed_methods) {
     uint32_t code_off = it->GetCodeItemOffset();
     if (code_off != 0 && !CheckOffsetToTypeMap(code_off, DexFile::kDexTypeCodeItem)) {
@@ -3260,6 +3288,17 @@ bool DexFileVerifier::CheckInterClassDataItem() {
                                   expect_direct)) {
       return false;
     }
+
+    std::string method_signature = dex_file_->GetMethodSignature(method).ToString();
+    if (seen_methods.find(std::make_pair(method.name_idx_, method_signature)) !=
+        seen_methods.end()) {
+      ErrorStringPrintf("Duplicated method %s%s in class %s",
+                        dex_file_->GetStringData(method.name_idx_),
+                        method_signature.c_str(),
+                        dex_file_->GetTypeDescriptor(method.class_idx_));
+      return false;
+    }
+    seen_methods.insert(std::make_pair(method.name_idx_, method_signature));
   }
 
   // Check static field types against initial static values in encoded array.
