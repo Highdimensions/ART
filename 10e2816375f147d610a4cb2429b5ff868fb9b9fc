@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9d9a1b8_2a0b1683",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-10T12:23:27Z",
+      "side": 1,
+      "message": "You are also baking in the assumption that the method handle in a particular register",
+      "revId": "10e2816375f147d610a4cb2429b5ff868fb9b9fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39863a2d_b05637b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-10T12:23:27Z",
+      "side": 1,
+      "message": "Is this change ready for review? There are some test failures",
+      "revId": "10e2816375f147d610a4cb2429b5ff868fb9b9fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b593829_c15e586c",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 5985,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-10T12:23:27Z",
+      "side": 1,
+      "message": "If they have at most 2 arguments, wouldn\u0027t `number_of_args \u003c\u003d 3` always be true?\n\nFor the other case I\u0027d either explicitly request W3, or DCHECK in `IntrinsicCodeGeneratorARM64::VisitMethodHandleInvokeExact` that we have W3 as the `in` argument if we are expecting that to be true",
+      "range": {
+        "startLine": 5985,
+        "startChar": 5,
+        "endLine": 5985,
+        "endChar": 39
+      },
+      "revId": "10e2816375f147d610a4cb2429b5ff868fb9b9fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
