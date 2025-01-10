@@ -67,6 +67,10 @@
 #include <link.h>  // for dl_iterate_phdr.
 #endif
 
+#ifdef __GLIBC__
+#include <gnu/libc-version.h>  // for gnu_get_libc_version.
+#endif
+
 // dlopen_ext support from bionic.
 #ifdef ART_TARGET_ANDROID
 #include "android/dlext.h"
@@ -89,6 +93,37 @@ static constexpr bool kUseDlopenOnHost = true;
 
 // For debugging, Open will print DlOpen error message if set to true.
 static constexpr bool kPrintDlOpenErrorMessage = false;
+
+// Returns whether dlopen can load dynamic shared objects with a read-only .dynamic section.
+// According to the ELF spec whether .dynamic is writable or not is determined by the operating
+// system and processor (Book I, part 1 "Object Files", "Special sections"). Bionic and glibc
+// > 2.34 support read-only .dynamic. Older glibc versions have a bug that causes a crash if
+// this section is read-only: https://sourceware.org/bugzilla/show_bug.cgi?id=28340.
+bool IsReadOnlyDynamicSupportedByDlOpen() {
+  // The following lambda will be executed only once as a part of a static
+  // variable initialization.
+  static bool is_ro_dynamic_supported = []() {
+#ifdef __GLIBC__
+    std::string libc_version = gnu_get_libc_version();
+    size_t pos = 0;
+    // libc version has the following format:
+    //   "X.Y"
+    // where:
+    //   X - major version in the decimal format.
+    //   Y - minor version in the decimal format.
+    // for example:
+    //    "2.34"
+    int major = std::stoi(libc_version, &pos);
+    CHECK_EQ(libc_version[pos], '.');
+    int minor = std::stoi(libc_version.substr(pos + 1));
+    if ((major < 2) || (major == 2 && minor <= 34)) {
+      return false;
+    }
+#endif
+    return true;
+  }();
+  return is_ro_dynamic_supported;
+}
 
 // Note for OatFileBase and descendents:
 //
@@ -1258,6 +1293,11 @@ bool DlOpenOatFile::Load(const std::string& elf_filename,
   }
   if (!executable) {
     *error_msg = "DlOpen does not support non-executable loading.";
+    return false;
+  }
+
+  if (!IsReadOnlyDynamicSupportedByDlOpen()) {
+    *error_msg = "DlOpen does not support read-only .dynamic section.";
     return false;
   }
 
