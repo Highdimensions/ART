@@ -8602,7 +8602,18 @@ size_t ClassLinker::LinkMethodsHelper<kPointerSize>::AssignVTableIndexes(
                 ? class_linker_->object_virtual_method_hashes_[k]
                 : ComputeMethodHash(super_method);
             auto [it, inserted] = super_vtable_signatures.InsertWithHash(k, super_hash);
-            DCHECK(inserted || super_vtable_accessor.GetVTableEntry(*it) == super_method);
+            if (UNLIKELY(!inserted && super_vtable_accessor.GetVTableEntry(*it) != super_method)) {
+              // We allow for duplicate methods within the same class in the direct methods or the
+              // virtual methods, as we will register the first one and ignore the second one.
+              // Caveat: we do not allow duplicates across those lists, so this means that class A
+              // can have two `foo` direct OR virtual methods, but it cannot have one `foo` direct
+              // and one `foo` virtual.
+              ArtMethod* entry = super_vtable_accessor.GetVTableEntry(*it);
+              DCHECK_EQ(entry->GetDeclaringClass(), super_method->GetDeclaringClass());
+              DCHECK_EQ(entry->GetInvokeType(), InvokeType::kVirtual);
+              DCHECK_EQ(super_method->GetInvokeType(), InvokeType::kVirtual);
+              DCHECK_LT(entry->GetMethodIndex(), super_method->GetMethodIndex());
+            }
           }
         }
         auto it2 = super_vtable_signatures.FindWithHash(interface_method, hash);
