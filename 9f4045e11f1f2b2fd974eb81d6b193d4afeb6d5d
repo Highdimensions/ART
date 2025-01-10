@@ -16,6 +16,310 @@
       "message": "PTAL. Thanks!",
       "revId": "9f4045e11f1f2b2fd974eb81d6b193d4afeb6d5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6fc946a6_569ee8e8",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-10T14:51:35Z",
+      "side": 1,
+      "message": "Should this change be its own CL?",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 164,
+        "endChar": 50
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c837ffdc_d3993112",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 144,
+                "startChar": 0,
+                "endLine": 146,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 151,
+                "startChar": 0,
+                "endLine": 152,
+                "endChar": 0
+              },
+              "replacement": "    method_trace_buffer[index--] \u003d init_time | kMaskTraceAction;\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 163,
+                "startChar": 0,
+                "endLine": 164,
+                "endChar": 0
+              },
+              "replacement": "  method_trace_buffer[index] \u003d kMaskTraceAction;\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 488,
+                "startChar": 0,
+                "endLine": 489,
+                "endChar": 0
+              },
+              "replacement": "    if (entry \u003d\u003d kMaskTraceAction) {\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 491,
+                "startChar": 0,
+                "endLine": 492,
+                "endChar": 0
+              },
+              "replacement": "    } else if (entry \u0026 kMaskTraceAction) {\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 493,
+                "startChar": 0,
+                "endLine": 494,
+                "endChar": 0
+              },
+              "replacement": "      os \u003c\u003c \"\u003c-\" \u003c\u003c TimestampCounter::GetMicroTime(entry \u0026 ~kMaskTraceAction) \u003c\u003c \"\\n\";\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 499,
+                "startChar": 0,
+                "endLine": 500,
+                "endChar": 0
+              },
+              "replacement": "      os \u003c\u003c \"-\u003e\" \u003c\u003c method \u003c\u003c \" \" \u003c\u003c TimestampCounter::GetMicroTime(*ptr \u0026 ~kMaskTraceAction) \u003c\u003c \"\\n\";\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 521,
+                "startChar": 0,
+                "endLine": 522,
+                "endChar": 0
+              },
+              "replacement": "    if (*ptr \u0026 kMaskTraceAction) {\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 539,
+                "startChar": 0,
+                "endLine": 540,
+                "endChar": 0
+              },
+              "replacement": "    method_trace_entries[--index] \u003d kMaskTraceAction;\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 554,
+                "startChar": 0,
+                "endLine": 555,
+                "endChar": 0
+              },
+              "replacement": "    method_trace_entries[--index] \u003d timestamp | kMaskTraceAction;\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 556,
+                "startChar": 0,
+                "endLine": 558,
+                "endChar": 0
+              },
+              "replacement": "    if (method_trace_entries[index] \u0026 kMaskTraceAction) {\n      method_trace_entries[--index] \u003d timestamp | kMaskTraceAction;\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 564,
+                "startChar": 0,
+                "endLine": 565,
+                "endChar": 0
+              },
+              "replacement": "        method_trace_entries[--index] \u003d timestamp | kMaskTraceAction;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9f4045e11f1f2b2fd974eb81d6b193d4afeb6d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7eb406df_e2822870",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-10T14:51:35Z",
+      "side": 1,
+      "message": "Add `GUARDED_BY`.",
+      "range": {
+        "startLine": 88,
+        "startChar": 14,
+        "endLine": 88,
+        "endChar": 35
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e7121aa6_6b6bde45",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 88,
+                "startChar": 0,
+                "endLine": 89,
+                "endChar": 0
+              },
+              "replacement": "  std::string long_running_methods_ GUARDED_BY(trace_data_lock_);\n"
+            },
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 94,
+                "startChar": 0,
+                "endLine": 95,
+                "endChar": 0
+              },
+              "replacement": "  std::unordered_set\u003cArtMethod*\u003e traced_methods_ GUARDED_BY(trace_data_lock_);\n"
+            },
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 98,
+                "startChar": 0,
+                "endLine": 99,
+                "endChar": 0
+              },
+              "replacement": "  std::unordered_map\u003csize_t, std::string\u003e traced_threads_ GUARDED_BY(trace_data_lock_);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9f4045e11f1f2b2fd974eb81d6b193d4afeb6d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff0c7500_647dfb56",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-10T14:51:35Z",
+      "side": 1,
+      "message": "Add `GUARDED_BY`.",
+      "range": {
+        "startLine": 94,
+        "startChar": 33,
+        "endLine": 94,
+        "endChar": 48
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6064faf9_592028a3",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 94,
+                "startChar": 0,
+                "endLine": 95,
+                "endChar": 0
+              },
+              "replacement": "  std::unordered_set\u003cArtMethod*\u003e traced_methods_ GUARDED_BY(trace_data_lock_);\n"
+            },
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 98,
+                "startChar": 0,
+                "endLine": 99,
+                "endChar": 0
+              },
+              "replacement": "  std::unordered_map\u003csize_t, std::string\u003e traced_threads_ GUARDED_BY(trace_data_lock_);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9f4045e11f1f2b2fd974eb81d6b193d4afeb6d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d06b8fb_e062ca84",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-10T14:51:35Z",
+      "side": 1,
+      "message": "Add `GUARDED_BY`.",
+      "range": {
+        "startLine": 98,
+        "startChar": 42,
+        "endLine": 98,
+        "endChar": 57
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0cd1a31b_51064280",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 98,
+                "startChar": 0,
+                "endLine": 99,
+                "endChar": 0
+              },
+              "replacement": "  std::unordered_map\u003csize_t, std::string\u003e traced_thread_names_;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9f4045e11f1f2b2fd974eb81d6b193d4afeb6d5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
