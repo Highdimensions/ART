@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "42b8255f_2ed5895f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-10T13:42:23Z",
+      "side": 1,
+      "message": "Only when this invocation can be accessor call. Should CL description be more explicit and / or comments around that code?",
+      "parentUuid": "d9d9a1b8_2a0b1683",
+      "revId": "10e2816375f147d610a4cb2429b5ff868fb9b9fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "39863a2d_b05637b5",
@@ -35,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2369f99a_d1eefb1c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-10T13:42:23Z",
+      "side": 1,
+      "message": "I\u0027ve changed fields order and didn\u0027t run tests. Now only top100 presubmit check should fail.",
+      "parentUuid": "39863a2d_b05637b5",
+      "revId": "10e2816375f147d610a4cb2429b5ff868fb9b9fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9b593829_c15e586c",
@@ -48,6 +84,30 @@
       "writtenOn": "2025-01-10T12:23:27Z",
       "side": 1,
       "message": "If they have at most 2 arguments, wouldn\u0027t `number_of_args \u003c\u003d 3` always be true?\n\nFor the other case I\u0027d either explicitly request W3, or DCHECK in `IntrinsicCodeGeneratorARM64::VisitMethodHandleInvokeExact` that we have W3 as the `in` argument if we are expecting that to be true",
+      "range": {
+        "startLine": 5985,
+        "startChar": 5,
+        "endLine": 5985,
+        "endChar": 39
+      },
+      "revId": "10e2816375f147d610a4cb2429b5ff868fb9b9fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d360a465_4059304e",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 5985,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-10T13:42:23Z",
+      "side": 1,
+      "message": "At the moment when we do arguments allocation we don\u0027t know MH\u0027s kind.",
+      "parentUuid": "9b593829_c15e586c",
       "range": {
         "startLine": 5985,
         "startChar": 5,
