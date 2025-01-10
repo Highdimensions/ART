@@ -298,9 +298,9 @@ Result<FileVisibility> GetFileVisibility(const std::string& file) {
   }
 
   return (status.permissions() & std::filesystem::perms::others_read) !=
-                 std::filesystem::perms::none ?
-             FileVisibility::OTHER_READABLE :
-             FileVisibility::NOT_OTHER_READABLE;
+                 std::filesystem::perms::none
+             ? FileVisibility::OTHER_READABLE
+             : FileVisibility::NOT_OTHER_READABLE;
 }
 
 Result<ArtdCancellationSignal*> ToArtdCancellationSignal(IArtdCancellationSignal* input) {
@@ -940,8 +940,8 @@ ndk::ScopedAStatus Artd::mergeProfiles(const std::vector<ProfilePath>& in_profil
   }
 
   ProfmanResult::ProcessingResult expected_result =
-      (in_options.dumpOnly || in_options.dumpClassesAndMethods) ? ProfmanResult::kSuccess :
-                                                                  ProfmanResult::kCompile;
+      (in_options.dumpOnly || in_options.dumpClassesAndMethods) ? ProfmanResult::kSuccess
+                                                                : ProfmanResult::kCompile;
   if (result.value() != expected_result) {
     return NonFatal(ART_FORMAT("profman returned an unexpected code: {}", result.value()));
   }
@@ -1016,9 +1016,9 @@ ndk::ScopedAStatus Artd::dexopt(
   OR_RETURN_FATAL(ValidateDexPath(in_dexFile));
   // `in_profile` can be either a Pre-reboot profile or an ordinary one.
   std::optional<std::string> profile_path =
-      in_profile.has_value() ?
-          std::make_optional(OR_RETURN_FATAL(BuildProfileOrDmPath(in_profile.value()))) :
-          std::nullopt;
+      in_profile.has_value()
+          ? std::make_optional(OR_RETURN_FATAL(BuildProfileOrDmPath(in_profile.value())))
+          : std::nullopt;
   ArtdCancellationSignal* cancellation_signal =
       OR_RETURN_FATAL(ToArtdCancellationSignal(in_cancellationSignal.get()));
 
@@ -1774,9 +1774,9 @@ bool Artd::ShouldUseDebugBinaries() {
 }
 
 Result<std::string> Artd::GetDex2Oat() {
-  std::string binary_name = ShouldUseDebugBinaries() ?
-                                (ShouldUseDex2Oat64() ? "dex2oatd64" : "dex2oatd32") :
-                                (ShouldUseDex2Oat64() ? "dex2oat64" : "dex2oat32");
+  std::string binary_name = ShouldUseDebugBinaries()
+                                ? (ShouldUseDex2Oat64() ? "dex2oatd64" : "dex2oatd32")
+                                : (ShouldUseDex2Oat64() ? "dex2oat64" : "dex2oat32");
   return BuildArtBinPath(binary_name);
 }
 
@@ -1852,8 +1852,8 @@ void Artd::AddPerfConfigFlags(PriorityClass priority_class,
 
   if (priority_class < PriorityClass::BOOT) {
     art_exec_args
-        .Add(priority_class <= PriorityClass::BACKGROUND ? "--set-task-profile=Dex2OatBackground" :
-                                                           "--set-task-profile=Dex2OatBootComplete")
+        .Add(priority_class <= PriorityClass::BACKGROUND ? "--set-task-profile=Dex2OatBackground"
+                                                         : "--set-task-profile=Dex2OatBootComplete")
         .Add("--set-priority=background");
   }
 
@@ -2009,10 +2009,16 @@ Result<void> Artd::PreRebootInitDeriveClasspath(const std::string& path) {
     return ErrnoErrorf("Failed to create '{}'", path);
   }
 
+  BuildSystemProperties new_props = OR_RETURN(BuildSystemProperties::Create("/system/build.prop"));
+
   CmdlineBuilder args = OR_RETURN(GetArtExecCmdlineBuilder());
   args.Add("--keep-fds=%d", output->Fd())
       .Add("--")
       .Add("/apex/com.android.sdkext/bin/derive_classpath")
+      .Add("--override-device-sdk-version=%s", new_props.GetOrEmpty("ro.build.version.sdk"))
+      .Add("--override-device-codename=%s", new_props.GetOrEmpty("ro.build.version.codename"))
+      .Add("--override-device-known-codenames=%s",
+           new_props.GetOrEmpty("ro.build.version.known_codenames"))
       .Add("/proc/self/fd/%d", output->Fd());
 
   LOG(INFO) << "Running derive_classpath: " << Join(args.Get(), /*separator=*/" ");
