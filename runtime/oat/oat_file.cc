@@ -2366,7 +2366,7 @@ const dex::ClassDef* OatDexFile::FindClassDef(const DexFile& dex_file,
   const dex::ClassDef* lookup_table_classdef = nullptr;
   if (LIKELY((oat_dex_file != nullptr) && oat_dex_file->GetTypeLookupTable().Valid())) {
     used_lookup_table = true;
-    const uint32_t class_def_idx = oat_dex_file->GetTypeLookupTable().Lookup(descriptor, hash);
+    const uint32_t class_def_idx = (oat_dex_file != nullptr) ? oat_dex_file->GetTypeLookupTable().Lookup(descriptor, hash) : dex::kDexNoIndex;
     if (class_def_idx != dex::kDexNoIndex) {
       CHECK_LT(class_def_idx, dex_file.NumClassDefs()) << oat_dex_file->GetOatFile()->GetLocation();
       lookup_table_classdef = &dex_file.GetClassDef(class_def_idx);
