@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c3224a6_10cc96ba",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-13T17:32:53Z",
+      "side": 1,
+      "message": "Does that somehow cause the destructor instantiation in contexts where it previously would not have been instantiated?\n\n(Do we need to roll our own version of `std::unique_ptr`? For me, being able to use `std::unique_ptr` with incomplete types was a feature, not a bug.)",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 9,
+        "endChar": 38
+      },
+      "revId": "10970161c0f427c63afc515250be64b02d3e0a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "bc129116_cdbebe86",
