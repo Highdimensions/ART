@@ -116,6 +116,30 @@
       },
       "revId": "10e2816375f147d610a4cb2429b5ff868fb9b9fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3014f4b6_3198865a",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 5985,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-13T18:05:12Z",
+      "side": 1,
+      "message": "What I don\u0027t get is that if `Accessors have at most 2 arguments` then shouldn\u0027t `number_of_args` always be at most 2?",
+      "parentUuid": "d360a465_4059304e",
+      "range": {
+        "startLine": 5985,
+        "startChar": 5,
+        "endLine": 5985,
+        "endChar": 39
+      },
+      "revId": "10e2816375f147d610a4cb2429b5ff868fb9b9fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
