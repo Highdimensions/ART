@@ -218,7 +218,11 @@ void DisassemblerArm::CustomDisassembler::CustomDisassemblerStream::PrintLiteral
 }
 
 DisassemblerArm::DisassemblerArm(DisassemblerOptions* options)
-    : Disassembler(options), disasm_(std::make_unique<CustomDisassembler>(output_, options)) {}
+    : Disassembler(options), disasm_(new CustomDisassembler(output_, options)) {}
+
+DisassemblerArm::~DisassemblerArm() {
+  delete disasm_;
+}
 
 size_t DisassemblerArm::Dump(std::ostream& os, const uint8_t* begin) {
   uintptr_t next;

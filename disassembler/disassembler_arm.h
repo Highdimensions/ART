@@ -31,6 +31,7 @@ class DisassemblerArm final : public Disassembler {
 
  public:
   explicit DisassemblerArm(DisassemblerOptions* options);
+  ~DisassemblerArm();
 
   size_t Dump(std::ostream& os, const uint8_t* begin) override;
   void Dump(std::ostream& os, const uint8_t* begin, const uint8_t* end) override;
@@ -43,7 +44,7 @@ class DisassemblerArm final : public Disassembler {
   }
 
   std::ostringstream output_;
-  std::unique_ptr<CustomDisassembler> disasm_;
+  CustomDisassembler* disasm_;
 
   DISALLOW_COPY_AND_ASSIGN(DisassemblerArm);
 };
