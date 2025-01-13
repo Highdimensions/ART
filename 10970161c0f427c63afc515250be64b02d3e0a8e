@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d9da2573_b5b664f7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-01-13T21:27:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c3224a6_10cc96ba",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 9,
+        "endChar": 38
+      },
+      "revId": "10970161c0f427c63afc515250be64b02d3e0a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "bc129116_cdbebe86",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -78,6 +102,30 @@
       "side": 1,
       "message": "kicked off https://android-review.git.corp.google.com/c/platform/art/+/3450689 to see whether that works...",
       "parentUuid": "870dfb56_b1251919",
+      "range": {
+        "startLine": 34,
+        "startChar": 2,
+        "endLine": 34,
+        "endChar": 21
+      },
+      "revId": "10970161c0f427c63afc515250be64b02d3e0a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5661a3c_6b42d1f9",
+        "filename": "disassembler/disassembler_arm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-01-13T21:27:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f048eb1_e8dd6637",
       "range": {
         "startLine": 34,
         "startChar": 2,
