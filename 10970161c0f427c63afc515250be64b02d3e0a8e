@@ -39,6 +39,29 @@
       "message": "i\u0027m assuming you don\u0027t want to move the CustomDisassembler implementation into the header, so this seems like the least worst option?",
       "revId": "10970161c0f427c63afc515250be64b02d3e0a8e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "870dfb56_b1251919",
+        "filename": "disassembler/disassembler_arm.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-13T17:38:06Z",
+      "side": 1,
+      "message": "We should have had this declaration here and an empty definition in the `.cc` file. With that, maybe we can actually keep the `std::unique_ptr\u003cCustomDisassembler\u003e disasm_`.",
+      "range": {
+        "startLine": 34,
+        "startChar": 2,
+        "endLine": 34,
+        "endChar": 21
+      },
+      "revId": "10970161c0f427c63afc515250be64b02d3e0a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
