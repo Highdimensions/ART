@@ -188,6 +188,30 @@
       },
       "revId": "10e2816375f147d610a4cb2429b5ff868fb9b9fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9a6ca32_adf4588a",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 5985,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-13T18:39:57Z",
+      "side": 1,
+      "message": "Either that, or it\u0027s a valid MH targeting some method call and that method is executed.",
+      "parentUuid": "3d8a1197_d955348e",
+      "range": {
+        "startLine": 5985,
+        "startChar": 5,
+        "endLine": 5985,
+        "endChar": 39
+      },
+      "revId": "10e2816375f147d610a4cb2429b5ff868fb9b9fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
