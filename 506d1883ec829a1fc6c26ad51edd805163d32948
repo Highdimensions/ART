@@ -22,6 +22,30 @@
       },
       "revId": "506d1883ec829a1fc6c26ad51edd805163d32948",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58f46285_f4d51f94",
+        "filename": "test/734-duplicate-fields/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-13T10:36:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5c60b8d_2aeb562c",
+      "range": {
+        "startLine": 31,
+        "startChar": 36,
+        "endLine": 31,
+        "endChar": 37
+      },
+      "revId": "506d1883ec829a1fc6c26ad51edd805163d32948",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
