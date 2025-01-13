@@ -22,6 +22,30 @@
       },
       "revId": "78273234739a3fea70452eaf29f3f477d2802823",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1040d4fd_a3ad68cf",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5809,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-01-13T11:44:30Z",
+      "side": 1,
+      "message": "Yes, you\u0027re right. I\u0027ve fixed it.",
+      "parentUuid": "e7528774_eafd299c",
+      "range": {
+        "startLine": 5809,
+        "startChar": 15,
+        "endLine": 5809,
+        "endChar": 17
+      },
+      "revId": "78273234739a3fea70452eaf29f3f477d2802823",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
