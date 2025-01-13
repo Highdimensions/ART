@@ -769,6 +769,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c200e6b_68b9e128",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 4112,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-13T15:52:36Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/3448430 has been merged, so this is resolved.",
+      "parentUuid": "493db8a1_4d0e7268",
+      "range": {
+        "startLine": 4108,
+        "startChar": 6,
+        "endLine": 4112,
+        "endChar": 19
+      },
+      "revId": "1e828da2c14345abb5647f358a368d8311e959c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "015b1e8a_2624e3f0",
