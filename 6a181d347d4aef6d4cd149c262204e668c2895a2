@@ -70,6 +70,30 @@
       },
       "revId": "6a181d347d4aef6d4cd149c262204e668c2895a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "807f1a99_e94a9f16",
+        "filename": "test/testrunner/env.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-13T15:30:33Z",
+      "side": 1,
+      "message": "I\u0027m not sure I\u0027m the first to try - I suspect people commonly may just opt to workaround it when something doesn\u0027t work in this area.\n\nMy context is that I had a CL in an AOSP tree with a full system image where I needed to exercise some run tests (and atest doesn\u0027t have the same coverage). Hence I could build and push a chroot to it, although it would be an extra step, which requires another Soong run, so it often adds several minutes.\n\nrpl@ mentioned another more tangible use case, namely to test on OEM devices without root access.\n\n\u003e Does setting ART_TEST_CHROOT to empty string work?\n\nMaybe, but it\u0027s not the approach documented in the [README](https://cs.android.com/android/platform/superproject/main/+/main:art/test/README.chroot.md). The approach there is that the user is expected to set `ART_TEST_CHROOT` first if they want to use it, iow this `else` clause shouldn\u0027t exist. Is there a reason to not stick to that?",
+      "parentUuid": "d7052beb_c15f45da",
+      "range": {
+        "startLine": 163,
+        "startChar": 0,
+        "endLine": 164,
+        "endChar": 78
+      },
+      "revId": "6a181d347d4aef6d4cd149c262204e668c2895a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
