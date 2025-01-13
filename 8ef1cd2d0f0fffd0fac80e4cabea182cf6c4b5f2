@@ -34,6 +34,24 @@
       "parentUuid": "b502ed2c_bce8e32a",
       "revId": "8ef1cd2d0f0fffd0fac80e4cabea182cf6c4b5f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b82010f_f34768e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-13T22:44:33Z",
+      "side": 1,
+      "message": "Correct, removing the remaining cdex code is blocked on b/369208474 - simpleperf links libdexfile statically and still requires support for cdex for earlier platforms. It needs to link dynamically on device instead.",
+      "parentUuid": "940f619c_739cbe76",
+      "revId": "8ef1cd2d0f0fffd0fac80e4cabea182cf6c4b5f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
