@@ -143,7 +143,7 @@ void RecordMethodsOnThreadStack(Thread* thread, TraceData* trace_data)
   // Annotate them with an 'S' to indicate they are methods at startup and the entry timestamp
   // isn't accurate.
   uintptr_t* method_trace_buffer = thread->GetMethodTraceBuffer();
-  uint64_t init_time = TimestampCounter::GetMicroTime(TimestampCounter::GetTimestamp());
+  uint64_t init_time = TimestampCounter::GetNanoTime(TimestampCounter::GetTimestamp());
   std::unordered_set<ArtMethod*> methods;
   std::ostringstream os;
   os << "Thread:" << thread->GetTid() << "\n";
@@ -492,13 +492,13 @@ void TraceProfiler::DumpLongRunningMethodBuffer(uint32_t thread_id,
       // start of the trace. Just ignore this entry.
     } else if (entry & 0x1) {
       // Method exit
-      os << "<-" << TimestampCounter::GetMicroTime(entry & ~1) << "\n";
+      os << "<-" << TimestampCounter::GetNanoTime(entry & ~1) << "\n";
     } else {
       // Method entry
       ArtMethod* method = reinterpret_cast<ArtMethod*>(entry);
       ptr--;
       CHECK(ptr >= end_trace_entries);
-      os << "->" << method << " " << TimestampCounter::GetMicroTime(*ptr) << "\n";
+      os << "->" << method << " " << TimestampCounter::GetNanoTime(*ptr) << "\n";
       methods.insert(method);
     }
     ptr--;

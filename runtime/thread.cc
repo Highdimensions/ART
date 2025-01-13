@@ -1497,6 +1497,20 @@ uint64_t Thread::GetCpuMicroTime() const {
 #endif
 }
 
+uint64_t Thread::GetCpuNanoTime() const {
+#if defined(__linux__)
+  clockid_t cpu_clock_id;
+  pthread_getcpuclockid(tlsPtr_.pthread_self, &cpu_clock_id);
+  timespec now;
+  clock_gettime(cpu_clock_id, &now);
+  return static_cast<uint64_t>(now.tv_sec) * UINT64_C(1000000000) +
+         static_cast<uint64_t>(now.tv_nsec);
+#else  // __APPLE__
+  UNIMPLEMENTED(WARNING);
+  return -1;
+#endif
+}
+
 // Attempt to rectify locks so that we dump thread list with required locks before exiting.
 void Thread::UnsafeLogFatalForSuspendCount(Thread* self, Thread* thread) NO_THREAD_SAFETY_ANALYSIS {
   LOG(ERROR) << *thread << " suspend count already zero.";
