@@ -46,6 +46,30 @@
       },
       "revId": "6a181d347d4aef6d4cd149c262204e668c2895a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7052beb_c15f45da",
+        "filename": "test/testrunner/env.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1065473
+      },
+      "writtenOn": "2025-01-13T13:50:30Z",
+      "side": 1,
+      "message": "Oh... not intentionally.\nI suppose one question is: do we want to support non-chroot setup?\nGiven this CL is year old, I suppose you are the first to try in a year.\nWhat is the conext here?\nDoes setting `ART_TEST_CHROOT` to empty string work?",
+      "parentUuid": "44d165e5_7c95058b",
+      "range": {
+        "startLine": 163,
+        "startChar": 0,
+        "endLine": 164,
+        "endChar": 78
+      },
+      "revId": "6a181d347d4aef6d4cd149c262204e668c2895a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
