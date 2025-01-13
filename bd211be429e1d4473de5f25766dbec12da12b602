@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "126ec7f5_eebc18ff",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 1178,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-13T16:24:58Z",
+      "side": 1,
+      "message": "We should be able to guess the index based on the index of field 0 now. Wasn\u0027t that the main reason for this CL?",
+      "range": {
+        "startLine": 1177,
+        "startChar": 4,
+        "endLine": 1178,
+        "endChar": 54
+      },
+      "revId": "bd211be429e1d4473de5f25766dbec12da12b602",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48317715_c2b8c2a5",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 1268,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-13T16:24:58Z",
+      "side": 1,
+      "message": "Maybe rename to `kSearchStaticFieldsIninterfaces`?\n\nUpdate the comment above.",
+      "range": {
+        "startLine": 1268,
+        "startChar": 15,
+        "endLine": 1268,
+        "endChar": 34
+      },
+      "revId": "bd211be429e1d4473de5f25766dbec12da12b602",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
