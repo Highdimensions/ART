@@ -22,6 +22,30 @@
       },
       "revId": "f27dbe219e2dbfb08fbe1d6c430e0b3829aff997",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d102593c_ca45e1f6",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 10185,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-14T18:19:38Z",
+      "side": 1,
+      "message": "It looks like I added that when I uploaded the change but I don\u0027t remember why. I think it would work either way, but we can leave the ternary operator.",
+      "parentUuid": "65f85860_26424043",
+      "range": {
+        "startLine": 10185,
+        "startChar": 2,
+        "endLine": 10185,
+        "endChar": 62
+      },
+      "revId": "f27dbe219e2dbfb08fbe1d6c430e0b3829aff997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
