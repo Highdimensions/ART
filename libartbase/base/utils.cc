@@ -419,7 +419,8 @@ std::string GetOsThreadStatQuick(pid_t tid) {
   }
 #else
   UNUSED(tid);
-  strcpy(buf, "Unknown state");  // snprintf may not be usable.
+  strncpy(buf, "Unknown state", sizeof(buf) - 1);
+  buf[sizeof(buf) - 1] = '\0'; // Ensure null-termination
 #endif
   return buf;
 }
