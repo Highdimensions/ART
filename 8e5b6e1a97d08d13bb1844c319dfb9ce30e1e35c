@@ -16,6 +16,24 @@
       "message": "How is `field_` used? It\u0027s private and we don\u0027t have accessors to it.",
       "revId": "8e5b6e1a97d08d13bb1844c319dfb9ce30e1e35c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3ed3443_d45ddfb1",
+        "filename": "runtime/mirror/method_handle_impl.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-14T20:25:50Z",
+      "side": 1,
+      "message": "It is used in the actual code which does the work. Please check libcore counterpart of this CL [1].\n\n[1] https://android-review.git.corp.google.com/c/platform/libcore/+/3380836/5/ojluni/src/main/java/java/lang/invoke/DirectMethodHandle.java#51",
+      "parentUuid": "06e56d06_9aaa0a14",
+      "revId": "8e5b6e1a97d08d13bb1844c319dfb9ce30e1e35c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
