@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65f85860_26424043",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 10185,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-14T17:51:40Z",
+      "side": 1,
+      "message": "This bit looks like it belongs to https://android-review.googlesource.com/3380108 . Why do you need it in this CL?\n\nI\u0027m fine with keeping it here but it looks like an additional risk of regressions being attributed to this CL.",
+      "range": {
+        "startLine": 10185,
+        "startChar": 2,
+        "endLine": 10185,
+        "endChar": 62
+      },
+      "revId": "f27dbe219e2dbfb08fbe1d6c430e0b3829aff997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
