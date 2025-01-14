@@ -22,6 +22,30 @@
       },
       "revId": "017dabfb96906bce0369475c45d2b513e47ad015",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "324e2729_0e6b38f3",
+        "filename": "libartpalette/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-14T14:55:12Z",
+      "side": 1,
+      "message": "Aha, thanks.",
+      "parentUuid": "a73df61c_48544ccf",
+      "range": {
+        "startLine": 169,
+        "startChar": 8,
+        "endLine": 169,
+        "endChar": 18
+      },
+      "revId": "017dabfb96906bce0369475c45d2b513e47ad015",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
