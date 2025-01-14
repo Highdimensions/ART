@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06e56d06_9aaa0a14",
+        "filename": "runtime/mirror/method_handle_impl.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-14T20:18:39Z",
+      "side": 1,
+      "message": "How is `field_` used? It\u0027s private and we don\u0027t have accessors to it.",
+      "revId": "8e5b6e1a97d08d13bb1844c319dfb9ce30e1e35c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
