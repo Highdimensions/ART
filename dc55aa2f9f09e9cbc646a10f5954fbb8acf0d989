@@ -1,0 +1,126 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "796b511a_6f98508f",
+        "filename": "libartpalette/apex/palette.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-14T17:18:10Z",
+      "side": 1,
+      "message": "Following my argument below, I think it\u0027s worth adding a note here that this API is de-facto available on SDK level 36.",
+      "fixSuggestions": [
+        {
+          "fixId": "4e60bcfd_3c36afaf",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartpalette/apex/palette.cc",
+              "range": {
+                "startLine": 264,
+                "startChar": 0,
+                "endLine": 265,
+                "endChar": 0
+              },
+              "replacement": "// Introduced in version 5 API, corresponding to SDK level 37. However,\n// this API is de-facto available on SDK level 36.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "dc55aa2f9f09e9cbc646a10f5954fbb8acf0d989",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8b36e5e_817996d1",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-14T17:18:10Z",
+      "side": 1,
+      "message": "Not applicable anymore.",
+      "range": {
+        "startLine": 59,
+        "startChar": 2,
+        "endLine": 59,
+        "endChar": 72
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0e543265_16de2592",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartpalette/apex/palette_test.cc",
+              "range": {
+                "startLine": 59,
+                "startChar": 0,
+                "endLine": 60,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "dc55aa2f9f09e9cbc646a10f5954fbb8acf0d989",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06a965f8_b79367e5",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-14T17:18:10Z",
+      "side": 1,
+      "message": "To enable testing before this API level is finalised, you need to extend the check by looking at `ro.build.version.codename` similar to [this](https://cs.android.com/android/platform/superproject/main/+/main:frameworks/libs/modules-utils/build/include/android-modules-utils/sdk_level.h;l\u003d61-63;drc\u003d468d12c054cc3180b00b8db73ea0a335fa760b73).\n\nHowever, considering native API\u0027s aren\u0027t flagged, and assuming this CL will get submitted well before the final snap to Baklava, this API will de-facto be present there, regardless what we put in the .map(.txt) files. Hence, confusingly, you\u0027ll need to check if the codename is \"Baklava\" to enable testing on ToT.\n\nIt should also include the codename for C, but I don\u0027t know what that is; I don\u0027t think it has been decided yet. So for now we can only test for Baklava and leave a TODO to add it later.\n\nIow, return true if this condition is true, else return true if `ro.build.version.codename` is precisely `\"Baklava\"` (and add the TODO).\n\nAnother complication is when building against an SDK level 36 (Baklava) stub that won\u0027t have the API, but I think that should work since libartpalette uses strictly runtime resolution through dlopen and dlsym (and I believe the `# introduced\u003d37` comment in the map file has no effect when it\u0027s used as `version_script`).\n\nAlso worth noting that the real production code will still call the API on SDK level 36, for the same reason. We\u0027d have to complement the wrapper in palette.cc to check the SDK level to avoid that, but I can\u0027t see any benefit with doing so, except possibly that the behaviour is in some regards less confusing.\n\nBottom line, in many ways it would be easier to add this API to SDK level 36 regardless of the passed deadline, to make de-facto reality agree with stated claims. But here we are. :\\",
+      "range": {
+        "startLine": 60,
+        "startChar": 9,
+        "endLine": 60,
+        "endChar": 45
+      },
+      "revId": "dc55aa2f9f09e9cbc646a10f5954fbb8acf0d989",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36c98faf_9d087de9",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-14T17:18:10Z",
+      "side": 1,
+      "message": "Yes, should be since it\u0027ll only build against the fake that goes in with this CL.\n\nI suggest wrapping the call below inside `#ifdef ART_TARGET_ANDROID` instead, to make it more clear that the API level check isn\u0027t applicable on host.",
+      "range": {
+        "startLine": 66,
+        "startChar": 16,
+        "endLine": 66,
+        "endChar": 24
+      },
+      "revId": "dc55aa2f9f09e9cbc646a10f5954fbb8acf0d989",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
