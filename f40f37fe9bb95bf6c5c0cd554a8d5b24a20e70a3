@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79807dca_b2d570ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-14T18:09:18Z",
+      "side": 1,
+      "message": "Hi!\n\nPlease take a look at these two RFCs implement optimisations aimed at addressing issue b/378792349.\n\nTo evaluate their impact the following two CLs should be cherry-picked:\n* https://android-review.googlesource.com/c/platform/art/+/3403680\n* https://android-review.googlesource.com/c/platform/art/+/3356727\n\nFurther detail is discussed within the issuetracker.\n\nThank you!",
+      "revId": "f40f37fe9bb95bf6c5c0cd554a8d5b24a20e70a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
