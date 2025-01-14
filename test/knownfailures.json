@@ -1141,6 +1141,7 @@
                   "692-vdex-inmem-loader",
                   "693-vdex-inmem-loader-evict",
                   "723-string-init-range",
+                  "734-duplicate-fields",
                   "808-checker-invoke-super",
                   "809-checker-invoke-super-bss",
                   "810-checker-invoke-super-default",
@@ -1225,7 +1226,8 @@
                   "2263-method-trace-jit",
                   "2270-mh-internal-hiddenapi-use",
                   "2271-profile-inline-cache",
-                  "2279-aconfig-flags"],
+                  "2279-aconfig-flags",
+                  "2286-method-tracing-aot-code"],
         "variant": "jvm",
         "description": ["Doesn't run on RI."]
     },
