@@ -201,15 +201,18 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
 
   // Adds the given string to the beginning of the last failure message.
   void PrependToLastFailMessage(std::string prepend) {
-    MessageOStream* last_fail_message = &LastFailureMessageStream();
-    prepend += last_fail_message->view();
-    last_fail_message->str(std::move(prepend));
+    size_t failure_num = failure_messages_.size();
+    DCHECK_NE(failure_num, 0U);
+    std::ostringstream* last_fail_message = failure_messages_[failure_num - 1];
+    prepend += last_fail_message->str();
+    failure_messages_[failure_num - 1] = new std::ostringstream(prepend, std::ostringstream::ate);
+    delete last_fail_message;
   }
 
   // Return the last failure message stream for appending.
-  MessageOStream& LastFailureMessageStream() {
-    DCHECK(!failures_.empty());
-    return failures_.back().message;
+  std::ostream& LastFailureMessageStream() {
+    DCHECK(!failure_messages_.empty());
+    return *failure_messages_.back();
   }
 
   /*
@@ -1311,8 +1314,9 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
 
   // Dump the failures encountered by the verifier.
   std::ostream& DumpFailures(std::ostream& os) {
-    for (const VerifyErrorAndMessage& veam : failures_) {
-        os << veam.message.view() << "\n";
+    DCHECK_EQ(failures_.size(), failure_messages_.size());
+    for (const auto* stream : failure_messages_) {
+        os << stream->str() << "\n";
     }
     return os;
   }
@@ -2504,7 +2508,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyMethod() {
       if (register_line != nullptr) {
         if (work_line_->CompareLine(register_line) != 0) {
           Dump(LOG_STREAM(FATAL_WITHOUT_ABORT));
-          LOG(FATAL_WITHOUT_ABORT) << InfoMessages().view();
+          LOG(FATAL_WITHOUT_ABORT) << InfoMessages().str();
           LOG(FATAL) << "work_line diverged in " << dex_file_->PrettyMethod(dex_method_idx_)
                      << "@" << reinterpret_cast<void*>(work_insn_idx_) << "\n"
                      << " work_line=" << work_line_->Dump(this) << "\n"
@@ -2577,7 +2581,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyMethod() {
     // To dump the state of the verify after a method, do something like:
     // if (dex_file_->PrettyMethod(dex_method_idx_) ==
     //     "boolean java.lang.String.equals(java.lang.Object)") {
-    //   LOG(INFO) << InfoMessages().view();
+    //   LOG(INFO) << InfoMessages().str();
     // }
   }
   return true;
@@ -3609,8 +3613,8 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
       ArtMethod* called_method = VerifyInvocationArgs(inst, METHOD_POLYMORPHIC, is_range);
       if (called_method == nullptr) {
         // Convert potential soft failures in VerifyInvocationArgs() to hard errors.
-        if (failures_.size() > 0) {
-          std::string_view message = failures_.back().message.view();
+        if (failure_messages_.size() > 0) {
+          std::string message = failure_messages_.back()->str();
           Fail(VERIFY_ERROR_BAD_CLASS_HARD) << message;
         } else {
           Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "invoke-polymorphic verification failure.";
@@ -3867,11 +3871,13 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
   if (flags_.have_pending_hard_failure_) {
     if (IsAotMode()) {
       /* When AOT compiling, check that the last failure is a hard failure */
-      DCHECK(!failures_.empty());
-      if (failures_.back().error != VERIFY_ERROR_BAD_CLASS_HARD) {
+      if (failures_[failures_.size() - 1] != VERIFY_ERROR_BAD_CLASS_HARD) {
         LOG(ERROR) << "Pending failures:";
-        for (const VerifyErrorAndMessage& veam : failures_) {
-          LOG(ERROR) << veam.error << " " << veam.message.view();
+        for (auto& error : failures_) {
+          LOG(ERROR) << error;
+        }
+        for (auto& error_msg : failure_messages_) {
+          LOG(ERROR) << error_msg->str();
         }
         LOG(FATAL) << "Pending hard failure, but last failure not hard.";
       }
@@ -5366,13 +5372,16 @@ MethodVerifier::MethodVerifier(Thread* self,
       dex_file_(reg_types->GetDexFile()),
       class_def_(class_def),
       code_item_accessor_(*dex_file_, code_item),
-      failures_(allocator_.Adapter(kArenaAllocVerifier)),
       flags_{ .have_pending_hard_failure_ = false, .have_pending_runtime_throw_failure_ = false },
       const_flags_{ .aot_mode_ = aot_mode, .can_load_classes_ = reg_types->CanLoadClasses() },
       encountered_failure_types_(0),
       info_messages_(std::nullopt),
       verifier_deps_(verifier_deps),
       link_(nullptr) {
+}
+
+MethodVerifier::~MethodVerifier() {
+  STLDeleteElements(&failure_messages_);
 }
 
 MethodVerifier::FailureData MethodVerifier::VerifyMethod(Thread* self,
@@ -5478,7 +5487,7 @@ MethodVerifier::FailureData MethodVerifier::VerifyMethod(Thread* self,
             << reg_types->GetDexFile()->PrettyMethod(method_idx) << "\n");
       }
       if (kVerifierDebug) {
-        LOG(INFO) << verifier.InfoMessages().view();
+        LOG(INFO) << verifier.InfoMessages().str();
         verifier.Dump(LOG_STREAM(INFO));
       }
       if (CanRuntimeHandleVerificationFailure(verifier.encountered_failure_types_)) {
@@ -5519,23 +5528,24 @@ MethodVerifier::FailureData MethodVerifier::VerifyMethod(Thread* self,
           << reg_types->GetDexFile()->PrettyMethod(method_idx) << "\n");
     }
     if (hard_failure_msg != nullptr) {
-      CHECK(!verifier.failures_.empty());
-      *hard_failure_msg = verifier.failures_.back().message.view();
+      CHECK(!verifier.failure_messages_.empty());
+      *hard_failure_msg =
+          verifier.failure_messages_[verifier.failure_messages_.size() - 1]->str();
     }
     result.kind = FailureKind::kHardFailure;
 
     if (kVerifierDebug || VLOG_IS_ON(verifier)) {
-      LOG(ERROR) << verifier.InfoMessages().view();
+      LOG(ERROR) << verifier.InfoMessages().str();
       verifier.Dump(LOG_STREAM(ERROR));
     }
     // Under verifier-debug, dump the complete log into the error message.
     if (kVerifierDebug && hard_failure_msg != nullptr) {
       hard_failure_msg->append("\n");
-      hard_failure_msg->append(verifier.InfoMessages().view());
+      hard_failure_msg->append(verifier.InfoMessages().str());
       hard_failure_msg->append("\n");
       std::ostringstream oss;
       verifier.Dump(oss);
-      hard_failure_msg->append(oss.view());
+      hard_failure_msg->append(oss.str());
     }
   }
   if (kTimeVerifyMethod) {
@@ -5581,7 +5591,7 @@ MethodVerifier* MethodVerifier::CalculateVerificationInfo(
   verifier->Verify();
   if (VLOG_IS_ON(verifier)) {
     verifier->DumpFailures(VLOG_STREAM(verifier));
-    VLOG(verifier) << verifier->InfoMessages().view();
+    VLOG(verifier) << verifier->InfoMessages().str();
     verifier->Dump(VLOG_STREAM(verifier));
   }
   if (verifier->flags_.have_pending_hard_failure_) {
@@ -5620,7 +5630,7 @@ void MethodVerifier::VerifyMethodAndDump(Thread* self,
       api_level);
   verifier.Verify();
   verifier.DumpFailures(vios->Stream());
-  vios->Stream() << verifier.InfoMessages().view();
+  vios->Stream() << verifier.InfoMessages().str();
   // Only dump if no hard failures. Otherwise the verifier may be not fully initialized
   // and querying any info is dangerous/can abort.
   if (!verifier.flags_.have_pending_hard_failure_) {
@@ -5727,10 +5737,12 @@ std::ostream& MethodVerifier::Fail(VerifyError error, bool pending_exc) {
     CHECK_NE(error, VERIFY_ERROR_BAD_CLASS_HARD);
   }
 
-  std::string location =
-      StringPrintf("%s: [0x%X] ", dex_file_->PrettyMethod(dex_method_idx_).c_str(), work_insn_idx_);
-  failures_.emplace_back(error, location, failures_.get_allocator());
-  return failures_.back().message;
+  failures_.push_back(error);
+  std::string location(StringPrintf("%s: [0x%X] ", dex_file_->PrettyMethod(dex_method_idx_).c_str(),
+                                    work_insn_idx_));
+  std::ostringstream* failure_message = new std::ostringstream(location, std::ostringstream::ate);
+  failure_messages_.push_back(failure_message);
+  return *failure_message;
 }
 
 ScopedNewLine MethodVerifier::LogVerifyInfo() {

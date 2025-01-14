@@ -19,7 +19,6 @@
 
 #include <deque>
 #include <forward_list>
-#include <list>
 #include <queue>
 #include <set>
 #include <stack>
@@ -53,9 +52,6 @@ using ArenaDeque = std::deque<T, ArenaAllocatorAdapter<T>>;
 
 template <typename T>
 using ArenaForwardList = std::forward_list<T, ArenaAllocatorAdapter<T>>;
-
-template <typename T>
-using ArenaList = std::list<T, ArenaAllocatorAdapter<T>>;
 
 template <typename T>
 using ArenaQueue = std::queue<T, ArenaDeque<T>>;

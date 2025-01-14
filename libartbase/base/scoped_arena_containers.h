@@ -19,7 +19,6 @@
 
 #include <deque>
 #include <forward_list>
-#include <list>
 #include <queue>
 #include <set>
 #include <type_traits>
@@ -51,9 +50,6 @@ using ScopedArenaDeque = std::deque<T, ScopedArenaAllocatorAdapter<T>>;
 
 template <typename T>
 using ScopedArenaForwardList = std::forward_list<T, ScopedArenaAllocatorAdapter<T>>;
-
-template <typename T>
-using ScopedArenaList = std::list<T, ScopedArenaAllocatorAdapter<T>>;
 
 template <typename T>
 using ScopedArenaQueue = std::queue<T, ScopedArenaDeque<T>>;
