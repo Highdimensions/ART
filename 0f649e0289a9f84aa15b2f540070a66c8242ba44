@@ -725,6 +725,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "92892dab_84b03b33",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1492,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-15T19:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44a1882f_526b898d",
+      "range": {
+        "startLine": 1492,
+        "startChar": 2,
+        "endLine": 1492,
+        "endChar": 9
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8865b139_c30349dd",
@@ -809,6 +833,30 @@
       "side": 1,
       "message": "Same reason as in RefsUpdateVisitor",
       "parentUuid": "804bde5d_36df2988",
+      "range": {
+        "startLine": 4378,
+        "startChar": 2,
+        "endLine": 4378,
+        "endChar": 9
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec5b0cfd_511beaaa",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 4378,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-15T19:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58f464c3_97340ff6",
       "range": {
         "startLine": 4378,
         "startChar": 2,
@@ -1350,6 +1398,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "88a55a5f_019fd90e",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-15T19:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e14049ff_2c5b87ae",
+      "range": {
+        "startLine": 713,
+        "startChar": 0,
+        "endLine": 718,
+        "endChar": 22
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c45c4acc_42832526",
@@ -1632,6 +1704,30 @@
       "side": 1,
       "message": "Can we change use_generationsl_cc_ to e.g. use_generational_gc_ or use_generational_concurrent_? My concern is just that cc is generally specific to the CC collector.\nI don\u0027t see the rename yet.",
       "parentUuid": "551c02f7_abde754a",
+      "range": {
+        "startLine": 2571,
+        "startChar": 31,
+        "endLine": 2571,
+        "endChar": 51
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "801a6784_9ede5568",
+        "filename": "runtime/gc/heap.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 2571,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-15T19:26:25Z",
+      "side": 1,
+      "message": "I\u0027ll rename in the next CL (aosp/3321434) as that one deals with it much more than this CL.",
+      "parentUuid": "54a546d8_d4f7a5b0",
       "range": {
         "startLine": 2571,
         "startChar": 31,
