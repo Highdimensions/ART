@@ -4226,6 +4226,15 @@ ArtMethod* MethodVerifierImpl::ResolveMethodAndCheckAccess(
           << "non-interface method " << dex_file_->PrettyMethod(dex_method_idx)
           << " is in an interface class " << klass->PrettyClass();
       return nullptr;
+    } else if (method_type == METHOD_SUPER &&
+               res_method->GetDeclaringClass()->IsObjectClass()) {
+      Fail(VERIFY_ERROR_NO_METHOD) << "invoke-super " << klass->PrettyDescriptor() << "."
+                                   << dex_file_->GetMethodName(method_id) << " "
+                                   << dex_file_->GetMethodSignature(method_id) << " resolved to "
+                                   << "object method " << res_method->PrettyMethod() << " "
+                                   << "but Object methods are excluded from super "
+                                   << "method resolution on interfaces.";
+      return nullptr;
     }
   } else {
     if (method_type == METHOD_INTERFACE) {
