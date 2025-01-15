@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0afe55aa_dd05a3d2",
+        "filename": "test/735-interface-clone/smali/Itf.smali",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-15T18:11:59Z",
+      "side": 1,
+      "message": "2025",
+      "range": {
+        "startLine": 1,
+        "startChar": 16,
+        "endLine": 1,
+        "endChar": 20
+      },
+      "revId": "36eb54e188a6e8865abd04f9a732f39facfdd97f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "730f3fd9_8227c74b",
+        "filename": "test/735-interface-clone/smali/Itf.smali",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-15T18:11:59Z",
+      "side": 1,
+      "message": "nit double spacing",
+      "range": {
+        "startLine": 16,
+        "startChar": 6,
+        "endLine": 16,
+        "endChar": 8
+      },
+      "revId": "36eb54e188a6e8865abd04f9a732f39facfdd97f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8c984ec_28393f73",
+        "filename": "test/735-interface-clone/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-15T18:11:59Z",
+      "side": 1,
+      "message": "Can you just catch `IncompatibleClassChangeError`?",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 5
+      },
+      "revId": "36eb54e188a6e8865abd04f9a732f39facfdd97f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
