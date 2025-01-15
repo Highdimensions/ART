@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "64bde5d7_06025b12",
+        "filename": "test/735-interface-clone/smali/Itf.smali",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-15T18:18:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0afe55aa_dd05a3d2",
+      "range": {
+        "startLine": 1,
+        "startChar": 16,
+        "endLine": 1,
+        "endChar": 20
+      },
+      "revId": "36eb54e188a6e8865abd04f9a732f39facfdd97f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "730f3fd9_8227c74b",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f251e0a_aa304163",
+        "filename": "test/735-interface-clone/smali/Itf.smali",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-15T18:18:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "730f3fd9_8227c74b",
+      "range": {
+        "startLine": 16,
+        "startChar": 6,
+        "endLine": 16,
+        "endChar": 8
+      },
+      "revId": "36eb54e188a6e8865abd04f9a732f39facfdd97f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d8c984ec_28393f73",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-01-15T18:11:59Z",
       "side": 1,
       "message": "Can you just catch `IncompatibleClassChangeError`?",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 5
+      },
+      "revId": "36eb54e188a6e8865abd04f9a732f39facfdd97f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef3a90f1_9c30fdb6",
+        "filename": "test/735-interface-clone/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-15T18:18:33Z",
+      "side": 1,
+      "message": "No, calling through j.l.r.Method throws `InvocationTargetException`",
+      "parentUuid": "d8c984ec_28393f73",
       "range": {
         "startLine": 25,
         "startChar": 0,
