@@ -163,5 +163,3 @@ ART_SCP_CMD = _env.get('ART_SCP_CMD', f"scp -q -F {ART_SSH_CONFIG} -P {ART_TEST_
 ART_CHROOT_CMD = _env.get('ART_CHROOT_CMD', "unshare --user --map-root-user chroot art-test-chroot")
 if ART_TEST_ON_VM:
   ART_TEST_CHROOT = _env.get('ART_TEST_CHROOT', f"/home/{ART_TEST_SSH_USER}/art-test-chroot")
-else:
-  ART_TEST_CHROOT = _env.get('ART_TEST_CHROOT', "/data/local/art-test-chroot")
