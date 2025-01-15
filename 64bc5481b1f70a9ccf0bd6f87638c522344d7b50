@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9691fb8_ee657191",
+        "filename": "libartservice/service/javatests/com/android/server/art/UtilsTest.java",
+        "patchSetId": 25
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-15T15:39:17Z",
+      "side": 1,
+      "message": "Please add an entry with the right package but wrong app id.",
+      "range": {
+        "startLine": 252,
+        "startChar": 68,
+        "endLine": 252,
+        "endChar": 73
+      },
+      "revId": "64bc5481b1f70a9ccf0bd6f87638c522344d7b50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

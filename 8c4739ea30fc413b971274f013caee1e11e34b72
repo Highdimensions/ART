@@ -161,6 +161,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e7e459d_4806240b",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagerLocal.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-15T15:39:17Z",
+      "side": 1,
+      "message": "\u003e The shell user can switch to any user through adb shell am switch-user as well as perform various interactions across users, so there is no point to restrict the method for shell.\n\nI see, TIL.\n\n\u003e Therefore, I have removed this restriction now.\n\nSGTM.",
+      "parentUuid": "86b62af8_e5af6549",
+      "range": {
+        "startLine": 1229,
+        "startChar": 42,
+        "endLine": 1229,
+        "endChar": 64
+      },
+      "revId": "8c4739ea30fc413b971274f013caee1e11e34b72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f73cfed0_fd301aaf",
