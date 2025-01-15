@@ -115,6 +115,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d4db8e55_7daf6ea8",
+        "filename": "runtime/gc/accounting/card_table.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-15T21:24:37Z",
+      "side": 1,
+      "message": "Presumably the write barrier always sets to kCardDirty when an object in the card is written. kCardAged conventionally represents the previous version of dirt bits before we last \"aged\" them, and kCardAged2 before that? Could you please add a comment with a, possibly corrected, version of that statement?\n\nThis is clearly a pre-existing issue, but I always found this code hard to read/review. I find this particularly opaque since AgeCardVisitor only implements some of this. I think this would be easier to talk about if there were an actual function to age cards, as opposed to a Scan visitor.",
+      "parentUuid": "cdc84b20_8d353d32",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 0
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4c1412f9_bb023033",
         "filename": "runtime/gc/accounting/card_table.h",
         "patchSetId": 16
@@ -1776,6 +1800,30 @@
       "side": 1,
       "message": "I re-thought abut it. I can make the change as you suggest from Heap onwards, but changing the ones before (ART_USE_GENERATIONAL_CC macro and -Xgc:generational_cc dalvikvm option) will have ramifications on testing configs and possibly OEMs.\n\nIs that ok if I only change the flag from Heap class onwards?",
       "parentUuid": "801a6784_9ede5568",
+      "range": {
+        "startLine": 2571,
+        "startChar": 31,
+        "endLine": 2571,
+        "endChar": 51
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9455c05_49d220d0",
+        "filename": "runtime/gc/heap.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 2571,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-15T21:24:37Z",
+      "side": 1,
+      "message": "As discussed, yes.",
+      "parentUuid": "53cf0ed2_1ec65e55",
       "range": {
         "startLine": 2571,
         "startChar": 31,
