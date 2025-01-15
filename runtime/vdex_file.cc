@@ -418,7 +418,7 @@ static const char* GetStringFromIndex(const DexFile& dex_file,
     *utf8_length = DexFile::Utf8Length(str, utf16_length);
     return str;
   } else {
-    CHECK_LT(string_id.index_ - num_ids_in_dex, number_of_extra_strings);
+    DCHECK_LT(string_id.index_ - num_ids_in_dex, number_of_extra_strings);
     uint32_t offset = extra_strings_offsets[string_id.index_ - num_ids_in_dex];
     const char* str = reinterpret_cast<const char*>(verifier_deps) + offset;
     *utf8_length = strlen(str);
@@ -499,6 +499,7 @@ ClassStatus VdexFile::ComputeClassStatus(Thread* self, Handle<mirror::Class> cls
 
   const uint8_t* cursor = verifier_deps + class_def_offset;
   const uint8_t* end = verifier_deps + end_offset;
+  const uint32_t num_ids_in_dex = dex_file.NumStringIds();
   while (cursor < end) {
     uint32_t destination_index;
     uint32_t source_index;
@@ -507,6 +508,14 @@ ClassStatus VdexFile::ComputeClassStatus(Thread* self, Handle<mirror::Class> cls
       // Error parsing the data, just return that we are not verified.
       return ClassStatus::kResolved;
     }
+    auto valid_index = [num_ids_in_dex, number_of_extra_strings](uint32_t index) {
+      return index < num_ids_in_dex || index - num_ids_in_dex < number_of_extra_strings;
+    };
+    if (!valid_index(destination_index) || !valid_index(source_index)) {
+      // Invalid index, just return that we are not verified.
+      return ClassStatus::kResolved;
+    }
+
     size_t destination_desc_length;
     const char* destination_desc = GetStringFromIndex(dex_file,
                                                       dex::StringIndex(destination_index),
