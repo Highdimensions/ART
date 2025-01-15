@@ -16,6 +16,24 @@
       "message": "Newest failure includes this:\n```\nm test-art-host-gtest\n...\nFAILING TESTS\ntest-art-host-gtest-art_dex2oat_tests32\ntest-art-host-gtest-art_dex2oat_tests64\ntest-art-host-gtest-art_runtime_tests32\ntest-art-host-gtest-art_runtime_tests64\n```",
       "revId": "19ce2d231a4c7025f41187c48ef0b344db963bd7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32c81a8b_d4092d3e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-15T21:08:33Z",
+      "side": 1,
+      "message": "Additional failure is this:\n\n```\nError: the test failed: art/dex2oat/linker/oat_writer_test.cc:(451) Failure in test OatTest.WriteRead\n\nart/dex2oat/linker/oat_writer_test.cc:(451) Failure in test OatTest.WriteRead\nValue of: IsAligned\u003ckElfSegmentAlignment\u003e(oat_file-\u003eBegin() + oat_header.GetExecutableOffset())\n  Actual: false\nExpected: true\nOatTest.WriteRead exited with exitcode 1.\n```\n\nHaven\u0027t confirmed which CL is causing it yet.",
+      "parentUuid": "afbde0fe_2b49ac50",
+      "revId": "19ce2d231a4c7025f41187c48ef0b344db963bd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
