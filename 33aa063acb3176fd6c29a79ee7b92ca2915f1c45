@@ -16,6 +16,29 @@
       "message": "This needs a corresponding change to derivce_classpath. ATM I\u0027m assuming ART will upload that CL.",
       "revId": "33aa063acb3176fd6c29a79ee7b92ca2915f1c45",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac6b89c2_03e1edc2",
+        "filename": "artd/artd.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2022,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-15T11:02:05Z",
+      "side": 1,
+      "message": "`BuildSystemProperties` is limited in its parsing, and we may not find these properties. Although it looks like derive_classpath will fail then, I think it\u0027d be better to not count on that and bail out here instead.",
+      "range": {
+        "startLine": 2022,
+        "startChar": 39,
+        "endLine": 2022,
+        "endChar": 46
+      },
+      "revId": "33aa063acb3176fd6c29a79ee7b92ca2915f1c45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
