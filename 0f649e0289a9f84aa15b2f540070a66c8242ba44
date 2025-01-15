@@ -1282,6 +1282,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6f69ca30_9215c7cb",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-15T20:25:10Z",
+      "side": 1,
+      "message": "There is no real race as during compaction, even if cards are getting dirtied and we miss them, it\u0027s ok.\n\nWhat I am suggesting is to acquire heap_bitmap_lock_ in the gc-thread exclusively and then use FakeMutexLock in UpdateNonMovingPage(). That way we guarantee that heap bitmap won\u0027t change until compaction is finished, and also mutators won\u0027t require taking any lock in the SIGBUS handler. Does it make sense?",
+      "parentUuid": "88de401a_2d3f8f15",
+      "range": {
+        "startLine": 376,
+        "startChar": 44,
+        "endLine": 376,
+        "endChar": 69
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5eac6a17_75fab662",
         "filename": "runtime/gc/collector/mark_compact.h",
         "patchSetId": 16
@@ -1728,6 +1752,30 @@
       "side": 1,
       "message": "I\u0027ll rename in the next CL (aosp/3321434) as that one deals with it much more than this CL.",
       "parentUuid": "54a546d8_d4f7a5b0",
+      "range": {
+        "startLine": 2571,
+        "startChar": 31,
+        "endLine": 2571,
+        "endChar": 51
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53cf0ed2_1ec65e55",
+        "filename": "runtime/gc/heap.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 2571,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-15T20:25:10Z",
+      "side": 1,
+      "message": "I re-thought abut it. I can make the change as you suggest from Heap onwards, but changing the ones before (ART_USE_GENERATIONAL_CC macro and -Xgc:generational_cc dalvikvm option) will have ramifications on testing configs and possibly OEMs.\n\nIs that ok if I only change the flag from Heap class onwards?",
+      "parentUuid": "801a6784_9ede5568",
       "range": {
         "startLine": 2571,
         "startChar": 31,
