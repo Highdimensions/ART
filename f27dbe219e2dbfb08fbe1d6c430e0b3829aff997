@@ -46,6 +46,30 @@
       },
       "revId": "f27dbe219e2dbfb08fbe1d6c430e0b3829aff997",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2486322_004b1922",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 10185,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-15T11:56:36Z",
+      "side": 1,
+      "message": "Good point. Moving back to previous code.",
+      "parentUuid": "d102593c_ca45e1f6",
+      "range": {
+        "startLine": 10185,
+        "startChar": 2,
+        "endLine": 10185,
+        "endChar": 62
+      },
+      "revId": "f27dbe219e2dbfb08fbe1d6c430e0b3829aff997",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
