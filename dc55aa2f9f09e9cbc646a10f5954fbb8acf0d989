@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3baf447_f597b4c5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-15T00:12:24Z",
+      "side": 1,
+      "message": "My tentative conlusion is to defer submitting this until we can more easily accomodate the API change.",
+      "revId": "dc55aa2f9f09e9cbc646a10f5954fbb8acf0d989",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "796b511a_6f98508f",
@@ -90,6 +107,30 @@
       "writtenOn": "2025-01-14T17:18:10Z",
       "side": 1,
       "message": "To enable testing before this API level is finalised, you need to extend the check by looking at `ro.build.version.codename` similar to [this](https://cs.android.com/android/platform/superproject/main/+/main:frameworks/libs/modules-utils/build/include/android-modules-utils/sdk_level.h;l\u003d61-63;drc\u003d468d12c054cc3180b00b8db73ea0a335fa760b73).\n\nHowever, considering native API\u0027s aren\u0027t flagged, and assuming this CL will get submitted well before the final snap to Baklava, this API will de-facto be present there, regardless what we put in the .map(.txt) files. Hence, confusingly, you\u0027ll need to check if the codename is \"Baklava\" to enable testing on ToT.\n\nIt should also include the codename for C, but I don\u0027t know what that is; I don\u0027t think it has been decided yet. So for now we can only test for Baklava and leave a TODO to add it later.\n\nIow, return true if this condition is true, else return true if `ro.build.version.codename` is precisely `\"Baklava\"` (and add the TODO).\n\nAnother complication is when building against an SDK level 36 (Baklava) stub that won\u0027t have the API, but I think that should work since libartpalette uses strictly runtime resolution through dlopen and dlsym (and I believe the `# introduced\u003d37` comment in the map file has no effect when it\u0027s used as `version_script`).\n\nAlso worth noting that the real production code will still call the API on SDK level 36, for the same reason. We\u0027d have to complement the wrapper in palette.cc to check the SDK level to avoid that, but I can\u0027t see any benefit with doing so, except possibly that the behaviour is in some regards less confusing.\n\nBottom line, in many ways it would be easier to add this API to SDK level 36 regardless of the passed deadline, to make de-facto reality agree with stated claims. But here we are. :\\",
+      "range": {
+        "startLine": 60,
+        "startChar": 9,
+        "endLine": 60,
+        "endChar": 45
+      },
+      "revId": "dc55aa2f9f09e9cbc646a10f5954fbb8acf0d989",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1af3046b_fac81e9b",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-15T00:12:24Z",
+      "side": 1,
+      "message": "After looking at your assessment, and some discussion with Dan Albert, my inclination is to defer these two CLs to a more approriate time, I\u0027ll rebase aosp//3287177 to comment out the code that uses the new palette call; it has a fallback anyway.\nThe point of adding the call is to avoid a messy dance to reconstruct a table on the ART side with the current API. But I don\u0027t think that actually costs us measurable performance. What you suggest to make this work here seems messier than the mess it\u0027s designed to avoid.",
+      "parentUuid": "06a965f8_b79367e5",
       "range": {
         "startLine": 60,
         "startChar": 9,
