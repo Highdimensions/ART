@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdf64415_4bb3391d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-16T18:41:20Z",
+      "side": 1,
+      "message": "\u003e Yes it will mess it up, the dex pc of the instruction is its own.\n\nAfter offline conversation, the Instruction\u0027s dex pc is not used currently for stack maps. The stack maps use the environment in the HInstruction.\n\n\u003e Why would you favor the caller dex pc, and not the callee?\n\nThis helps highlighting after inlining in godbolt. The idea would be that if an HInvoke is at dex pc `k` then all instructions are associated with that dex pc after inlining.\n\n\u003e Looks like for b/63864515, the request requires every instruction to have an environment.\n\nFor posterity, the bug is b/363864515",
+      "parentUuid": "9b041b89_76e9ea30",
+      "revId": "5b5a15376d4e2dd37ef6863158fa69eb5e4dd05c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a9c46ca0_d265b8d8",
@@ -67,6 +85,30 @@
       "writtenOn": "2025-01-16T16:23:28Z",
       "side": 1,
       "message": "You should now document this member properly. For inlined instructions with an environment, this shall not match the dex pc of the immediate environment but rather the environment\u0027s top-most parent.",
+      "range": {
+        "startLine": 2627,
+        "startChar": 11,
+        "endLine": 2627,
+        "endChar": 18
+      },
+      "revId": "5b5a15376d4e2dd37ef6863158fa69eb5e4dd05c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ceace67_74f592e2",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2627,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-16T18:41:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9c46ca0_d265b8d8",
       "range": {
         "startLine": 2627,
         "startChar": 11,
