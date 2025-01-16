@@ -1,0 +1,39 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05aa7872_4126539b",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-01-16T16:43:17Z",
+      "side": 1,
+      "message": "From the cpplint check:\n```\nart/libartbase/base/utils.cc:423:  At least two spaces is best between code and comments  [whitespace/comments] [2]\n```",
+      "fixSuggestions": [
+        {
+          "fixId": "25dca903_917f1af3",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartbase/base/utils.cc",
+              "range": {
+                "startLine": 423,
+                "startChar": 0,
+                "endLine": 424,
+                "endChar": 0
+              },
+              "replacement": "  buf[sizeof(buf) - 1] \u003d \u0027\\0\u0027;  // Ensure null-termination\n"
+            }
+          ]
+        }
+      ],
+      "revId": "6a7ec156b3c3673c168966d8bbd1a2104bdd607a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
