@@ -147,4 +147,135 @@ TEST_F(ControlFlowSimplifierTest, testSelectInIrreducibleLoop) {
   }
 }
 
+TEST_F(ControlFlowSimplifierTest, testFlattenGotoRight) {
+  HBasicBlock* return_block = InitEntryMainExitGraphWithReturnVoid();
+  HParameterValue* bool_param1 = MakeParam(DataType::Type::kBool);
+  HParameterValue* bool_param2 = MakeParam(DataType::Type::kBool);
+  HInstruction* const0 = graph_->GetIntConstant(0);
+  HInstruction* const1 = graph_->GetIntConstant(1);
+  HInstruction* const2 = graph_->GetIntConstant(2);
+  auto [start, left, right_end] = CreateDiamondPattern(return_block, bool_param1);
+  auto [right_start, right_left, right_right] = CreateDiamondPattern(right_end, bool_param2);
+  HPhi* phi1 = MakePhi(right_end, {const1, const2});
+  HPhi* phi2 = MakePhi(return_block, {const0, phi1});  // `phi1` shall be replaced by its inputs.
+  HPhi* phi3 = MakePhi(return_block, {const0, const1});  // `const1` shall be duplicated.
+
+  MakeInvokeStatic(right_right, DataType::Type::kVoid, {}, {});  // Prevent `HSelect` generation.
+
+  EXPECT_TRUE(CheckGraphAndTryControlFlowSimplifier());
+
+  ASSERT_BLOCK_REMOVED(return_block);
+  ASSERT_BLOCK_RETAINED(right_end);
+  ASSERT_TRUE(PredecessorsEqual(right_end, {left, right_left, right_right}));
+  ASSERT_INS_REMOVED(phi1);
+  ASSERT_INS_RETAINED(phi2);
+  ASSERT_TRUE(InputsEqual(phi2, {const0, const1, const2}));
+  ASSERT_INS_RETAINED(phi3);
+  ASSERT_TRUE(InputsEqual(phi3, {const0, const1, const1}));
+}
+
+TEST_F(ControlFlowSimplifierTest, testFlattenGotoLeft) {
+  HBasicBlock* return_block = InitEntryMainExitGraphWithReturnVoid();
+  HParameterValue* bool_param1 = MakeParam(DataType::Type::kBool);
+  HParameterValue* bool_param2 = MakeParam(DataType::Type::kBool);
+  HInstruction* const0 = graph_->GetIntConstant(0);
+  HInstruction* const1 = graph_->GetIntConstant(1);
+  HInstruction* const2 = graph_->GetIntConstant(2);
+  auto [start, left_end, right] = CreateDiamondPattern(return_block, bool_param1);
+  auto [left_start, left_left, left_right] = CreateDiamondPattern(left_end, bool_param2);
+  HPhi* phi1 = MakePhi(left_end, {const0, const1});
+  HPhi* phi2 = MakePhi(return_block, {phi1, const2});  // `phi1` shall be replaced by its inputs.
+  HPhi* phi3 = MakePhi(return_block, {const0, const2});  // `const0` shall be duplicated.
+
+  MakeInvokeStatic(left_right, DataType::Type::kVoid, {}, {});  // Prevent `HSelect` generation.
+
+  EXPECT_TRUE(CheckGraphAndTryControlFlowSimplifier());
+
+  ASSERT_BLOCK_REMOVED(return_block);
+  ASSERT_BLOCK_RETAINED(left_end);
+  ASSERT_TRUE(PredecessorsEqual(left_end, {left_left, left_right, right}));
+  ASSERT_INS_REMOVED(phi1);
+  ASSERT_INS_RETAINED(phi2);
+  ASSERT_TRUE(InputsEqual(phi2, {const0, const1, const2}));
+  ASSERT_INS_RETAINED(phi3);
+  ASSERT_TRUE(InputsEqual(phi3, {const0, const0, const2}));
+
+  // The initial reverse post order has `right` after `left_end` and these
+  // need to be reordered when we flatten the block merging.
+  auto&& rpo = graph_->GetReversePostOrder();
+  ASSERT_LT(IndexOfElement(rpo, right), IndexOfElement(rpo, left_end));
+}
+
+TEST_F(ControlFlowSimplifierTest, testIrreducibleLoopFlattenGotoRight) {
+  HBasicBlock* return_block = InitEntryMainExitGraphWithReturnVoid();
+  HParameterValue* bool_param1 = MakeParam(DataType::Type::kBool);
+  HParameterValue* bool_param2 = MakeParam(DataType::Type::kBool);
+  HParameterValue* n_param = MakeParam(DataType::Type::kInt32);
+  HInstruction* const0 = graph_->GetIntConstant(0);
+  HInstruction* const1 = graph_->GetIntConstant(1);
+  HInstruction* const2 = graph_->GetIntConstant(2);
+  auto [split, left_header, right_header, body] = CreateIrreducibleLoop(return_block);
+  auto [start, left, right_end] = CreateDiamondPattern(body, bool_param1);
+  auto [right_start, right_left, right_right] = CreateDiamondPattern(right_end, bool_param2);
+  HPhi* phi1 = MakePhi(right_end, {const1, const2});
+  HPhi* phi2 = MakePhi(body, {const0, phi1});  // `phi1` shall be replaced by its inputs.
+  HPhi* phi3 = MakePhi(body, {const0, const1});  // `const1` shall be duplicated.
+
+  MakeInvokeStatic(right_right, DataType::Type::kVoid, {}, {});  // Prevent `HSelect` generation.
+
+  MakeIf(split, bool_param1);
+  auto [left_phi, right_phi, add] =
+      MakeLinearIrreducibleLoopVar(left_header, right_header, body, const0, const1, const1);
+  HCondition* condition = MakeCondition(left_header, kCondGE, left_phi, n_param);
+  MakeIf(left_header, condition);
+
+  EXPECT_TRUE(CheckGraphAndTryControlFlowSimplifier());
+
+  ASSERT_BLOCK_REMOVED(body);
+  ASSERT_BLOCK_RETAINED(right_end);
+  ASSERT_TRUE(PredecessorsEqual(right_end, {left, right_left, right_right}));
+  ASSERT_INS_REMOVED(phi1);
+  ASSERT_INS_RETAINED(phi2);
+  ASSERT_TRUE(InputsEqual(phi2, {const0, const1, const2}));
+  ASSERT_INS_RETAINED(phi3);
+  ASSERT_TRUE(InputsEqual(phi3, {const0, const1, const1}));
+}
+
+TEST_F(ControlFlowSimplifierTest, testIrreducibleLoopFlattenGotoNotApplicable) {
+  HBasicBlock* return_block = InitEntryMainExitGraphWithReturnVoid();
+  auto [split, left_header, right_header, body] = CreateIrreducibleLoop(return_block);
+  HBasicBlock* left_preheader = split->GetSuccessors()[0];
+  ASSERT_EQ(left_header, left_preheader->GetSingleSuccessor());
+  HBasicBlock* right_preheader = split->GetSuccessors()[1];
+  ASSERT_EQ(right_header, right_preheader->GetSingleSuccessor());
+  HParameterValue* bool_param1 = MakeParam(DataType::Type::kBool);
+  HParameterValue* bool_param2 = MakeParam(DataType::Type::kBool);
+  HParameterValue* n_param = MakeParam(DataType::Type::kInt32);
+  MakeIf(split, bool_param1);
+
+  // Change each preheader and the body to have two predecessors to test code paths
+  // that prevent header merging even if all other conditions are satisfied.
+  auto [left_split, left_left, left_right] = CreateDiamondPattern(left_preheader, bool_param2);
+  auto [right_split, right_left, right_right] = CreateDiamondPattern(right_preheader, bool_param2);
+  auto [body_split, body_left, body_right] = CreateDiamondPattern(body, bool_param2);
+  MakeInvokeStatic(left_right, DataType::Type::kVoid, {}, {});  // Prevent `HSelect` generation.
+  MakeInvokeStatic(right_right, DataType::Type::kVoid, {}, {});  // Prevent `HSelect` generation.
+  MakeInvokeStatic(body_right, DataType::Type::kVoid, {}, {});  // Prevent `HSelect` generation.
+
+  HInstruction* const0 = graph_->GetIntConstant(0);
+  HInstruction* const1 = graph_->GetIntConstant(1);
+  auto [left_phi, right_phi, add] =
+      MakeLinearIrreducibleLoopVar(left_header, right_header, body, const0, const1, const1);
+  HCondition* condition = MakeCondition(left_header, kCondGE, left_phi, n_param);
+  MakeIf(left_header, condition);
+
+  EXPECT_FALSE(CheckGraphAndTryControlFlowSimplifier());
+
+  ASSERT_BLOCK_RETAINED(left_preheader);
+  ASSERT_BLOCK_RETAINED(right_preheader);
+  ASSERT_BLOCK_RETAINED(left_header);
+  ASSERT_BLOCK_RETAINED(right_header);
+  ASSERT_BLOCK_RETAINED(body);
+}
+
 }  // namespace art
