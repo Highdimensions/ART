@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e03b1cd_5bda19bb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1318142
+      },
+      "writtenOn": "2025-01-16T20:02:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6041acf4_17f224ce",
+      "revId": "b31abce498faeb51b126efea2fc7de40197b1c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4a33cbfd_baa98e1a",
@@ -55,6 +73,30 @@
       "side": 1,
       "message": "Can this CL wait until I\u0027ve removed the heap dump generation from ahat/Android.mk? What\u0027s the priority of this work?\n\nOnce I\u0027ve removed the heap dump generation from ahat/Android.mk, we should be able to keep all the ahat-tests related things. Porting the build of ahat-tests to Android.bp should be simple at that point.",
       "parentUuid": "4a33cbfd_baa98e1a",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 42
+      },
+      "revId": "b31abce498faeb51b126efea2fc7de40197b1c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27edc311_625fe625",
+        "filename": "Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1318142
+      },
+      "writtenOn": "2025-01-16T20:02:53Z",
+      "side": 1,
+      "message": "Sure, it can wait. It is not urgent, but sooner better and you will benefit from (or not impacted by) the build system switching to soong-only build for cuttlefish devices end of Jan.",
+      "parentUuid": "015fc9d7_b23caddb",
       "range": {
         "startLine": 31,
         "startChar": 0,
