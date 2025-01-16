@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14ab6b4d_690686e5",
+        "filename": "test/735-interface-clone/smali/Cls.smali",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-16T11:03:52Z",
+      "side": 1,
+      "message": "I think you need to add this test to known failures for RI.\n\n(I\u0027d prefer jasmin tests over smali tests.)",
+      "revId": "ae13bd8a14183069642a5eed4793cf34f5a2eadc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
