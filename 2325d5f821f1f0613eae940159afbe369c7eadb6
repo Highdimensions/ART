@@ -103,6 +103,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9da857ec_dae49faf",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-16T13:05:49Z",
+      "side": 1,
+      "message": "\u003e Hii @Nicolas Geoffray Thank you for your suggestion. The reasonfor using sizeof(buf) - 1 in the strncpy() call is to ensure that there is room left for the null-terminator at the end of the string. \n\u003e \n\u003e - sizeof(buf) gives the total size of the buf array, but it does not account for the null-terminating character (\\0) that needs to be explicitly added at the end of the string to ensure it is properly terminated.\n\u003e   \n\u003e - Using sizeof(buf) - 1 ensures that we copy only up to the available space in the buffer leaving one byte for the null-terminator which we then manually set by buf[sizeof(buf) - 1] \u003d \\0;\n\u003e \n\u003e If we use sizeof(buf) instead there is a risk of overwriting the buffer’s boundary (if buf is not large enough to hold the string plus the null-terminator), leading to potential buffer overflows.\n\u003e \n\u003e Hence, sizeof(buf) - 1 is the safer approach ensuring we don’t overwrite the buffer’s boundary while still protecting against buffer overflow vulnerabilities.",
+      "parentUuid": "acd2070d_27382e7c",
+      "range": {
+        "startLine": 422,
+        "startChar": 32,
+        "endLine": 422,
+        "endChar": 47
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cea2dac8_06049e1d",
         "filename": "libartbase/base/utils.cc",
         "patchSetId": 2
