@@ -49,6 +49,54 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c0c066fe_cd63918c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-16T14:20:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3ab721e_022e80c5",
+      "range": {
+        "startLine": 7,
+        "startChar": 90,
+        "endLine": 7,
+        "endChar": 91
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fbc5493_e6ad9114",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-16T14:20:46Z",
+      "side": 1,
+      "message": "If we use sizeof(buf) instead there is a risk of overwriting the buffer’s boundary (if buf is not large enough to hold the string plus the null-terminator), leading to potential buffer overflows.\n\nHence, sizeof(buf) - 1 is the safer approach ensuring we don’t overwrite the buffer’s boundary while still protecting against buffer overflow vulnerabilities.",
+      "parentUuid": "18379f47_93fbe67b",
+      "range": {
+        "startLine": 7,
+        "startChar": 32,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "6d9a45fe_1cbdbe26",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -78,6 +126,24 @@
       "side": 1,
       "message": "Hello Shivam, let\u0027s wait for someone else to review the CL first, and if we get all the required approvals I will merge it.",
       "parentUuid": "6d9a45fe_1cbdbe26",
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b249324_6d8253f7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-16T14:20:46Z",
+      "side": 1,
+      "message": "Hii @scianciulli@google.com now it have reviewed by other reviewer also now it can be merge",
+      "parentUuid": "15c69c97_8c6bc651",
       "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
