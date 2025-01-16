@@ -34,6 +34,24 @@
       ],
       "revId": "6a7ec156b3c3673c168966d8bbd1a2104bdd607a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91315285_898582e7",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-16T18:03:59Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "05aa7872_4126539b",
+      "revId": "6a7ec156b3c3673c168966d8bbd1a2104bdd607a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
