@@ -686,9 +686,10 @@ class HGraph : public ArenaObject<kArenaAllocGraph> {
   // List of methods that are assumed to have single implementation.
   ArenaSet<ArtMethod*> cha_single_implementation_list_;
 
-  friend class SsaBuilder;           // For caching constants.
-  friend class SsaLivenessAnalysis;  // For the linear order.
-  friend class HInliner;             // For the reverse post order.
+  friend class HControlFlowSimplifier;  // For direct modification of `reverse_post_order_`.
+  friend class HInliner;                // For the reverse post order.
+  friend class SsaBuilder;              // For caching constants.
+  friend class SsaLivenessAnalysis;     // For the linear order.
   ART_FRIEND_TEST(GraphTest, IfSuccessorSimpleJoinBlock1);
   DISALLOW_COPY_AND_ASSIGN(HGraph);
 };
@@ -1123,6 +1124,11 @@ class HBasicBlock : public ArenaObject<kArenaAllocBasicBlock> {
   // from the graph. The two blocks must be successive, i.e. `this` the only
   // predecessor of `other` and vice versa.
   void MergeWith(HBasicBlock* other);
+
+  // Take the single successor's other predecessors and merge `HPhis`. This block must
+  // contain only a single `HGoto` instruction and an arbitrary number of `HPhi`s.
+  // This function does not update dominance information.
+  void TakeGotoBlockSuccessorsOtherPredecessorsAndMergePhis();
 
   // Disconnects `this` from all its predecessors, successors and dominator,
   // removes it from all loops it is included in and eventually from the graph.
@@ -3069,6 +3075,9 @@ class HPhi final : public HVariableInputSizeInstruction {
     }
     return nullptr;
   }
+
+  void ReplaceInputPhiWithItsInputsAt(ArenaAllocator* allocator, size_t index);
+  void DuplicateInputAt(ArenaAllocator* allocator, size_t index, size_t new_copies);
 
   DECLARE_INSTRUCTION(Phi);
 

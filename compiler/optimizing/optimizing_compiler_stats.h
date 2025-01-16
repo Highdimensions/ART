@@ -86,6 +86,7 @@ enum class MethodCompilationStat {
   kExplicitNullCheckGenerated,
   kControlFlowSelectGenerated,
   kControlFlowDiamondRemoved,
+  kControlFlowFlattenedMerge,
   kSimplifyIf,
   kSimplifyIfAddedPhi,
   kSimplifyThrowingInvoke,

@@ -78,13 +78,14 @@ class HControlFlowSimplifier : public HOptimization {
   bool TryGenerateSelectSimpleDiamondPattern(HBasicBlock* block,
                                              ScopedArenaSafeMap<HInstruction*, HSelect*>* cache);
 
-  // When generating code for nested ternary operators (e.g. `return (x > 100) ? 100 : ((x < -100) ?
-  // -100 : x);`), a dexer can generate a double diamond pattern but it is not a clear cut one due
-  // to the merging of the blocks. `TryFixupDoubleDiamondPattern` recognizes that pattern and fixes
-  // up the graph to have a clean double diamond that `TryGenerateSelectSimpleDiamondPattern` can
-  // use to generate selects.
+  // Try merging a block that contains only a `HGoto` and `Phi`s with the successor. We do this
+  // if both the `block` and its single successor have two or more predecessors each to flatten
+  // the merge blocks for multi-if/switch control flow. This can reduce the number of parrallel
+  // moves created by the register allocator and/or expose new optimization opportunities.
   //
-  // In ASCII, it turns:
+  // For example, nested ternary operators such as `(x > 100) ? 100 : ((x < -100) ? -100 : x)`
+  // can be represented in bytecode in a double diamond pattern that is not easily recognized
+  // for `HSelect` simplification and `TryFlattenMerge()` can help. It turns
   //
   //      1 (outer if)
   //     / \
@@ -97,7 +98,9 @@ class HControlFlowSimplifier : public HOptimization {
   //         7
   //         |
   //         8
-  // into:
+  //
+  // with block 6 containing only a `HGoto` and `HPhi`s into
+  //
   //      1 (outer if)
   //     / \
   //    2   3 (inner if)
@@ -108,9 +111,12 @@ class HControlFlowSimplifier : public HOptimization {
   //      |
   //      8
   //
-  // In short, block 7 disappears and we merge 6 and 7. Now we have a diamond with {3,4,5,6}, and
-  // when that gets resolved we get another one with the outer if.
-  HBasicBlock* TryFixupDoubleDiamondPattern(HBasicBlock* block);
+  // In short, block 7 disappears as we merge blocks 6 and 7. Now we have a diamond with {3,4,5,6},
+  // and if that gets converted to `HSelect`, we get another diamond with the outer if and a chance
+  // to convert that to a `HSelect`.
+  bool TryFlattenMerge(HBasicBlock* block,
+                       size_t reverse_post_order_index,
+                       ArenaBitVector* visited_blocks);
 
   DISALLOW_COPY_AND_ASSIGN(HControlFlowSimplifier);
 };

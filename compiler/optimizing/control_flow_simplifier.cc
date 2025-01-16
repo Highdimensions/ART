@@ -231,131 +231,168 @@ bool HControlFlowSimplifier::TryGenerateSelectSimpleDiamondPattern(
   return true;
 }
 
-HBasicBlock* HControlFlowSimplifier::TryFixupDoubleDiamondPattern(HBasicBlock* block) {
-  DCHECK(block->GetLastInstruction()->IsIf());
-  HIf* if_instruction = block->GetLastInstruction()->AsIf();
-  HBasicBlock* true_block = if_instruction->IfTrueSuccessor();
-  HBasicBlock* false_block = if_instruction->IfFalseSuccessor();
-  DCHECK_NE(true_block, false_block);
-
-  // One branch must be a single goto, and the other one the inner if.
-  if (true_block->IsSingleGoto() == false_block->IsSingleGoto()) {
-    return nullptr;
+bool HControlFlowSimplifier::TryFlattenMerge(HBasicBlock* block,
+                                             size_t reverse_post_order_index,
+                                             ArenaBitVector* visited_blocks) {
+  DCHECK(block->GetFirstInstruction()->IsGoto());
+  DCHECK_EQ(block->GetFirstInstruction(), block->GetLastInstruction());
+  HBasicBlock* successor = block->GetSingleSuccessor();
+  DCHECK(!successor->IsExitBlock());  // `HGoto` does not flow to exit block.
+  if (block->GetPredecessors().size() < 2u || successor->GetPredecessors().size() < 2u) {
+    return false;
   }
-
-  HBasicBlock* single_goto = true_block->IsSingleGoto() ? true_block : false_block;
-  HBasicBlock* inner_if_block = true_block->IsSingleGoto() ? false_block : true_block;
-
-  // The innner if branch has to be a block with just a comparison and an if.
-  if (!inner_if_block->EndsWithIf() ||
-      inner_if_block->GetLastInstruction()->AsIf()->InputAt(0) !=
-          inner_if_block->GetFirstInstruction() ||
-      inner_if_block->GetLastInstruction()->GetPrevious() !=
-          inner_if_block->GetFirstInstruction() ||
-      !inner_if_block->GetFirstInstruction()->IsCondition()) {
-    return nullptr;
+  if (block->IsCatchBlock() || successor->IsCatchBlock()) {
+    // Phi inputs do not correspond to catch block predecessors. Do not flatten.
+    return false;
   }
-
-  HIf* inner_if_instruction = inner_if_block->GetLastInstruction()->AsIf();
-  HBasicBlock* inner_if_true_block = inner_if_instruction->IfTrueSuccessor();
-  HBasicBlock* inner_if_false_block = inner_if_instruction->IfFalseSuccessor();
-  if (!inner_if_true_block->IsSingleGoto() || !inner_if_false_block->IsSingleGoto()) {
-    return nullptr;
+  if (block->GetLoopInformation() != successor->GetLoopInformation()) {
+    // The `block` is a pre-header, including the case when `successor` is an irreducible
+    // loop entry that's not actually marked as loop header in the `HLoopInformation`.
+    return false;
   }
-
-  // One must merge into the outer condition and the other must not.
-  if (BlocksMergeTogether(single_goto, inner_if_true_block) ==
-      BlocksMergeTogether(single_goto, inner_if_false_block)) {
-    return nullptr;
-  }
-
-  // First merge merges the outer if with one of the inner if branches. The block must be a Phi and
-  // a Goto.
-  HBasicBlock* first_merge = single_goto->GetSingleSuccessor();
-  if (first_merge->GetNumberOfPredecessors() != 2 ||
-      first_merge->GetPhis().CountSize() != 1 ||
-      !first_merge->GetLastInstruction()->IsGoto() ||
-      first_merge->GetFirstInstruction() != first_merge->GetLastInstruction()) {
-    return nullptr;
-  }
-
-  HPhi* first_phi = first_merge->GetFirstPhi()->AsPhi();
-
-  // Second merge is first_merge and the remainder branch merging. It must be phi + goto, or phi +
-  // return. Depending on the first merge, we define the second merge.
-  HBasicBlock* merges_into_second_merge =
-    BlocksMergeTogether(single_goto, inner_if_true_block)
-      ? inner_if_false_block
-      : inner_if_true_block;
-  if (!BlocksMergeTogether(first_merge, merges_into_second_merge)) {
-    return nullptr;
-  }
-
-  HBasicBlock* second_merge = merges_into_second_merge->GetSingleSuccessor();
-  if (second_merge->GetNumberOfPredecessors() != 2 ||
-      second_merge->GetPhis().CountSize() != 1 ||
-      !(second_merge->GetLastInstruction()->IsGoto() ||
-        second_merge->GetLastInstruction()->IsReturn()) ||
-      second_merge->GetFirstInstruction() != second_merge->GetLastInstruction()) {
-    return nullptr;
-  }
-
-  size_t index = second_merge->GetPredecessorIndexOf(merges_into_second_merge);
-  HPhi* second_phi = second_merge->GetFirstPhi()->AsPhi();
-
-  // Merge the phis.
-  first_phi->AddInput(second_phi->InputAt(index));
-  merges_into_second_merge->ReplaceSuccessor(second_merge, first_merge);
-  second_phi->ReplaceWith(first_phi);
-  second_merge->RemovePhi(second_phi);
-
-  // Sort out the new domination before merging the blocks
-  DCHECK_EQ(second_merge->GetSinglePredecessor(), first_merge);
-  second_merge->GetDominator()->RemoveDominatedBlock(second_merge);
-  second_merge->SetDominator(first_merge);
-  first_merge->AddDominatedBlock(second_merge);
-  first_merge->MergeWith(second_merge);
-
-  // No need to update dominance information. There's a chance that `merges_into_second_merge`
-  // doesn't come before `first_merge` but we don't need to fix it since `merges_into_second_merge`
-  // will disappear from the graph altogether when doing the follow-up
-  // TryGenerateSelectSimpleDiamondPattern.
-
-  return inner_if_block;
-}
-
-bool HControlFlowSimplifier::Run() {
-  bool did_select = false;
-  // Select cache with local allocator.
-  ScopedArenaAllocator allocator(graph_->GetArenaStack());
-  ScopedArenaSafeMap<HInstruction*, HSelect*> cache(
-      std::less<HInstruction*>(), allocator.Adapter(kArenaAllocControlFlowSimplifier));
-
-  // Iterate in post order in the unlikely case that removing one occurrence of
-  // the selection pattern empties a branch block of another occurrence.
-  for (HBasicBlock* block : graph_->GetPostOrder()) {
-    if (!block->EndsWithIf()) {
-      continue;
+  if (block->IsInLoop()) {
+    // Do not merge if the `block` or the `successor` is a loop header, including irreducible
+    // loop entries that are not actually marked as loop header in the `HLoopInformation`.
+    // Even for irreducible loops, check for the recorded loop header first.
+    HLoopInformation* loop_info = block->GetLoopInformation();
+    if (block == loop_info->GetHeader() || successor == loop_info->GetHeader()) {
+      return false;
     }
-
-    if (TryGenerateSelectSimpleDiamondPattern(block, &cache)) {
-      did_select = true;
-    } else {
-      // Try to fix up the odd version of the double diamond pattern. If we could do it, it means
-      // that we can generate two selects.
-      HBasicBlock* inner_if_block = TryFixupDoubleDiamondPattern(block);
-      if (inner_if_block != nullptr) {
-        // Generate the selects now since `inner_if_block` should be after `block` in PostOrder.
-        bool result = TryGenerateSelectSimpleDiamondPattern(inner_if_block, &cache);
-        DCHECK(result);
-        result = TryGenerateSelectSimpleDiamondPattern(block, &cache);
-        DCHECK(result);
-        did_select = true;
+    if (UNLIKELY(loop_info->IsIrreducible())) {
+      auto is_loop_header = [loop_info](HBasicBlock* b) {
+        DCHECK_EQ(loop_info, b->GetLoopInformation());
+        auto&& predecessors = b->GetPredecessors();
+        return std::any_of(
+            predecessors.begin(),
+            predecessors.end(),
+            [loop_info](HBasicBlock* p) { return p->GetLoopInformation() != loop_info; });
+      };
+      if (is_loop_header(block) || is_loop_header(successor)) {
+        return false;
       }
     }
   }
 
-  return did_select;
+  block->TakeGotoBlockSuccessorsOtherPredecessorsAndMergePhis();
+
+  // Fix up domination information for unmerged blocks before calling `MergeWith()`.
+  HBasicBlock* dominator = successor->GetDominator();
+  if (block->GetDominator() == dominator) {
+    dominator->RemoveDominatedBlock(successor);
+  } else {
+    block->GetDominator()->RemoveDominatedBlock(block);
+    block->SetDominator(dominator);
+    dominator->ReplaceDominatedBlock(successor, block);
+  }
+  successor->SetDominator(block);
+  block->AddDominatedBlock(successor);
+
+  // Move predecessors before `block` in reverse post order if needed.
+  ScopedArenaAllocator allocator(graph_->GetArenaStack());
+  ArenaBitVector predecessors_to_move(&allocator,
+                                      graph_->GetBlocks().size(),
+                                      /* expandable= */ false,
+                                      kArenaAllocControlFlowSimplifier);
+  ScopedArenaVector<HBasicBlock*> work_queue(allocator.Adapter(kArenaAllocLSE));
+  auto mark_predecessors = [&](HBasicBlock* current) {
+    for (HBasicBlock* predecessor : current->GetPredecessors()) {
+      if (visited_blocks->IsBitSet(predecessor->GetBlockId()) &&
+          !predecessors_to_move.IsBitSet(predecessor->GetBlockId())) {
+        predecessors_to_move.SetBit(predecessor->GetBlockId());
+        work_queue.push_back(predecessor);
+      }
+    }
+  };
+  mark_predecessors(block);
+  if (!work_queue.empty()) {
+    do {
+      HBasicBlock* current = work_queue.back();
+      work_queue.pop_back();
+      mark_predecessors(current);
+    } while (!work_queue.empty());
+    // Move blocks marked in `predecessors_to_move` to the correct position in the reverse
+    // post order while extracting `block` and other unmarked blocks to a temporary vector.
+    ScopedArenaVector<HBasicBlock*> extracted(allocator.Adapter(kArenaAllocLSE));
+    auto moved_end = graph_->reverse_post_order_.begin() + reverse_post_order_index;
+    DCHECK_EQ(block, *moved_end);
+    DCHECK(!predecessors_to_move.IsBitSet(block->GetBlockId()));
+    extracted.push_back(block);
+    auto move_it = std::next(moved_end);
+    DCHECK(move_it != graph_->reverse_post_order_.end());
+    while (*move_it != successor) {
+      if (predecessors_to_move.IsBitSet((*move_it)->GetBlockId())) {
+        *moved_end = *move_it;
+        ++moved_end;
+      } else {
+        extracted.push_back(*move_it);
+      }
+      ++move_it;
+      DCHECK(move_it != graph_->reverse_post_order_.end());
+    }
+    // Place extracted blocks in the freed range in reverse post order.
+    DCHECK_EQ(static_cast<size_t>(std::distance(moved_end, move_it)), extracted.size());
+    std::copy(extracted.begin(), extracted.end(), moved_end);
+  }
+
+  // Finish the merge using `MergeWith()`.
+  block->MergeWith(successor);
+
+  MaybeRecordStat(stats_, MethodCompilationStat::kControlFlowFlattenedMerge);
+  return true;
+}
+
+bool HControlFlowSimplifier::Run() {
+  bool did_simplify = false;
+
+  ScopedArenaAllocator allocator(graph_->GetArenaStack());
+  // Select cache with local allocator for `TryGenerateSelectSimpleDiamondPattern()`.
+  ScopedArenaSafeMap<HInstruction*, HSelect*> select_cache(
+      std::less<HInstruction*>(), allocator.Adapter(kArenaAllocControlFlowSimplifier));
+  // Mark visited blocks by block id for reverse post order fixup in `TryFlattenMerge()`.
+  ArenaBitVector visited_blocks(&allocator,
+                                graph_->GetBlocks().size(),
+                                /* expandable= */ false,
+                                kArenaAllocControlFlowSimplifier);
+
+  // Iterate in post order in the case that simplifying a block exposes simplification
+  // opportunities for earier blocks. Do not process the entry block.
+  // We may remove blocks from the reverse post order array, so make the iteration very explicit.
+  HBasicBlock* const * reverse_post_order_data = graph_->GetReversePostOrder().data();
+  size_t reverse_post_order_index = graph_->GetReversePostOrder().size();
+  while (reverse_post_order_index != /* Do not process entry block with index 0. */ 1u) {
+    --reverse_post_order_index;
+    HBasicBlock* block = reverse_post_order_data[reverse_post_order_index];
+    DCHECK(block != nullptr);
+    DCHECK(block->GetFirstInstruction() != nullptr);
+    HInstruction* last = block->GetLastInstruction();
+    DCHECK(last != nullptr);
+    bool rpo_may_have_changed = false;
+    if (last->IsGoto()) {
+      if (last == block->GetFirstInstruction() &&
+          TryFlattenMerge(block, reverse_post_order_index, &visited_blocks)) {
+        did_simplify = true;
+        rpo_may_have_changed = true;
+      }
+    } else if (block->GetLastInstruction()->IsIf()) {
+      if (TryGenerateSelectSimpleDiamondPattern(block, &select_cache)) {
+        did_simplify = true;
+      }
+    }
+    DCHECK_LT(block->GetBlockId(), graph_->GetBlocks().size());
+    visited_blocks.SetBit(block->GetBlockId());
+    // Blocks with higher indexes may have been removed but the `block` remains at the same index.
+    // Removing from a `std::vector<>` does not change the data pointer.
+    DCHECK_EQ(reverse_post_order_data, graph_->GetReversePostOrder().data());
+    DCHECK_LT(reverse_post_order_index, graph_->GetReversePostOrder().size());
+    if (rpo_may_have_changed) {
+      DCHECK_GE(IndexOfElement(graph_->GetReversePostOrder(), block), reverse_post_order_index);
+    } else {
+      DCHECK_EQ(block, reverse_post_order_data[reverse_post_order_index]);
+    }
+  }
+  DCHECK_EQ(reverse_post_order_index, 1u);
+  DCHECK(reverse_post_order_data[0u]->IsEntryBlock());
+  return did_simplify;
 }
 
 }  // namespace art
