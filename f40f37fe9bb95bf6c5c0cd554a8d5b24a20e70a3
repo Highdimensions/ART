@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "35085de0_5bc2b819",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-16T20:26:01Z",
+      "side": 1,
+      "message": "ok, sure.",
+      "parentUuid": "f1a8c78d_0f2f97b3",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "f40f37fe9bb95bf6c5c0cd554a8d5b24a20e70a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "79807dca_b2d570ab",
@@ -60,6 +84,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "aa11b046_f60aa5ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-16T20:26:01Z",
+      "side": 1,
+      "message": "Sorry for missing the bug, and thank you for the fix! It seems this leads to a build error only for the arm32 target.",
+      "parentUuid": "cc680d4c_a5ca28a4",
+      "revId": "f40f37fe9bb95bf6c5c0cd554a8d5b24a20e70a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "428172d9_26532a96",
         "filename": "libelffile/elf/elf_builder.h",
         "patchSetId": 3
@@ -71,6 +113,24 @@
       "writtenOn": "2025-01-14T21:47:51Z",
       "side": 1,
       "message": "how do we keep this logic in sync w/ other logic using this space?",
+      "revId": "f40f37fe9bb95bf6c5c0cd554a8d5b24a20e70a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7977e9e_f656be97",
+        "filename": "libelffile/elf/elf_builder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-16T20:26:01Z",
+      "side": 1,
+      "message": "The parts that can be changed (such as the number of symbols, their names and hashtable structure) are shared between `ReserveSpaceForDynamicSection` and `PrepareDynamicSection`.\n\nThe set of sections that occupy the reserved space is unlikely to be changed.\n\nThis patch also adds checks to make sure that we do not write outside the reserved space.",
+      "parentUuid": "428172d9_26532a96",
       "revId": "f40f37fe9bb95bf6c5c0cd554a8d5b24a20e70a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

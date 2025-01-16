@@ -34,6 +34,24 @@
       "parentUuid": "afbde0fe_2b49ac50",
       "revId": "19ce2d231a4c7025f41187c48ef0b344db963bd7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51d5e7df_f5aaee15",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-16T20:26:01Z",
+      "side": 1,
+      "message": "Thank you for sharing details!\n\nThe problem is that this assertion, which checks the alignment of the .text section of the oat file in memory, doesn\u0027t take into account that ART\u0027s ELF loader, used in this test, does not adhere to the segment alignment specified in a corresponding ELF program header and only guarantees to align it to the runtime page size.\n\nWe hadn\u0027t identified this issue earlier because the test fails non-deterministically, depending on the address returned by mmap.\n\nWe are still unable to reproduce the failure in art_runtime_tests. Could you provide more details about it, please?",
+      "parentUuid": "afbde0fe_2b49ac50",
+      "revId": "19ce2d231a4c7025f41187c48ef0b344db963bd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
