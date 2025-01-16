@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ceba47d_6644462f",
+        "filename": "test/736-interface-super-Object/smali/Itf.smali",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-16T15:46:06Z",
+      "side": 1,
+      "message": "We could have a superinterface that defines `toString()` in `src/` and does not define it in `src2/` - avoid smali and reflection and have the ability to compare with the RI. Maybe as a cleanup later if you find the time.\n\nWhat we do need right now is to update the known failures. (Merge https://android-review.googlesource.com/3452711 first or you\u0027ll get a conflict if you add the failure at the same line.)",
+      "range": {
+        "startLine": 20,
+        "startChar": 7,
+        "endLine": 20,
+        "endChar": 61
+      },
+      "revId": "bd10db5dc80ceea092c0083d8519a28be6ec025a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
