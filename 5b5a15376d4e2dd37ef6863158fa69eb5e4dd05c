@@ -34,6 +34,24 @@
       "parentUuid": "476f81b9_e1fac488",
       "revId": "5b5a15376d4e2dd37ef6863158fa69eb5e4dd05c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b041b89_76e9ea30",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-16T15:41:53Z",
+      "side": 1,
+      "message": "Yes it will mess it up, the dex pc of the instruction is its own.\n\nWhy would you favor the caller dex pc, and not the callee?\n\nLooks like for b/63864515, the request requires every instruction to have an environment.",
+      "parentUuid": "2e213d41_26e35cf5",
+      "revId": "5b5a15376d4e2dd37ef6863158fa69eb5e4dd05c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
