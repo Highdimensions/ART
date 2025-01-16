@@ -1,0 +1,1 @@
+Test that the inlined invoke's dex_pc is set on the inlined instructions.

@@ -2168,6 +2168,7 @@ class HInstruction : public ArenaObject<kArenaAllocInstruction> {
   }
 
   uint32_t GetDexPc() const { return dex_pc_; }
+  void SetDexPc(uint32_t pc) { dex_pc_ = pc; }
 
   virtual bool IsControlFlow() const { return false; }
 
@@ -2623,7 +2624,13 @@ class HInstruction : public ArenaObject<kArenaAllocInstruction> {
   HInstruction* previous_;
   HInstruction* next_;
   HBasicBlock* block_;
-  const uint32_t dex_pc_;
+
+  // The dex program counter of the instruction. If this instruction is inlined into another method,
+  // it will copy the dex pc of the caller's HInvoke instruction. The original dex_pc_ will be
+  // present in the instruction's environment, if this instruction needs an environment. For inlined
+  // instructions that don't need an environment, the original dex_pc_ is not preserved as we
+  // currently don't have any uses for it.
+  uint32_t dex_pc_;
 
   // An instruction gets an id when it is added to the graph.
   // It reflects creation order. A negative id means the instruction
