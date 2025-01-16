@@ -40,6 +40,30 @@
       ],
       "revId": "52fb78b1a1c3977d66a551eb60e18a636216aef9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d00d6223_73177176",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-16T21:53:03Z",
+      "side": 1,
+      "message": "Thanks! Done. T plan to ignore merge conflicts and compilation errors until this can actually be submitted.",
+      "parentUuid": "25150917_009bb8ec",
+      "range": {
+        "startLine": 104,
+        "startChar": 4,
+        "endLine": 104,
+        "endChar": 29
+      },
+      "revId": "52fb78b1a1c3977d66a551eb60e18a636216aef9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
