@@ -2707,9 +2707,12 @@ void HGraph::UpdateLoopAndTryInformationOfNewBlock(HBasicBlock* block,
 HInstruction* HGraph::InlineInto(HGraph* outer_graph, HInvoke* invoke) {
   DCHECK(HasExitBlock()) << "Unimplemented scenario";
   // Update the environments in this graph to have the invoke's environment
-  // as parent.
+  // as parent. Also update the DEX PC of the instructions to be the one of the invoke we are
+  // inlining.
   {
-    // Skip the entry block, we do not need to update the entry's suspend check.
+    // Skip the entry block, we do not need to update the entry's suspend check. Skipping the entry
+    // block is fine for updating the DEX PC as no real instructions exist there.
+    const uint32_t pc = invoke->GetDexPc();
     for (HBasicBlock* block : GetReversePostOrderSkipEntryBlock()) {
       for (HInstructionIterator instr_it(block->GetInstructions());
            !instr_it.Done();
@@ -2720,6 +2723,7 @@ HInstruction* HGraph::InlineInto(HGraph* outer_graph, HInvoke* invoke) {
           current->GetEnvironment()->SetAndCopyParentChain(
               outer_graph->GetAllocator(), invoke->GetEnvironment());
         }
+        current->SetDexPc(pc);
       }
     }
   }

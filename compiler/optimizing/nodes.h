@@ -2168,6 +2168,7 @@ class HInstruction : public ArenaObject<kArenaAllocInstruction> {
   }
 
   uint32_t GetDexPc() const { return dex_pc_; }
+  void SetDexPc(uint32_t pc) { dex_pc_ = pc; }
 
   virtual bool IsControlFlow() const { return false; }
 
@@ -2623,7 +2624,7 @@ class HInstruction : public ArenaObject<kArenaAllocInstruction> {
   HInstruction* previous_;
   HInstruction* next_;
   HBasicBlock* block_;
-  const uint32_t dex_pc_;
+  uint32_t dex_pc_;
 
   // An instruction gets an id when it is added to the graph.
   // It reflects creation order. A negative id means the instruction
