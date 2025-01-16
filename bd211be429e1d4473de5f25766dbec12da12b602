@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f138b738_cbc892e6",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 1178,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-16T10:54:57Z",
+      "side": 1,
+      "message": "OK, let\u0027s see if we get any regressions from this CL alone.",
+      "parentUuid": "373246db_82d862a1",
+      "range": {
+        "startLine": 1177,
+        "startChar": 4,
+        "endLine": 1178,
+        "endChar": 54
+      },
+      "revId": "bd211be429e1d4473de5f25766dbec12da12b602",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "48317715_c2b8c2a5",
