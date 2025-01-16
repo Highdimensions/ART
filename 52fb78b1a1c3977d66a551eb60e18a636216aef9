@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25150917_009bb8ec",
+        "filename": "libartpalette/include/palette/palette_method_list.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1010103
+      },
+      "writtenOn": "2025-01-16T15:52:19Z",
+      "side": 1,
+      "message": "Suggest `PaletteMapPriority` or something along the AI-suggested name which is decent of `PaletteGetNicenessForManagedPriority` since this isn\u0027t returning a mapping but rather is doing a mapping (as in, \"GetPriorityMapping\" sounds to me like it\u0027s going to return a Map\u003cT, U\u003e which this isn\u0027t)",
+      "range": {
+        "startLine": 104,
+        "startChar": 4,
+        "endLine": 104,
+        "endChar": 29
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "718ed8ea_4a7af17a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartpalette/include/palette/palette_method_list.h",
+              "range": {
+                "startLine": 104,
+                "startChar": 0,
+                "endLine": 105,
+                "endChar": 0
+              },
+              "replacement": "  M(PaletteMapPriority, int32_t managed_priority, /*out*/ int* result)\n"
+            }
+          ]
+        }
+      ],
+      "revId": "52fb78b1a1c3977d66a551eb60e18a636216aef9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
