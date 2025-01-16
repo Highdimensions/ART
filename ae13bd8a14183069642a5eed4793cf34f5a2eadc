@@ -16,6 +16,24 @@
       "message": "I think you need to add this test to known failures for RI.\n\n(I\u0027d prefer jasmin tests over smali tests.)",
       "revId": "ae13bd8a14183069642a5eed4793cf34f5a2eadc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bd3ffb5_6b6947da",
+        "filename": "test/735-interface-clone/smali/Cls.smali",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-16T15:28:31Z",
+      "side": 1,
+      "message": "Thanks, done here: aosp/3452711.\n\nUnfortunately, jasmin does not support default methods 😞",
+      "parentUuid": "14ab6b4d_690686e5",
+      "revId": "ae13bd8a14183069642a5eed4793cf34f5a2eadc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
