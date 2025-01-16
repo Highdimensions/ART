@@ -52,6 +52,29 @@
       "parentUuid": "2e213d41_26e35cf5",
       "revId": "5b5a15376d4e2dd37ef6863158fa69eb5e4dd05c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9c46ca0_d265b8d8",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2627,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-16T16:23:28Z",
+      "side": 1,
+      "message": "You should now document this member properly. For inlined instructions with an environment, this shall not match the dex pc of the immediate environment but rather the environment\u0027s top-most parent.",
+      "range": {
+        "startLine": 2627,
+        "startChar": 11,
+        "endLine": 2627,
+        "endChar": 18
+      },
+      "revId": "5b5a15376d4e2dd37ef6863158fa69eb5e4dd05c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
