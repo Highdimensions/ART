@@ -143,6 +143,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3be5faa_52cd1543",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-16T14:44:54Z",
+      "side": 1,
+      "message": "Can you demonstrate a scenario when buffer overflow can happen in the existing code?",
+      "parentUuid": "a0ad9fc3_01e0caca",
+      "range": {
+        "startLine": 7,
+        "startChar": 32,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "6d9a45fe_1cbdbe26",
