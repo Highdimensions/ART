@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "476f81b9_e1fac488",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-16T15:37:20Z",
+      "side": 1,
+      "message": "Is that correct? The dex pc of the invoke can be found from the environment.",
+      "revId": "5b5a15376d4e2dd37ef6863158fa69eb5e4dd05c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
