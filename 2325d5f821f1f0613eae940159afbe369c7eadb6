@@ -125,6 +125,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd58ce6c_01bd4b9e",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-16T14:07:12Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "9da857ec_dae49faf",
+      "range": {
+        "startLine": 422,
+        "startChar": 32,
+        "endLine": 422,
+        "endChar": 47
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cea2dac8_06049e1d",
@@ -138,6 +162,30 @@
       "writtenOn": "2025-01-16T11:53:43Z",
       "side": 1,
       "message": "Why do we need this?",
+      "range": {
+        "startLine": 423,
+        "startChar": 0,
+        "endLine": 423,
+        "endChar": 57
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8eb3c65c_20765317",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-16T14:07:12Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "cea2dac8_06049e1d",
       "range": {
         "startLine": 423,
         "startChar": 0,
