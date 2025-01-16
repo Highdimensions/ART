@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6041acf4_17f224ce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-16T12:34:33Z",
+      "side": 1,
+      "message": "Please add `Bug: 342330305`.",
+      "revId": "b31abce498faeb51b126efea2fc7de40197b1c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a33cbfd_baa98e1a",
+        "filename": "Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-16T12:34:33Z",
+      "side": 1,
+      "message": "This will remove the `ahat-tests` module from the build. Considering the discussion on http://b/342330305#comment33 ff that should be fine, but @ruhler@google.com to confirm.\n\nHowever, we need to get rid of references to `ahat-tests` as well - I find [one in test mapping](https://cs.android.com/android/platform/superproject/main/+/main:art/tools/ahat/TEST_MAPPING;l\u003d4;drc\u003d26d828fc42d51960914829428986e87553c196f2) and [one in ATP](https://atp.googleplex.com/tests/v2/android-runtime-team/ahat/unit-tests).",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 42
+      },
+      "revId": "b31abce498faeb51b126efea2fc7de40197b1c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
