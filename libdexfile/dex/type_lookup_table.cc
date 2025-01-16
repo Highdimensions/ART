@@ -93,6 +93,7 @@ TypeLookupTable TypeLookupTable::Open(const uint8_t* dex_data_pointer,
   return TypeLookupTable(dex_data_pointer, mask_bits, entries, /* owned_entries= */ nullptr);
 }
 
+++
 uint32_t TypeLookupTable::Lookup(std::string_view str, uint32_t hash) const {
   uint32_t mask = Entry::GetMask(mask_bits_);
   uint32_t pos = hash & mask;
@@ -109,6 +110,9 @@ uint32_t TypeLookupTable::Lookup(std::string_view str, uint32_t hash) const {
       return dex::kDexNoIndex;
     }
     pos = (pos + entry->GetNextPosDelta(mask_bits_)) & mask;
+    if (pos >= (1u << mask_bits_)) {
+      return dex::kDexNoIndex;
+    }
     entry = &entries_[pos];
     DCHECK(!entry->IsEmpty());
   }
