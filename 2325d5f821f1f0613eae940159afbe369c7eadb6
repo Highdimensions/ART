@@ -121,6 +121,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "a0ad9fc3_01e0caca",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-16T14:39:16Z",
+      "side": 1,
+      "message": "Thank you for the clarification. You are correct that in the specific case where the buffer size is 100 and the string \"Unknown state\" (including the null-terminator) fits comfortably.\n\nHowever the use of sizeof(buf) - 1 is intended as a safety measure for all scenarios, including cases where the buffer size and string length might not be so neatly aligned. The purpose of reserving one byte for the null-terminator is to ensure that:\n\n1. If the buffer size were smaller than the string length (including the null-terminator) this would prevent writing past the buffer’s boundary.\n2. The null-terminator would still be explicitly set preventing potential undefined behavior from missing or incorrect string termination.\n\nSo while the current case may seem safe the practice of using sizeof(buf) - 1 helps maintain a more general, robust approach to handling buffers, ensuring that null-termination is properly managed in all situations.",
+      "parentUuid": "61adcdb9_5472e39c",
+      "range": {
+        "startLine": 7,
+        "startChar": 32,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "6d9a45fe_1cbdbe26",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -168,6 +192,24 @@
       "side": 1,
       "message": "Hii @scianciulli@google.com now it have reviewed by other reviewer also now it can be merge",
       "parentUuid": "15c69c97_8c6bc651",
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4b14af9_fdbd5942",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-16T14:39:16Z",
+      "side": 1,
+      "message": "Hii Thanks for Reviewing could you please review this Code again as i deleted whitespace in commit message",
+      "parentUuid": "8b249324_6d8253f7",
       "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -275,6 +317,30 @@
       "side": 1,
       "message": "Acknowledged",
       "parentUuid": "9da857ec_dae49faf",
+      "range": {
+        "startLine": 422,
+        "startChar": 32,
+        "endLine": 422,
+        "endChar": 47
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18cfbb90_6f18b20f",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-16T14:39:16Z",
+      "side": 1,
+      "message": "Hii Thanks for Reviewing could you please review this Code again as i deleted whitespace in commit message",
+      "parentUuid": "dd58ce6c_01bd4b9e",
       "range": {
         "startLine": 422,
         "startChar": 32,
