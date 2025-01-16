@@ -28,7 +28,8 @@ include $(art_path)/build/Android.cpplint.mk
 ########################################################################
 # product rules
 
-include $(art_path)/tools/ahat/Android.mk
+$(warning art/tools/ahat/Android.mk is ignored on purpose for cleanup. Please check out the details in b/388015096 if your cases are impacted.)
+#include $(art_path)/tools/ahat/Android.mk
 
 ART_HOST_DEPENDENCIES := \
   $(ART_HOST_EXECUTABLES) \
