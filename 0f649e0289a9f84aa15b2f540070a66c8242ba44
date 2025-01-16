@@ -1330,6 +1330,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d52b6b1d_7227ae12",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-16T01:07:59Z",
+      "side": 1,
+      "message": "That basically sounds correct. If there is noreal race we\u0027re fine. Otherwise there is still a concern that if a non-atomic changes asynchronously, the compiler may have made assumptions that assume this is impossible.",
+      "parentUuid": "6f69ca30_9215c7cb",
+      "range": {
+        "startLine": 376,
+        "startChar": 44,
+        "endLine": 376,
+        "endChar": 69
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5eac6a17_75fab662",
         "filename": "runtime/gc/collector/mark_compact.h",
         "patchSetId": 16

@@ -1,0 +1,242 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4efbe64d_2d43d68d",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-16T01:07:59Z",
+      "side": 1,
+      "message": "\"are compacted and then ...\"\nTechnically redundant, but I think it makes it a bit easier to follow.",
+      "range": {
+        "startLine": 1001,
+        "startChar": 29,
+        "endLine": 1001,
+        "endChar": 32
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "89ee00d1_dd089698",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1001,
+                "startChar": 0,
+                "endLine": 1003,
+                "endChar": 0
+              },
+              "replacement": "// surviving mid-gen objects are compacted and then promoted to old-gen, while the\n// surviving young gen objects are promoted to mid-gen.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d21e9f1_f569286b",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-16T01:07:59Z",
+      "side": 1,
+      "message": "\"mark bits\"",
+      "range": {
+        "startLine": 1015,
+        "startChar": 60,
+        "endLine": 1015,
+        "endChar": 64
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "4a2a8531_d8983345",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1015,
+                "startChar": 0,
+                "endLine": 1016,
+                "endChar": 0
+              },
+              "replacement": "// when objects are promoted to old-gen from mid-gen, their mark bits are first\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36baba1c_ec67dfe8",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-16T01:07:59Z",
+      "side": 1,
+      "message": "\"So we mark from native roots during the marking phase of young generation collections.\" ?\n\nThis sounds like we actually dirty cards during old-gen compaction? It seems that just building a vector of object addresses would be cheaper? But this allows better code reuse?",
+      "range": {
+        "startLine": 1023,
+        "startChar": 35,
+        "endLine": 1024,
+        "endChar": 9
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6475c20a_13f2f3ad",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-16T01:07:59Z",
+      "side": 1,
+      "message": "Can we comment/fix the REQUIRES annotations on VisitmarkedRange? Do we satisfy that constraint here?",
+      "range": {
+        "startLine": 1190,
+        "startChar": 28,
+        "endLine": 1190,
+        "endChar": 44
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0db72ef_52bb0700",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1651,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-16T01:07:59Z",
+      "side": 1,
+      "message": "Why is this only conditionally incremented? Can you add a comment describinf what dest_cards represents?",
+      "range": {
+        "startLine": 1651,
+        "startChar": 37,
+        "endLine": 1651,
+        "endChar": 52
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27b312d9_69d7ba35",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 4776,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-16T01:07:59Z",
+      "side": 1,
+      "message": "I guess this has to divide evenly due to a page alignment calculation? Could we DCHECK that, or add a suitable static_assert?",
+      "range": {
+        "startLine": 4776,
+        "startChar": 6,
+        "endLine": 4776,
+        "endChar": 100
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "530cfa6d_87f89060",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-16T01:07:59Z",
+      "side": 1,
+      "message": "Could use a comment mentioning \"mark bits\", as below.",
+      "range": {
+        "startLine": 738,
+        "startChar": 2,
+        "endLine": 738,
+        "endChar": 62
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5850874_cc1ccdfc",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-16T01:07:59Z",
+      "side": 1,
+      "message": "[Preexisting] Can we replace this comment with one that says something like \"mark bits for main space\"? The declaration already says it\u0027s a bitmap.",
+      "range": {
+        "startLine": 786,
+        "startChar": 2,
+        "endLine": 786,
+        "endChar": 26
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0f6ecf73_06830033",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 786,
+                "startChar": 0,
+                "endLine": 787,
+                "endChar": 0
+              },
+              "replacement": "  // Mark bits for main space.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
