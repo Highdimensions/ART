@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "373246db_82d862a1",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 1178,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-16T09:46:23Z",
+      "side": 1,
+      "message": "Yes, but I\u0027m planning to do this in a standalone CL.",
+      "parentUuid": "126ec7f5_eebc18ff",
+      "range": {
+        "startLine": 1177,
+        "startChar": 4,
+        "endLine": 1178,
+        "endChar": 54
+      },
+      "revId": "bd211be429e1d4473de5f25766dbec12da12b602",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "48317715_c2b8c2a5",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-01-13T16:24:58Z",
       "side": 1,
       "message": "Maybe rename to `kSearchStaticFieldsIninterfaces`?\n\nUpdate the comment above.",
+      "range": {
+        "startLine": 1268,
+        "startChar": 15,
+        "endLine": 1268,
+        "endChar": 34
+      },
+      "revId": "bd211be429e1d4473de5f25766dbec12da12b602",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0b13461_58d0e9ff",
+        "filename": "runtime/mirror/class.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 1268,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-16T09:46:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48317715_c2b8c2a5",
       "range": {
         "startLine": 1268,
         "startChar": 15,
