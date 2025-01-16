@@ -22,6 +22,30 @@
       },
       "revId": "bd10db5dc80ceea092c0083d8519a28be6ec025a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "897f3f85_acbb0ba7",
+        "filename": "test/736-interface-super-Object/smali/Itf.smali",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-16T17:59:40Z",
+      "side": 1,
+      "message": "Unfortunately, javac prevents you from doing super call on abstract Itf.toString, and providing default methods that override j.l.Object methods.\n\nUpdates of knownfailures.json done.",
+      "parentUuid": "1ceba47d_6644462f",
+      "range": {
+        "startLine": 20,
+        "startChar": 7,
+        "endLine": 20,
+        "endChar": 61
+      },
+      "revId": "bd10db5dc80ceea092c0083d8519a28be6ec025a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
