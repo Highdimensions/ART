@@ -1569,6 +1569,45 @@ void HVariableInputSizeInstruction::RemoveAllInputs() {
   DCHECK_EQ(0u, InputCount());
 }
 
+void HPhi::ReplaceInputPhiWithItsInputsAt(size_t index) {
+  DCHECK(inputs_[index].GetInstruction()->IsPhi());
+  HPhi* src = inputs_[index].GetInstruction()->AsPhi();
+  size_t num_src_inputs = src->inputs_.size();
+  DCHECK_GE(num_src_inputs, 2u);
+  // Replace the `src` input with its first input.
+  ReplaceInput(src->inputs_[0].GetInstruction(), index);
+  // Insert `src`'s other inputs.
+  inputs_.insert(inputs_.begin() + index + 1u, src->inputs_.begin() + 1u, src->inputs_.end());
+  // Update indexes in use nodes of inputs that have been pushed further back by the insert().
+  for (size_t i = index + num_src_inputs, e = inputs_.size(); i < e; ++i) {
+    DCHECK_EQ(inputs_[i].GetUseNode()->GetIndex(), i - (num_src_inputs - 1u));
+    inputs_[i].GetUseNode()->SetIndex(i);
+  }
+  // Add the uses after updating the indexes. If the copied inputs are already used by `this`,
+  // the fixup after use insertion can use those indexes.
+  for (size_t new_index = index + 1u; new_index != index + num_src_inputs; ++new_index) {
+    inputs_[new_index].GetInstruction()->AddUseAt(this, new_index);
+  }
+}
+
+void HPhi::DuplicateInputAt(size_t index, size_t new_copies) {
+  DCHECK_NE(new_copies, 0u);
+  HInstruction* to_copy = inputs_[index].GetInstruction();
+  // Insert new copies of `to_copy`.
+  inputs_.insert(inputs_.begin() + index + 1u, new_copies, HUserRecord<HInstruction*>(to_copy));
+  size_t end_copies = index + 1u + new_copies;
+  // Update indexes in use nodes of inputs that have been pushed further back by the insert().
+  for (size_t i = end_copies, e = inputs_.size(); i < e; ++i) {
+    DCHECK_EQ(inputs_[i].GetUseNode()->GetIndex(), i - new_copies);
+    inputs_[i].GetUseNode()->SetIndex(i);
+  }
+  // Add the uses after updating the indexes. If the `to_copy` is already used by `this`,
+  // the fixup after use insertion can use those indexes.
+  for (size_t new_index = index + 1u; new_index != end_copies; ++new_index) {
+    to_copy->AddUseAt(this, new_index);
+  }
+}
+
 size_t HConstructorFence::RemoveConstructorFences(HInstruction* instruction) {
   DCHECK(instruction->GetBlock() != nullptr);
   // Removing constructor fences only makes sense for instructions with an object return type.
@@ -2626,6 +2665,85 @@ void HBasicBlock::MergeWithInlined(HBasicBlock* other) {
   other->dominated_blocks_.clear();
   other->dominator_ = nullptr;
   other->graph_ = nullptr;
+}
+
+void HBasicBlock::MergeGotoBlockWithSuccessor() {
+  DCHECK(GetFirstInstruction() != nullptr);
+  DCHECK(GetFirstInstruction()->IsGoto());
+
+  size_t num_old_this_predecessors = GetPredecessors().size();
+  DCHECK_GE(num_old_this_predecessors, 1u);
+  DCHECK_IMPLIES(num_old_this_predecessors == 1u, GetPhis().IsEmpty());
+
+  HBasicBlock* successor = GetSingleSuccessor();
+  ArenaVector<HBasicBlock*>& succ_preds = successor->predecessors_;
+  DCHECK_GE(succ_preds.size(), 1u);
+  DCHECK_IMPLIES(succ_preds.size() == 1u, successor->GetPhis().IsEmpty());
+
+  if (successor->GetPredecessors().size() != 1u) {
+    // Redirect `successor`'s other predecessors to `this`.
+    // We want to have the final predecessor order as if we inserted data from `this`
+    // to the `successor`. However, to reuse `MergeWith()`, we shall move the data
+    // in the opposite direction, so we insert the other `successor`'s predecessors
+    // around the existing predecessors of `this`.
+    size_t this_predecessor_index = successor->GetPredecessorIndexOf(this);
+    predecessors_.reserve(predecessors_.size() + succ_preds.size() - 1u);
+    predecessors_.insert(predecessors_.begin(),
+                         succ_preds.begin(),
+                         succ_preds.begin() + this_predecessor_index);
+    predecessors_.insert(predecessors_.begin() + this_predecessor_index + num_old_this_predecessors,
+                         succ_preds.begin() + this_predecessor_index + 1u,
+                         succ_preds.end());
+    std::swap(succ_preds[0], succ_preds[this_predecessor_index]);
+    for (HBasicBlock* pred : ArrayRef<HBasicBlock*>(succ_preds).SubArray(1u)) {
+      // Do not use `ReplaceSuccessor(successor, this)` as that would update `predecessor_`
+      // data in `successor` and `this` and we're already doing that explicitly.
+      ReplaceElement(pred->successors_, successor, this);
+    }
+    // We need to keep the `this` predecessor for `MergeWith()`.
+    succ_preds.erase(succ_preds.begin() + 1u, succ_preds.end());
+
+    // Update `successor` `Phi`s' block and input from `this`.
+    for (HInstruction* phi = successor->GetFirstPhi(); phi != nullptr; phi = phi->GetNext()) {
+      DCHECK(phi->IsPhi());
+      phi->SetBlock(this);
+      HInstruction* input = phi->AsPhi()->InputAt(this_predecessor_index);
+      if (input->GetBlock() == this) {
+        // The input is defined in `this`, so it must be a `Phi`. (It cannot be the `Goto`.)
+        DCHECK(input->IsPhi());
+        // Replace the input `Phi` with its own inputs corresponding to the `this`'s predecessors.
+        phi->AsPhi()->ReplaceInputPhiWithItsInputsAt(this_predecessor_index);
+      } else if (num_old_this_predecessors != 1u) {
+        // Duplicate the input for additional predecessors of `this`.
+        phi->AsPhi()->DuplicateInputAt(this_predecessor_index, num_old_this_predecessors - 1u);
+      }
+    }
+
+    // All `Phi`s in `this` are now dead. Remove them.
+    while (GetFirstPhi() != nullptr) {
+      DCHECK(!GetFirstPhi()->HasUses());
+      RemovePhi(GetFirstPhi()->AsPhi());
+    }
+
+    // Move updated `Phi`s from `successor` to `this`.
+    phis_.Add(successor->GetPhis());
+    successor->phis_.Clear();
+
+    // Fix up domination information for unmerged blocks before calling `MergeWith()`.
+    HBasicBlock* dominator = successor->GetDominator();
+    if (GetDominator() == dominator) {
+      dominator->RemoveDominatedBlock(successor);
+    } else {
+      GetDominator()->RemoveDominatedBlock(this);
+      SetDominator(dominator);
+      dominator->ReplaceDominatedBlock(successor, this);
+    }
+    successor->SetDominator(this);
+    AddDominatedBlock(successor);
+  }
+
+  // Finish the merge using `MergeWith()`.
+  MergeWith(successor);
 }
 
 void HBasicBlock::ReplaceWith(HBasicBlock* other) {

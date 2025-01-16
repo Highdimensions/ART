@@ -112,6 +112,9 @@ class HCodeFlowSimplifier : public HOptimization {
   // when that gets resolved we get another one with the outer if.
   HBasicBlock* TryFixupDoubleDiamondPattern(HBasicBlock* block);
 
+  // Try merging a block that contains only `HGoto` and `Phi`s with the successor.
+  bool TryMergeGotoBlock(HBasicBlock* block);
+
   DISALLOW_COPY_AND_ASSIGN(HCodeFlowSimplifier);
 };
 

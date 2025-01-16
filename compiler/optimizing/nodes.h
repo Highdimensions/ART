@@ -1127,6 +1127,12 @@ class HBasicBlock : public ArenaObject<kArenaAllocBasicBlock> {
   // predecessor of `other` and vice versa.
   void MergeWith(HBasicBlock* other);
 
+  // Merge the single successor of `this` at the end of `this`. This must contain
+  // only a single `HGoto` instructions and `HPhi`s. Unlike `MergeWith()`, this
+  // function allows the successor to have additional predecessors (not just `this`)
+  // and handles merging `HPhis`.
+  void MergeGotoBlockWithSuccessor();
+
   // Disconnects `this` from all its predecessors, successors and dominator,
   // removes it from all loops it is included in and eventually from the graph.
   // The block must not dominate any other block. Predecessors and successors
@@ -3049,6 +3055,9 @@ class HPhi final : public HVariableInputSizeInstruction {
     }
     return nullptr;
   }
+
+  void ReplaceInputPhiWithItsInputsAt(size_t index);
+  void DuplicateInputAt(size_t index, size_t new_copies);
 
   DECLARE_INSTRUCTION(Phi);
 
