@@ -384,7 +384,7 @@ bool HInstructionBuilder::Build() {
       if (graph_->IsDebuggable() && code_generator_->GetCompilerOptions().IsJitCompiler()) {
         AppendInstruction(new (allocator_) HMethodEntryHook(0u));
       }
-      AppendInstruction(new (allocator_) HGoto(0u));
+      AppendInstruction(new (allocator_) HGoto());
       continue;
     } else if (current_block_->IsExitBlock()) {
       AppendInstruction(new (allocator_) HExit());
@@ -476,7 +476,7 @@ void HInstructionBuilder::BuildIntrinsic(ArtMethod* method) {
   if (graph_->IsDebuggable() && code_generator_->GetCompilerOptions().IsJitCompiler()) {
     AppendInstruction(new (allocator_) HMethodEntryHook(0u));
   }
-  AppendInstruction(new (allocator_) HGoto(0u));
+  AppendInstruction(new (allocator_) HGoto());
 
   // Fill the body.
   current_block_ = current_block_->GetSingleSuccessor();
