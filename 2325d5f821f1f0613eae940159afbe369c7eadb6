@@ -95,6 +95,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "61adcdb9_5472e39c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-16T14:23:30Z",
+      "side": 1,
+      "message": "\u003e (if buf is not large enough to hold the string plus the null-terminator)\n\nThat\u0027s my question: `buf` size is 100 and 100 is bigger than length of \"Unknown state\". What exactly is tisk here?",
+      "parentUuid": "6fbc5493_e6ad9114",
+      "range": {
+        "startLine": 7,
+        "startChar": 32,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "6d9a45fe_1cbdbe26",
