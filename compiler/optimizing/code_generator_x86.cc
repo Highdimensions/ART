@@ -91,7 +91,6 @@ class NullCheckSlowPathX86 : public SlowPathCode {
     }
     x86_codegen->InvokeRuntime(kQuickThrowNullPointer,
                                instruction_,
-                               instruction_->GetDexPc(),
                                this);
     CheckEntrypointTypes<kQuickThrowNullPointer, void, void>();
   }
@@ -111,7 +110,7 @@ class DivZeroCheckSlowPathX86 : public SlowPathCode {
   void EmitNativeCode(CodeGenerator* codegen) override {
     CodeGeneratorX86* x86_codegen = down_cast<CodeGeneratorX86*>(codegen);
     __ Bind(GetEntryLabel());
-    x86_codegen->InvokeRuntime(kQuickThrowDivZero, instruction_, instruction_->GetDexPc(), this);
+    x86_codegen->InvokeRuntime(kQuickThrowDivZero, instruction_, this);
     CheckEntrypointTypes<kQuickThrowDivZero, void, void>();
   }
 
@@ -213,7 +212,7 @@ class BoundsCheckSlowPathX86 : public SlowPathCode {
     QuickEntrypointEnum entrypoint = instruction_->AsBoundsCheck()->IsStringCharAt()
         ? kQuickThrowStringBounds
         : kQuickThrowArrayBounds;
-    x86_codegen->InvokeRuntime(entrypoint, instruction_, instruction_->GetDexPc(), this);
+    x86_codegen->InvokeRuntime(entrypoint, instruction_, this);
     CheckEntrypointTypes<kQuickThrowStringBounds, void, int32_t, int32_t>();
     CheckEntrypointTypes<kQuickThrowArrayBounds, void, int32_t, int32_t>();
   }
@@ -236,7 +235,7 @@ class SuspendCheckSlowPathX86 : public SlowPathCode {
     CodeGeneratorX86* x86_codegen = down_cast<CodeGeneratorX86*>(codegen);
     __ Bind(GetEntryLabel());
     SaveLiveRegisters(codegen, locations);  // Only saves full width XMM for SIMD.
-    x86_codegen->InvokeRuntime(kQuickTestSuspend, instruction_, instruction_->GetDexPc(), this);
+    x86_codegen->InvokeRuntime(kQuickTestSuspend, instruction_, this);
     CheckEntrypointTypes<kQuickTestSuspend, void, void>();
     RestoreLiveRegisters(codegen, locations);  // Only restores full width XMM for SIMD.
     if (successor_ == nullptr) {
@@ -279,7 +278,7 @@ class LoadStringSlowPathX86 : public SlowPathCode {
     InvokeRuntimeCallingConvention calling_convention;
     const dex::StringIndex string_index = instruction_->AsLoadString()->GetStringIndex();
     __ movl(calling_convention.GetRegisterAt(0), Immediate(string_index.index_));
-    x86_codegen->InvokeRuntime(kQuickResolveString, instruction_, instruction_->GetDexPc(), this);
+    x86_codegen->InvokeRuntime(kQuickResolveString, instruction_, this);
     CheckEntrypointTypes<kQuickResolveString, void*, uint32_t>();
     x86_codegen->Move32(locations->Out(), Location::RegisterLocation(EAX));
     RestoreLiveRegisters(codegen, locations);
@@ -304,7 +303,6 @@ class LoadClassSlowPathX86 : public SlowPathCode {
   void EmitNativeCode(CodeGenerator* codegen) override {
     LocationSummary* locations = instruction_->GetLocations();
     Location out = locations->Out();
-    const uint32_t dex_pc = instruction_->GetDexPc();
     bool must_resolve_type = instruction_->IsLoadClass() && cls_->MustResolveTypeOnSlowPath();
     bool must_do_clinit = instruction_->IsClinitCheck() || cls_->MustGenerateClinitCheck();
 
@@ -322,10 +320,10 @@ class LoadClassSlowPathX86 : public SlowPathCode {
       __ movl(calling_convention.GetRegisterAt(0), Immediate(type_index.index_));
       if (cls_->NeedsAccessCheck()) {
         CheckEntrypointTypes<kQuickResolveTypeAndVerifyAccess, void*, uint32_t>();
-        x86_codegen->InvokeRuntime(kQuickResolveTypeAndVerifyAccess, instruction_, dex_pc, this);
+        x86_codegen->InvokeRuntime(kQuickResolveTypeAndVerifyAccess, instruction_, this);
       } else {
         CheckEntrypointTypes<kQuickResolveType, void*, uint32_t>();
-        x86_codegen->InvokeRuntime(kQuickResolveType, instruction_, dex_pc, this);
+        x86_codegen->InvokeRuntime(kQuickResolveType, instruction_, this);
       }
       // If we also must_do_clinit, the resolved type is now in the correct register.
     } else {
@@ -334,7 +332,7 @@ class LoadClassSlowPathX86 : public SlowPathCode {
       x86_codegen->Move32(Location::RegisterLocation(calling_convention.GetRegisterAt(0)), source);
     }
     if (must_do_clinit) {
-      x86_codegen->InvokeRuntime(kQuickInitializeStaticStorage, instruction_, dex_pc, this);
+      x86_codegen->InvokeRuntime(kQuickInitializeStaticStorage, instruction_, this);
       CheckEntrypointTypes<kQuickInitializeStaticStorage, void*, mirror::Class*>();
     }
 
@@ -392,14 +390,12 @@ class TypeCheckSlowPathX86 : public SlowPathCode {
     if (instruction_->IsInstanceOf()) {
       x86_codegen->InvokeRuntime(kQuickInstanceofNonTrivial,
                                  instruction_,
-                                 instruction_->GetDexPc(),
                                  this);
       CheckEntrypointTypes<kQuickInstanceofNonTrivial, size_t, mirror::Object*, mirror::Class*>();
     } else {
       DCHECK(instruction_->IsCheckCast());
       x86_codegen->InvokeRuntime(kQuickCheckInstanceOf,
                                  instruction_,
-                                 instruction_->GetDexPc(),
                                  this);
       CheckEntrypointTypes<kQuickCheckInstanceOf, void, mirror::Object*, mirror::Class*>();
     }
@@ -437,7 +433,7 @@ class DeoptimizationSlowPathX86 : public SlowPathCode {
     x86_codegen->Load32BitValue(
         calling_convention.GetRegisterAt(0),
         static_cast<uint32_t>(instruction_->AsDeoptimize()->GetDeoptimizationKind()));
-    x86_codegen->InvokeRuntime(kQuickDeoptimize, instruction_, instruction_->GetDexPc(), this);
+    x86_codegen->InvokeRuntime(kQuickDeoptimize, instruction_, this);
     CheckEntrypointTypes<kQuickDeoptimize, void, DeoptimizationKind>();
   }
 
@@ -476,7 +472,7 @@ class ArraySetSlowPathX86 : public SlowPathCode {
     codegen->GetMoveResolver()->EmitNativeCode(&parallel_move);
 
     CodeGeneratorX86* x86_codegen = down_cast<CodeGeneratorX86*>(codegen);
-    x86_codegen->InvokeRuntime(kQuickAputObject, instruction_, instruction_->GetDexPc(), this);
+    x86_codegen->InvokeRuntime(kQuickAputObject, instruction_, this);
     CheckEntrypointTypes<kQuickAputObject, void, mirror::Array*, int32_t, mirror::Object*>();
     RestoreLiveRegisters(codegen, locations);
     __ jmp(GetExitLabel());
@@ -878,7 +874,7 @@ class ReadBarrierForHeapReferenceSlowPathX86 : public SlowPathCode {
       codegen->GetMoveResolver()->EmitNativeCode(&parallel_move);
       __ movl(calling_convention.GetRegisterAt(2), Immediate(offset_));
     }
-    x86_codegen->InvokeRuntime(kQuickReadBarrierSlow, instruction_, instruction_->GetDexPc(), this);
+    x86_codegen->InvokeRuntime(kQuickReadBarrierSlow, instruction_, this);
     CheckEntrypointTypes<
         kQuickReadBarrierSlow, mirror::Object*, mirror::Object*, mirror::Object*, uint32_t>();
     x86_codegen->Move32(out_, Location::RegisterLocation(EAX));
@@ -944,7 +940,6 @@ class ReadBarrierForRootSlowPathX86 : public SlowPathCode {
     x86_codegen->Move32(Location::RegisterLocation(calling_convention.GetRegisterAt(0)), root_);
     x86_codegen->InvokeRuntime(kQuickReadBarrierForRootSlow,
                                instruction_,
-                               instruction_->GetDexPc(),
                                this);
     CheckEntrypointTypes<kQuickReadBarrierForRootSlow, mirror::Object*, GcRoot<mirror::Object>*>();
     x86_codegen->Move32(out_, Location::RegisterLocation(EAX));
@@ -976,7 +971,7 @@ class MethodEntryExitHooksSlowPathX86 : public SlowPathCode {
     if (instruction_->IsMethodExitHook()) {
       __ movl(EBX, Immediate(codegen->GetFrameSize()));
     }
-    x86_codegen->InvokeRuntime(entry_point, instruction_, instruction_->GetDexPc(), this);
+    x86_codegen->InvokeRuntime(entry_point, instruction_, this);
     RestoreLiveRegisters(codegen, locations);
     __ jmp(GetExitLabel());
   }
@@ -1105,7 +1100,6 @@ size_t CodeGeneratorX86::RestoreFloatingPointRegister(size_t stack_index, uint32
 
 void CodeGeneratorX86::InvokeRuntime(QuickEntrypointEnum entrypoint,
                                      HInstruction* instruction,
-                                     [[maybe_unused]] uint32_t dex_pc,
                                      SlowPathCode* slow_path) {
   ValidateInvokeRuntime(entrypoint, instruction, slow_path);
   GenerateInvokeRuntime(GetThreadOffset<kX86PointerSize>(entrypoint).Int32Value());
@@ -3470,12 +3464,12 @@ void InstructionCodeGeneratorX86::VisitTypeConversion(HTypeConversion* conversio
           break;
 
         case DataType::Type::kFloat32:
-          codegen_->InvokeRuntime(kQuickF2l, conversion, conversion->GetDexPc());
+          codegen_->InvokeRuntime(kQuickF2l, conversion);
           CheckEntrypointTypes<kQuickF2l, int64_t, float>();
           break;
 
         case DataType::Type::kFloat64:
-          codegen_->InvokeRuntime(kQuickD2l, conversion, conversion->GetDexPc());
+          codegen_->InvokeRuntime(kQuickD2l, conversion);
           CheckEntrypointTypes<kQuickD2l, int64_t, double>();
           break;
 
@@ -4309,10 +4303,10 @@ void InstructionCodeGeneratorX86::GenerateDivRemIntegral(HBinaryOperation* instr
       DCHECK_EQ(EDX, out.AsRegisterPairHigh<Register>());
 
       if (is_div) {
-        codegen_->InvokeRuntime(kQuickLdiv, instruction, instruction->GetDexPc());
+        codegen_->InvokeRuntime(kQuickLdiv, instruction);
         CheckEntrypointTypes<kQuickLdiv, int64_t, int64_t, int64_t>();
       } else {
-        codegen_->InvokeRuntime(kQuickLmod, instruction, instruction->GetDexPc());
+        codegen_->InvokeRuntime(kQuickLmod, instruction);
         CheckEntrypointTypes<kQuickLmod, int64_t, int64_t, int64_t>();
       }
       break;
@@ -5208,7 +5202,7 @@ void LocationsBuilderX86::VisitNewInstance(HNewInstance* instruction) {
 }
 
 void InstructionCodeGeneratorX86::VisitNewInstance(HNewInstance* instruction) {
-  codegen_->InvokeRuntime(instruction->GetEntrypoint(), instruction, instruction->GetDexPc());
+  codegen_->InvokeRuntime(instruction->GetEntrypoint(), instruction);
   CheckEntrypointTypes<kQuickAllocObjectWithChecks, void*, mirror::Class*>();
   DCHECK(!codegen_->IsLeafMethod());
 }
@@ -5225,7 +5219,7 @@ void LocationsBuilderX86::VisitNewArray(HNewArray* instruction) {
 void InstructionCodeGeneratorX86::VisitNewArray(HNewArray* instruction) {
   // Note: if heap poisoning is enabled, the entry point takes care of poisoning the reference.
   QuickEntrypointEnum entrypoint = CodeGenerator::GetArrayAllocationEntrypoint(instruction);
-  codegen_->InvokeRuntime(entrypoint, instruction, instruction->GetDexPc());
+  codegen_->InvokeRuntime(entrypoint, instruction);
   CheckEntrypointTypes<kQuickAllocArrayResolved, void*, mirror::Class*, int32_t>();
   DCHECK(!codegen_->IsLeafMethod());
 }
@@ -6395,7 +6389,7 @@ void LocationsBuilderX86::VisitStringBuilderAppend(HStringBuilderAppend* instruc
 
 void InstructionCodeGeneratorX86::VisitStringBuilderAppend(HStringBuilderAppend* instruction) {
   __ movl(EAX, Immediate(instruction->GetFormat()->GetValue()));
-  codegen_->InvokeRuntime(kQuickStringBuilderAppend, instruction, instruction->GetDexPc());
+  codegen_->InvokeRuntime(kQuickStringBuilderAppend, instruction);
 }
 
 void LocationsBuilderX86::VisitUnresolvedInstanceFieldGet(
@@ -7723,7 +7717,7 @@ void InstructionCodeGeneratorX86::VisitLoadString(HLoadString* load) NO_THREAD_S
   InvokeRuntimeCallingConvention calling_convention;
   DCHECK_EQ(calling_convention.GetRegisterAt(0), out);
   __ movl(calling_convention.GetRegisterAt(0), Immediate(load->GetStringIndex().index_));
-  codegen_->InvokeRuntime(kQuickResolveString, load, load->GetDexPc());
+  codegen_->InvokeRuntime(kQuickResolveString, load);
   CheckEntrypointTypes<kQuickResolveString, void*, uint32_t>();
 }
 
@@ -7757,7 +7751,7 @@ void LocationsBuilderX86::VisitThrow(HThrow* instruction) {
 }
 
 void InstructionCodeGeneratorX86::VisitThrow(HThrow* instruction) {
-  codegen_->InvokeRuntime(kQuickDeliverException, instruction, instruction->GetDexPc());
+  codegen_->InvokeRuntime(kQuickDeliverException, instruction);
   CheckEntrypointTypes<kQuickDeliverException, void, mirror::Object*>();
 }
 
@@ -8390,10 +8384,8 @@ void LocationsBuilderX86::VisitMonitorOperation(HMonitorOperation* instruction) 
 }
 
 void InstructionCodeGeneratorX86::VisitMonitorOperation(HMonitorOperation* instruction) {
-  codegen_->InvokeRuntime(instruction->IsEnter() ? kQuickLockObject
-                                                 : kQuickUnlockObject,
-                          instruction,
-                          instruction->GetDexPc());
+  codegen_->InvokeRuntime(instruction->IsEnter() ? kQuickLockObject : kQuickUnlockObject,
+                          instruction);
   if (instruction->IsEnter()) {
     CheckEntrypointTypes<kQuickLockObject, void, mirror::Object*>();
   } else {
