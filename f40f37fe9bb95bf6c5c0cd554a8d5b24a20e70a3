@@ -133,6 +133,24 @@
       "parentUuid": "428172d9_26532a96",
       "revId": "f40f37fe9bb95bf6c5c0cd554a8d5b24a20e70a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66b09b77_093a5bce",
+        "filename": "libelffile/elf/elf_builder.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-17T23:06:45Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "e7977e9e_f656be97",
+      "revId": "f40f37fe9bb95bf6c5c0cd554a8d5b24a20e70a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
