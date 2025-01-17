@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb2442bc_a452b429",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-01-17T18:36:11Z",
+      "side": 1,
+      "message": "signalstack?",
+      "range": {
+        "startLine": 10,
+        "startChar": 17,
+        "endLine": 10,
+        "endChar": 28
+      },
+      "revId": "3ad67f7babfb62a62aba95e6b58797fa7b1091a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27d8b4ba_1e45ad61",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-01-17T18:36:11Z",
+      "side": 1,
+      "message": "do in Runtime::Start()",
+      "range": {
+        "startLine": 18,
+        "startChar": 24,
+        "endLine": 18,
+        "endChar": 43
+      },
+      "revId": "3ad67f7babfb62a62aba95e6b58797fa7b1091a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a149f007_9f377bb4",
+        "filename": "tools/fuzzer/libart_verify_classes_fuzzer.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-01-17T18:36:11Z",
+      "side": 1,
+      "message": "IIUC, In Runtime::Init this seems to happen after transitioning to suspended, when we call Thread::FinishStartup(). I don\u0027t understand the initialization process well enough. I think it\u0027s okay for the fuzzer to call this before transitioning to suspended but just checking if there was a reason we want to do this before. If yes, adding a comment would be good.",
+      "range": {
+        "startLine": 131,
+        "startChar": 1,
+        "endLine": 131,
+        "endChar": 66
+      },
+      "revId": "3ad67f7babfb62a62aba95e6b58797fa7b1091a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
