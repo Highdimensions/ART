@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "90c2c983_f36f246e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-17T18:44:23Z",
+      "side": 1,
+      "message": "I mean the `if (sigaltstack(nullptr, \u0026ss) \u003d\u003d -1) {` LSAN workaround at the end of initialization. I can reword it\u0027s not clear.",
+      "parentUuid": "eb2442bc_a452b429",
+      "range": {
+        "startLine": 10,
+        "startChar": 17,
+        "endLine": 10,
+        "endChar": 28
+      },
+      "revId": "3ad67f7babfb62a62aba95e6b58797fa7b1091a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27d8b4ba_1e45ad61",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2025-01-17T18:36:11Z",
       "side": 1,
       "message": "do in Runtime::Start()",
+      "range": {
+        "startLine": 18,
+        "startChar": 24,
+        "endLine": 18,
+        "endChar": 43
+      },
+      "revId": "3ad67f7babfb62a62aba95e6b58797fa7b1091a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7c6e49c_d04ae451",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-17T18:44:23Z",
+      "side": 1,
+      "message": "I mean that that\u0027s where we would do `Runtime::Start()` if we have all the necessary pieces in position (which we don\u0027t yet). Added backticks to make it more clear",
+      "parentUuid": "27d8b4ba_1e45ad61",
       "range": {
         "startLine": 18,
         "startChar": 24,
@@ -60,6 +108,30 @@
       "writtenOn": "2025-01-17T18:36:11Z",
       "side": 1,
       "message": "IIUC, In Runtime::Init this seems to happen after transitioning to suspended, when we call Thread::FinishStartup(). I don\u0027t understand the initialization process well enough. I think it\u0027s okay for the fuzzer to call this before transitioning to suspended but just checking if there was a reason we want to do this before. If yes, adding a comment would be good.",
+      "range": {
+        "startLine": 131,
+        "startChar": 1,
+        "endLine": 131,
+        "endChar": 66
+      },
+      "revId": "3ad67f7babfb62a62aba95e6b58797fa7b1091a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f4508a1_8c320992",
+        "filename": "tools/fuzzer/libart_verify_classes_fuzzer.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-17T18:44:23Z",
+      "side": 1,
+      "message": "With this CL, the fuzzer does these instructions in the order that dex2oat does https://cs.android.com/android/platform/superproject/main/+/main:art/dex2oat/dex2oat.cc;l\u003d2747-2758;drc\u003d9906a10b5fe84ce113ec888af1da5dfba62949c6",
+      "parentUuid": "a149f007_9f377bb4",
       "range": {
         "startLine": 131,
         "startChar": 1,
