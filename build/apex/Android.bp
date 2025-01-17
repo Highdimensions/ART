@@ -275,6 +275,7 @@ apex {
     },
 
     visibility: [
+        "//art/test",
         "//packages/modules/common/build",
     ],
 }
