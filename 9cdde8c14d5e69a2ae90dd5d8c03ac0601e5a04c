@@ -1,0 +1,68 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee37a1a0_15392465",
+        "filename": "compiler/optimizing/nodes.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 2711,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-17T10:12:58Z",
+      "side": 1,
+      "message": "Update commen if field gets renamed. If not renamed, make it clear that it\u0027s just a debugging information.",
+      "range": {
+        "startLine": 2710,
+        "startChar": 15,
+        "endLine": 2711,
+        "endChar": 14
+      },
+      "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6d5b191_5bc43328",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2632,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-17T10:12:58Z",
+      "side": 1,
+      "message": "Thanks for putting this. If it\u0027s not a large refactoring, I\u0027d also appreciate a rename of the field to be clearer on what it is. Like `debug_dex_pc`, or `outermost_dex_pc`, or other options.",
+      "range": {
+        "startLine": 2627,
+        "startChar": 0,
+        "endLine": 2632,
+        "endChar": 42
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "00a3e21f_0009a93d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/nodes.h",
+              "range": {
+                "startLine": 2629,
+                "startChar": 0,
+                "endLine": 2633,
+                "endChar": 0
+              },
+              "replacement": "  // it will copy the dex pc of the caller\u0027s HInvoke instruction. The original dex_pc_ will be present\n  // in the instruction\u0027s environment, if this instruction needs an environment. For inlined instructions\n  // that don\u0027t need an environment, the original dex_pc_ is not preserved as we currently don\u0027t have\n  // any uses for it.\n  // TODO: rename this field to be clearer on what it is. Like `debug_dex_pc`, or `outermost_dex_pc`.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
