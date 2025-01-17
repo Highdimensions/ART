@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7976b61a_17d76149",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-17T21:24:19Z",
+      "side": 1,
+      "message": "This change is intentional and we are going to land it in beta1.",
+      "revId": "dd56c09cd84da2fb3ae5c9500440a626e28df427",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
