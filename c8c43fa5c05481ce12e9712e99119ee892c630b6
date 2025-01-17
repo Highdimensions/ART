@@ -16,6 +16,365 @@
       "message": "This should be ready to review. The palette changes were removed from this CL and then deferred, since this is not an opportune time to check those in.",
       "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d23c227_e0ce2eb9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "I\u0027ve only looked at the palette function calls and the doc. If I\u0027m expected to look at anything else, let me know.",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35760fca_7188ca45",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "Please add a TODO with a ticket that tracks this, to help future readers (with Google access) judge the accuracy.",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0038f38_83bb4af9",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "As a layman reader, I\u0027m unsure if this section discusses Java or native priorities - the talk about `Thread.setPriority` etc suggests Java priorities, but then negative values get mentioned, which is only possible on the native side.\n\nReading carefully, it seems that the term \"niceness value\" is used for native priorities, and hence \"priority\" implies Java priority? However that\u0027s not stated explicitly so readers can still be unsure about it. Unfortunately, with function names like `setpriority` the native side does lay claim to that term as well (if it stuck to \"niceness\" with `setniceness` etc instead it\u0027d be a different matter).",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68725316_b922ebc4",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "There is also the reverse race - if the other thread\u0027s raise to y comes first then A may read y as the old priority and hence restore that rather than x afterwards. Whether that is a problem or not depends on how the other thread operates, but given #3 and #4 below I understand it\u0027s not expected that it will ever try to restore an earlier priority if the app has had an opportunity to do its own restore.\n\nGiven that, to avoid this reverse race it\u0027s important that the app reads the cached priority as x, presumably through `Thread.getPriority`. That seems worth mentioning in #1 below.",
+      "range": {
+        "startLine": 58,
+        "startChar": 85,
+        "endLine": 59,
+        "endChar": 65
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61938bc7_611505be",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "In the pseudocode below it\u0027s not this simple, and this simplification opens questions about reentrancy behaviour. Maybe it\u0027s better to avoid this and instead refer to the more detailed description below?",
+      "range": {
+        "startLine": 73,
+        "startChar": 53,
+        "endLine": 74,
+        "endChar": 12
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87c59ee3_45e2e533",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "This doesn\u0027t have a precise meaning to me - make it more explicit?\n\nOr else, iiuc the gist here is that an external process really can\u0027t make any assumptions that a priority it sets will remain set for any amount of time. Presumably in a situation like that there would be some sort understanding between the app and the external process so they don\u0027t fight each other, but ART can still always come in and change the priority and then restore it to the cached one.\n\nIf that understanding is correct then I\u0027d express it something like this instead: External processes should avoid updating priorities of threads executing managed code (and hence enters ART). If they do, ART can at any moment overwrite their updates and restore the cached priority.",
+      "range": {
+        "startLine": 87,
+        "startChar": 25,
+        "endLine": 87,
+        "endChar": 41
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfa1fdaf_8286a04b",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "`else`?",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44399c55_45cd0c8b",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "Does this mean \u003cdo high priority stuff\u003e can reenter app code? If so, what if the app lowers the priority? We won\u0027t overwrite that value here, but still, a more or less large portion of the high priority stuff will then be executed at a lower priority than we intended, which also isn\u0027t great. right?",
+      "range": {
+        "startLine": 101,
+        "startChar": 47,
+        "endLine": 102,
+        "endChar": 22
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19655a6e_e45f894f",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "Nit: Single backticks.",
+      "range": {
+        "startLine": 109,
+        "startChar": 68,
+        "endLine": 109,
+        "endChar": 71
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6ba756f3_806f2907",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread_priorities.md",
+              "range": {
+                "startLine": 109,
+                "startChar": 0,
+                "endLine": 110,
+                "endChar": 0
+              },
+              "replacement": "The above requires sufficient concurrency control to ensure that no `Thread.setPriority`\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c0b8754_d80ebca3",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "Nit: Add empty line.",
+      "fixSuggestions": [
+        {
+          "fixId": "8e3f3e3d_4d550ab3",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread_priorities.md",
+              "range": {
+                "startLine": 129,
+                "startChar": 0,
+                "endLine": 129,
+                "endChar": 0
+              },
+              "replacement": "\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa82f148_c39b283c",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "Spello: \"condition\"",
+      "range": {
+        "startLine": 131,
+        "startChar": 14,
+        "endLine": 131,
+        "endChar": 22
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "72b3f3d5_8e9a12b5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread_priorities.md",
+              "range": {
+                "startLine": 131,
+                "startChar": 0,
+                "endLine": 132,
+                "endChar": 0
+              },
+              "replacement": "waiting for a condition variable that *B* will eventually signal, or because *A* is waiting\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ced05b29_19e301fc",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "Spello: \"thus\"",
+      "range": {
+        "startLine": 139,
+        "startChar": 73,
+        "endLine": 139,
+        "endChar": 78
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "982f1868_afc4aab5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread_priorities.md",
+              "range": {
+                "startLine": 139,
+                "startChar": 0,
+                "endLine": 140,
+                "endChar": 0
+              },
+              "replacement": "avoids the race issues we discussed above, along with some others. It is thus quite attractive.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8c427ea_7613088d",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-17T20:12:37Z",
+      "side": 1,
+      "message": "Spello: \"to\"",
+      "range": {
+        "startLine": 142,
+        "startChar": 3,
+        "endLine": 142,
+        "endChar": 5
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "3b165f2c_f161f820",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread_priorities.md",
+              "range": {
+                "startLine": 142,
+                "startChar": 0,
+                "endLine": 143,
+                "endChar": 0
+              },
+              "replacement": "it to cover some non-lock cases, which are equally important to us. However, there are currently\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
