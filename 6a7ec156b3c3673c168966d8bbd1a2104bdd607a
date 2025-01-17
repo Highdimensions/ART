@@ -106,6 +106,24 @@
       "parentUuid": "d4b8c97e_74e6f70f",
       "revId": "6a7ec156b3c3673c168966d8bbd1a2104bdd607a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "551122b0_67690e68",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-01-17T10:12:54Z",
+      "side": 1,
+      "message": "It looks now there is a trailing whitespace at the end of the comment, please remove that, too.",
+      "parentUuid": "4c180ca7_82ca3b38",
+      "revId": "6a7ec156b3c3673c168966d8bbd1a2104bdd607a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
