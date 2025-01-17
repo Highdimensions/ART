@@ -339,9 +339,12 @@ class CodeGenerator : public DeletableArenaObject<kArenaAllocCodeGenerator> {
     return GetFrameSize() - FrameEntrySpillSize() - kShouldDeoptimizeFlagSize;
   }
 
+  // For stack overflow checks and native-debug-info entries without dex register
+  // mapping (i.e. start of basic block or start of slow path).
+  void RecordPcInfo();
+
   // Record native to dex mapping for a suspend point. Required by runtime.
   void RecordPcInfo(HInstruction* instruction,
-                    uint32_t dex_pc,
                     uint32_t native_pc,
                     SlowPathCode* slow_path = nullptr,
                     bool native_debug_info = false);
@@ -352,7 +355,6 @@ class CodeGenerator : public DeletableArenaObject<kArenaAllocCodeGenerator> {
   // Note: As Assembler::CodePosition is target dependent, it does not guarantee the exact native_pc
   // for the instruction. If the exact native_pc is required it must be provided explicitly.
   void RecordPcInfo(HInstruction* instruction,
-                    uint32_t dex_pc,
                     SlowPathCode* slow_path = nullptr,
                     bool native_debug_info = false);
 
@@ -672,6 +674,7 @@ class CodeGenerator : public DeletableArenaObject<kArenaAllocCodeGenerator> {
   void SetDisassemblyInformation(DisassemblyInformation* info) { disasm_info_ = info; }
   DisassemblyInformation* GetDisassemblyInformation() const { return disasm_info_; }
 
+  // TODO(solanes): Remove `dex_pc` now that it is unused.
   virtual void InvokeRuntime(QuickEntrypointEnum entrypoint,
                              HInstruction* instruction,
                              uint32_t dex_pc,
