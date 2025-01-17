@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9050589_b667e53b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-01-17T18:56:27Z",
+      "side": 1,
+      "message": "No that\u0027s good.",
+      "parentUuid": "90c2c983_f36f246e",
+      "range": {
+        "startLine": 10,
+        "startChar": 17,
+        "endLine": 10,
+        "endChar": 28
+      },
+      "revId": "3ad67f7babfb62a62aba95e6b58797fa7b1091a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "27d8b4ba_1e45ad61",
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "With this CL, the fuzzer does these instructions in the order that dex2oat does https://cs.android.com/android/platform/superproject/main/+/main:art/dex2oat/dex2oat.cc;l\u003d2747-2758;drc\u003d9906a10b5fe84ce113ec888af1da5dfba62949c6",
       "parentUuid": "a149f007_9f377bb4",
+      "range": {
+        "startLine": 131,
+        "startChar": 1,
+        "endLine": 131,
+        "endChar": 66
+      },
+      "revId": "3ad67f7babfb62a62aba95e6b58797fa7b1091a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a088616b_a2040d50",
+        "filename": "tools/fuzzer/libart_verify_classes_fuzzer.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-01-17T18:56:27Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "7f4508a1_8c320992",
       "range": {
         "startLine": 131,
         "startChar": 1,
