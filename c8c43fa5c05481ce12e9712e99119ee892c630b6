@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ecf6f8f_566d7ed6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-17T05:23:19Z",
+      "side": 1,
+      "message": "This should be ready to review. The palette changes were removed from this CL and then deferred, since this is not an opportune time to check those in.",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
