@@ -1,0 +1,68 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b71a598c_5886b1f8",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-17T05:17:21Z",
+      "side": 1,
+      "message": "These are presumably unused? It seems to me the implementations should at least abort? Is this really a better way to do this than what CC does?",
+      "range": {
+        "startLine": 70,
+        "startChar": 2,
+        "endLine": 71,
+        "endChar": 76
+      },
+      "revId": "98a2598ef285a4dcaae5eec88ff139f43f6f38db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b04863b_4086d3da",
+        "filename": "runtime/gc/heap.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-17T05:17:21Z",
+      "side": 1,
+      "message": "This presumably applies to the 0.5? The second one is fixed? Can we clarify that?",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 66
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ae9bad76_cd5bb47c",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap.cc",
+              "range": {
+                "startLine": 152,
+                "startChar": 0,
+                "endLine": 155,
+                "endChar": 0
+              },
+              "replacement": "// Sticky GC throughput adjustment. Increasing this (0.5) causes sticky GC to occur more\n// relative to partial/full GC (1.0). This may be desirable since sticky GCs interfere less\n// with mutator threads (lower pauses, use less memory bandwidth). The 1.0 is fixed.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "98a2598ef285a4dcaae5eec88ff139f43f6f38db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
