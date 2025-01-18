@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce94ad8e_5cf8bec9",
+        "filename": "dex2oat/linker/oat_writer_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-18T00:22:18Z",
+      "side": 1,
+      "message": "So this is the check that\u0027s failing (in only one config), mentioned in the CL on top of this.\n\nCould you print the begin + offset as well on failure, so the values always show in test failures?\n\nAlso - how are you running it?\n```\nm art-host-tests\natest --host art_dex2oat_tests\n```\n\nArt team may have faster way to build/test this, though I\u0027m not actually seeing the failure locally, with or without http://r.android.com/3403680, on AOSP or our internal branch. We will submit with http://r.android.com/3403680 and http://r.android.com/3356727, so probably best you also test in that configuration.\n\nThough, if you add more debugging information or what you need to debug this, I can continue to share results from our infra, or if someone in the Art team has a better way to repro locally, would appreciate!",
+      "range": {
+        "startLine": 450,
+        "startChar": 0,
+        "endLine": 451,
+        "endChar": 41
+      },
+      "revId": "a9d28c25ce67402269b4f84d811779c12447147d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
