@@ -70,6 +70,24 @@
       "parentUuid": "51d5e7df_f5aaee15",
       "revId": "19ce2d231a4c7025f41187c48ef0b344db963bd7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e568990f_e910fd8c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-18T00:22:49Z",
+      "side": 1,
+      "message": "See more notes for the second failure on the other CL.",
+      "parentUuid": "957b8777_09d40130",
+      "revId": "19ce2d231a4c7025f41187c48ef0b344db963bd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
