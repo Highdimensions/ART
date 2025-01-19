@@ -69,6 +69,24 @@
       "message": "If this is WAI may i ask if you can mark b/390327923 as WAI?",
       "revId": "dd56c09cd84da2fb3ae5c9500440a626e28df427",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac8484e6_28e096ae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010363
+      },
+      "writtenOn": "2025-01-19T17:20:41Z",
+      "side": 1,
+      "message": "Per b/388496637, approving the revert.",
+      "parentUuid": "d99d6676_c437221b",
+      "revId": "dd56c09cd84da2fb3ae5c9500440a626e28df427",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
