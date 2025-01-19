@@ -16,10 +16,12 @@
 
 #include "jni.h"
 
-#include <android-base/logging.h>
+#include <iostream>
 
-#include "nativehelper/ScopedUtfChars.h"
-#include "runtime.h"
+#include <android-base/logging.h>
+#include <nativehelper/ScopedUtfChars.h>
+
+#include "libarttest_api.h"
 
 namespace art {
 
@@ -52,7 +54,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_TestCase_testAccessInternal(JNIEnv* e
 }
 
 extern "C" JNIEXPORT void JNICALL Java_TestCase_dedupeHiddenApiWarnings(JNIEnv*, jclass) {
-  Runtime::Current()->SetDedupeHiddenApiWarnings(true);
+  art::test_817_hiddenapi::SetDedupeHiddenApiWarnings(true);
 }
 
 }  // namespace art
