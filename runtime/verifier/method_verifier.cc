@@ -81,13 +81,12 @@ void PcToRegisterLineTable::Init(InstructionFlags* flags,
                                  uint32_t insns_size,
                                  uint16_t registers_size,
                                  ArenaAllocator& allocator,
-                                 RegTypeCache* reg_types,
                                  uint32_t interesting_dex_pc) {
   DCHECK_GT(insns_size, 0U);
   register_lines_.resize(insns_size);
   for (uint32_t i = 0; i < insns_size; i++) {
     if ((i == interesting_dex_pc) || flags[i].IsBranchTarget()) {
-      register_lines_[i].reset(RegisterLine::Create(registers_size, allocator, reg_types));
+      register_lines_[i].reset(RegisterLine::Create(registers_size, allocator));
     }
   }
 }
@@ -120,36 +119,33 @@ constexpr bool IsCompatThrow(Instruction::Code opcode) {
   return opcode == Instruction::Code::RETURN_OBJECT || opcode == Instruction::Code::MOVE_EXCEPTION;
 }
 
-template <bool kVerifierDebug>
-class MethodVerifier final : public ::art::verifier::MethodVerifier {
+class MethodVerifierImpl : public ::art::verifier::MethodVerifier {
  public:
   bool IsInstanceConstructor() const {
     return IsConstructor() && !IsStatic();
   }
 
-  void FindLocksAtDexPc() REQUIRES_SHARED(Locks::mutator_lock_);
-
- private:
-  MethodVerifier(Thread* self,
-                 ArenaPool* arena_pool,
-                 RegTypeCache* reg_types,
-                 VerifierDeps* verifier_deps,
-                 const dex::CodeItem* code_item,
-                 uint32_t method_idx,
-                 bool aot_mode,
-                 Handle<mirror::DexCache> dex_cache,
-                 const dex::ClassDef& class_def,
-                 uint32_t access_flags,
-                 bool verify_to_dump,
-                 uint32_t api_level) REQUIRES_SHARED(Locks::mutator_lock_)
-     : art::verifier::MethodVerifier(self,
-                                     arena_pool,
-                                     reg_types,
-                                     verifier_deps,
-                                     class_def,
-                                     code_item,
-                                     method_idx,
-                                     aot_mode),
+ protected:
+  MethodVerifierImpl(Thread* self,
+                     ArenaPool* arena_pool,
+                     RegTypeCache* reg_types,
+                     VerifierDeps* verifier_deps,
+                     const dex::CodeItem* code_item,
+                     uint32_t method_idx,
+                     bool aot_mode,
+                     Handle<mirror::DexCache> dex_cache,
+                     const dex::ClassDef& class_def,
+                     uint32_t access_flags,
+                     bool verify_to_dump,
+                     uint32_t api_level) REQUIRES_SHARED(Locks::mutator_lock_)
+     : ::art::verifier::MethodVerifier(self,
+                                       arena_pool,
+                                       reg_types,
+                                       verifier_deps,
+                                       class_def,
+                                       code_item,
+                                       method_idx,
+                                       aot_mode),
        method_access_flags_(access_flags),
        return_type_(nullptr),
        dex_cache_(dex_cache),
@@ -201,18 +197,15 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
 
   // Adds the given string to the beginning of the last failure message.
   void PrependToLastFailMessage(std::string prepend) {
-    size_t failure_num = failure_messages_.size();
-    DCHECK_NE(failure_num, 0U);
-    std::ostringstream* last_fail_message = failure_messages_[failure_num - 1];
-    prepend += last_fail_message->str();
-    failure_messages_[failure_num - 1] = new std::ostringstream(prepend, std::ostringstream::ate);
-    delete last_fail_message;
+    MessageOStream* last_fail_message = &LastFailureMessageStream();
+    prepend += last_fail_message->view();
+    last_fail_message->str(std::move(prepend));
   }
 
   // Return the last failure message stream for appending.
-  std::ostream& LastFailureMessageStream() {
-    DCHECK(!failure_messages_.empty());
-    return *failure_messages_.back();
+  MessageOStream& LastFailureMessageStream() {
+    DCHECK(!failures_.empty());
+    return failures_.back().message;
   }
 
   /*
@@ -568,73 +561,9 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
   bool GetBranchOffset(uint32_t cur_offset, int32_t* pOffset, bool* pConditional,
                        bool* selfOkay);
 
-  /* Perform detailed code-flow analysis on a single method. */
-  bool VerifyCodeFlow() REQUIRES_SHARED(Locks::mutator_lock_);
-
   // Set the register types for the first instruction in the method based on the method signature.
   // This has the side-effect of validating the signature.
   bool SetTypesFromSignature() REQUIRES_SHARED(Locks::mutator_lock_);
-
-  /*
-   * Perform code flow on a method.
-   *
-   * The basic strategy is as outlined in v3 4.11.1.2: set the "changed" bit on the first
-   * instruction, process it (setting additional "changed" bits), and repeat until there are no
-   * more.
-   *
-   * v3 4.11.1.1
-   * - (N/A) operand stack is always the same size
-   * - operand stack [registers] contain the correct types of values
-   * - local variables [registers] contain the correct types of values
-   * - methods are invoked with the appropriate arguments
-   * - fields are assigned using values of appropriate types
-   * - opcodes have the correct type values in operand registers
-   * - there is never an uninitialized class instance in a local variable in code protected by an
-   *   exception handler (operand stack is okay, because the operand stack is discarded when an
-   *   exception is thrown) [can't know what's a local var w/o the debug info -- should fall out of
-   *   register typing]
-   *
-   * v3 4.11.1.2
-   * - execution cannot fall off the end of the code
-   *
-   * (We also do many of the items described in the "static checks" sections, because it's easier to
-   * do them here.)
-   *
-   * We need an array of RegType values, one per register, for every instruction. If the method uses
-   * monitor-enter, we need extra data for every register, and a stack for every "interesting"
-   * instruction. In theory this could become quite large -- up to several megabytes for a monster
-   * function.
-   *
-   * NOTE:
-   * The spec forbids backward branches when there's an uninitialized reference in a register. The
-   * idea is to prevent something like this:
-   *   loop:
-   *     move r1, r0
-   *     new-instance r0, MyClass
-   *     ...
-   *     if-eq rN, loop  // once
-   *   initialize r0
-   *
-   * This leaves us with two different instances, both allocated by the same instruction, but only
-   * one is initialized. The scheme outlined in v3 4.11.1.4 wouldn't catch this, so they work around
-   * it by preventing backward branches. We achieve identical results without restricting code
-   * reordering by specifying that you can't execute the new-instance instruction if a register
-   * contains an uninitialized instance created by that same instruction.
-   */
-  template <bool kMonitorDexPCs>
-  bool CodeFlowVerifyMethod() REQUIRES_SHARED(Locks::mutator_lock_);
-
-  /*
-   * Perform verification for a single instruction.
-   *
-   * This requires fully decoding the instruction to determine the effect it has on registers.
-   *
-   * Finds zero or more following instructions and sets the "changed" flag if execution at that
-   * point needs to be (re-)evaluated. Register changes are merged into "reg_types_" at the target
-   * addresses. Does not set or clear any other flags in "insn_flags_".
-   */
-  bool CodeFlowVerifyInstruction(uint32_t* start_guess)
-      REQUIRES_SHARED(Locks::mutator_lock_);
 
   // Perform verification of a new array instruction
   void VerifyNewArray(const Instruction* inst, bool is_filled, bool is_range)
@@ -674,14 +603,6 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
   // the referrer can access the resolved class.
   template <CheckAccess C>
   const RegType& ResolveClass(dex::TypeIndex class_idx)
-      REQUIRES_SHARED(Locks::mutator_lock_);
-
-  /*
-   * For the "move-exception" instruction at "work_insn_idx_", which must be at an exception handler
-   * address, determine the Join of all exceptions that can land here. Fails if no matching
-   * exception handler can be found or if the Join of exception types fails.
-   */
-  const RegType& GetCaughtExceptionType()
       REQUIRES_SHARED(Locks::mutator_lock_);
 
   /*
@@ -733,16 +654,6 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
    * Verify the arguments present for a call site. Returns "true" if all is well, "false" otherwise.
    */
   bool CheckCallSite(uint32_t call_site_idx);
-
-  /*
-  * Control can transfer to "next_insn". Merge the registers from merge_line into the table at
-  * next_insn, and set the changed flag on the target address if any of the registers were changed.
-  * In the case of fall-through, update the merge line on a change as its the working line for the
-  * next instruction.
-  * Returns "false" if an error is encountered.
-  */
-  bool UpdateRegisters(uint32_t next_insn, RegisterLine* merge_line, bool update_merge_line)
-      REQUIRES_SHARED(Locks::mutator_lock_);
 
   // Return the register type for the method.
   const RegType& GetMethodReturnType() REQUIRES_SHARED(Locks::mutator_lock_);
@@ -1260,8 +1171,6 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
   RegType::Kind DetermineCat1Constant(int32_t value)
       REQUIRES_SHARED(Locks::mutator_lock_);
 
-  ALWAYS_INLINE bool FailOrAbort(bool condition, const char* error_msg, uint32_t work_insn_idx);
-
   ALWAYS_INLINE InstructionFlags& GetModifiableInstructionFlags(size_t index) {
     return insn_flags_[index];
   }
@@ -1291,6 +1200,7 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
       return inst->VRegB_4rcc();
     }
   }
+
   // Returns the field index of a field access instruction.
   ALWAYS_INLINE static uint16_t GetFieldIdxOfFieldAccess(const Instruction* inst) {
     // Note: This is compiled to a single load in release mode.
@@ -1303,20 +1213,14 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
     }
   }
 
-  // Run verification on the method. Returns true if verification completes and false if the input
-  // has an irrecoverable corruption.
-  bool Verify() override REQUIRES_SHARED(Locks::mutator_lock_);
-
   // For app-compatibility, code after a runtime throw is treated as dead code
   // for apps targeting <= S.
-  // Returns whether the current instruction was marked as throwing.
-  bool PotentiallyMarkRuntimeThrow() override;
+  void PotentiallyMarkRuntimeThrow() override;
 
   // Dump the failures encountered by the verifier.
   std::ostream& DumpFailures(std::ostream& os) {
-    DCHECK_EQ(failures_.size(), failure_messages_.size());
-    for (const auto* stream : failure_messages_) {
-        os << stream->str() << "\n";
+    for (const VerifyErrorAndMessage& veam : failures_) {
+        os << veam.message.view() << "\n";
     }
     return os;
   }
@@ -1329,7 +1233,12 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
   }
   void Dump(VariableIndentationOutputStream* vios) REQUIRES_SHARED(Locks::mutator_lock_);
 
-  bool HandleMoveException(const Instruction* inst) REQUIRES_SHARED(Locks::mutator_lock_);
+  struct HandleMoveExceptionResult {
+    bool success;
+    bool skip_verification_of_exception_handler;
+  };
+  HandleMoveExceptionResult HandleMoveException(const Instruction* inst)
+      REQUIRES_SHARED(Locks::mutator_lock_);
 
   const uint32_t method_access_flags_;  // Method's access flags.
   const RegType* return_type_;  // Lazily computed return type of the method.
@@ -1366,40 +1275,98 @@ class MethodVerifier final : public ::art::verifier::MethodVerifier {
   // Instead, unset level should correspond to max().
   const uint32_t api_level_;
 
+  DISALLOW_COPY_AND_ASSIGN(MethodVerifierImpl);
+};
+
+template <bool kVerifierDebug>
+class MethodVerifier final : public MethodVerifierImpl {
+ public:
+  void FindLocksAtDexPc() REQUIRES_SHARED(Locks::mutator_lock_);
+
+ private:
+  using MethodVerifierImpl::MethodVerifierImpl;
+
+  /* Perform detailed code-flow analysis on a single method. */
+  bool VerifyCodeFlow() REQUIRES_SHARED(Locks::mutator_lock_);
+
+  /*
+   * Perform code flow on a method.
+   *
+   * The basic strategy is as outlined in v3 4.11.1.2: set the "changed" bit on the first
+   * instruction, process it (setting additional "changed" bits), and repeat until there are no
+   * more.
+   *
+   * v3 4.11.1.1
+   * - (N/A) operand stack is always the same size
+   * - operand stack [registers] contain the correct types of values
+   * - local variables [registers] contain the correct types of values
+   * - methods are invoked with the appropriate arguments
+   * - fields are assigned using values of appropriate types
+   * - opcodes have the correct type values in operand registers
+   * - there is never an uninitialized class instance in a local variable in code protected by an
+   *   exception handler (operand stack is okay, because the operand stack is discarded when an
+   *   exception is thrown) [can't know what's a local var w/o the debug info -- should fall out of
+   *   register typing]
+   *
+   * v3 4.11.1.2
+   * - execution cannot fall off the end of the code
+   *
+   * (We also do many of the items described in the "static checks" sections, because it's easier to
+   * do them here.)
+   *
+   * We need an array of RegType values, one per register, for every instruction. If the method uses
+   * monitor-enter, we need extra data for every register, and a stack for every "interesting"
+   * instruction. In theory this could become quite large -- up to several megabytes for a monster
+   * function.
+   *
+   * NOTE:
+   * The spec forbids backward branches when there's an uninitialized reference in a register. The
+   * idea is to prevent something like this:
+   *   loop:
+   *     move r1, r0
+   *     new-instance r0, MyClass
+   *     ...
+   *     if-eq rN, loop  // once
+   *   initialize r0
+   *
+   * This leaves us with two different instances, both allocated by the same instruction, but only
+   * one is initialized. The scheme outlined in v3 4.11.1.4 wouldn't catch this, so they work around
+   * it by preventing backward branches. We achieve identical results without restricting code
+   * reordering by specifying that you can't execute the new-instance instruction if a register
+   * contains an uninitialized instance created by that same instruction.
+   */
+  template <bool kMonitorDexPCs>
+  bool CodeFlowVerifyMethod() REQUIRES_SHARED(Locks::mutator_lock_);
+
+  /*
+   * Perform verification for a single instruction.
+   *
+   * This requires fully decoding the instruction to determine the effect it has on registers.
+   *
+   * Finds zero or more following instructions and sets the "changed" flag if execution at that
+   * point needs to be (re-)evaluated. Register changes are merged into "reg_types_" at the target
+   * addresses. Does not set or clear any other flags in "insn_flags_".
+   */
+  bool CodeFlowVerifyInstruction(uint32_t* start_guess)
+      REQUIRES_SHARED(Locks::mutator_lock_);
+
+  /*
+  * Control can transfer to "next_insn". Merge the registers from merge_line into the table at
+  * next_insn, and set the changed flag on the target address if any of the registers were changed.
+  * In the case of fall-through, update the merge line on a change as it's the working line for the
+  * next instruction.
+  */
+  void UpdateRegisters(uint32_t next_insn, RegisterLine* merge_line, bool update_merge_line)
+      REQUIRES_SHARED(Locks::mutator_lock_);
+
+  // Run verification on the method. Returns true if verification completes and false if the input
+  // has an irrecoverable corruption.
+  bool Verify() override REQUIRES_SHARED(Locks::mutator_lock_);
+
   friend class ::art::verifier::MethodVerifier;
 
   DISALLOW_COPY_AND_ASSIGN(MethodVerifier);
 };
-
-// Note: returns true on failure.
-template <bool kVerifierDebug>
-inline bool MethodVerifier<kVerifierDebug>::FailOrAbort(bool condition,
-                                                        const char* error_msg,
-                                                        uint32_t work_insn_idx) {
-  if (kIsDebugBuild) {
-    // In a debug build, abort if the error condition is wrong. Only warn if
-    // we are already aborting (as this verification is likely run to print
-    // lock information).
-    if (LIKELY(gAborting == 0)) {
-      DCHECK(condition) << error_msg << work_insn_idx << " "
-                        << dex_file_->PrettyMethod(dex_method_idx_);
-    } else {
-      if (!condition) {
-        LOG(ERROR) << error_msg << work_insn_idx;
-        Fail(VERIFY_ERROR_BAD_CLASS_HARD) << error_msg << work_insn_idx;
-        return true;
-      }
-    }
-  } else {
-    // In a non-debug build, just fail the class.
-    if (!condition) {
-      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << error_msg << work_insn_idx;
-      return true;
-    }
-  }
-
-  return false;
-}
 
 static bool IsLargeMethod(const CodeItemDataAccessor& accessor) {
   if (!accessor.HasCodeItem()) {
@@ -1615,8 +1582,7 @@ bool MethodVerifier<kVerifierDebug>::Verify() {
   return result;
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::ComputeWidthsAndCountOps() {
+bool MethodVerifierImpl::ComputeWidthsAndCountOps() {
   // We can't assume the instruction is well formed, handle the case where calculating the size
   // goes past the end of the code item.
   const uint32_t insns_size = code_item_accessor_.InsnsSizeInCodeUnits();
@@ -1695,8 +1661,7 @@ bool MethodVerifier<kVerifierDebug>::ComputeWidthsAndCountOps() {
   return true;
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::ScanTryCatchBlocks() {
+bool MethodVerifierImpl::ScanTryCatchBlocks() {
   const uint32_t tries_size = code_item_accessor_.TriesSize();
   if (tries_size == 0) {
     return true;
@@ -1757,8 +1722,7 @@ bool MethodVerifier<kVerifierDebug>::ScanTryCatchBlocks() {
   return true;
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::VerifyInstructions() {
+bool MethodVerifierImpl::VerifyInstructions() {
   // Flag the start of the method as a branch target.
   GetModifiableInstructionFlags(0).SetBranchTarget();
   const Instruction* inst = Instruction::At(code_item_accessor_.Insns());
@@ -1833,12 +1797,11 @@ bool MethodVerifier<kVerifierDebug>::VerifyInstructions() {
   return true;
 }
 
-template <bool kVerifierDebug>
 template <Instruction::Code kDispatchOpcode>
-inline bool MethodVerifier<kVerifierDebug>::VerifyInstruction(uint32_t dex_pc,
-                                                              uint32_t end_dex_pc,
-                                                              const Instruction* inst,
-                                                              uint16_t inst_data) {
+inline bool MethodVerifierImpl::VerifyInstruction(uint32_t dex_pc,
+                                                  uint32_t end_dex_pc,
+                                                  const Instruction* inst,
+                                                  uint16_t inst_data) {
   // The `kDispatchOpcode` may differ from the actual opcode but it shall have the
   // same verification flags and format. We explicitly `DCHECK` these below and
   // the format is also `DCHECK`ed in VReg getters that take it as an argument.
@@ -1971,8 +1934,7 @@ inline bool MethodVerifier<kVerifierDebug>::VerifyInstruction(uint32_t dex_pc,
   return result;
 }
 
-template <bool kVerifierDebug>
-inline bool MethodVerifier<kVerifierDebug>::CheckNewInstance(dex::TypeIndex idx) {
+inline bool MethodVerifierImpl::CheckNewInstance(dex::TypeIndex idx) {
   if (UNLIKELY(idx.index_ >= dex_file_->GetHeader().type_ids_size_)) {
     Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "bad type index " << idx.index_ << " (max "
                                       << dex_file_->GetHeader().type_ids_size_ << ")";
@@ -1991,8 +1953,7 @@ inline bool MethodVerifier<kVerifierDebug>::CheckNewInstance(dex::TypeIndex idx)
   return true;
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::CheckNewArray(dex::TypeIndex idx) {
+bool MethodVerifierImpl::CheckNewArray(dex::TypeIndex idx) {
   if (UNLIKELY(idx.index_ >= dex_file_->GetHeader().type_ids_size_)) {
     Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "bad type index " << idx.index_ << " (max "
                                       << dex_file_->GetHeader().type_ids_size_ << ")";
@@ -2018,10 +1979,9 @@ bool MethodVerifier<kVerifierDebug>::CheckNewArray(dex::TypeIndex idx) {
   return true;
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::CheckArrayData(uint32_t dex_pc,
-                                                    uint32_t end_dex_pc,
-                                                    const Instruction* inst) {
+bool MethodVerifierImpl::CheckArrayData(uint32_t dex_pc,
+                                        uint32_t end_dex_pc,
+                                        const Instruction* inst) {
   int32_t array_data_offset = inst->VRegB_31t();
   /* Make sure the start of the array data table is in range. */
   if (!IsOffsetInRange(dex_pc, end_dex_pc, array_data_offset)) {
@@ -2054,12 +2014,11 @@ bool MethodVerifier<kVerifierDebug>::CheckArrayData(uint32_t dex_pc,
   return true;
 }
 
-template <bool kVerifierDebug>
 template <Instruction::Format kFormat>
-bool MethodVerifier<kVerifierDebug>::CheckAndMarkBranchTarget(uint32_t dex_pc,
-                                                              uint32_t end_dex_pc,
-                                                              const Instruction* inst,
-                                                              uint16_t inst_data) {
+bool MethodVerifierImpl::CheckAndMarkBranchTarget(uint32_t dex_pc,
+                                                  uint32_t end_dex_pc,
+                                                  const Instruction* inst,
+                                                  uint16_t inst_data) {
   int32_t offset;
   if constexpr (kFormat == Instruction::k22t) {  // if-<cond>?
     offset = inst->VRegC(kFormat);
@@ -2093,11 +2052,10 @@ bool MethodVerifier<kVerifierDebug>::CheckAndMarkBranchTarget(uint32_t dex_pc,
   return true;
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::GetBranchOffset(uint32_t cur_offset,
-                                                     int32_t* pOffset,
-                                                     bool* pConditional,
-                                                     bool* selfOkay) {
+bool MethodVerifierImpl::GetBranchOffset(uint32_t cur_offset,
+                                         int32_t* pOffset,
+                                         bool* pConditional,
+                                         bool* selfOkay) {
   const uint16_t* insns = code_item_accessor_.Insns() + cur_offset;
   *pConditional = false;
   *selfOkay = false;
@@ -2133,11 +2091,10 @@ bool MethodVerifier<kVerifierDebug>::GetBranchOffset(uint32_t cur_offset,
   return true;
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::CheckAndMarkSwitchTargets(uint32_t dex_pc,
-                                                               uint32_t end_dex_pc,
-                                                               const Instruction* inst,
-                                                               uint16_t inst_data) {
+bool MethodVerifierImpl::CheckAndMarkSwitchTargets(uint32_t dex_pc,
+                                                   uint32_t end_dex_pc,
+                                                   const Instruction* inst,
+                                                   uint16_t inst_data) {
   int32_t switch_payload_offset = inst->VRegB_31t();
   /* Make sure the start of the switch data is in range. */
   if (!IsOffsetInRange(dex_pc, end_dex_pc, switch_payload_offset)) {
@@ -2247,11 +2204,10 @@ bool MethodVerifier<kVerifierDebug>::VerifyCodeFlow() {
                   code_item_accessor_.InsnsSizeInCodeUnits(),
                   registers_size,
                   allocator_,
-                  GetRegTypeCache(),
                   interesting_dex_pc_);
 
-  work_line_.reset(RegisterLine::Create(registers_size, allocator_, GetRegTypeCache()));
-  saved_line_.reset(RegisterLine::Create(registers_size, allocator_, GetRegTypeCache()));
+  work_line_.reset(RegisterLine::Create(registers_size, allocator_));
+  saved_line_.reset(RegisterLine::Create(registers_size, allocator_));
 
   /* Initialize register types of method arguments. */
   if (!SetTypesFromSignature()) {
@@ -2275,8 +2231,7 @@ bool MethodVerifier<kVerifierDebug>::VerifyCodeFlow() {
   return true;
 }
 
-template <bool kVerifierDebug>
-void MethodVerifier<kVerifierDebug>::Dump(VariableIndentationOutputStream* vios) {
+void MethodVerifierImpl::Dump(VariableIndentationOutputStream* vios) {
   if (!code_item_accessor_.HasCodeItem()) {
     vios->Stream() << "Native method\n";
     return;
@@ -2310,8 +2265,7 @@ void MethodVerifier<kVerifierDebug>::Dump(VariableIndentationOutputStream* vios)
   }
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::SetTypesFromSignature() {
+bool MethodVerifierImpl::SetTypesFromSignature() {
   RegisterLine* reg_line = reg_table_.GetLine(0);
 
   // Should have been verified earlier.
@@ -2508,7 +2462,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyMethod() {
       if (register_line != nullptr) {
         if (work_line_->CompareLine(register_line) != 0) {
           Dump(LOG_STREAM(FATAL_WITHOUT_ABORT));
-          LOG(FATAL_WITHOUT_ABORT) << InfoMessages().str();
+          LOG(FATAL_WITHOUT_ABORT) << InfoMessages().view();
           LOG(FATAL) << "work_line diverged in " << dex_file_->PrettyMethod(dex_method_idx_)
                      << "@" << reinterpret_cast<void*>(work_insn_idx_) << "\n"
                      << " work_line=" << work_line_->Dump(this) << "\n"
@@ -2525,13 +2479,31 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyMethod() {
       HandleMonitorDexPcsWorkLine(monitor_enter_dex_pcs_, work_line_.get());
     }
 
-    if (!CodeFlowVerifyInstruction(&start_guess)) {
+    if (UNLIKELY(!CodeFlowVerifyInstruction(&start_guess))) {
+      DCHECK(flags_.have_pending_hard_failure_);
+      if (IsAotMode()) {
+        /* When AOT compiling, check that the last failure is a hard failure */
+        DCHECK(!failures_.empty());
+        if (failures_.back().error != VERIFY_ERROR_BAD_CLASS_HARD) {
+          LOG(ERROR) << "Pending failures:";
+          for (const VerifyErrorAndMessage& veam : failures_) {
+            LOG(ERROR) << veam.error << " " << veam.message.view();
+          }
+          LOG(FATAL) << "Pending hard failure, but last failure not hard.";
+        }
+      }
+      if (kVerifierDebug) {
+        InfoMessages() << "Rejecting opcode "
+                       << code_item_accessor_.InstructionAt(work_insn_idx_).DumpString(dex_file_);
+      }
+
       std::string prepend(dex_file_->PrettyMethod(dex_method_idx_));
       prepend += " failed to verify: ";
       PrependToLastFailMessage(prepend);
       return false;
     }
     /* Clear "changed" and mark as visited. */
+    DCHECK(!flags_.have_pending_hard_failure_);
     GetModifiableInstructionFlags(insn_idx).SetVisited();
     GetModifiableInstructionFlags(insn_idx).ClearChanged();
   }
@@ -2581,41 +2553,10 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyMethod() {
     // To dump the state of the verify after a method, do something like:
     // if (dex_file_->PrettyMethod(dex_method_idx_) ==
     //     "boolean java.lang.String.equals(java.lang.Object)") {
-    //   LOG(INFO) << InfoMessages().str();
+    //   LOG(INFO) << InfoMessages().view();
     // }
   }
   return true;
-}
-
-// Setup a register line for the given return instruction.
-template <bool kVerifierDebug>
-static void AdjustReturnLine(MethodVerifier<kVerifierDebug>* verifier,
-                             const Instruction* ret_inst,
-                             RegisterLine* line) {
-  Instruction::Code opcode = ret_inst->Opcode();
-
-  switch (opcode) {
-    case Instruction::RETURN_VOID:
-      if (verifier->IsInstanceConstructor()) {
-        // Before we mark all regs as conflicts, check that we don't have an uninitialized this.
-        line->CheckConstructorReturn(verifier);
-      }
-      line->MarkAllRegistersAsConflicts(verifier);
-      break;
-
-    case Instruction::RETURN:
-    case Instruction::RETURN_OBJECT:
-      line->MarkAllRegistersAsConflictsExcept(verifier, ret_inst->VRegA_11x());
-      break;
-
-    case Instruction::RETURN_WIDE:
-      line->MarkAllRegistersAsConflictsExceptWide(verifier, ret_inst->VRegA_11x());
-      break;
-
-    default:
-      LOG(FATAL) << "Unknown return opcode " << opcode;
-      UNREACHABLE();
-  }
 }
 
 template <bool kVerifierDebug>
@@ -2665,7 +2606,6 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
   }
   // Per-instruction flag, should not be set here.
   DCHECK(!flags_.have_pending_runtime_throw_failure_);
-  bool exc_handler_unreachable = false;
 
 
   // We need to ensure the work line is consistent while performing validation. When we spot a
@@ -2742,11 +2682,18 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
       work_line_->CopyResultRegister1(this, inst->VRegA_11x(inst_data), true);
       break;
 
-    case Instruction::MOVE_EXCEPTION:
-      if (!HandleMoveException(inst)) {
-        exc_handler_unreachable = true;
+    case Instruction::MOVE_EXCEPTION: {
+      auto result = HandleMoveException(inst);
+      if (!result.success) {
+        return false;
+      }
+      DCHECK_NE(opcode_flags & Instruction::kContinue, 0);
+      if (UNLIKELY(result.skip_verification_of_exception_handler)) {
+        // Avoid verification of the following exception handler instructions.
+        opcode_flags &= ~Instruction::kContinue;
       }
       break;
+    }
 
     case Instruction::RETURN_VOID:
       if (!IsInstanceConstructor() || work_line_->CheckConstructorReturn(this)) {
@@ -3018,25 +2965,12 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
           (is_checkcast) ? inst->VRegA_21c(inst_data) : inst->VRegB_22c(inst_data);
       const RegType& orig_type = work_line_->GetRegisterType(this, orig_type_reg);
       if (!res_type.IsNonZeroReferenceTypes()) {
-        if (is_checkcast) {
-          Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "check-cast on unexpected class " << res_type;
-        } else {
-          Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "instance-of on unexpected class " << res_type;
-        }
+        Fail(VERIFY_ERROR_BAD_CLASS_HARD) << opcode << " on unexpected class " << res_type;
       } else if (!orig_type.IsReferenceTypes()) {
-        if (is_checkcast) {
-          Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "check-cast on non-reference in v" << orig_type_reg;
-        } else {
-          Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "instance-of on non-reference in v" << orig_type_reg;
-        }
+        Fail(VERIFY_ERROR_BAD_CLASS_HARD) << opcode << " on non-reference in v" << orig_type_reg;
       } else if (orig_type.IsUninitializedTypes()) {
-        if (is_checkcast) {
-          Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "check-cast on uninitialized reference in v"
-                                            << orig_type_reg;
-        } else {
-          Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "instance-of on uninitialized reference in v"
-                                            << orig_type_reg;
-        }
+        Fail(VERIFY_ERROR_BAD_CLASS_HARD) << opcode << " on uninitialized reference in v"
+                                          << orig_type_reg;
       } else {
         if (is_checkcast) {
           work_line_->SetRegisterType<LockOp::kKeep>(inst->VRegA_21c(inst_data), res_type);
@@ -3258,8 +3192,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
             !orig_type.IsZeroOrNull() &&
             IsStrictlyAssignableFrom(orig_type, cast_type.Merge(orig_type, &reg_types_, this))) {
           RegisterLine* update_line = RegisterLine::Create(code_item_accessor_.RegistersSize(),
-                                                           allocator_,
-                                                           GetRegTypeCache());
+                                                           allocator_);
           if (inst->Opcode() == Instruction::IF_EQZ) {
             fallthrough_line.reset(update_line);
           } else {
@@ -3467,7 +3400,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
                          dex_file_->GetTypeDescriptorView(return_type_idx));
       const RegType& return_type = reg_types_.FromTypeIndex(return_type_idx);
       if (!return_type.IsLowHalf()) {
-        work_line_->SetResultRegisterType(this, return_type);
+        work_line_->SetResultRegisterType(return_type);
       } else {
         work_line_->SetResultRegisterTypeWide(return_type, return_type.HighHalf(&reg_types_));
       }
@@ -3530,7 +3463,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
       }
       const RegType& return_type = reg_types_.FromTypeIndex(return_type_idx);
       if (!return_type.IsLowHalf()) {
-        work_line_->SetResultRegisterType(this, return_type);
+        work_line_->SetResultRegisterType(return_type);
       } else {
         work_line_->SetResultRegisterTypeWide(return_type, return_type.HighHalf(&reg_types_));
       }
@@ -3549,7 +3482,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
                          dex_file_->GetTypeDescriptorView(return_type_idx));
       const RegType& return_type = reg_types_.FromTypeIndex(return_type_idx);
       if (!return_type.IsLowHalf()) {
-        work_line_->SetResultRegisterType(this, return_type);
+        work_line_->SetResultRegisterType(return_type);
       } else {
         work_line_->SetResultRegisterTypeWide(return_type, return_type.HighHalf(&reg_types_));
       }
@@ -3600,7 +3533,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
                          dex_file_->GetTypeDescriptorView(return_type_idx));
       const RegType& return_type = reg_types_.FromTypeIndex(return_type_idx);
       if (!return_type.IsLowHalf()) {
-        work_line_->SetResultRegisterType(this, return_type);
+        work_line_->SetResultRegisterType(return_type);
       } else {
         work_line_->SetResultRegisterTypeWide(return_type, return_type.HighHalf(&reg_types_));
       }
@@ -3613,8 +3546,8 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
       ArtMethod* called_method = VerifyInvocationArgs(inst, METHOD_POLYMORPHIC, is_range);
       if (called_method == nullptr) {
         // Convert potential soft failures in VerifyInvocationArgs() to hard errors.
-        if (failure_messages_.size() > 0) {
-          std::string message = failure_messages_.back()->str();
+        if (failures_.size() > 0) {
+          std::string_view message = failures_.back().message.view();
           Fail(VERIFY_ERROR_BAD_CLASS_HARD) << message;
         } else {
           Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "invoke-polymorphic verification failure.";
@@ -3630,7 +3563,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
       const RegType& return_type =
           reg_types_.FromTypeIndex(dex_file_->GetProtoId(proto_idx).return_type_idx_);
       if (!return_type.IsLowHalf()) {
-        work_line_->SetResultRegisterType(this, return_type);
+        work_line_->SetResultRegisterType(return_type);
       } else {
         work_line_->SetResultRegisterTypeWide(return_type, return_type.HighHalf(&reg_types_));
       }
@@ -3661,7 +3594,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
       // Step 3. Propagate return type information
       const RegType& return_type = reg_types_.FromTypeIndex(proto_id.return_type_idx_);
       if (!return_type.IsLowHalf()) {
-        work_line_->SetResultRegisterType(this, return_type);
+        work_line_->SetResultRegisterType(return_type);
       } else {
         work_line_->SetResultRegisterTypeWide(return_type, return_type.HighHalf(&reg_types_));
       }
@@ -3869,21 +3802,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
   }  // end - switch (dec_insn.opcode)
 
   if (flags_.have_pending_hard_failure_) {
-    if (IsAotMode()) {
-      /* When AOT compiling, check that the last failure is a hard failure */
-      if (failures_[failures_.size() - 1] != VERIFY_ERROR_BAD_CLASS_HARD) {
-        LOG(ERROR) << "Pending failures:";
-        for (auto& error : failures_) {
-          LOG(ERROR) << error;
-        }
-        for (auto& error_msg : failure_messages_) {
-          LOG(ERROR) << error_msg->str();
-        }
-        LOG(FATAL) << "Pending hard failure, but last failure not hard.";
-      }
-    }
     /* immediate failure, reject class */
-    InfoMessages() << "Rejecting opcode " << inst->DumpString(dex_file_);
     return false;
   } else if (flags_.have_pending_runtime_throw_failure_) {
     LogVerifyInfo() << "Elevating opcode flags from " << opcode_flags << " to Throw";
@@ -3899,7 +3818,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
    * not expensive and it makes our debugging output cleaner.)
    */
   if (!just_set_result) {
-    work_line_->SetResultTypeToUnknown(GetRegTypeCache());
+    work_line_->SetResultTypeToUnknown();
   }
 
   /*
@@ -3925,13 +3844,9 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
     DCHECK(!IsMoveResultOrMoveException(inst->RelativeAt(branch_target)->Opcode()));
     /* update branch target, set "changed" if appropriate */
     if (nullptr != branch_line) {
-      if (!UpdateRegisters(work_insn_idx_ + branch_target, branch_line.get(), false)) {
-        return false;
-      }
+      UpdateRegisters(work_insn_idx_ + branch_target, branch_line.get(), false);
     } else {
-      if (!UpdateRegisters(work_insn_idx_ + branch_target, work_line_.get(), false)) {
-        return false;
-      }
+      UpdateRegisters(work_insn_idx_ + branch_target, work_line_.get(), false);
     }
   }
 
@@ -3967,9 +3882,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
       abs_offset = work_insn_idx_ + offset;
       DCHECK_LT(abs_offset, code_item_accessor_.InsnsSizeInCodeUnits());
       DCHECK(!IsMoveResultOrMoveException(inst->RelativeAt(offset)->Opcode()));
-      if (!UpdateRegisters(abs_offset, work_line_.get(), false)) {
-        return false;
-      }
+      UpdateRegisters(abs_offset, work_line_.get(), false);
     }
   }
 
@@ -4013,9 +3926,7 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
         LogVerifyInfo() << "Updating exception handler 0x"
                         << std::hex << iterator.GetHandlerAddress();
       }
-      if (!UpdateRegisters(iterator.GetHandlerAddress(), saved_line_.get(), false)) {
-        return false;
-      }
+      UpdateRegisters(iterator.GetHandlerAddress(), saved_line_.get(), false);
     }
 
     /*
@@ -4041,37 +3952,30 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
    *        because it changes work_line_ when performing peephole optimization
    *        and this change should not be used in those cases.
    */
-  if ((opcode_flags & Instruction::kContinue) != 0 && !exc_handler_unreachable) {
+  if ((opcode_flags & Instruction::kContinue) != 0) {
     DCHECK_EQ(&code_item_accessor_.InstructionAt(work_insn_idx_), inst);
     uint32_t next_insn_idx = work_insn_idx_ + inst->SizeInCodeUnits();
     if (next_insn_idx >= code_item_accessor_.InsnsSizeInCodeUnits()) {
-      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "Execution can walk off end of code area";
+      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "Can flow through to end of code area";
       return false;
     }
     // The only way to get to a move-exception instruction is to get thrown there. Make sure the
     // next instruction isn't one.
     Instruction::Code next_opcode = code_item_accessor_.InstructionAt(next_insn_idx).Opcode();
     if (UNLIKELY(next_opcode == Instruction::MOVE_EXCEPTION)) {
-      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "invalid use of move-exception";
+      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "Can flow through to move-exception";
       return false;
     }
     if (nullptr != fallthrough_line) {
       // Make workline consistent with fallthrough computed from peephole optimization.
       work_line_->CopyFromLine(fallthrough_line.get());
     }
-    if (GetInstructionFlags(next_insn_idx).IsReturn()) {
-      // For returns we only care about the operand to the return, all other registers are dead.
-      const Instruction* ret_inst = &code_item_accessor_.InstructionAt(next_insn_idx);
-      AdjustReturnLine(this, ret_inst, work_line_.get());
-    }
     RegisterLine* next_line = reg_table_.GetLine(next_insn_idx);
     if (next_line != nullptr) {
       // Merge registers into what we have for the next instruction, and set the "changed" flag if
       // needed. If the merge changes the state of the registers then the work line will be
       // updated.
-      if (!UpdateRegisters(next_insn_idx, work_line_.get(), true)) {
-        return false;
-      }
+      UpdateRegisters(next_insn_idx, work_line_.get(), true);
     } else {
       /*
        * We're not recording register data for the next instruction, so we don't know what the
@@ -4112,9 +4016,8 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
   return true;
 }  // NOLINT(readability/fn_size)
 
-template <bool kVerifierDebug>
 template <CheckAccess C>
-const RegType& MethodVerifier<kVerifierDebug>::ResolveClass(dex::TypeIndex class_idx) {
+const RegType& MethodVerifierImpl::ResolveClass(dex::TypeIndex class_idx) {
   // FIXME: `RegTypeCache` can currently return a few fundamental classes such as j.l.Object
   // or j.l.Class without resolving them using the current class loader and recording them
   // in the corresponding `ClassTable`. The subsequent method and field lookup by callers of
@@ -4167,94 +4070,100 @@ const RegType& MethodVerifier<kVerifierDebug>::ResolveClass(dex::TypeIndex class
   return result;
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::HandleMoveException(const Instruction* inst)  {
+MethodVerifierImpl::HandleMoveExceptionResult
+MethodVerifierImpl::HandleMoveException(const Instruction* inst)  {
   // We do not allow MOVE_EXCEPTION as the first instruction in a method. This is a simple case
   // where one entrypoint to the catch block is not actually an exception path.
   if (work_insn_idx_ == 0) {
     Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "move-exception at pc 0x0";
-    return true;
+    return {false, false};
   }
   /*
    * This statement can only appear as the first instruction in an exception handler. We verify
    * that as part of extracting the exception type from the catch block list.
    */
-  auto caught_exc_type_fn = [&]() REQUIRES_SHARED(Locks::mutator_lock_) ->
-      std::pair<bool, const RegType*> {
-    const RegType* common_super = nullptr;
-    if (code_item_accessor_.TriesSize() != 0) {
-      const uint8_t* handlers_ptr = code_item_accessor_.GetCatchHandlerData();
-      uint32_t handlers_size = DecodeUnsignedLeb128(&handlers_ptr);
-      const RegType* unresolved = nullptr;
-      for (uint32_t i = 0; i < handlers_size; i++) {
-        CatchHandlerIterator iterator(handlers_ptr);
-        for (; iterator.HasNext(); iterator.Next()) {
-          if (iterator.GetHandlerAddress() == (uint32_t) work_insn_idx_) {
-            if (!iterator.GetHandlerTypeIndex().IsValid()) {
-              common_super = &reg_types_.JavaLangThrowable();
-            } else {
-              // Do access checks only on resolved exception classes.
-              const RegType& exception =
-                  ResolveClass<CheckAccess::kOnResolvedClass>(iterator.GetHandlerTypeIndex());
-              if (!IsAssignableFrom(reg_types_.JavaLangThrowable(), exception)) {
-                DCHECK(!exception.IsUninitializedTypes());  // Comes from dex, shouldn't be uninit.
-                if (exception.IsUnresolvedTypes()) {
-                  if (unresolved == nullptr) {
-                    unresolved = &exception;
-                  } else {
-                    unresolved = &unresolved->SafeMerge(exception, &reg_types_, this);
-                  }
+  const RegType* common_super = nullptr;
+  const RegType* unresolved = nullptr;
+  if (code_item_accessor_.TriesSize() != 0) {
+    const uint8_t* handlers_ptr = code_item_accessor_.GetCatchHandlerData();
+    uint32_t handlers_size = DecodeUnsignedLeb128(&handlers_ptr);
+    for (uint32_t i = 0; i < handlers_size; i++) {
+      CatchHandlerIterator iterator(handlers_ptr);
+      for (; iterator.HasNext(); iterator.Next()) {
+        if (iterator.GetHandlerAddress() == (uint32_t) work_insn_idx_) {
+          if (!iterator.GetHandlerTypeIndex().IsValid()) {
+            common_super = &reg_types_.JavaLangThrowable();
+          } else {
+            // Do access checks only on resolved exception classes.
+            const RegType& exception =
+                ResolveClass<CheckAccess::kOnResolvedClass>(iterator.GetHandlerTypeIndex());
+            if (!IsAssignableFrom(reg_types_.JavaLangThrowable(), exception)) {
+              DCHECK(!exception.IsUninitializedTypes());  // Comes from dex, shouldn't be uninit.
+              if (exception.IsUnresolvedTypes()) {
+                if (unresolved == nullptr) {
+                  unresolved = &exception;
                 } else {
-                  Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "unexpected non-throwable class "
-                                                    << exception;
-                  return std::make_pair(true, &reg_types_.Conflict());
+                  unresolved = &unresolved->SafeMerge(exception, &reg_types_, this);
                 }
-              } else if (common_super == nullptr) {
-                common_super = &exception;
-              } else if (common_super->Equals(exception)) {
-                // odd case, but nothing to do
               } else {
-                common_super = &common_super->Merge(exception, &reg_types_, this);
-                if (FailOrAbort(IsAssignableFrom(reg_types_.JavaLangThrowable(), *common_super),
-                                "java.lang.Throwable is not assignable-from common_super at ",
-                                work_insn_idx_)) {
-                  break;
-                }
+                Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "unexpected non-throwable class "
+                                                  << exception;
+                return {false, false};
+              }
+            } else if (common_super == nullptr) {
+              common_super = &exception;
+            } else if (common_super->Equals(exception)) {
+              // odd case, but nothing to do
+            } else {
+              common_super = &common_super->Merge(exception, &reg_types_, this);
+              if (UNLIKELY(!IsAssignableFrom(reg_types_.JavaLangThrowable(), *common_super))) {
+                Fail(VERIFY_ERROR_BAD_CLASS_HARD)
+                    << "java.lang.Throwable is not assignable-from common_super";
+                return {false, false};
               }
             }
           }
         }
-        handlers_ptr = iterator.EndDataPointer();
       }
-      if (unresolved != nullptr) {
-        // Soft-fail, but do not handle this with a synthetic throw.
-        Fail(VERIFY_ERROR_UNRESOLVED_TYPE_CHECK, /*pending_exc=*/ false)
-            << "Unresolved catch handler";
-        bool should_continue = true;
-        if (common_super != nullptr) {
-          unresolved = &unresolved->Merge(*common_super, &reg_types_, this);
-        } else {
-          should_continue = !PotentiallyMarkRuntimeThrow();
-        }
-        return std::make_pair(should_continue, unresolved);
+      handlers_ptr = iterator.EndDataPointer();
+    }
+  }
+  const RegType* reg_type = nullptr;
+  bool skip_verification_of_exception_handler = false;
+  if (unresolved != nullptr) {
+    // Soft-fail, but do not handle this with a synthetic throw.
+    Fail(VERIFY_ERROR_UNRESOLVED_TYPE_CHECK, /*pending_exc=*/ false)
+        << "Unresolved catch handler";
+    bool should_continue = true;
+    if (common_super != nullptr) {
+      reg_type = &unresolved->Merge(*common_super, &reg_types_, this);
+    } else {
+      reg_type = unresolved;
+      if (!IsAotMode() && !IsSdkVersionSetAndAtLeast(api_level_, SdkVersion::kS_V2)) {
+        // This is an unreachable handler at runtime. For older API levels, we avoid the
+        // verification of the entire handler for compatibility reasons. The instruction
+        // doesn't throw, but we mark the method as having a pending runtime throw failure
+        // so that the JIT compiler does not try to compile it - the compiler expects all
+        // instructions to be properly verified and may crash otherwise.
+        Fail(VERIFY_ERROR_RUNTIME_THROW, /* pending_exc= */ false);
+        skip_verification_of_exception_handler = true;
       }
     }
-    if (common_super == nullptr) {
-      /* No catch block */
-      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "unable to find exception handler";
-      return std::make_pair(true, &reg_types_.Conflict());
-    }
+  } else if (common_super == nullptr) {
+    /* No catch block */
+    Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "unable to find exception handler";
+    return {false, false};
+  } else {
     DCHECK(common_super->HasClass());
     CheckForFinalAbstractClass(common_super->GetClass());
-    return std::make_pair(true, common_super);
-  };
-  auto result = caught_exc_type_fn();
-  work_line_->SetRegisterType<LockOp::kClear>(inst->VRegA_11x(), *result.second);
-  return result.first;
+    reg_type = common_super;
+  }
+  DCHECK(reg_type != nullptr);
+  work_line_->SetRegisterType<LockOp::kClear>(inst->VRegA_11x(), *reg_type);
+  return {true, skip_verification_of_exception_handler};
 }
 
-template <bool kVerifierDebug>
-ArtMethod* MethodVerifier<kVerifierDebug>::ResolveMethodAndCheckAccess(
+ArtMethod* MethodVerifierImpl::ResolveMethodAndCheckAccess(
     uint32_t dex_method_idx, MethodType method_type) {
   const dex::MethodId& method_id = dex_file_->GetMethodId(dex_method_idx);
   const RegType& klass_type = ResolveClass<CheckAccess::kYes>(method_id.class_idx_);
@@ -4390,9 +4299,8 @@ ArtMethod* MethodVerifier<kVerifierDebug>::ResolveMethodAndCheckAccess(
   return res_method;
 }
 
-template <bool kVerifierDebug>
 template <class T>
-ArtMethod* MethodVerifier<kVerifierDebug>::VerifyInvocationArgsFromIterator(
+ArtMethod* MethodVerifierImpl::VerifyInvocationArgsFromIterator(
     T* it, const Instruction* inst, MethodType method_type, bool is_range, ArtMethod* res_method) {
   DCHECK_EQ(!is_range, inst->HasVarArgs());
 
@@ -4531,10 +4439,9 @@ ArtMethod* MethodVerifier<kVerifierDebug>::VerifyInvocationArgsFromIterator(
   return res_method;
 }
 
-template <bool kVerifierDebug>
-void MethodVerifier<kVerifierDebug>::VerifyInvocationArgsUnresolvedMethod(const Instruction* inst,
-                                                                          MethodType method_type,
-                                                                          bool is_range) {
+void MethodVerifierImpl::VerifyInvocationArgsUnresolvedMethod(const Instruction* inst,
+                                                              MethodType method_type,
+                                                              bool is_range) {
   // As the method may not have been resolved, make this static check against what we expect.
   // The main reason for this code block is to fail hard when we find an illegal use, e.g.,
   // wrong number of arguments or wrong primitive types, even if the method could not be resolved.
@@ -4544,8 +4451,7 @@ void MethodVerifier<kVerifierDebug>::VerifyInvocationArgsUnresolvedMethod(const 
   VerifyInvocationArgsFromIterator(&it, inst, method_type, is_range, nullptr);
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::CheckCallSite(uint32_t call_site_idx) {
+bool MethodVerifierImpl::CheckCallSite(uint32_t call_site_idx) {
   if (call_site_idx >= dex_file_->NumCallSiteIds()) {
     Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "Bad call site id #" << call_site_idx
                                       << " >= " << dex_file_->NumCallSiteIds();
@@ -4599,8 +4505,7 @@ bool MethodVerifier<kVerifierDebug>::CheckCallSite(uint32_t call_site_idx) {
   return true;
 }
 
-template <bool kVerifierDebug>
-ArtMethod* MethodVerifier<kVerifierDebug>::VerifyInvocationArgs(
+ArtMethod* MethodVerifierImpl::VerifyInvocationArgs(
     const Instruction* inst, MethodType method_type, bool is_range) {
   // Resolve the method. This could be an abstract or concrete method depending on what sort of call
   // we're making.
@@ -4692,8 +4597,7 @@ ArtMethod* MethodVerifier<kVerifierDebug>::VerifyInvocationArgs(
   return verified_method;
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::CheckSignaturePolymorphicMethod(ArtMethod* method) {
+bool MethodVerifierImpl::CheckSignaturePolymorphicMethod(ArtMethod* method) {
   ObjPtr<mirror::Class> klass = method->GetDeclaringClass();
   const char* method_name = method->GetName();
 
@@ -4741,8 +4645,7 @@ bool MethodVerifier<kVerifierDebug>::CheckSignaturePolymorphicMethod(ArtMethod* 
   return true;
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::CheckSignaturePolymorphicReceiver(const Instruction* inst) {
+bool MethodVerifierImpl::CheckSignaturePolymorphicReceiver(const Instruction* inst) {
   const RegType& this_type = GetInvocationThis(inst);
   if (this_type.IsZeroOrNull()) {
     /* null pointer always passes (and always fails at run time) */
@@ -4775,10 +4678,9 @@ bool MethodVerifier<kVerifierDebug>::CheckSignaturePolymorphicReceiver(const Ins
   return true;
 }
 
-template <bool kVerifierDebug>
-void MethodVerifier<kVerifierDebug>::VerifyNewArray(const Instruction* inst,
-                                                    bool is_filled,
-                                                    bool is_range) {
+void MethodVerifierImpl::VerifyNewArray(const Instruction* inst,
+                                        bool is_filled,
+                                        bool is_range) {
   dex::TypeIndex type_idx;
   if (!is_filled) {
     DCHECK_EQ(inst->Opcode(), Instruction::NEW_ARRAY);
@@ -4821,15 +4723,14 @@ void MethodVerifier<kVerifierDebug>::VerifyNewArray(const Instruction* inst,
         }
       }
       // filled-array result goes into "result" register
-      work_line_->SetResultRegisterType(this, res_type);
+      work_line_->SetResultRegisterType(res_type);
     }
   }
 }
 
-template <bool kVerifierDebug>
-void MethodVerifier<kVerifierDebug>::VerifyAGet(const Instruction* inst,
-                                                const RegType& insn_type,
-                                                bool is_primitive) {
+void MethodVerifierImpl::VerifyAGet(const Instruction* inst,
+                                    const RegType& insn_type,
+                                    bool is_primitive) {
   const RegType& index_type = work_line_->GetRegisterType(this, inst->VRegC_23x());
   if (!index_type.IsArrayIndexTypes()) {
     Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "Invalid reg type for array index (" << index_type << ")";
@@ -4896,9 +4797,7 @@ void MethodVerifier<kVerifierDebug>::VerifyAGet(const Instruction* inst,
   }
 }
 
-template <bool kVerifierDebug>
-void MethodVerifier<kVerifierDebug>::VerifyPrimitivePut(const RegType& target_type,
-                                                        uint32_t vregA) {
+void MethodVerifierImpl::VerifyPrimitivePut(const RegType& target_type, uint32_t vregA) {
   // Primitive assignability rules are weaker than regular assignability rules.
   bool value_compatible;
   const RegType& value_type = work_line_->GetRegisterType(this, vregA);
@@ -4924,10 +4823,9 @@ void MethodVerifier<kVerifierDebug>::VerifyPrimitivePut(const RegType& target_ty
   }
 }
 
-template <bool kVerifierDebug>
-void MethodVerifier<kVerifierDebug>::VerifyAPut(const Instruction* inst,
-                                                const RegType& insn_type,
-                                                bool is_primitive) {
+void MethodVerifierImpl::VerifyAPut(const Instruction* inst,
+                                    const RegType& insn_type,
+                                    bool is_primitive) {
   const RegType& index_type = work_line_->GetRegisterType(this, inst->VRegC_23x());
   if (!index_type.IsArrayIndexTypes()) {
     Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "Invalid reg type for array index (" << index_type << ")";
@@ -5005,8 +4903,7 @@ void MethodVerifier<kVerifierDebug>::VerifyAPut(const Instruction* inst,
   }
 }
 
-template <bool kVerifierDebug>
-ArtField* MethodVerifier<kVerifierDebug>::GetStaticField(uint32_t field_idx, bool is_put) {
+ArtField* MethodVerifierImpl::GetStaticField(uint32_t field_idx, bool is_put) {
   const dex::FieldId& field_id = dex_file_->GetFieldId(field_idx);
   // Check access to class
   const RegType& klass_type = ResolveClass<CheckAccess::kYes>(field_id.class_idx_);
@@ -5041,10 +4938,7 @@ ArtField* MethodVerifier<kVerifierDebug>::GetStaticField(uint32_t field_idx, boo
   return GetISFieldCommon(field, is_put);
 }
 
-template <bool kVerifierDebug>
-ArtField* MethodVerifier<kVerifierDebug>::GetInstanceField(uint32_t vregB,
-                                                           uint32_t field_idx,
-                                                           bool is_put) {
+ArtField* MethodVerifierImpl::GetInstanceField(uint32_t vregB, uint32_t field_idx, bool is_put) {
   const RegType& obj_type = work_line_->GetRegisterType(this, vregB);
   if (!obj_type.IsReferenceTypes()) {
     // Trying to read a field from something that isn't a reference.
@@ -5162,8 +5056,7 @@ ArtField* MethodVerifier<kVerifierDebug>::GetInstanceField(uint32_t vregB,
   return GetISFieldCommon(field, is_put);
 }
 
-template <bool kVerifierDebug>
-ArtField* MethodVerifier<kVerifierDebug>::GetISFieldCommon(ArtField* field, bool is_put) {
+ArtField* MethodVerifierImpl::GetISFieldCommon(ArtField* field, bool is_put) {
   DCHECK(field != nullptr);
   if (!CanAccessMember(field->GetDeclaringClass(), field->GetAccessFlags())) {
     Fail(VERIFY_ERROR_ACCESS_FIELD)
@@ -5181,11 +5074,10 @@ ArtField* MethodVerifier<kVerifierDebug>::GetISFieldCommon(ArtField* field, bool
   return field;
 }
 
-template <bool kVerifierDebug>
 template <FieldAccessType kAccType>
-void MethodVerifier<kVerifierDebug>::VerifyISFieldAccess(const Instruction* inst,
-                                                         bool is_primitive,
-                                                         bool is_static) {
+void MethodVerifierImpl::VerifyISFieldAccess(const Instruction* inst,
+                                             bool is_primitive,
+                                             bool is_static) {
   uint32_t field_idx = GetFieldIdxOfFieldAccess(inst);
   DCHECK(!flags_.have_pending_hard_failure_);
   ArtField* field;
@@ -5225,9 +5117,10 @@ void MethodVerifier<kVerifierDebug>::VerifyISFieldAccess(const Instruction* inst
 }
 
 template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::UpdateRegisters(uint32_t next_insn,
+void MethodVerifier<kVerifierDebug>::UpdateRegisters(uint32_t next_insn,
                                                      RegisterLine* merge_line,
                                                      bool update_merge_line) {
+  DCHECK(!flags_.have_pending_hard_failure_);
   bool changed = true;
   RegisterLine* target_line = reg_table_.GetLine(next_insn);
   if (!GetInstructionFlags(next_insn).IsVisitedOrChanged()) {
@@ -5237,29 +5130,13 @@ bool MethodVerifier<kVerifierDebug>::UpdateRegisters(uint32_t next_insn,
      * only way a register can transition out of "unknown", so this is not just an optimization.)
      */
     target_line->CopyFromLine(merge_line);
-    if (GetInstructionFlags(next_insn).IsReturn()) {
-      // Verify that the monitor stack is empty on return.
-      merge_line->VerifyMonitorStackEmpty(this);
-
-      // For returns we only care about the operand to the return, all other registers are dead.
-      // Initialize them as conflicts so they don't add to GC and deoptimization information.
-      const Instruction* ret_inst = &code_item_accessor_.InstructionAt(next_insn);
-      AdjustReturnLine(this, ret_inst, target_line);
-      // Directly bail if a hard failure was found.
-      if (flags_.have_pending_hard_failure_) {
-        return false;
-      }
-    }
   } else {
     RegisterLineArenaUniquePtr copy;
     if (kVerifierDebug) {
-      copy.reset(RegisterLine::Create(target_line->NumRegs(), allocator_, GetRegTypeCache()));
+      copy.reset(RegisterLine::Create(target_line->NumRegs(), allocator_));
       copy->CopyFromLine(target_line);
     }
     changed = target_line->MergeRegisters(this, merge_line);
-    if (flags_.have_pending_hard_failure_) {
-      return false;
-    }
     if (kVerifierDebug && changed) {
       LogVerifyInfo() << "Merging at [" << reinterpret_cast<void*>(work_insn_idx_) << "]"
                       << " to [" << reinterpret_cast<void*>(next_insn) << "]: " << "\n"
@@ -5274,11 +5151,10 @@ bool MethodVerifier<kVerifierDebug>::UpdateRegisters(uint32_t next_insn,
   if (changed) {
     GetModifiableInstructionFlags(next_insn).SetChanged();
   }
-  return true;
+  DCHECK(!flags_.have_pending_hard_failure_);
 }
 
-template <bool kVerifierDebug>
-const RegType& MethodVerifier<kVerifierDebug>::GetMethodReturnType() {
+const RegType& MethodVerifierImpl::GetMethodReturnType() {
   if (return_type_ == nullptr) {
     const dex::MethodId& method_id = dex_file_->GetMethodId(dex_method_idx_);
     const dex::ProtoId& proto_id = dex_file_->GetMethodPrototype(method_id);
@@ -5287,8 +5163,7 @@ const RegType& MethodVerifier<kVerifierDebug>::GetMethodReturnType() {
   return *return_type_;
 }
 
-template <bool kVerifierDebug>
-RegType::Kind MethodVerifier<kVerifierDebug>::DetermineCat1Constant(int32_t value) {
+RegType::Kind MethodVerifierImpl::DetermineCat1Constant(int32_t value) {
   // Imprecise constant type.
   if (value < -32768) {
     return RegType::Kind::kIntegerConstant;
@@ -5311,10 +5186,9 @@ RegType::Kind MethodVerifier<kVerifierDebug>::DetermineCat1Constant(int32_t valu
   }
 }
 
-template <bool kVerifierDebug>
-bool MethodVerifier<kVerifierDebug>::PotentiallyMarkRuntimeThrow() {
+void MethodVerifierImpl::PotentiallyMarkRuntimeThrow() {
   if (IsAotMode() || IsSdkVersionSetAndAtLeast(api_level_, SdkVersion::kS_V2)) {
-    return false;
+    return;
   }
   // Compatibility mode: we treat the following code unreachable and the verifier
   // will not analyze it.
@@ -5323,13 +5197,7 @@ bool MethodVerifier<kVerifierDebug>::PotentiallyMarkRuntimeThrow() {
   if (work_insn_idx_ < dex::kDexNoIndex) {
     const Instruction& inst = code_item_accessor_.InstructionAt(work_insn_idx_);
     Instruction::Code opcode = inst.Opcode();
-    if (opcode == Instruction::MOVE_EXCEPTION) {
-      // This is an unreachable handler. The instruction doesn't throw, but we
-      // mark the method as having a pending runtime throw failure so that
-      // the compiler does not try to compile it.
-      Fail(VERIFY_ERROR_RUNTIME_THROW, /* pending_exc= */ false);
-      return true;
-    }
+    DCHECK_NE(opcode, Instruction::MOVE_EXCEPTION);
     // How to handle runtime failures for instructions that are not flagged kThrow.
     if ((Instruction::FlagsOf(opcode) & Instruction::kThrow) == 0 &&
         !impl::IsCompatThrow(opcode) &&
@@ -5345,7 +5213,6 @@ bool MethodVerifier<kVerifierDebug>::PotentiallyMarkRuntimeThrow() {
     }
   }
   flags_.have_pending_runtime_throw_failure_ = true;
-  return true;
 }
 
 }  // namespace
@@ -5372,16 +5239,13 @@ MethodVerifier::MethodVerifier(Thread* self,
       dex_file_(reg_types->GetDexFile()),
       class_def_(class_def),
       code_item_accessor_(*dex_file_, code_item),
+      failures_(allocator_.Adapter(kArenaAllocVerifier)),
       flags_{ .have_pending_hard_failure_ = false, .have_pending_runtime_throw_failure_ = false },
       const_flags_{ .aot_mode_ = aot_mode, .can_load_classes_ = reg_types->CanLoadClasses() },
       encountered_failure_types_(0),
       info_messages_(std::nullopt),
       verifier_deps_(verifier_deps),
       link_(nullptr) {
-}
-
-MethodVerifier::~MethodVerifier() {
-  STLDeleteElements(&failure_messages_);
 }
 
 MethodVerifier::FailureData MethodVerifier::VerifyMethod(Thread* self,
@@ -5487,7 +5351,7 @@ MethodVerifier::FailureData MethodVerifier::VerifyMethod(Thread* self,
             << reg_types->GetDexFile()->PrettyMethod(method_idx) << "\n");
       }
       if (kVerifierDebug) {
-        LOG(INFO) << verifier.InfoMessages().str();
+        LOG(INFO) << verifier.InfoMessages().view();
         verifier.Dump(LOG_STREAM(INFO));
       }
       if (CanRuntimeHandleVerificationFailure(verifier.encountered_failure_types_)) {
@@ -5528,24 +5392,23 @@ MethodVerifier::FailureData MethodVerifier::VerifyMethod(Thread* self,
           << reg_types->GetDexFile()->PrettyMethod(method_idx) << "\n");
     }
     if (hard_failure_msg != nullptr) {
-      CHECK(!verifier.failure_messages_.empty());
-      *hard_failure_msg =
-          verifier.failure_messages_[verifier.failure_messages_.size() - 1]->str();
+      CHECK(!verifier.failures_.empty());
+      *hard_failure_msg = verifier.failures_.back().message.view();
     }
     result.kind = FailureKind::kHardFailure;
 
     if (kVerifierDebug || VLOG_IS_ON(verifier)) {
-      LOG(ERROR) << verifier.InfoMessages().str();
+      LOG(ERROR) << verifier.InfoMessages().view();
       verifier.Dump(LOG_STREAM(ERROR));
     }
     // Under verifier-debug, dump the complete log into the error message.
     if (kVerifierDebug && hard_failure_msg != nullptr) {
       hard_failure_msg->append("\n");
-      hard_failure_msg->append(verifier.InfoMessages().str());
+      hard_failure_msg->append(verifier.InfoMessages().view());
       hard_failure_msg->append("\n");
       std::ostringstream oss;
       verifier.Dump(oss);
-      hard_failure_msg->append(oss.str());
+      hard_failure_msg->append(oss.view());
     }
   }
   if (kTimeVerifyMethod) {
@@ -5591,7 +5454,7 @@ MethodVerifier* MethodVerifier::CalculateVerificationInfo(
   verifier->Verify();
   if (VLOG_IS_ON(verifier)) {
     verifier->DumpFailures(VLOG_STREAM(verifier));
-    VLOG(verifier) << verifier->InfoMessages().str();
+    VLOG(verifier) << verifier->InfoMessages().view();
     verifier->Dump(VLOG_STREAM(verifier));
   }
   if (verifier->flags_.have_pending_hard_failure_) {
@@ -5630,7 +5493,7 @@ void MethodVerifier::VerifyMethodAndDump(Thread* self,
       api_level);
   verifier.Verify();
   verifier.DumpFailures(vios->Stream());
-  vios->Stream() << verifier.InfoMessages().str();
+  vios->Stream() << verifier.InfoMessages().view();
   // Only dump if no hard failures. Otherwise the verifier may be not fully initialized
   // and querying any info is dangerous/can abort.
   if (!verifier.flags_.have_pending_hard_failure_) {
@@ -5737,12 +5600,10 @@ std::ostream& MethodVerifier::Fail(VerifyError error, bool pending_exc) {
     CHECK_NE(error, VERIFY_ERROR_BAD_CLASS_HARD);
   }
 
-  failures_.push_back(error);
-  std::string location(StringPrintf("%s: [0x%X] ", dex_file_->PrettyMethod(dex_method_idx_).c_str(),
-                                    work_insn_idx_));
-  std::ostringstream* failure_message = new std::ostringstream(location, std::ostringstream::ate);
-  failure_messages_.push_back(failure_message);
-  return *failure_message;
+  std::string location =
+      StringPrintf("%s: [0x%X] ", dex_file_->PrettyMethod(dex_method_idx_).c_str(), work_insn_idx_);
+  failures_.emplace_back(error, location, failures_.get_allocator());
+  return failures_.back().message;
 }
 
 ScopedNewLine MethodVerifier::LogVerifyInfo() {
