@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d8431e9_5d96e3b8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-20T15:38:06Z",
+      "side": 1,
+      "message": "Please try `atest ahat-tests` as well.",
+      "revId": "dd6982914af5d9e90510bcafe03f243fe1c7027a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecb25dd6_103dbc19",
+        "filename": "tools/ahat/ahat-test-dump-gen.sh.in",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-20T15:38:06Z",
+      "side": 1,
+      "message": "```suggestion\n# be used by the ahat tests. Note: You\u0027ll see a lot of error messages from\n```",
+      "range": {
+        "startLine": 27,
+        "startChar": 61,
+        "endLine": 27,
+        "endChar": 68
+      },
+      "revId": "dd6982914af5d9e90510bcafe03f243fe1c7027a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a4d6478_0a69c02f",
+        "filename": "tools/ahat/ahat-test-dump-gen.sh.in",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-20T15:38:06Z",
+      "side": 1,
+      "message": "For the sake of completeness, this should also be mentioned as something the user needs to build beforehand. I think the script by itself isn\u0027t enough to get a working ART VM, so maybe just add something like `droid` as a build target.",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 3
+      },
+      "revId": "dd6982914af5d9e90510bcafe03f243fe1c7027a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de21a4e2_f823ea0d",
+        "filename": "tools/ahat/etc/README.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-20T15:38:06Z",
+      "side": 1,
+      "message": "Nit: Delete extra empty line.",
+      "revId": "dd6982914af5d9e90510bcafe03f243fe1c7027a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
