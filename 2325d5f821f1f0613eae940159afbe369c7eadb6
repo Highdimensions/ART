@@ -169,6 +169,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "038b7431_bf4e5c03",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-20T18:28:11Z",
+      "side": 1,
+      "message": "Hii\n\nThanks for your follow-up question.\n\nAs we discussed earlier, in the current case where buf is 100 bytes and the string \"Unknown state\" (including the null-terminator) is much smaller, there\u0027s no immediate risk of a buffer overflow. However, the intention behind the change was to provide a safety measure in the case where the buffer size is smaller than expected or when working with dynamically sized buffers.\n\nEven though it might seem unnecessary for the current scenario, the update of using sizeof(buf) - 1 ensures that:\n\n1. **Buffer Overflow Prevention:** If the buffer size were smaller than the string being copied, this measure would ensure we don’t accidentally write past the buffer boundaries.\n  \n2. **Null-Termination Safety:** By explicitly reserving space for the null-terminator, we ensure that the string is always null-terminated, which is crucial to avoid undefined behavior or incorrect string handling later.\n\nIn essence while the current buffer size is large enough, this change ensures robustness and prevents potential issues in scenarios where buffer sizes may vary or be smaller than anticipated. It’s a general good practice to safeguard against buffer overflows and incorrect string termination which are common issues in C/C++ code.\n\nI think this would be sufficient",
+      "parentUuid": "b3be5faa_52cd1543",
+      "range": {
+        "startLine": 7,
+        "startChar": 32,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "6d9a45fe_1cbdbe26",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
