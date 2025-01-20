@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c4116b1_48e8c2dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:09:40Z",
+      "side": 1,
+      "message": "Hans, please take a look at PS18 -\u003e PS20 for the changes related to the comments you gave. Thanks.",
+      "revId": "7a8663ee6b5f327bf390ed33da2ea29d995aa99e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
