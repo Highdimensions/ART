@@ -37,6 +37,41 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3458ed7f_968073ff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-20T19:23:30Z",
+      "side": 1,
+      "message": "It seems there is a failure in the presubmit testing. Could you please share more details about it? Thank you!",
+      "revId": "6785801d9df1347872820deb3c6c052be9838008",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73012993_857f3d13",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-20T19:23:30Z",
+      "side": 1,
+      "message": "Thank you for sharing this results!\n\nWhile we still have more benchmarking planned, we do not expect the optimisation CLs to significantly impact these metrics. To help us investigate, could you please share details about the configuration used for the measurements, specifically whether it is 4K or 16K, and whether sparsity is enabled or disabled?\n\nWe see that some of the numbers show improvements while others are negatively impacted, so we are wondering whether this could be due to noise? We have experienced such issues in our measurements in the past.\n\nIf the results are statistically significant, could you please help us direct our efforts by confirming whether the results occur specifically with our CLs, or maybe they are introduced only when reverting the force-4K-alignment CL and/or adding the dense-zeroes CL?\n\nThank you!",
+      "parentUuid": "bbb6b75f_bd4fad13",
+      "revId": "6785801d9df1347872820deb3c6c052be9838008",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "79326961_30fb3dcb",
         "filename": "libelffile/elf/elf_builder.h",
         "patchSetId": 5
