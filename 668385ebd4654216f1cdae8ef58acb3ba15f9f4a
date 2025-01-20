@@ -3,6 +3,46 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "18fd2de5_e97b984d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "Even if this is not mandatory (nor enforced), I\u0027d recommend adding a Flag stanza mentioning the new Aconfig flag controlling the use of Generational CMC collection here, i.e.:\n\n```\nFlag: art_performance.use_generational_cmc\n```",
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77cb74cc_4342b6c0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "I suggest mentioning the various environment variables used to control the different GC types / behaviours too.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 46
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f4fa23e8_f9faf924",
         "filename": "build/art.go",
         "patchSetId": 14
@@ -14,6 +54,30 @@
       "writtenOn": "2025-01-20T13:24:59Z",
       "side": 1,
       "message": "Is it okay to repurpose `ART_USE_GENERATIONAL_CC` to mean generational CMC? Will it cause confusions? Personally, I don\u0027t have an opinion on this. I just wonder other ART folks\u0027 opinion, especially those who work on the runtime.",
+      "range": {
+        "startLine": 79,
+        "startChar": 31,
+        "endLine": 79,
+        "endChar": 54
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ba4dfcd_3ce74b4c",
+        "filename": "build/art.go",
+        "patchSetId": 14
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "I presume reusing the `ART_USE_GENERATIONAL_CC` environment variable / macro is meant to leverage existing continuous integration configurations (e.g. on LUCI and Golem), but I agree this is confusing. I\u0027d also recommend introducing a new unambiguous name here (e.g. `ART_USE_GENERATIONAL_GC`).\n\nWe should also consider moving away from using `ART_USE_READ_BARRIER` to mean \"CC collector vs other collector\" as this is confusing, e.g. by generalising the use of an explicit \"GC type\" environment variable / macro instead – but this is a bit orthogonal to this CL, so this would be fine to do in a separate CL.",
+      "parentUuid": "f4fa23e8_f9faf924",
       "range": {
         "startLine": 79,
         "startChar": 31,
@@ -49,6 +113,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "175cf72d_571fd6e7",
+        "filename": "build/flags/art-flags.aconfig",
+        "patchSetId": 14
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "e85aab42_a2fc9265",
+      "range": {
+        "startLine": 24,
+        "startChar": 2,
+        "endLine": 24,
+        "endChar": 26
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "66f991ff_32e6b151",
         "filename": "cmdline/cmdline_types.h",
         "patchSetId": 14
@@ -65,6 +153,309 @@
         "startChar": 31,
         "endLine": 584,
         "endChar": 46
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "499929b5_f768b95c",
+        "filename": "cmdline/cmdline_types.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "Lokesh, IIUC you are reusing [the logic in `app_process` / Zygote which is reading the `runtime_native_boot/enable_generational_cc` \"legacy\" P/H flag and passing it to the runtime](https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/jni/AndroidRuntime.cpp;l\u003d922-932;drc\u003d3366756f141c921f7ef5210e6be34877b7d4dc3f) here. Ideally, we should try and move away from this approach, as it relies on code living in the non-Mainline-updatable platform.\n\nTo \"dynamically\" control the generational behaviour of the new GC, I think we should introduce a new P/H flag (and read it in ART rather than in `app_process`), instead of piggingbacking on `runtime_native_boot/enable_generational_cc`. As discussed last week, we should eventually have three P/H flags to control 1. the GC type, 2. whether the GC is generational, and 3. whether the MOVE ioctl should be used (when applicable).",
+      "parentUuid": "66f991ff_32e6b151",
+      "range": {
+        "startLine": 584,
+        "startChar": 31,
+        "endLine": 584,
+        "endChar": 46
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2463a8c_1c8cbc0f",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "This comment (as well as the one on line 574) does not seem accurate.",
+      "range": {
+        "startLine": 459,
+        "startChar": 0,
+        "endLine": 459,
+        "endChar": 82
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6a1c09c_6feb016a",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "Should this be done (and \"undone\") every time when the collector type is swapped in `YoungMarkCompact::RunPhases()`?",
+      "range": {
+        "startLine": 460,
+        "startChar": 0,
+        "endLine": 472,
+        "endChar": 55
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80153e45_efeb08bb",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "I\u0027d add an explicit comment about which methods are not meant to be called here.",
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2418aed7_14439ffa",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "Is this function also unused?",
+      "range": {
+        "startLine": 72,
+        "startChar": 18,
+        "endLine": 72,
+        "endChar": 28
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ca6faa8_2089b1d6",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "I\u0027d replace this occurrence (and the others below) with:\n\n```\n    LOG(FATAL) \u003c\u003c \"Unreachable code\";\n    UNREACHABLE();\n```\n\nas I\u0027m not sure `UNREACHABLE()` (i.e. `__builtin_unreachable`) would actually abort.",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 18
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c55f2ca8_49cf9b67",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 75,
+                "startChar": 0,
+                "endLine": 75,
+                "endChar": 0
+              },
+              "replacement": "    LOG(FATAL) \u003c\u003c \"Unreachable code\";\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 80,
+                "startChar": 0,
+                "endLine": 80,
+                "endChar": 0
+              },
+              "replacement": "    LOG(FATAL) \u003c\u003c \"Unreachable code\";\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 85,
+                "startChar": 0,
+                "endLine": 85,
+                "endChar": 0
+              },
+              "replacement": "    LOG(FATAL) \u003c\u003c \"Unreachable code\";\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 89,
+                "startChar": 0,
+                "endLine": 89,
+                "endChar": 0
+              },
+              "replacement": "    LOG(FATAL) \u003c\u003c \"Unreachable code\";\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 91,
+                "startChar": 0,
+                "endLine": 92,
+                "endChar": 0
+              },
+              "replacement": "  void RevokeAllThreadLocalBuffers() override {\n    LOG(FATAL) \u003c\u003c \"Unreachable code\";\n    UNREACHABLE();\n  };\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 95,
+                "startChar": 0,
+                "endLine": 95,
+                "endChar": 0
+              },
+              "replacement": "    LOG(FATAL) \u003c\u003c \"Unreachable code\";\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 98,
+                "startChar": 0,
+                "endLine": 99,
+                "endChar": 0
+              },
+              "replacement": "  void ProcessMarkStack() override {\n    LOG(FATAL) \u003c\u003c \"Unreachable code\";\n    UNREACHABLE();\n  }\n"
+            }
+          ]
+        }
+      ],
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2de50b50_8a7fddbc",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "Is this function also unused?",
+      "range": {
+        "startLine": 87,
+        "startChar": 7,
+        "endLine": 87,
+        "endChar": 34
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4b1988d_ff847479",
+        "filename": "runtime/gc/heap.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "Style:\n```suggestion\n    const bool concurrent \u003d (i !\u003d 0);\n```",
+      "range": {
+        "startLine": 824,
+        "startChar": 0,
+        "endLine": 824,
+        "endChar": 35
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8803912b_d01bc372",
+        "filename": "runtime/gc/heap.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 1652,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "Consider using `std::variant` (which is type-safe) instead of `union`.",
+      "range": {
+        "startLine": 1645,
+        "startChar": 0,
+        "endLine": 1652,
+        "endChar": 4
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00f8dab9_1cbef314",
+        "filename": "runtime/runtime_globals.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T18:53:39Z",
+      "side": 1,
+      "message": "Same comment as https://android-review.git.corp.google.com/c/platform/art/+/3321434/comment/f4fa23e8_f9faf924/.",
+      "range": {
+        "startLine": 139,
+        "startChar": 7,
+        "endLine": 139,
+        "endChar": 30
       },
       "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
