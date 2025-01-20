@@ -42,6 +42,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "db5a962d_afb097c5",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:05:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4efbe64d_2d43d68d",
+      "range": {
+        "startLine": 1001,
+        "startChar": 29,
+        "endLine": 1001,
+        "endChar": 32
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d21e9f1_f569286b",
@@ -83,6 +107,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0dd39a66_32586e28",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:05:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d21e9f1_f569286b",
+      "range": {
+        "startLine": 1015,
+        "startChar": 60,
+        "endLine": 1015,
+        "endChar": 64
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "36baba1c_ec67dfe8",
@@ -108,6 +156,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1cff320a_5662104b",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:05:32Z",
+      "side": 1,
+      "message": "\u003e \"So we mark from native roots during the marking phase of young generation collections.\" ?\n\nActually, I\u0027m not talking about marking. The marking from native-roots is done regardless during marking phase. Since we dirty the card even when a native-root in an object which have any (dex-cache/class-loader/class), we need to catch that as well. So I\u0027m talking about capturing those.\n\n\u003eThis sounds like we actually dirty cards during old-gen compaction? It seems that just building a vector of object addresses would be cheaper? But this allows better code reuse?\n\nYes, we need to dirty the cards for references to mid-gen. It\u0027s definitely worth trying the vector approach for performance. I thought about it too. As you said, this allows better code as well as data-structure reuse.",
+      "parentUuid": "36baba1c_ec67dfe8",
+      "range": {
+        "startLine": 1023,
+        "startChar": 35,
+        "endLine": 1024,
+        "endChar": 9
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6475c20a_13f2f3ad",
         "filename": "runtime/gc/collector/mark_compact.cc",
         "patchSetId": 18
@@ -119,6 +191,30 @@
       "writtenOn": "2025-01-16T01:07:59Z",
       "side": 1,
       "message": "Can we comment/fix the REQUIRES annotations on VisitmarkedRange? Do we satisfy that constraint here?",
+      "range": {
+        "startLine": 1190,
+        "startChar": 28,
+        "endLine": 1190,
+        "endChar": 44
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bad29296_56b9f4f2",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1190,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:05:32Z",
+      "side": 1,
+      "message": "The function is annotated with `NO_THREAD_SAFETY_ANALYSIS`, so I didn\u0027t get any complains. Fixed now.",
+      "parentUuid": "6475c20a_13f2f3ad",
       "range": {
         "startLine": 1190,
         "startChar": 28,
@@ -154,6 +250,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "edfc52ba_a7bd9bb3",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1651,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:05:32Z",
+      "side": 1,
+      "message": "Thanks for pointing out. I realized it\u0027s more complicated than I initially thought.\n\nFixed it as well as added comments. PTAL.",
+      "parentUuid": "e0db72ef_52bb0700",
+      "range": {
+        "startLine": 1651,
+        "startChar": 37,
+        "endLine": 1651,
+        "endChar": 52
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27b312d9_69d7ba35",
         "filename": "runtime/gc/collector/mark_compact.cc",
         "patchSetId": 18
@@ -165,6 +285,30 @@
       "writtenOn": "2025-01-16T01:07:59Z",
       "side": 1,
       "message": "I guess this has to divide evenly due to a page alignment calculation? Could we DCHECK that, or add a suitable static_assert?",
+      "range": {
+        "startLine": 4776,
+        "startChar": 6,
+        "endLine": 4776,
+        "endChar": 100
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ac5e51a_c47cdcd1",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 4776,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:05:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27b312d9_69d7ba35",
       "range": {
         "startLine": 4776,
         "startChar": 6,
@@ -188,6 +332,30 @@
       "writtenOn": "2025-01-16T01:07:59Z",
       "side": 1,
       "message": "Could use a comment mentioning \"mark bits\", as below.",
+      "range": {
+        "startLine": 738,
+        "startChar": 2,
+        "endLine": 738,
+        "endChar": 62
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28897faf_9e953a32",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:05:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "530cfa6d_87f89060",
       "range": {
         "startLine": 738,
         "startChar": 2,
@@ -235,6 +403,30 @@
           ]
         }
       ],
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eeb5c2a5_516f71b6",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:05:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5850874_cc1ccdfc",
+      "range": {
+        "startLine": 786,
+        "startChar": 2,
+        "endLine": 786,
+        "endChar": 26
+      },
       "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

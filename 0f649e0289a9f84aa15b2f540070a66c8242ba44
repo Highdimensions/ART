@@ -139,6 +139,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0a1c219c_4d9ac6a2",
+        "filename": "runtime/gc/accounting/card_table.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:05:32Z",
+      "side": 1,
+      "message": "I have tried to update the comment in the right direction. PTAL.",
+      "parentUuid": "d4db8e55_7daf6ea8",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 0
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4c1412f9_bb023033",
         "filename": "runtime/gc/accounting/card_table.h",
         "patchSetId": 16
@@ -1342,6 +1366,30 @@
       "side": 1,
       "message": "That basically sounds correct. If there is noreal race we\u0027re fine. Otherwise there is still a concern that if a non-atomic changes asynchronously, the compiler may have made assumptions that assume this is impossible.",
       "parentUuid": "6f69ca30_9215c7cb",
+      "range": {
+        "startLine": 376,
+        "startChar": 44,
+        "endLine": 376,
+        "endChar": 69
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8471fcbc_8c0483cd",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-20T10:05:32Z",
+      "side": 1,
+      "message": "Addressed it as we discussed offline.",
+      "parentUuid": "d52b6b1d_7227ae12",
       "range": {
         "startLine": 376,
         "startChar": 44,
