@@ -375,6 +375,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "36a664cf_a9cc5876",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-20T10:55:09Z",
+      "side": 1,
+      "message": "Hii @ngeoffray@google.com Could You Please Review latest patchset and give Vote again now all checks has been passed \nThanks",
+      "parentUuid": "18cfbb90_6f18b20f",
+      "range": {
+        "startLine": 422,
+        "startChar": 32,
+        "endLine": 422,
+        "endChar": 47
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cea2dac8_06049e1d",
