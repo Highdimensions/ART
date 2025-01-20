@@ -33,6 +33,29 @@
       "message": "(need to +2 to run presubmit)",
       "revId": "6785801d9df1347872820deb3c6c052be9838008",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79326961_30fb3dcb",
+        "filename": "libelffile/elf/elf_builder.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-20T15:43:53Z",
+      "side": 1,
+      "message": "This is 1 now, right? Add `DCHECK_EQ()` and remove `RoundUp()`.",
+      "range": {
+        "startLine": 652,
+        "startChar": 29,
+        "endLine": 652,
+        "endChar": 57
+      },
+      "revId": "6785801d9df1347872820deb3c6c052be9838008",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
