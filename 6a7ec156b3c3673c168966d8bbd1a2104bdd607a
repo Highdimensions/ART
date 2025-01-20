@@ -178,6 +178,24 @@
       "parentUuid": "6ed08fa0_8c70e533",
       "revId": "6a7ec156b3c3673c168966d8bbd1a2104bdd607a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c724024c_ad3ff898",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-20T11:46:36Z",
+      "side": 1,
+      "message": "Hii Thanks For Resolve all build related issues is there anything else is required from my side to get this PR merged",
+      "parentUuid": "c4526586_ce192f93",
+      "revId": "6a7ec156b3c3673c168966d8bbd1a2104bdd607a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
