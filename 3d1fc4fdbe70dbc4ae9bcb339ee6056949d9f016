@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cbd5b17_19285b26",
+        "filename": "libdexfile/dex/dex_file_verifier.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-20T15:57:21Z",
+      "side": 1,
+      "message": "You need to update `DexFileVerifier::CheckMap()` to keep the `Unknown map section type` error reachable. (Maybe we should reordered that check before doing the `static_cast\u003cDexFile::MapItemType\u003e()`.)",
+      "revId": "3d1fc4fdbe70dbc4ae9bcb339ee6056949d9f016",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
