@@ -22,6 +22,30 @@
       },
       "revId": "a9d28c25ce67402269b4f84d811779c12447147d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a783aba5_3557699f",
+        "filename": "dex2oat/linker/oat_writer_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-20T17:18:27Z",
+      "side": 1,
+      "message": "Thank you very much for your help!\n\nThis particular issue should be fixed in the latest PS5. It relates to art_dex2oat_tests only, but you also mentioned a failure in art_runtime_tests. Could you please provide more information about it?\n\n\u003e Could you print the begin + offset as well on failure, so the values always show in test failures?\n\nYes, it is a good idea, thank you! I will add it.\n\n\u003e Also - how are you running it?\n\nI\u0027ve tried to reproduce failures on the whole chain using the following command:\n```\nm test-art-host-gtest\n```\nand also:\n```\nm test-art-host-gtest-art_dex2oat_tests64\nm test-art-host-gtest-art_runtime_tests64\n```\nThe fixed issue in art_dex2oat_tests can be reproduced in this way with some probability, but art_runtime_tests always succeed.\n\nThank you!",
+      "parentUuid": "ce94ad8e_5cf8bec9",
+      "range": {
+        "startLine": 450,
+        "startChar": 0,
+        "endLine": 451,
+        "endChar": 41
+      },
+      "revId": "a9d28c25ce67402269b4f84d811779c12447147d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
