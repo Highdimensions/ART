@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4fa23e8_f9faf924",
+        "filename": "build/art.go",
+        "patchSetId": 14
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-20T13:24:59Z",
+      "side": 1,
+      "message": "Is it okay to repurpose `ART_USE_GENERATIONAL_CC` to mean generational CMC? Will it cause confusions? Personally, I don\u0027t have an opinion on this. I just wonder other ART folks\u0027 opinion, especially those who work on the runtime.",
+      "range": {
+        "startLine": 79,
+        "startChar": 31,
+        "endLine": 79,
+        "endChar": 54
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e85aab42_a2fc9265",
+        "filename": "build/flags/art-flags.aconfig",
+        "patchSetId": 14
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-20T13:24:59Z",
+      "side": 1,
+      "message": "Looks like read-write flags are now supported, per the discussion at https://docs.google.com/presentation/d/1RmBJDZtjz5_9hkf2-sF6qBcmlcg5jb0i3S85BSvVz-c/edit?disco\u003dAAABbzyjWBw. Using a read-write flag can simplify the process of running experiments on Dogfood devices (you\u0027ll still need a P/H flag for running experiments on public though). Would you like to explore it?",
+      "range": {
+        "startLine": 24,
+        "startChar": 2,
+        "endLine": 24,
+        "endChar": 26
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66f991ff_32e6b151",
+        "filename": "cmdline/cmdline_types.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-20T13:24:59Z",
+      "side": 1,
+      "message": "Same here. Is it okay to repurpose `-Xgc:generational_cc` to mean generational CMC? Will it cause confusions? Personally, I don\u0027t have an opinion on this. I just wonder other ART folks\u0027 opinion, especially those who work on the runtime.",
+      "range": {
+        "startLine": 584,
+        "startChar": 31,
+        "endLine": 584,
+        "endChar": 46
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
