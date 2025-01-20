@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c7da073_b85dc61b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-20T17:18:53Z",
+      "side": 1,
+      "message": "Should this be \"it gets installed under /data/nativetest(64)/art/\u003carch\u003e\"?",
+      "range": {
+        "startLine": 22,
+        "startChar": 5,
+        "endLine": 22,
+        "endChar": 54
+      },
+      "revId": "beb1e4c8e9f1f1e0f2df6d3340756f112d465e72",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
