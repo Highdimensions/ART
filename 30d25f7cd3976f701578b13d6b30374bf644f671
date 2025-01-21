@@ -22,6 +22,30 @@
       },
       "revId": "30d25f7cd3976f701578b13d6b30374bf644f671",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8e21ff5_d5ad258b",
+        "filename": "test/735-checker-condition-merging/src/Main.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-21T16:58:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe82633e_ecd3e2b2",
+      "range": {
+        "startLine": 152,
+        "startChar": 33,
+        "endLine": 152,
+        "endChar": 52
+      },
+      "revId": "30d25f7cd3976f701578b13d6b30374bf644f671",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
