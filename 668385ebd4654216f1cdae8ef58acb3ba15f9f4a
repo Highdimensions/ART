@@ -249,6 +249,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "973b051f_adce831b",
+        "filename": "build/flags/art-flags.aconfig",
+        "patchSetId": 14
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-21T18:26:12Z",
+      "side": 1,
+      "message": "Discussed with Lokesh offline. There is a build failure due to RW flags unsupported for the [libcore\u0027s usage with `sdk_version: \"none\"`](https://cs.android.com/android/platform/superproject/main/+/main:libcore/JavaLibrary.bp;l\u003d1123;drc\u003d47fea5deb5e320dd6a7a5b532e5dbea7b9be22c0). I suggested to move this flag back to RO because:\n\n1. Lokesh\u0027s intention is to advance the flag quickly to make it to Beta 3. That means we won\u0027t stay in the Trunkfood Partial stage for long for A/B testing, so there isn\u0027t much value in using an RW flag.\n2. Lokesh said performance numbers from dogfood population are not representive, which defeats the value of using an RW flag too.",
+      "parentUuid": "06d07322_9dcff066",
+      "range": {
+        "startLine": 24,
+        "startChar": 2,
+        "endLine": 24,
+        "endChar": 26
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66f991ff_32e6b151",
