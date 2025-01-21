@@ -58,6 +58,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "34a503db_c4e996e3",
+        "filename": "runtime/base/mutex.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-21T22:36:38Z",
+      "side": 1,
+      "message": "Good point. Templated FakeMutexLock as you suggested.",
+      "parentUuid": "c20cad3e_b5fab1b7",
+      "range": {
+        "startLine": 539,
+        "startChar": 0,
+        "endLine": 550,
+        "endChar": 2
+      },
+      "revId": "7a8663ee6b5f327bf390ed33da2ea29d995aa99e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e41221f_6124b3b4",
@@ -99,6 +123,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38093c46_4f4c2cb9",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-21T22:36:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e41221f_6124b3b4",
+      "range": {
+        "startLine": 810,
+        "startChar": 71,
+        "endLine": 810,
+        "endChar": 77
+      },
+      "revId": "7a8663ee6b5f327bf390ed33da2ea29d995aa99e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1551c3ff_e45b9d7c",
@@ -136,6 +184,30 @@
           ]
         }
       ],
+      "revId": "7a8663ee6b5f327bf390ed33da2ea29d995aa99e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "337b7bba_05216b0f",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 811,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-21T22:36:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1551c3ff_e45b9d7c",
+      "range": {
+        "startLine": 811,
+        "startChar": 21,
+        "endLine": 811,
+        "endChar": 41
+      },
       "revId": "7a8663ee6b5f327bf390ed33da2ea29d995aa99e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
