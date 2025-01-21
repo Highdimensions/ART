@@ -177,6 +177,7 @@ struct EXPORT WellKnownClasses {
   static ArtField* dalvik_system_DexPathList__Element_dexFile;
   static ArtField* dalvik_system_VMRuntime_nonSdkApiUsageConsumer;
   static ArtField* dalvik_system_VirtualThreadContext_parkedStates;
+  static ArtField* dalvik_system_VirtualThreadContext_pinnedCarrierThread;
   static ArtField* dalvik_system_VirtualThreadParkedStates_frames;
   static ArtField* dalvik_system_VirtualThreadFrame_frame;
   static ArtField* dalvik_system_VirtualThreadFrame_refs;
