@@ -273,6 +273,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c198de2b_4cf39f6b",
+        "filename": "build/flags/art-flags.aconfig",
+        "patchSetId": 14
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-21T18:33:12Z",
+      "side": 1,
+      "message": "Thanks Jiakai.\n\nI created the bug (b/391379705) for the read-write flag issue.",
+      "parentUuid": "973b051f_adce831b",
+      "range": {
+        "startLine": 24,
+        "startChar": 2,
+        "endLine": 24,
+        "endChar": 26
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66f991ff_32e6b151",
