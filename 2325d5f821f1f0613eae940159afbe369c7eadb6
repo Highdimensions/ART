@@ -241,6 +241,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "469fab0b_539cc1f6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-21T06:30:43Z",
+      "side": 1,
+      "message": "Hii thanks for you feedback if we go to above approach the code will look like this i think \n #if defined(__linux__)\n  if (GetOsThreadStat(tid, buf, BUF_SIZE) \u003d\u003d 0) {\n    snprintf(buf, BUF_SIZE, \"Unknown state: %d\", tid);\n  }\n#else\n  UNUSED(tid);\n  return \"Unknown state\"; \n#endif\n  return buf;\n}\nBut i think sticking to same approach with strncpy will be good \nWhats your suggestion here",
+      "parentUuid": "2126c4eb_de117eed",
+      "range": {
+        "startLine": 7,
+        "startChar": 32,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "6d9a45fe_1cbdbe26",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
