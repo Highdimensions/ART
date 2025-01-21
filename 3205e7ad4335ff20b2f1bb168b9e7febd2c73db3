@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2722f8fa_7f732c9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1975620
+      },
+      "writtenOn": "2025-01-21T10:55:31Z",
+      "side": 1,
+      "message": "Polite ping on these two CLs, it looks like they just need a second reviewer to approve. I\u0027ve added Santiago in case David is unavailable at the moment - thank you!",
+      "revId": "3205e7ad4335ff20b2f1bb168b9e7febd2c73db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
