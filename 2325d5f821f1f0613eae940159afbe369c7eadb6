@@ -311,6 +311,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "790c8bcd_fbbcc736",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-21T10:30:39Z",
+      "side": 1,
+      "message": "Put `BUF_SIZE` and `buf` under `#if defined` too as they are ununsed in the else branch. Don\u0027t hesitate to upload your code: that way it is easier to review compared to text in comments.\n\nAnd don\u0027t forget to update CL description too. I don\u0027t think it worths mentioning buffer overflow vulnerability there.",
+      "parentUuid": "685eddcc_e88d4441",
+      "range": {
+        "startLine": 7,
+        "startChar": 32,
+        "endLine": 7,
+        "endChar": 72
+      },
+      "revId": "2325d5f821f1f0613eae940159afbe369c7eadb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "6d9a45fe_1cbdbe26",
