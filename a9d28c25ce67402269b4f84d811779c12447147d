@@ -46,6 +46,30 @@
       },
       "revId": "a9d28c25ce67402269b4f84d811779c12447147d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ac180c1_bc5db20f",
+        "filename": "dex2oat/linker/oat_writer_test.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-21T22:12:54Z",
+      "side": 1,
+      "message": "I\u0027ll comment on the other patch, since this test passes TH by itself. It\u0027s only the parent change that shows this failure.",
+      "parentUuid": "a783aba5_3557699f",
+      "range": {
+        "startLine": 450,
+        "startChar": 0,
+        "endLine": 451,
+        "endChar": 41
+      },
+      "revId": "a9d28c25ce67402269b4f84d811779c12447147d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
