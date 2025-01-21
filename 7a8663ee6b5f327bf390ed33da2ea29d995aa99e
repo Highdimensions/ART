@@ -16,6 +16,128 @@
       "message": "Hans, please take a look at PS18 -\u003e PS20 for the changes related to the comments you gave. Thanks.",
       "revId": "7a8663ee6b5f327bf390ed33da2ea29d995aa99e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a0c0148_cd0af4f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-21T22:10:45Z",
+      "side": 1,
+      "message": "It would be nice to address the mutex.h issue, and the two comment typos. Those just require recompilation to test. The cardtable.h issue should be postponed, as discussed.",
+      "revId": "7a8663ee6b5f327bf390ed33da2ea29d995aa99e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c20cad3e_b5fab1b7",
+        "filename": "runtime/base/mutex.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-21T22:10:45Z",
+      "side": 1,
+      "message": "I would have hoped that we could avoid duplicating this from FakeMutexLock, either by templatizing with respect to the mutex kind, or by doing something with BaseMutex instead. I expect the template is easier?\n\nThis could be deferred, but I think we should fix it.",
+      "range": {
+        "startLine": 539,
+        "startChar": 0,
+        "endLine": 550,
+        "endChar": 2
+      },
+      "revId": "7a8663ee6b5f327bf390ed33da2ea29d995aa99e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e41221f_6124b3b4",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-21T22:10:45Z",
+      "side": 1,
+      "message": "mid-gen",
+      "range": {
+        "startLine": 810,
+        "startChar": 71,
+        "endLine": 810,
+        "endChar": 77
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c1a7ee41_9224530a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 810,
+                "startChar": 0,
+                "endLine": 811,
+                "endChar": 0
+              },
+              "replacement": "  // mid-gen. During compaction, it represents \u0027post-compacted\u0027 end of mid-gen.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7a8663ee6b5f327bf390ed33da2ea29d995aa99e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1551c3ff_e45b9d7c",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 811,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-21T22:10:45Z",
+      "side": 1,
+      "message": "PrepareForCompaction",
+      "range": {
+        "startLine": 811,
+        "startChar": 21,
+        "endLine": 811,
+        "endChar": 41
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "bc82a53f_d49397cb",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 811,
+                "startChar": 0,
+                "endLine": 812,
+                "endChar": 0
+              },
+              "replacement": "  // This is done in PrepareForCompaction(). At the end of GC, in FinishPhase(),\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7a8663ee6b5f327bf390ed33da2ea29d995aa99e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

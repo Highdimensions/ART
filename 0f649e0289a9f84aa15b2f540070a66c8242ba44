@@ -161,6 +161,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2842b872_63747d5d",
+        "filename": "runtime/gc/accounting/card_table.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-21T22:10:45Z",
+      "side": 1,
+      "message": "I think this is fine for now.\n\nIn the long run, it seems cleaner to just have N values that say last dirtied N \"age card\" calls ago. N might vary, depending on the collector. Or not. If we want to know whether the card was dirtied in the last M cycles, we kust check whether the value is logically between 1 and M. It\u0027s not immediately clear how to best represent those integers, but I think that should be the logical model.",
+      "parentUuid": "0a1c219c_4d9ac6a2",
+      "range": {
+        "startLine": 54,
+        "startChar": 2,
+        "endLine": 57,
+        "endChar": 0
+      },
+      "revId": "0f649e0289a9f84aa15b2f540070a66c8242ba44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4c1412f9_bb023033",

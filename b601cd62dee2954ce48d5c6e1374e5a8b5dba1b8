@@ -178,6 +178,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1984914d_7e2507d6",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-21T22:10:45Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "1cff320a_5662104b",
+      "range": {
+        "startLine": 1023,
+        "startChar": 35,
+        "endLine": 1024,
+        "endChar": 9
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6475c20a_13f2f3ad",
@@ -262,6 +286,30 @@
       "side": 1,
       "message": "Thanks for pointing out. I realized it\u0027s more complicated than I initially thought.\n\nFixed it as well as added comments. PTAL.",
       "parentUuid": "e0db72ef_52bb0700",
+      "range": {
+        "startLine": 1651,
+        "startChar": 37,
+        "endLine": 1651,
+        "endChar": 52
+      },
+      "revId": "b601cd62dee2954ce48d5c6e1374e5a8b5dba1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "747a3e32_00a0858a",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 1651,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-21T22:10:45Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "edfc52ba_a7bd9bb3",
       "range": {
         "startLine": 1651,
         "startChar": 37,
