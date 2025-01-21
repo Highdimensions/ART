@@ -461,6 +461,9 @@
 
 // Locking is needed for both managed code and JNI stubs.
 .macro LOCK_OBJECT_FAST_PATH obj, slow_lock, can_be_null
+    ldr    w9, [xSELF, #THREAD_ALWAYS_SLOW_LOCK_OFFSET]
+    cbnz   w9, \slow_lock
+
     // Use scratch registers x8-x11 as temporaries.
     ldr    w9, [xSELF, #THREAD_ID_OFFSET]
     .if \can_be_null
@@ -495,6 +498,9 @@
 
 // Unlocking is needed for both managed code and JNI stubs.
 .macro UNLOCK_OBJECT_FAST_PATH obj, slow_unlock, can_be_null
+    ldr    w9, [xSELF, #THREAD_ALWAYS_SLOW_LOCK_OFFSET]
+    cbnz   w9, \slow_unlock
+
     // Use scratch registers x8-x11 as temporaries.
     ldr    w9, [xSELF, #THREAD_ID_OFFSET]
     .if \can_be_null

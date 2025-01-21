@@ -137,6 +137,10 @@ namespace art_flags = com::android::art::flags;
 
 namespace art HIDDEN {
 
+static bool ShouldAlwaysSlowlock() {
+  return false;
+}
+
 using android::base::StringAppendV;
 using android::base::StringPrintf;
 
@@ -929,7 +933,7 @@ void Thread::CreateNativeThread(JNIEnv* env, jobject java_peer, size_t stack_siz
     return;
   }
 
-  Thread* child_thread = new Thread(is_daemon);
+  Thread* child_thread = new Thread(is_daemon, ShouldAlwaysSlowlock());
   // Use global JNI ref to hold peer live while child thread starts.
   child_thread->tlsPtr_.jpeer = env->NewGlobalRef(java_peer);
   stack_size = FixStackSize(stack_size);
@@ -1132,7 +1136,7 @@ Thread* Thread::Attach(const char* thread_name,
       return nullptr;
     } else {
       Runtime::Current()->StartThreadBirth();
-      self = new Thread(as_daemon);
+      self = new Thread(as_daemon, ShouldAlwaysSlowlock());
       bool init_success = self->Init(runtime->GetThreadList(), runtime->GetJavaVM());
       Runtime::Current()->EndThreadBirth();
       if (!init_success) {
@@ -2583,8 +2587,8 @@ void Thread::SignalExitFlags() {
   tlsPtr_.thread_exit_flags = nullptr;  // Now unused.
 }
 
-Thread::Thread(bool daemon)
-    : tls32_(daemon),
+Thread::Thread(bool daemon, bool should_always_slow_lock)
+    : tls32_(daemon, should_always_slow_lock),
       wait_monitor_(nullptr),
       is_runtime_thread_(false) {
   wait_mutex_ = new Mutex("a thread wait mutex", LockLevel::kThreadWaitLock);

@@ -367,6 +367,9 @@
 
 // Locking is needed for both managed code and JNI stubs.
 .macro LOCK_OBJECT_FAST_PATH obj, tmp1, tmp2, tmp3, slow_lock, can_be_null
+    ldr    \tmp1, [rSELF, #THREAD_ALWAYS_SLOW_LOCK_OFFSET]
+    cbnz   \tmp1, \slow_lock
+
     ldr    \tmp1, [rSELF, #THREAD_ID_OFFSET]
     .if \can_be_null
         cbz \obj, \slow_lock
@@ -408,6 +411,9 @@
 
 // Unlocking is needed for both managed code and JNI stubs.
 .macro UNLOCK_OBJECT_FAST_PATH obj, tmp1, tmp2, tmp3, slow_unlock, can_be_null
+    ldr    \tmp1, [rSELF, #THREAD_ALWAYS_SLOW_LOCK_OFFSET]
+    cbnz   \tmp1, \slow_unlock
+
     ldr    \tmp1, [rSELF, #THREAD_ID_OFFSET]
     .if \can_be_null
         cbz    \obj, \slow_unlock

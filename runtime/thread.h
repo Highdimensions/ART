@@ -1040,6 +1040,13 @@ class EXPORT Thread {
   }
 
   template<PointerSize pointer_size>
+  static constexpr ThreadOffset<pointer_size> AlwaysSlowLockOffset() {
+    return ThreadOffset<pointer_size>(
+        OFFSETOF_MEMBER(Thread, tls32_) +
+        OFFSETOF_MEMBER(tls_32bit_sized_values, always_slow_lock));
+  }
+
+  template<PointerSize pointer_size>
   static constexpr ThreadOffset<pointer_size> TidOffset() {
     return ThreadOffset<pointer_size>(
         OFFSETOF_MEMBER(Thread, tls32_) +
@@ -1781,6 +1788,7 @@ class EXPORT Thread {
   // or kRunningFlipFunction are set. We can prevent Thread destruction by holding either of those
   // locks, ensuring that either of those flags are set, or possibly by registering and checking a
   // ThreadExitFlag.
+  Thread(bool daemon, bool should_always_slow_lock);
   ~Thread() REQUIRES(!Locks::mutator_lock_, !Locks::thread_suspend_count_lock_);
 
   // Thread destruction actions that do not invalidate the thread. Checkpoints and flip_functions
@@ -2139,7 +2147,7 @@ class EXPORT Thread {
     // to be 4-byte quantities.
     using bool32_t = uint32_t;
 
-    explicit tls_32bit_sized_values(bool is_daemon)
+    tls_32bit_sized_values(bool is_daemon, bool should_always_slow_lock)
         : state_and_flags(0u),
           suspend_count(0),
           thin_lock_thread_id(0),
@@ -2157,7 +2165,8 @@ class EXPORT Thread {
           make_visibly_initialized_counter(0),
           define_class_counter(0),
           num_name_readers(0),
-          shared_method_hotness(kSharedMethodHotnessThreshold) {}
+          shared_method_hotness(kSharedMethodHotnessThreshold),
+          always_slow_lock(should_always_slow_lock) {}
 
     // The state and flags field must be changed atomically so that flag values aren't lost.
     // See `StateAndFlags` for bit assignments of `ThreadFlag` and `ThreadState` values.
@@ -2260,6 +2269,9 @@ class EXPORT Thread {
     // There is a second level counter in `Jit::shared_method_counters_` to make
     // sure we at least have a few samples before compiling a method.
     uint32_t shared_method_hotness;
+
+    // Should we always use the slow path for locking?
+    const bool32_t always_slow_lock;
   } tls32_;
 
   struct alignas(8) tls_64bit_sized_values {

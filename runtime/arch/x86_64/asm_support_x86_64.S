@@ -492,6 +492,10 @@ END_MACRO
 
 // Locking is needed for both managed code and JNI stubs.
 MACRO3(LOCK_OBJECT_FAST_PATH, obj, tmp, slow_lock)
+    movl %gs:THREAD_ALWAYS_SLOW_LOCK_OFFSET, REG_VAR(tmp)
+    test REG_VAR(tmp), REG_VAR(tmp)
+    jnz  \slow_lock
+
 1:
     movl MIRROR_OBJECT_LOCK_WORD_OFFSET(REG_VAR(obj)), %eax  // EAX := lock word
     movl %gs:THREAD_ID_OFFSET, REG_VAR(tmp)  // tmp: thread id.
@@ -520,6 +524,10 @@ END_MACRO
 
 // Unlocking is needed for both managed code and JNI stubs.
 MACRO4(UNLOCK_OBJECT_FAST_PATH, obj, tmp, saved_rax, slow_unlock)
+    movl %gs:THREAD_ALWAYS_SLOW_LOCK_OFFSET, REG_VAR(tmp)
+    test REG_VAR(tmp), REG_VAR(tmp)
+    jnz  \slow_unlock
+
 1:
     movl MIRROR_OBJECT_LOCK_WORD_OFFSET(REG_VAR(obj)), %eax  // EAX := lock word
     movl %gs:THREAD_ID_OFFSET, REG_VAR(tmp)  // tmp := thread id
