@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a817913_60cf9ce0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-21T22:53:33Z",
+      "side": 1,
+      "message": "I think I have addressed all feedback from them. If they will have additional comments then I\u0027ll address in a follow-up CL.",
+      "parentUuid": "6a9bce73_b09a48cf",
+      "revId": "8ed8fc50b12cb86c1c616e2a530f0070c3de99eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd661563_b311b70f",
@@ -31,6 +49,30 @@
       "writtenOn": "2025-01-21T22:38:33Z",
       "side": 1,
       "message": "I think it should be fine to drop these in the void-returning cases. In the other cases, you probably need UNREACHABLE() to avoid the compilation error.",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 17
+      },
+      "revId": "8ed8fc50b12cb86c1c616e2a530f0070c3de99eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "768d1ddb_0f04312b",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-21T22:53:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd661563_b311b70f",
       "range": {
         "startLine": 93,
         "startChar": 4,
