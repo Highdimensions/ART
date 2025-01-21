@@ -227,6 +227,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "06d07322_9dcff066",
+        "filename": "build/flags/art-flags.aconfig",
+        "patchSetId": 14
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-21T13:55:41Z",
+      "side": 1,
+      "message": "\u003e So for read-write should \u0027is_fixed_read_only` be rmeoved or be set to false?\n\nEither way is fine. I prefer removing it.\n\n\u003e Also, are there any other differences in the way it is used? \n\nYou may refer to https://docs.google.com/presentation/d/14IUCn3DkNlyZ05CsD_CHOkwcDtCqWie0kXhudNAeXFU/edit#slide\u003did.g211eaaff9fe_0_128 for the difference between read-only and read-write flags, as well as the caveat. In a nutshell, by moving to a RW flag, you\u0027ll lose the macro but the function will still be there.",
+      "parentUuid": "f0ebfd26_c2d5b0d5",
+      "range": {
+        "startLine": 24,
+        "startChar": 2,
+        "endLine": 24,
+        "endChar": 26
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "66f991ff_32e6b151",
         "filename": "cmdline/cmdline_types.h",
         "patchSetId": 14
