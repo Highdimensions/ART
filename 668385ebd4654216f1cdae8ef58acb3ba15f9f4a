@@ -371,6 +371,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "32740221_52af4c19",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-21T05:42:32Z",
+      "side": 1,
+      "message": "+1\nI don\u0027t think it does.\nIs UNIMPLEMENTED(FATAL) the right thing?",
+      "parentUuid": "0ca6faa8_2089b1d6",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 18
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2de50b50_8a7fddbc",
         "filename": "runtime/gc/collector/mark_compact.h",
         "patchSetId": 14
