@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4075c12e_8e191d2a",
+        "filename": "compiler/optimizing/code_generator.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 1181,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-21T12:54:35Z",
+      "side": 1,
+      "message": "Looks like it, but I didn\u0027t want to make another change in the CL. These instructions can call the runtime, but the special casing/workaround shouldn\u0027t be necessary. Uploaded aosp/3457761 and testing on presubmit",
+      "parentUuid": "63ae4bac_6eb36106",
+      "range": {
+        "startLine": 1171,
+        "startChar": 1,
+        "endLine": 1181,
+        "endChar": 16
+      },
+      "revId": "fa792842c1d0f5cb48f5904cfa8833001e2a03ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "66a11b17_578381b1",
         "filename": "compiler/optimizing/code_generator.h",
         "patchSetId": 6
@@ -37,6 +61,30 @@
       "writtenOn": "2025-01-21T10:25:41Z",
       "side": 1,
       "message": "Do it as part of this CL?",
+      "range": {
+        "startLine": 680,
+        "startChar": 0,
+        "endLine": 680,
+        "endChar": 58
+      },
+      "revId": "fa792842c1d0f5cb48f5904cfa8833001e2a03ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd01e678_2caee6de",
+        "filename": "compiler/optimizing/code_generator.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-21T12:54:35Z",
+      "side": 1,
+      "message": "It is a follow-up CL (already created and in the relationship chain). I separated them to make reviewing easier but I can merge them if you prefer",
+      "parentUuid": "66a11b17_578381b1",
       "range": {
         "startLine": 680,
         "startChar": 0,
