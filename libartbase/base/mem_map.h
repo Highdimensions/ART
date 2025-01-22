@@ -37,15 +37,9 @@
 
 namespace art {
 
-#if defined(__LP64__) && !defined(__Fuchsia__) && \
-    (defined(__aarch64__) || defined(__riscv) || defined(__APPLE__))
+// TODO: Eventually get rid of the other case, which means we can also remove
+// mmap-based large-object space.
 #define USE_ART_LOW_4G_ALLOCATOR 1
-#else
-#if defined(__LP64__) && !defined(__Fuchsia__) && !defined(__x86_64__)
-#error "Unrecognized 64-bit architecture."
-#endif
-#define USE_ART_LOW_4G_ALLOCATOR 0
-#endif
 
 #ifdef __linux__
 static constexpr bool kMadviseZeroes = true;
