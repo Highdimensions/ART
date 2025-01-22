@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2955c773_53b8ac79",
+        "filename": "compiler/optimizing/inliner.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-22T08:44:32Z",
+      "side": 1,
+      "message": "Not required anymore, heap access has been removed.\n\n(But this file also needs two additional spaces indentation for all the `REQUIRES_SHARED` annotations that are indented only 2 spaces - we want 4.)",
+      "range": {
+        "startLine": 251,
+        "startChar": 4,
+        "endLine": 251,
+        "endChar": 41
+      },
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb92f06c_03290b24",
+        "filename": "compiler/optimizing/inliner.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-22T08:44:32Z",
+      "side": 1,
+      "message": "This fits on one line.",
+      "range": {
+        "startLine": 249,
+        "startChar": 0,
+        "endLine": 251,
+        "endChar": 0
+      },
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c17295b_4e832d17",
+        "filename": "compiler/optimizing/intrinsics.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-22T08:44:32Z",
+      "side": 1,
+      "message": "Not needed anymore.",
+      "range": {
+        "startLine": 175,
+        "startChar": 2,
+        "endLine": 175,
+        "endChar": 44
+      },
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4df5e6fa_32e614f6",
+        "filename": "compiler/optimizing/intrinsics.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-22T08:44:32Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 181,
+        "startChar": 2,
+        "endLine": 181,
+        "endChar": 44
+      },
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "264b2f5d_d6620b73",
+        "filename": "compiler/optimizing/reference_type_propagation.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-22T08:44:32Z",
+      "side": 1,
+      "message": "Not needed anymore.",
+      "range": {
+        "startLine": 280,
+        "startChar": 4,
+        "endLine": 280,
+        "endChar": 46
+      },
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
