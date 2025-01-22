@@ -120,8 +120,11 @@ void Class::VisitMethods(Visitor visitor, PointerSize pointer_size) {
 
 template<ReadBarrierOption kReadBarrierOption, class Visitor>
 void Class::VisitFields(Visitor visitor) {
-  for (ArtField& field : GetFieldsUnchecked()) {
-    visitor(&field);
+  for (ArtField& sfield : GetSFieldsUnchecked()) {
+    visitor(&sfield);
+  }
+  for (ArtField& ifield : GetIFieldsUnchecked()) {
+    visitor(&ifield);
   }
 }
 

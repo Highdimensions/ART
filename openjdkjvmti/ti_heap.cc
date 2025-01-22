@@ -352,42 +352,43 @@ class FieldVisitor {
 
     // Now visit fields for the current klass.
 
-    for (auto& field : klass->GetFields()) {
-      if (field.IsStatic()) {
-        if (field.IsPrimitiveType()) {
-          if (static_prim_visitor(obj,
-                                  klass,
-                                  field,
-                                  field_index,
-                                  user_data_)) {
-            return true;
-          }
-        } else {
-          if (static_ref_visitor(obj,
-                                 klass,
-                                 field,
-                                 field_index,
-                                 user_data_)) {
-            return true;
-          }
+    for (auto& static_field : klass->GetSFields()) {
+      if (static_field.IsPrimitiveType()) {
+        if (static_prim_visitor(obj,
+                                klass,
+                                static_field,
+                                field_index,
+                                user_data_)) {
+          return true;
         }
       } else {
-        if (field.IsPrimitiveType()) {
-          if (instance_prim_visitor(obj,
-                                    klass,
-                                    field,
-                                    field_index,
-                                    user_data_)) {
-            return true;
-          }
-        } else {
-          if (instance_ref_visitor(obj,
-                                   klass,
-                                   field,
-                                   field_index,
-                                   user_data_)) {
-            return true;
-          }
+        if (static_ref_visitor(obj,
+                               klass,
+                               static_field,
+                               field_index,
+                               user_data_)) {
+          return true;
+        }
+      }
+      field_index++;
+    }
+
+    for (auto& instance_field : klass->GetIFields()) {
+      if (instance_field.IsPrimitiveType()) {
+        if (instance_prim_visitor(obj,
+                                  klass,
+                                  instance_field,
+                                  field_index,
+                                  user_data_)) {
+          return true;
+        }
+      } else {
+        if (instance_ref_visitor(obj,
+                                 klass,
+                                 instance_field,
+                                 field_index,
+                                 user_data_)) {
+          return true;
         }
       }
       field_index++;
@@ -457,7 +458,8 @@ class FieldVisitor {
     auto visitor = [&count](art::ObjPtr<art::mirror::Class> inf_klass)
         REQUIRES_SHARED(art::Locks::mutator_lock_) {
       DCHECK(inf_klass->IsInterface());
-      count += inf_klass->NumFields();
+      DCHECK_EQ(0u, inf_klass->NumInstanceFields());
+      count += inf_klass->NumStaticFields();
     };
     RecursiveInterfaceVisit<decltype(visitor)>::VisitStatic(art::Thread::Current(), klass, visitor);
 

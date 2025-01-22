@@ -426,15 +426,22 @@ void Class::DumpClass(std::ostream& os, int flags) {
       os << StringPrintf("    %2zd: %s\n", i, ArtMethod::PrettyMethod(
           GetDirectMethod(i, image_pointer_size)).c_str());
     }
-    if (NumFields() > 0) {
-      os << "  fields (" << NumFields() << " entries):\n";
+    if (NumStaticFields() > 0) {
+      os << "  static fields (" << NumStaticFields() << " entries):\n";
       if (IsResolved()) {
-        for (size_t i = 0; i < NumFields(); ++i) {
-          ArtField* field = GetField(i);
-          os << StringPrintf("    %2zd: %s %s\n",
-                             i,
-                             field->IsStatic() ? "static" : "instance",
-                             ArtField::PrettyField(field).c_str());
+        for (size_t i = 0; i < NumStaticFields(); ++i) {
+          os << StringPrintf("    %2zd: %s\n", i, ArtField::PrettyField(GetStaticField(i)).c_str());
+        }
+      } else {
+        os << "    <not yet available>";
+      }
+    }
+    if (NumInstanceFields() > 0) {
+      os << "  instance fields (" << NumInstanceFields() << " entries):\n";
+      if (IsResolved()) {
+        for (size_t i = 0; i < NumInstanceFields(); ++i) {
+          os << StringPrintf("    %2zd: %s\n", i,
+                             ArtField::PrettyField(GetInstanceField(i)).c_str());
         }
       } else {
         os << "    <not yet available>";
@@ -1100,30 +1107,25 @@ static std::tuple<bool, ArtField*> FindFieldByNameAndType(const DexFile& dex_fil
   return {false, nullptr};
 }
 
-ArtField* Class::FindDeclaredField(std::string_view name, std::string_view type) {
+ArtField* Class::FindDeclaredInstanceField(std::string_view name, std::string_view type) {
   // Binary search by name. Interfaces are not relevant because they can't contain instance fields.
-  LengthPrefixedArray<ArtField>* fields = GetFieldsPtr();
-  if (fields == nullptr) {
+  LengthPrefixedArray<ArtField>* ifields = GetIFieldsPtr();
+  if (ifields == nullptr) {
     return nullptr;
   }
   DCHECK(!IsProxyClass());
-  auto [success, field] = FindFieldByNameAndType(GetDexFile(), fields, name, type);
+  auto [success, field] = FindFieldByNameAndType(GetDexFile(), ifields, name, type);
   DCHECK_EQ(success, field != nullptr);
   return field;
 }
 
-ArtField* Class::FindDeclaredInstanceField(std::string_view name, std::string_view type) {
-  ArtField* f = FindDeclaredField(name, type);
-  if (f != nullptr && !f->IsStatic()) {
-    return f;
-  }
-  return nullptr;
-}
-
 ArtField* Class::FindDeclaredInstanceField(ObjPtr<DexCache> dex_cache, uint32_t dex_field_idx) {
-  ArtField* f = FindDeclaredField(dex_cache, dex_field_idx);
-  if (f != nullptr && !f->IsStatic()) {
-    return f;
+  if (GetDexCache() == dex_cache) {
+    for (ArtField& field : GetIFields()) {
+      if (field.GetDexFieldIndex() == dex_field_idx) {
+        return &field;
+      }
+    }
   }
   return nullptr;
 }
@@ -1142,51 +1144,39 @@ ArtField* Class::FindInstanceField(std::string_view name, std::string_view type)
 
 ArtField* Class::FindDeclaredStaticField(std::string_view name, std::string_view type) {
   DCHECK(!type.empty());
-  LengthPrefixedArray<ArtField>* fields = GetFieldsPtr();
-  if (fields == nullptr) {
+  LengthPrefixedArray<ArtField>* sfields = GetSFieldsPtr();
+  if (sfields == nullptr) {
     return nullptr;
   }
   if (UNLIKELY(IsProxyClass())) {
     // Proxy fields do not have appropriate dex field indexes required by
     // `FindFieldByNameAndType()`. However, each proxy class has exactly
     // the same artificial fields created by the `ClassLinker`.
-    DCHECK_EQ(fields->size(), 2u);
-    DCHECK_EQ(strcmp(fields->At(0).GetName(), "interfaces"), 0);
-    DCHECK_EQ(strcmp(fields->At(0).GetTypeDescriptor(), "[Ljava/lang/Class;"), 0);
-    DCHECK(fields->At(0).IsStatic());
-    DCHECK_EQ(strcmp(fields->At(1).GetName(), "throws"), 0);
-    DCHECK_EQ(strcmp(fields->At(1).GetTypeDescriptor(), "[[Ljava/lang/Class;"), 0);
-    DCHECK(fields->At(1).IsStatic());
+    DCHECK_EQ(sfields->size(), 2u);
+    DCHECK_EQ(strcmp(sfields->At(0).GetName(), "interfaces"), 0);
+    DCHECK_EQ(strcmp(sfields->At(0).GetTypeDescriptor(), "[Ljava/lang/Class;"), 0);
+    DCHECK_EQ(strcmp(sfields->At(1).GetName(), "throws"), 0);
+    DCHECK_EQ(strcmp(sfields->At(1).GetTypeDescriptor(), "[[Ljava/lang/Class;"), 0);
     if (name == "interfaces") {
-      return (type == "[Ljava/lang/Class;") ? &fields->At(0) : nullptr;
+      return (type == "[Ljava/lang/Class;") ? &sfields->At(0) : nullptr;
     } else if (name == "throws") {
-      return (type == "[[Ljava/lang/Class;") ? &fields->At(1) : nullptr;
+      return (type == "[[Ljava/lang/Class;") ? &sfields->At(1) : nullptr;
     } else {
       return nullptr;
     }
   }
-  ArtField* f = FindDeclaredField(name, type);
-  if (f != nullptr && f->IsStatic()) {
-    return f;
-  }
-  return nullptr;
+  auto [success, field] = FindFieldByNameAndType(GetDexFile(), sfields, name, type);
+  DCHECK_EQ(success, field != nullptr);
+  return field;
 }
 
-ArtField* Class::FindDeclaredField(ObjPtr<DexCache> dex_cache, uint32_t dex_field_idx) {
+ArtField* Class::FindDeclaredStaticField(ObjPtr<DexCache> dex_cache, uint32_t dex_field_idx) {
   if (dex_cache == GetDexCache()) {
-    for (ArtField& field : GetFields()) {
+    for (ArtField& field : GetSFields()) {
       if (field.GetDexFieldIndex() == dex_field_idx) {
         return &field;
       }
     }
-  }
-  return nullptr;
-}
-
-ArtField* Class::FindDeclaredStaticField(ObjPtr<DexCache> dex_cache, uint32_t dex_field_idx) {
-  ArtField* f = FindDeclaredField(dex_cache, dex_field_idx);
-  if (f != nullptr && f->IsStatic()) {
-    return f;
   }
   return nullptr;
 }
@@ -1200,11 +1190,17 @@ ObjPtr<mirror::ObjectArray<mirror::Field>> Class::GetDeclaredFields(
     return nullptr;
   }
   StackHandleScope<1> hs(self);
-  IterationRange<StrideIterator<ArtField>> fields = GetFields();
-  size_t array_size = NumFields();
+  IterationRange<StrideIterator<ArtField>> ifields = GetIFields();
+  IterationRange<StrideIterator<ArtField>> sfields = GetSFields();
+  size_t array_size = NumInstanceFields() + NumStaticFields();
   auto hiddenapi_context = hiddenapi::GetReflectionCallerAccessContext(self);
   // Lets go subtract all the non discoverable fields.
-  for (ArtField& field : fields) {
+  for (ArtField& field : ifields) {
+    if (!IsDiscoverable(public_only, hiddenapi_context, &field)) {
+      --array_size;
+    }
+  }
+  for (ArtField& field : sfields) {
     if (!IsDiscoverable(public_only, hiddenapi_context, &field)) {
       --array_size;
     }
@@ -1215,7 +1211,7 @@ ObjPtr<mirror::ObjectArray<mirror::Field>> Class::GetDeclaredFields(
   if (object_array == nullptr) {
     return nullptr;
   }
-  for (ArtField& field : fields) {
+  for (ArtField& field : ifields) {
     if (IsDiscoverable(public_only, hiddenapi_context, &field)) {
       ObjPtr<mirror::Field> reflect_field =
           mirror::Field::CreateFromArtField(self, &field, force_resolve);
@@ -1224,6 +1220,23 @@ ObjPtr<mirror::ObjectArray<mirror::Field>> Class::GetDeclaredFields(
           self->AssertPendingException();
         }
         // Maybe null due to OOME or type resolving exception.
+        return nullptr;
+      }
+      // We're initializing a newly allocated object, so we do not need to record that under
+      // a transaction. If the transaction is aborted, the whole object shall be unreachable.
+      object_array->SetWithoutChecks</*kTransactionActive=*/ false,
+                                     /*kCheckTransaction=*/ false>(
+                                         array_idx++, reflect_field);
+    }
+  }
+  for (ArtField& field : sfields) {
+    if (IsDiscoverable(public_only, hiddenapi_context, &field)) {
+      ObjPtr<mirror::Field> reflect_field =
+          mirror::Field::CreateFromArtField(self, &field, force_resolve);
+      if (reflect_field == nullptr) {
+        if (kIsDebugBuild) {
+          self->AssertPendingException();
+        }
         return nullptr;
       }
       // We're initializing a newly allocated object, so we do not need to record that under
@@ -1261,15 +1274,17 @@ ArtField* Class::FindStaticField(std::string_view name, std::string_view type) {
 }
 
 // Find a field using the JLS field resolution order.
-// Template arguments can be used to extend the search to static fields of interfaces.
+// Template arguments can be used to limit the search to either static or instance fields.
 // The search should be limited only if we know that a full search would yield a field of
 // the right type or no field at all. This can be known for field references in a method
 // if we have previously verified that method and did not find a field type mismatch.
-template <bool kSearchStaticFieldsInInterfaces>
+template <bool kSearchInstanceFields, bool kSearchStaticFields>
 ALWAYS_INLINE
 ArtField* FindFieldImpl(ObjPtr<mirror::Class> klass,
                         ObjPtr<mirror::DexCache> dex_cache,
                         uint32_t field_idx) REQUIRES_SHARED(Locks::mutator_lock_) {
+  static_assert(kSearchInstanceFields || kSearchStaticFields);
+
   // FIXME: Hijacking a proxy class by a custom class loader can break this assumption.
   DCHECK(!klass->IsProxyClass());
 
@@ -1281,7 +1296,12 @@ ArtField* FindFieldImpl(ObjPtr<mirror::Class> klass,
     // Lookup is always performed in the class referenced by the FieldId.
     DCHECK_EQ(klass->GetDexTypeIndex(),
               klass_dex_cache->GetDexFile()->GetFieldId(field_idx).class_idx_);
-    ArtField* f = klass->FindDeclaredField(klass_dex_cache, field_idx);
+    ArtField* f =  kSearchInstanceFields
+        ? klass->FindDeclaredInstanceField(klass_dex_cache, field_idx)
+        : nullptr;
+    if (kSearchStaticFields && f == nullptr) {
+      f = klass->FindDeclaredStaticField(klass_dex_cache, field_idx);
+    }
     if (f != nullptr) {
       return f;
     }
@@ -1326,14 +1346,27 @@ ArtField* FindFieldImpl(ObjPtr<mirror::Class> klass,
 
   auto find_field_by_name_and_type = [&](ObjPtr<mirror::Class> k, ObjPtr<DexCache> k_dex_cache)
       REQUIRES_SHARED(Locks::mutator_lock_) -> std::tuple<bool, ArtField*> {
-    if (k->GetFieldsPtr() == nullptr) {
+    if ((!kSearchInstanceFields || k->GetIFieldsPtr() == nullptr) &&
+        (!kSearchStaticFields || k->GetSFieldsPtr() == nullptr)) {
       return {false, nullptr};
     }
     ensure_name_and_type_initialized();
     const DexFile& k_dex_file = *k_dex_cache->GetDexFile();
-    auto [success, field] = FindFieldByNameAndType(k_dex_file, k->GetFieldsPtr(), name, type);
-    DCHECK_EQ(success, field != nullptr);
-    return {success, field};
+    if (kSearchInstanceFields && k->GetIFieldsPtr() != nullptr) {
+      auto [success, field] = FindFieldByNameAndType(k_dex_file, k->GetIFieldsPtr(), name, type);
+      DCHECK_EQ(success, field != nullptr);
+      if (success) {
+        return {true, field};
+      }
+    }
+    if (kSearchStaticFields && k->GetSFieldsPtr() != nullptr) {
+      auto [success, field] = FindFieldByNameAndType(k_dex_file, k->GetSFieldsPtr(), name, type);
+      DCHECK_EQ(success, field != nullptr);
+      if (success) {
+        return {true, field};
+      }
+    }
+    return {false, nullptr};
   };
 
   // If we had a dex cache mismatch, search declared fields by name and type.
@@ -1346,7 +1379,7 @@ ArtField* FindFieldImpl(ObjPtr<mirror::Class> klass,
   }
 
   // Search direct interfaces for static fields.
-  if (kSearchStaticFieldsInInterfaces) {
+  if (kSearchStaticFields) {
     ArtField* f = search_direct_interfaces(klass);
     if (f != nullptr) {
       return f;
@@ -1360,11 +1393,22 @@ ArtField* FindFieldImpl(ObjPtr<mirror::Class> klass,
     if (k_dex_cache == dex_cache) {
       // Matching dex_cache. We cannot compare the `field_idx` anymore because
       // the type index differs, so compare the name index and type index.
-      for (ArtField& field : k->GetFields()) {
-        const dex::FieldId& other_field_id = dex_file.GetFieldId(field.GetDexFieldIndex());
-        if (other_field_id.name_idx_ == field_id.name_idx_ &&
-            other_field_id.type_idx_ == field_id.type_idx_) {
-          return &field;
+      if (kSearchInstanceFields) {
+        for (ArtField& field : k->GetIFields()) {
+          const dex::FieldId& other_field_id = dex_file.GetFieldId(field.GetDexFieldIndex());
+          if (other_field_id.name_idx_ == field_id.name_idx_ &&
+              other_field_id.type_idx_ == field_id.type_idx_) {
+            return &field;
+          }
+        }
+      }
+      if (kSearchStaticFields) {
+        for (ArtField& field : k->GetSFields()) {
+          const dex::FieldId& other_field_id = dex_file.GetFieldId(field.GetDexFieldIndex());
+           if (other_field_id.name_idx_ == field_id.name_idx_ &&
+              other_field_id.type_idx_ == field_id.type_idx_) {
+            return &field;
+          }
         }
       }
     } else {
@@ -1374,7 +1418,7 @@ ArtField* FindFieldImpl(ObjPtr<mirror::Class> klass,
         return field;
       }
     }
-    if (kSearchStaticFieldsInInterfaces) {
+    if (kSearchStaticFields) {
       // Is this field in any of this class' interfaces?
       ArtField* f = search_direct_interfaces(k);
       if (f != nullptr) {
@@ -1387,17 +1431,20 @@ ArtField* FindFieldImpl(ObjPtr<mirror::Class> klass,
 
 FLATTEN
 ArtField* Class::FindField(ObjPtr<mirror::DexCache> dex_cache, uint32_t field_idx) {
-  return FindFieldImpl</*kSearchStaticFieldsInInterfaces*/ true>(this, dex_cache, field_idx);
+  return FindFieldImpl</*kSearchInstanceFields=*/ true,
+                       /*kSearchStaticFields*/ true>(this, dex_cache, field_idx);
 }
 
 FLATTEN
 ArtField* Class::FindInstanceField(ObjPtr<mirror::DexCache> dex_cache, uint32_t field_idx) {
-  return FindFieldImpl</*kSearchStaticFieldsInInterfaces*/ false>(this, dex_cache, field_idx);
+  return FindFieldImpl</*kSearchInstanceFields=*/ true,
+                       /*kSearchStaticFields*/ false>(this, dex_cache, field_idx);
 }
 
 FLATTEN
 ArtField* Class::FindStaticField(ObjPtr<mirror::DexCache> dex_cache, uint32_t field_idx) {
-  return FindFieldImpl</*kSearchStaticFieldsInInterfaces*/ true>(this, dex_cache, field_idx);
+  return FindFieldImpl</*kSearchInstanceFields=*/ false,
+                       /*kSearchStaticFields*/ true>(this, dex_cache, field_idx);
 }
 
 void Class::ClearSkipAccessChecksFlagOnAllMethods(PointerSize pointer_size) {
@@ -2200,7 +2247,7 @@ bool Class::EnsureStaticFieldIds(Handle<Class> h_this) {
     self->AssertPendingOOMException();
     return false;
   }
-  return ext->EnsureStaticJFieldIDsArrayPresent(h_this->NumFields());
+  return ext->EnsureStaticJFieldIDsArrayPresent(h_this->NumStaticFields());
 }
 ObjPtr<Object> Class::GetInstanceFieldIds() {
   ObjPtr<ClassExt> ext(GetExtData());
@@ -2218,42 +2265,42 @@ bool Class::EnsureInstanceFieldIds(Handle<Class> h_this) {
     self->AssertPendingOOMException();
     return false;
   }
-  return ext->EnsureInstanceJFieldIDsArrayPresent(h_this->NumFields());
+  return ext->EnsureInstanceJFieldIDsArrayPresent(h_this->NumInstanceFields());
 }
 
 size_t Class::GetStaticFieldIdOffset(ArtField* field) {
   DCHECK_LT(reinterpret_cast<uintptr_t>(field),
-            reinterpret_cast<uintptr_t>(&*GetFieldsPtr()->end()))
+            reinterpret_cast<uintptr_t>(&*GetSFieldsPtr()->end()))
       << "field not part of the current class. " << field->PrettyField() << " class is "
       << PrettyClass();
   DCHECK_GE(reinterpret_cast<uintptr_t>(field),
-            reinterpret_cast<uintptr_t>(&*GetFieldsPtr()->begin()))
+            reinterpret_cast<uintptr_t>(&*GetSFieldsPtr()->begin()))
       << "field not part of the current class. " << field->PrettyField() << " class is "
       << PrettyClass();
-  uintptr_t start = reinterpret_cast<uintptr_t>(&GetFieldsPtr()->At(0));
+  uintptr_t start = reinterpret_cast<uintptr_t>(&GetSFieldsPtr()->At(0));
   uintptr_t fld = reinterpret_cast<uintptr_t>(field);
   size_t res = (fld - start) / sizeof(ArtField);
-  DCHECK_EQ(&GetFieldsPtr()->At(res), field)
+  DCHECK_EQ(&GetSFieldsPtr()->At(res), field)
       << "Incorrect field computation expected: " << field->PrettyField()
-      << " got: " << GetFieldsPtr()->At(res).PrettyField();
+      << " got: " << GetSFieldsPtr()->At(res).PrettyField();
   return res;
 }
 
 size_t Class::GetInstanceFieldIdOffset(ArtField* field) {
   DCHECK_LT(reinterpret_cast<uintptr_t>(field),
-            reinterpret_cast<uintptr_t>(&*GetFieldsPtr()->end()))
+            reinterpret_cast<uintptr_t>(&*GetIFieldsPtr()->end()))
       << "field not part of the current class. " << field->PrettyField() << " class is "
       << PrettyClass();
   DCHECK_GE(reinterpret_cast<uintptr_t>(field),
-            reinterpret_cast<uintptr_t>(&*GetFieldsPtr()->begin()))
+            reinterpret_cast<uintptr_t>(&*GetIFieldsPtr()->begin()))
       << "field not part of the current class. " << field->PrettyField() << " class is "
       << PrettyClass();
-  uintptr_t start = reinterpret_cast<uintptr_t>(&GetFieldsPtr()->At(0));
+  uintptr_t start = reinterpret_cast<uintptr_t>(&GetIFieldsPtr()->At(0));
   uintptr_t fld = reinterpret_cast<uintptr_t>(field);
   size_t res = (fld - start) / sizeof(ArtField);
-  DCHECK_EQ(&GetFieldsPtr()->At(res), field)
+  DCHECK_EQ(&GetIFieldsPtr()->At(res), field)
       << "Incorrect field computation expected: " << field->PrettyField()
-      << " got: " << GetFieldsPtr()->At(res).PrettyField();
+      << " got: " << GetIFieldsPtr()->At(res).PrettyField();
   return res;
 }
 

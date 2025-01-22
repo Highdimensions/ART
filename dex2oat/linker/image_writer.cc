@@ -761,12 +761,23 @@ ImageWriter::Bin ImageWriter::GetImageBin(mirror::Object* object) {
 
         // If the class's static fields are all final, put it into a separate bin
         // since it's very likely it will stay clean.
-        auto fields = as_klass->GetFields();
-        bool all_final = std::all_of(fields.begin(),
-                                     fields.end(),
-                                     [](ArtField& f) { return !f.IsStatic() || f.IsFinal(); });
-        if (all_final) {
+        uint32_t num_static_fields = as_klass->NumStaticFields();
+        if (num_static_fields == 0) {
           bin = Bin::kClassInitializedFinalStatics;
+        } else {
+          // Maybe all the statics are final?
+          bool all_final = true;
+          for (uint32_t i = 0; i < num_static_fields; ++i) {
+            ArtField* field = as_klass->GetStaticField(i);
+            if (!field->IsFinal()) {
+              all_final = false;
+              break;
+            }
+          }
+
+          if (all_final) {
+            bin = Bin::kClassInitializedFinalStatics;
+          }
         }
       }
     } else if (!klass->HasSuperClass()) {
@@ -1404,24 +1415,28 @@ void ImageWriter::RecordNativeRelocations(ObjPtr<mirror::Class> klass, size_t oa
     // Extra consistency check: no boot loader classes should be left!
     CHECK(!klass->IsBootStrapClassLoaded()) << klass->PrettyClass();
   }
+  LengthPrefixedArray<ArtField>* fields[] = {
+      klass->GetSFieldsPtr(), klass->GetIFieldsPtr(),
+  };
   ImageInfo& image_info = GetImageInfo(oat_index);
-  LengthPrefixedArray<ArtField>* fields = klass->GetFieldsPtr();
-  // Total array length including header.
-  if (fields != nullptr) {
-    // Forward the entire array at once.
-    size_t offset = image_info.GetBinSlotSize(Bin::kArtField);
-    DCHECK(!IsInBootImage(fields));
-    bool inserted =
-        native_object_relocations_.insert(std::make_pair(
-            fields,
-            NativeObjectRelocation{
-                oat_index, offset, NativeObjectRelocationType::kArtFieldArray
-            })).second;
-    CHECK(inserted) << "Field array " << fields << " already forwarded";
-    const size_t size = LengthPrefixedArray<ArtField>::ComputeSize(fields->size());
-    offset += size;
-    image_info.IncrementBinSlotSize(Bin::kArtField, size);
-    DCHECK_EQ(offset, image_info.GetBinSlotSize(Bin::kArtField));
+  for (LengthPrefixedArray<ArtField>* cur_fields : fields) {
+    // Total array length including header.
+    if (cur_fields != nullptr) {
+      // Forward the entire array at once.
+      size_t offset = image_info.GetBinSlotSize(Bin::kArtField);
+      DCHECK(!IsInBootImage(cur_fields));
+      bool inserted =
+          native_object_relocations_.insert(std::make_pair(
+              cur_fields,
+              NativeObjectRelocation{
+                  oat_index, offset, NativeObjectRelocationType::kArtFieldArray
+              })).second;
+      CHECK(inserted) << "Field array " << cur_fields << " already forwarded";
+      const size_t size = LengthPrefixedArray<ArtField>::ComputeSize(cur_fields->size());
+      offset += size;
+      image_info.IncrementBinSlotSize(Bin::kArtField, size);
+      DCHECK_EQ(offset, image_info.GetBinSlotSize(Bin::kArtField));
+    }
   }
   // Visit and assign offsets for methods.
   size_t num_methods = klass->NumMethods();
@@ -3319,7 +3334,8 @@ T* ImageWriter::NativeLocationInImage(T* obj) {
 ArtField* ImageWriter::NativeLocationInImage(ArtField* src_field) {
   // Fields are not individually stored in the native relocation map. Use the field array.
   ObjPtr<mirror::Class> declaring_class = src_field->GetDeclaringClass<kWithoutReadBarrier>();
-  LengthPrefixedArray<ArtField>* src_fields = declaring_class->GetFieldsPtr();
+  LengthPrefixedArray<ArtField>* src_fields =
+      src_field->IsStatic() ? declaring_class->GetSFieldsPtr() : declaring_class->GetIFieldsPtr();
   DCHECK(src_fields != nullptr);
   LengthPrefixedArray<ArtField>* dst_fields = NativeLocationInImage(src_fields);
   DCHECK(dst_fields != nullptr);

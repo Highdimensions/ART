@@ -32,7 +32,8 @@ void Field::VisitTarget(ReflectiveValueVisitor* v) {
   if (orig != new_value) {
     SetOffset<false>(new_value->GetOffset().Int32Value());
     SetDeclaringClass<false>(new_value->GetDeclaringClass());
-    auto new_range = GetDeclaringClass()->GetFields();
+    auto new_range =
+        IsStatic() ? GetDeclaringClass()->GetSFields() : GetDeclaringClass()->GetIFields();
     auto position = std::find_if(
         new_range.begin(), new_range.end(), [&](const auto& f) { return &f == new_value; });
     DCHECK(position != new_range.end());
@@ -44,7 +45,13 @@ void Field::VisitTarget(ReflectiveValueVisitor* v) {
 
 ArtField* Field::GetArtField() {
   ObjPtr<mirror::Class> declaring_class = GetDeclaringClass();
-  return declaring_class->GetField(GetArtFieldIndex());
+  if (IsStatic()) {
+    DCHECK_LT(GetArtFieldIndex(), declaring_class->NumStaticFields());
+    return declaring_class->GetStaticField(GetArtFieldIndex());
+  } else {
+    DCHECK_LT(GetArtFieldIndex(), declaring_class->NumInstanceFields());
+    return declaring_class->GetInstanceField(GetArtFieldIndex());
+  }
 }
 
 ObjPtr<mirror::Field> Field::CreateFromArtField(Thread* self,
@@ -79,7 +86,8 @@ ObjPtr<mirror::Field> Field::CreateFromArtField(Thread* self,
       field->GetDeclaringClass());
   ret->SetAccessFlags</*kTransactionActive=*/ false, /*kCheckTransaction=*/ false>(
       field->GetAccessFlags());
-  auto iter_range = field->GetDeclaringClass()->GetFields();
+  auto iter_range = field->IsStatic() ? field->GetDeclaringClass()->GetSFields()
+                                      : field->GetDeclaringClass()->GetIFields();
   auto position = std::find_if(
       iter_range.begin(), iter_range.end(), [&](const auto& f) { return &f == field; });
   DCHECK(position != iter_range.end());

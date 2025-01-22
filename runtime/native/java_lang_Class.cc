@@ -290,7 +290,11 @@ ALWAYS_INLINE static inline ObjPtr<mirror::Field> GetDeclaredField(Thread* self,
     ThrowRuntimeException("Obsolete Object!");
     return nullptr;
   }
-  ArtField* art_field = FindFieldByName(name, c->GetFieldsPtr());
+  ArtField* art_field = FindFieldByName(name, c->GetIFieldsPtr());
+  if (art_field != nullptr) {
+    return mirror::Field::CreateFromArtField(self, art_field, true);
+  }
+  art_field = FindFieldByName(name, c->GetSFieldsPtr());
   if (art_field != nullptr) {
     return mirror::Field::CreateFromArtField(self, art_field, true);
   }

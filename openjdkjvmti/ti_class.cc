@@ -564,8 +564,9 @@ jvmtiError ClassUtil::GetClassFields(jvmtiEnv* env,
     return ERR(NULL_POINTER);
   }
 
-  art::IterationRange<art::StrideIterator<art::ArtField>> fields = klass->GetFields();
-  size_t array_size = klass->NumFields();
+  art::IterationRange<art::StrideIterator<art::ArtField>> ifields = klass->GetIFields();
+  art::IterationRange<art::StrideIterator<art::ArtField>> sfields = klass->GetSFields();
+  size_t array_size = klass->NumInstanceFields() + klass->NumStaticFields();
 
   unsigned char* out_ptr;
   jvmtiError allocError = env->Allocate(array_size * sizeof(jfieldID), &out_ptr);
@@ -575,7 +576,11 @@ jvmtiError ClassUtil::GetClassFields(jvmtiEnv* env,
   jfieldID* field_array = reinterpret_cast<jfieldID*>(out_ptr);
 
   size_t array_idx = 0;
-  for (art::ArtField& field : fields) {
+  for (art::ArtField& field : sfields) {
+    field_array[array_idx] = art::jni::EncodeArtField(&field);
+    ++array_idx;
+  }
+  for (art::ArtField& field : ifields) {
     field_array[array_idx] = art::jni::EncodeArtField(&field);
     ++array_idx;
   }

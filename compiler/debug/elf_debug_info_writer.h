@@ -379,11 +379,8 @@ class ElfCompilationUnitWriter {
         }
 
         // Member variables.
-        for (uint32_t i = 0, count = type->NumFields(); i < count; ++i) {
-          ArtField* field = type->GetField(i);
-          if (field->IsStatic()) {
-            continue;
-          }
+        for (uint32_t i = 0, count = type->NumInstanceFields(); i < count; ++i) {
+          ArtField* field = type->GetInstanceField(i);
           info_.StartTag(DW_TAG_member);
           WriteName(field->GetName());
           WriteLazyType(field->GetTypeDescriptor());

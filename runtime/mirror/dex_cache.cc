@@ -245,7 +245,10 @@ void DexCache::SetResolvedType(dex::TypeIndex type_idx, ObjPtr<Class> resolved) 
     }
     auto* resolved_fields = GetResolvedFieldsArray();
     if (resolved_fields != nullptr) {
-      for (ArtField& current_field : resolved->GetFields()) {
+      for (ArtField& current_field : resolved->GetSFields()) {
+        resolved_fields->Set(current_field.GetDexFieldIndex(), &current_field);
+      }
+      for (ArtField& current_field : resolved->GetIFields()) {
         resolved_fields->Set(current_field.GetDexFieldIndex(), &current_field);
       }
     }
