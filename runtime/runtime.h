@@ -682,7 +682,11 @@ class Runtime {
   }
 
   void SetHiddenApiExemptions(const std::vector<std::string>& exemptions) {
+    if (hidden_api_exemptions_were_set) {
+      return;
+    }
     hidden_api_exemptions_ = exemptions;
+    hidden_api_exemptions_were_set = true;
   }
 
   const std::vector<std::string>& GetHiddenApiExemptions() {
@@ -1461,6 +1465,7 @@ class Runtime {
   // List of signature prefixes of methods that have been removed from the blocklist, and treated
   // as if SDK.
   std::vector<std::string> hidden_api_exemptions_;
+  bool hidden_api_exemptions_were_set = false;
 
   // Do not warn about the same hidden API access violation twice.
   // This is only used for testing.
