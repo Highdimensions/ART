@@ -209,8 +209,15 @@ TEST_F(HeapTest, GCMetrics) {
       EXPECT_FALSE(full_gc_scanned_bytes_delta->IsNull());
       EXPECT_FALSE(full_gc_freed_bytes->IsNull());
       EXPECT_FALSE(full_gc_freed_bytes_delta->IsNull());
+      // Like the generational case, these GC duration can be less than a
+      // millisecond here as well (b/391531096). Temporarily disabling the
+      // tests.
+      // TODO(b/271112044): Possibly make the GCs above more time consuming to
+      // avoid the situation.
+#if 0
       EXPECT_FALSE(full_gc_duration->IsNull());
       EXPECT_FALSE(full_gc_duration_delta->IsNull());
+#endif
 
       EXPECT_TRUE(young_gc_collection_time->IsNull());
       EXPECT_TRUE(young_gc_count->IsNull());
