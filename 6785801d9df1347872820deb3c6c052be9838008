@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2a94a804_6fa05f49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-22T16:58:52Z",
+      "side": 1,
+      "message": "This is on 4 KB mode with all 4 CLs applied (that would mean sparsity is enabled).\n\nI\u0027m re-running tests to check, and asking Art team to look at all results, as I\u0027m not familiar with the tools. Thanks!",
+      "parentUuid": "73012993_857f3d13",
+      "revId": "6785801d9df1347872820deb3c6c052be9838008",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "79326961_30fb3dcb",
         "filename": "libelffile/elf/elf_builder.h",
         "patchSetId": 5
