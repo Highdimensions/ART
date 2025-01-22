@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a89deda5_75a38755",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-22T12:14:08Z",
+      "side": 1,
+      "message": "Is this the heap.cc change? Do you want to do this in a previous CL? Not sure if the `MAP_32BIT` will land the first time without a revert",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 10
+      },
+      "revId": "83da4b420bdde4dd15e5f59e52dc8a8985745eff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
