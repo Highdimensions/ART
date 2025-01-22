@@ -558,6 +558,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ceae2f3_7cbc1702",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-22T18:22:03Z",
+      "side": 1,
+      "message": "Sorry about the confusion – I thought that `art::gc::collector::MarkCompact::RunPhases` was calling `art::gc::collector::GarbageCollector::Run`, but this is actually the opposite. In that case, as long the data used to compute the metrics is located in the right collector or \"global\" (e.g. `current_iteration`), then the current implementation is probably fine.",
+      "parentUuid": "a52b9733_5cca2b36",
+      "range": {
+        "startLine": 460,
+        "startChar": 0,
+        "endLine": 472,
+        "endChar": 55
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "80153e45_efeb08bb",
