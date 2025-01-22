@@ -22,6 +22,30 @@
       },
       "revId": "83da4b420bdde4dd15e5f59e52dc8a8985745eff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fe61d4a_13f7d7a8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-22T22:40:19Z",
+      "side": 1,
+      "message": "Yeah I agree. With this CL I basically wanted to quickly cook up something for Prashant to launch the scanner job.\n\nI\u0027ll split the CLs.",
+      "parentUuid": "a89deda5_75a38755",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 10
+      },
+      "revId": "83da4b420bdde4dd15e5f59e52dc8a8985745eff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
