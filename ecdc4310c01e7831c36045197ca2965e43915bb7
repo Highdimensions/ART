@@ -52,6 +52,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a535cae4_c9d71736",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5787,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-01-22T17:34:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1301f64_4436cb8b",
+      "revId": "ecdc4310c01e7831c36045197ca2965e43915bb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "583db3a7_0f49f804",
@@ -65,6 +83,30 @@
       "writtenOn": "2025-01-17T08:50:52Z",
       "side": 1,
       "message": "`AddConst32`\n\n(Or `LoadConst32()` to a scratch register from a `ScratchRegisterScope` and use `Bne()` instead of `Bnez()`. This would avoid one dependency. It would be nice to have helper functions such as `BneConst32()`.)",
+      "range": {
+        "startLine": 5808,
+        "startChar": 5,
+        "endLine": 5808,
+        "endChar": 9
+      },
+      "revId": "ecdc4310c01e7831c36045197ca2965e43915bb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "726676fd_c98a2303",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5808,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-01-22T17:34:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "583db3a7_0f49f804",
       "range": {
         "startLine": 5808,
         "startChar": 5,
@@ -98,6 +140,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "acb6cde0_675b9ef1",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5811,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-01-22T17:34:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a54fde2_cc41d1ae",
+      "range": {
+        "startLine": 5811,
+        "startChar": 12,
+        "endLine": 5811,
+        "endChar": 16
+      },
+      "revId": "ecdc4310c01e7831c36045197ca2965e43915bb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "036d605c_9a022308",
@@ -111,6 +177,24 @@
       "writtenOn": "2025-01-17T08:50:52Z",
       "side": 1,
       "message": "Line too long, remove some spaces. (See arm64 for a decent alignment of comments.)",
+      "revId": "ecdc4310c01e7831c36045197ca2965e43915bb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "841d6a7a_2cc91b6c",
+        "filename": "runtime/arch/riscv64/quick_entrypoints_riscv64.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-01-22T17:34:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "036d605c_9a022308",
       "revId": "ecdc4310c01e7831c36045197ca2965e43915bb7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
