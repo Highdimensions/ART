@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88c2c759_a4d443d7",
+        "filename": "compiler/optimizing/code_flow_simplifier.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-22T18:53:48Z",
+      "side": 1,
+      "message": "nit: add ` \u003d false` to explicitly initialize the bool since the DCHECK in line 162 can be reached without going through line 152",
+      "range": {
+        "startLine": 143,
+        "startChar": 44,
+        "endLine": 143,
+        "endChar": 45
+      },
+      "revId": "40993a2ee87d5e0fbe38d86b6619ccbc5bec9f09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
