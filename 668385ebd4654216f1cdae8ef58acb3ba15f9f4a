@@ -154,6 +154,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "691cc2e0_39f94491",
+        "filename": "build/art.go",
+        "patchSetId": 14
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-22T00:29:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4cd0c01e_cfae7150",
+      "range": {
+        "startLine": 79,
+        "startChar": 31,
+        "endLine": 79,
+        "endChar": 54
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e85aab42_a2fc9265",
@@ -358,6 +382,30 @@
       "side": 1,
       "message": "Actually, I am not intending to reuse the logic that you referred. The `-Xgc:[no]generational_cc` is a dalvikvm command line option.\n\nAs discussed, I have added the new P/H flag for generational. Please see the changes in mark_compact.cc in this CL.",
       "parentUuid": "499929b5_f768b95c",
+      "range": {
+        "startLine": 584,
+        "startChar": 31,
+        "endLine": 584,
+        "endChar": 46
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61d066ff_32754fb0",
+        "filename": "cmdline/cmdline_types.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-22T00:29:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f32e68c3_d345c44f",
       "range": {
         "startLine": 584,
         "startChar": 31,
@@ -824,6 +872,30 @@
       "side": 1,
       "message": "It\u0027s a good idea and I gave it a try too but the need to have the same name for the different variants is a bit annoying. Besides, in this particular case safety isn\u0027t an issue as all union fields are pointer-types which are never changed once set.",
       "parentUuid": "8803912b_d01bc372",
+      "range": {
+        "startLine": 1645,
+        "startChar": 0,
+        "endLine": 1652,
+        "endChar": 4
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "716ff86d_a3213d1a",
+        "filename": "runtime/gc/heap.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 1652,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-22T00:29:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be3fcce2_62a28032",
       "range": {
         "startLine": 1645,
         "startChar": 0,
