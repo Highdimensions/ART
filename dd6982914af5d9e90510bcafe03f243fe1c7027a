@@ -130,6 +130,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "44032904_7ac64b59",
+        "filename": "tools/ahat/ahat-test-dump-gen.sh.in",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-22T08:38:15Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s possible - afaik Soong can only depend on Soong or make modules, but `build-art-host` is just a plain make target,",
+      "parentUuid": "a1e872ad_841a5514",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 3
+      },
+      "revId": "dd6982914af5d9e90510bcafe03f243fe1c7027a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de21a4e2_f823ea0d",
