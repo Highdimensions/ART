@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6a5e512_6f8ab92f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-22T01:35:36Z",
+      "side": 1,
+      "message": "atest ahat-tests works for me.\n\nThe only idea I have for why presubmit failed was maybe the test-dump.map was out of sync with the test dumps I checked in? The lastest patch set checks in test-dump.map as well.",
+      "parentUuid": "1d8431e9_5d96e3b8",
+      "revId": "dd6982914af5d9e90510bcafe03f243fe1c7027a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ecb25dd6_103dbc19",
@@ -31,6 +49,30 @@
       "writtenOn": "2025-01-20T15:38:06Z",
       "side": 1,
       "message": "```suggestion\n# be used by the ahat tests. Note: You\u0027ll see a lot of error messages from\n```",
+      "range": {
+        "startLine": 27,
+        "startChar": 61,
+        "endLine": 27,
+        "endChar": 68
+      },
+      "revId": "dd6982914af5d9e90510bcafe03f243fe1c7027a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8dea6ac4_200d5c9a",
+        "filename": "tools/ahat/ahat-test-dump-gen.sh.in",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-22T01:35:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecb25dd6_103dbc19",
       "range": {
         "startLine": 27,
         "startChar": 61,
@@ -64,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1e872ad_841a5514",
+        "filename": "tools/ahat/ahat-test-dump-gen.sh.in",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-22T01:35:36Z",
+      "side": 1,
+      "message": "I added the build command to the script itself.\n\nI also tried adding these as dependencies of the generated script in Android.bp, but couldn\u0027t figure out how to make it work.",
+      "parentUuid": "0a4d6478_0a69c02f",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 3
+      },
+      "revId": "dd6982914af5d9e90510bcafe03f243fe1c7027a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de21a4e2_f823ea0d",
@@ -77,6 +143,24 @@
       "writtenOn": "2025-01-20T15:38:06Z",
       "side": 1,
       "message": "Nit: Delete extra empty line.",
+      "revId": "dd6982914af5d9e90510bcafe03f243fe1c7027a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8891b765_5fc64ec7",
+        "filename": "tools/ahat/etc/README.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-22T01:35:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de21a4e2_f823ea0d",
       "revId": "dd6982914af5d9e90510bcafe03f243fe1c7027a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
