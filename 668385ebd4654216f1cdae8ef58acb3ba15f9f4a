@@ -321,6 +321,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e189153_5f2e4b65",
+        "filename": "build/flags/art-flags.aconfig",
+        "patchSetId": 14
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-22T14:12:14Z",
+      "side": 1,
+      "message": "Keeping the flag read-only sounds good to me.",
+      "parentUuid": "c198de2b_4cf39f6b",
+      "range": {
+        "startLine": 24,
+        "startChar": 2,
+        "endLine": 24,
+        "endChar": 26
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66f991ff_32e6b151",
@@ -500,6 +524,30 @@
       "side": 1,
       "message": "No, it doesn\u0027t have to be done every time. For young collections GarbageCollector::Run() will always call YoungMarkCompact::RunPhases(). So this binging of young-GC metrics to YoungMarkCompact\u0027s instance is permanent for the runtime\u0027s lifetime.",
       "parentUuid": "e6a1c09c_6feb016a",
+      "range": {
+        "startLine": 460,
+        "startChar": 0,
+        "endLine": 472,
+        "endChar": 55
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a52b9733_5cca2b36",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 14
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-22T14:12:14Z",
+      "side": 1,
+      "message": "Sorry if my comment was not clear.\n\nWhat I meant is that `art::gc::collector::YoungMarkCompact::gc_time_histogram_` (and similar fields inherited from `art::gc::collector::GarbageCollector`) won\u0027t be used in practice, given that `art::gc::collector::YoungMarkCompact` delegates everything to an instance of `art::gc::collector::MarkCompact` (which does not know about the `art::gc::collector::YoungMarkCompact` instance). (Actually I\u0027d recommend to initialise them to `nullptr` to catch unintended uses early).\n\nI think you need to assign `art::gc::collector::MarkCompact::gc_time_histogram_` and related fields to the right metric field every time a collection starts in `art::gc::collector::MarkCompact::RunPhases`, depending on the collection type.",
+      "parentUuid": "4eaeac11_67daf97a",
       "range": {
         "startLine": 460,
         "startChar": 0,
@@ -741,6 +789,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "378ecf8f_a5aa72e0",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-22T14:12:14Z",
+      "side": 1,
+      "message": "\u003e +1\n\u003e I don\u0027t think it does.\n\u003e Is UNIMPLEMENTED(FATAL) the right thing?\n\nOh right, I forgot about `UNIMPLEMENTED`, which is even clearer.",
+      "parentUuid": "02b2c79f_55c5af3c",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 18
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2de50b50_8a7fddbc",
@@ -778,6 +850,30 @@
       "side": 1,
       "message": "Yes, I replaced `return` with `UNREACHABLE()`",
       "parentUuid": "2de50b50_8a7fddbc",
+      "range": {
+        "startLine": 87,
+        "startChar": 7,
+        "endLine": 87,
+        "endChar": 34
+      },
+      "revId": "668385ebd4654216f1cdae8ef58acb3ba15f9f4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b51bb8b4_ea51818d",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-22T14:12:14Z",
+      "side": 1,
+      "message": "👍",
+      "parentUuid": "9909b3d8_877fcb82",
       "range": {
         "startLine": 87,
         "startChar": 7,

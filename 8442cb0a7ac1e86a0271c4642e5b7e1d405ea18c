@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11585912_911235f8",
+        "filename": "build/art.go",
+        "patchSetId": 15
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-22T14:12:14Z",
+      "side": 1,
+      "message": "Nit: Could you attach a bug to this TODO for tracking?",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 8
+      },
+      "revId": "8442cb0a7ac1e86a0271c4642e5b7e1d405ea18c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a41c34e0_730353ce",
+        "filename": "cmdline/cmdline_types.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-22T14:12:14Z",
+      "side": 1,
+      "message": "Nit: Ditto, could you attach a bug to this TODO for tracking?",
+      "revId": "8442cb0a7ac1e86a0271c4642e5b7e1d405ea18c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
