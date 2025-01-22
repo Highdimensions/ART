@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8665a730_fb4eb4c7",
+        "filename": "test/674-hiddenapi/run.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-22T20:45:11Z",
+      "side": 0,
+      "message": "Afaict this pattern can never match anything, because log lines start with a timestamp, so I deleted it.",
+      "range": {
+        "startLine": 27,
+        "startChar": 2,
+        "endLine": 27,
+        "endChar": 76
+      },
+      "revId": "7c3331ac9b64693c9a2cb36358e62ca00ac0f994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
