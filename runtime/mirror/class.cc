@@ -1173,12 +1173,41 @@ ArtField* Class::FindDeclaredStaticField(std::string_view name, std::string_view
 }
 
 ArtField* Class::FindDeclaredField(ObjPtr<DexCache> dex_cache, uint32_t dex_field_idx) {
-  if (dex_cache == GetDexCache()) {
-    for (ArtField& field : GetFields()) {
-      if (field.GetDexFieldIndex() == dex_field_idx) {
-        return &field;
+  size_t num_fields = NumFields();
+  if (dex_cache == GetDexCache() && num_fields > 0) {
+    // Try direct access in the array.
+    uint32_t index = dex_field_idx - GetField(0)->GetDexFieldIndex();
+    if (index < num_fields) {
+      ArtField* field = GetField(index);
+      if (field->GetDexFieldIndex() == dex_field_idx) {
+        return field;
+      }
+    } else {
+      index = num_fields ;
+    }
+    for (; index > 0; --index) {
+      ArtField* field = GetField(index - 1);
+      if (field->GetDexFieldIndex() == dex_field_idx) {
+        return field;
+      } else if (field->GetDexFieldIndex() < dex_field_idx) {
+        break;
       }
     }
+      /*
+    // We can do a binary search as fields are ordered per dex field index in
+    // the array.
+    bool success;
+    uint32_t mid;
+    uint32_t begin = 
+    uint32_t end = NumFields();
+    auto cmp = [&](uint32_t mid) REQUIRES_SHARED(Locks::mutator_lock_) ALWAYS_INLINE {
+      uint32_t other_dex_field_idx = this->GetField(mid)->GetDexFieldIndex();
+      return other_dex_field_idx == dex_field_idx ? 0 : other_dex_field_idx < dex_field_idx ? 1 : -1;
+    };
+    std::tie(success, mid, begin, end) = BinarySearch(begin, end, cmp);
+    if (success) {
+      return GetField(mid);
+    }*/
   }
   return nullptr;
 }
