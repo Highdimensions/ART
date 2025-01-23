@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efaf24aa_f4cbca34",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T09:07:53Z",
+      "side": 1,
+      "message": "This is not really useful: it just describes changes. Given the diff this description does not provide any new information.\n\n\"Define BUF_SIZE and buf\": they were defined before this change.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 48
+      },
+      "revId": "a51092437db48a013e88e58bf060afd041189a2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3de2d31a_20019d92",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T09:07:53Z",
+      "side": 1,
+      "message": "Please add a new line before `Change-Id`",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 52
+      },
+      "revId": "a51092437db48a013e88e58bf060afd041189a2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c211edb7_d0613a9d",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T09:07:53Z",
+      "side": 1,
+      "message": "This will be the second definition of `buf`. Lines 414-415 can be inside `if defined`",
+      "range": {
+        "startLine": 417,
+        "startChar": 2,
+        "endLine": 417,
+        "endChar": 21
+      },
+      "revId": "a51092437db48a013e88e58bf060afd041189a2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a7bd263_c4c0088d",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T09:07:53Z",
+      "side": 1,
+      "message": "Is this comment really needed?",
+      "range": {
+        "startLine": 417,
+        "startChar": 23,
+        "endLine": 417,
+        "endChar": 39
+      },
+      "revId": "a51092437db48a013e88e58bf060afd041189a2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fba2955_6f1e2bb0",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T09:07:53Z",
+      "side": 1,
+      "message": "This is not true: method returns `std::string`, not buffer.",
+      "range": {
+        "startLine": 421,
+        "startChar": 15,
+        "endLine": 421,
+        "endChar": 31
+      },
+      "revId": "a51092437db48a013e88e58bf060afd041189a2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
