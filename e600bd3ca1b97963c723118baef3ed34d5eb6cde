@@ -145,6 +145,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "087b54f6_3197b483",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T13:27:09Z",
+      "side": 1,
+      "message": "You\u0027re the author of this CL. Take your time, read links I\u0027ve provided earlier, check other commits in this repo and try to come up with a short description of your change.\n\nFeel free to update this thread if nothing comes up in 24 hours.",
+      "parentUuid": "431a10f2_21663cce",
+      "range": {
+        "startLine": 7,
+        "startChar": 21,
+        "endLine": 7,
+        "endChar": 55
+      },
+      "revId": "e600bd3ca1b97963c723118baef3ed34d5eb6cde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f32bf185_bd71b283",
         "filename": "/COMMIT_MSG",
         "patchSetId": 13
