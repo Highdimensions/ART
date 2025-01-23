@@ -47,6 +47,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f9ba439_8be40100",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-23T12:37:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac010625_fb706344",
+      "range": {
+        "startLine": 7,
+        "startChar": 21,
+        "endLine": 7,
+        "endChar": 55
+      },
+      "revId": "e600bd3ca1b97963c723118baef3ed34d5eb6cde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df882cc2_cb812f82",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-23T12:37:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16b53550_e8ba664f",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 1
+      },
+      "revId": "e600bd3ca1b97963c723118baef3ed34d5eb6cde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f32bf185_bd71b283",
@@ -77,6 +125,48 @@
       "writtenOn": "2025-01-23T11:57:25Z",
       "side": 1,
       "message": "Text is unnecessarily long. It can just say \"Do not allocate buf to return string literal\" or something similar.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 261
+      },
+      "revId": "e600bd3ca1b97963c723118baef3ed34d5eb6cde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f18eaef8_3ecdff68",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-23T12:37:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f32bf185_bd71b283",
+      "revId": "e600bd3ca1b97963c723118baef3ed34d5eb6cde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5227ce9_eb2712d2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-23T12:37:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ef319dd_4853e806",
       "range": {
         "startLine": 8,
         "startChar": 0,
