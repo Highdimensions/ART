@@ -68,31 +68,23 @@ static bool BlocksMergeTogether(HBasicBlock* block1, HBasicBlock* block2) {
   return block1->GetSingleSuccessor() == block2->GetSingleSuccessor();
 }
 
-// Search `block` for phis that have different inputs at `index1` and `index2`.
-// If none is found, returns `{true, nullptr}`.
-// If exactly one such `phi` is found, returns `{true, phi}`.
-// Otherwise (if more than one such phi is found), returns `{false, nullptr}`.
-static std::pair<bool, HPhi*> HasAtMostOnePhiWithDifferentInputs(HBasicBlock* block,
-                                                                 size_t index1,
-                                                                 size_t index2) {
+// Returns nullptr if `block` has either no phis or there is more than one phi. Otherwise returns
+// that phi.
+static HPhi* GetSinglePhi(HBasicBlock* block, size_t index1, size_t index2) {
   DCHECK_NE(index1, index2);
 
   HPhi* select_phi = nullptr;
   for (HInstructionIterator it(block->GetPhis()); !it.Done(); it.Advance()) {
     HPhi* phi = it.Current()->AsPhi();
-    auto&& inputs = phi->GetInputs();
-    if (inputs[index1] == inputs[index2]) {
-      continue;
-    }
     if (select_phi == nullptr) {
       // First phi found.
       select_phi = phi;
     } else {
       // More than one phi found, return null.
-      return {false, nullptr};
+      return nullptr;
     }
   }
-  return {true, select_phi};
+  return select_phi;
 }
 
 bool HCodeFlowSimplifier::TryGenerateSelectSimpleDiamondPattern(
@@ -140,60 +132,54 @@ bool HCodeFlowSimplifier::TryGenerateSelectSimpleDiamondPattern(
   //     a = 1; b = 2;
   //   }
   //   // use a and b
-  bool at_most_one_phi_with_different_inputs = false;
-  HPhi* phi = nullptr;
+  HPhi* phi = GetSinglePhi(merge_block, predecessor_index_true, predecessor_index_false);
+
   HInstruction* true_value = nullptr;
   HInstruction* false_value = nullptr;
   if (both_successors_return) {
-    // Note: This can create a select with the same then-value and else-value.
     true_value = true_block->GetFirstInstruction()->InputAt(0);
     false_value = false_block->GetFirstInstruction()->InputAt(0);
+  } else if (phi != nullptr) {
+    true_value = phi->InputAt(predecessor_index_true);
+    false_value = phi->InputAt(predecessor_index_false);
   } else {
-    std::tie(at_most_one_phi_with_different_inputs, phi) = HasAtMostOnePhiWithDifferentInputs(
-        merge_block, predecessor_index_true, predecessor_index_false);
-    if (!at_most_one_phi_with_different_inputs) {
-      return false;
-    }
-    if (phi != nullptr) {
-      true_value = phi->InputAt(predecessor_index_true);
-      false_value = phi->InputAt(predecessor_index_false);
-    }  // else we don't need to create a `HSelect` at all.
+    return false;
   }
-  DCHECK(both_successors_return || at_most_one_phi_with_different_inputs);
+  DCHECK(both_successors_return || phi != nullptr);
 
   // Create the Select instruction and insert it in front of the If.
   HInstruction* condition = if_instruction->InputAt(0);
-  HSelect* select = nullptr;
-  if (both_successors_return || phi != nullptr) {
-    select = new (graph_->GetAllocator()) HSelect(condition,
-                                                  true_value,
-                                                  false_value,
-                                                  if_instruction->GetDexPc());
-    block->InsertInstructionBefore(select, if_instruction);
-    if (both_successors_return) {
-      if (true_value->GetType() == DataType::Type::kReference) {
-        DCHECK(false_value->GetType() == DataType::Type::kReference);
-        ReferenceTypePropagation::FixUpSelectType(select, graph_->GetHandleCache());
-      }
-      false_block->GetFirstInstruction()->ReplaceInput(select, 0);
-    } else {
-      if (phi->GetType() == DataType::Type::kReference) {
-        select->SetReferenceTypeInfoIfValid(phi->GetReferenceTypeInfo());
-      }
-      phi->ReplaceInput(select, predecessor_index_false);  // We'll remove the true branch below.
+  HSelect* select = new (graph_->GetAllocator()) HSelect(condition,
+                                                          true_value,
+                                                          false_value,
+                                                          if_instruction->GetDexPc());
+  if (both_successors_return) {
+    if (true_value->GetType() == DataType::Type::kReference) {
+      DCHECK(false_value->GetType() == DataType::Type::kReference);
+      ReferenceTypePropagation::FixUpSelectType(select, graph_->GetHandleCache());
     }
+  } else if (phi->GetType() == DataType::Type::kReference) {
+    select->SetReferenceTypeInfoIfValid(phi->GetReferenceTypeInfo());
+  }
+  block->InsertInstructionBefore(select, if_instruction);
+
+  // Remove the true branch which removes the corresponding Phi
+  // input if needed. If left only with the false branch, the Phi is
+  // automatically removed.
+  if (both_successors_return) {
+    false_block->GetFirstInstruction()->ReplaceInput(select, 0);
+  } else {
+    phi->ReplaceInput(select, predecessor_index_false);
   }
 
-  // Remove the true branch which removes the corresponding Phi input if needed.
-  // If left only with the false branch, the Phi is automatically removed.
+  bool only_two_predecessors = (merge_block->GetPredecessors().size() == 2u);
   true_block->DisconnectAndDelete();
 
   // Merge remaining blocks which are now connected with Goto.
   DCHECK_EQ(block->GetSingleSuccessor(), false_block);
   block->MergeWith(false_block);
-  if (!both_successors_return && merge_block->GetPredecessors().size() == 1u) {
-    DCHECK_IMPLIES(phi != nullptr, phi->GetBlock() == nullptr);
-    DCHECK(merge_block->GetPhis().IsEmpty());
+  if (!both_successors_return && only_two_predecessors) {
+    DCHECK_EQ(only_two_predecessors, phi->GetBlock() == nullptr);
     DCHECK_EQ(block->GetSingleSuccessor(), merge_block);
     block->MergeWith(merge_block);
   }
@@ -204,22 +190,20 @@ bool HCodeFlowSimplifier::TryGenerateSelectSimpleDiamondPattern(
   // (since this runs after GVN). Lookup by condition, and reuse latest one if possible
   // (due to post order, latest select is most likely replacement). If needed, we could
   // improve this by e.g. using the operands in the map as well.
-  if (select != nullptr) {
-    auto it = cache->find(condition);
-    if (it == cache->end()) {
-      cache->Put(condition, select);
-    } else {
-      // Found cached value. See if latest can replace cached in the HIR.
-      HSelect* cached_select = it->second;
-      DCHECK_EQ(cached_select->GetCondition(), select->GetCondition());
-      if (cached_select->GetTrueValue() == select->GetTrueValue() &&
-          cached_select->GetFalseValue() == select->GetFalseValue() &&
-          select->StrictlyDominates(cached_select)) {
-        cached_select->ReplaceWith(select);
-        cached_select->GetBlock()->RemoveInstruction(cached_select);
-      }
-      it->second = select;  // always cache latest
+  auto it = cache->find(condition);
+  if (it == cache->end()) {
+    cache->Put(condition, select);
+  } else {
+    // Found cached value. See if latest can replace cached in the HIR.
+    HSelect* cached_select = it->second;
+    DCHECK_EQ(cached_select->GetCondition(), select->GetCondition());
+    if (cached_select->GetTrueValue() == select->GetTrueValue() &&
+        cached_select->GetFalseValue() == select->GetFalseValue() &&
+        select->StrictlyDominates(cached_select)) {
+      cached_select->ReplaceWith(select);
+      cached_select->GetBlock()->RemoveInstruction(cached_select);
     }
+    it->second = select;  // always cache latest
   }
 
   // No need to update dominance information, as we are simplifying
