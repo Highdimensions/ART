@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a56088ed_91dddf23",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T11:12:54Z",
+      "side": 1,
+      "message": "This still just describes the changes themselves. It carries no new information and is identical to `git diff`.\n\nIt\u0027s OK to say \"Do not use strcpy in GetOsThreadStatQuick on non linux devices.\" or something similiar it the title, but add some details why.\n\nYou can use other changes in this file as a reference: https://android.googlesource.com/platform/art/+log/refs/heads/main/libartbase/base/utils.cc",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 82
+      },
+      "revId": "a0cb900b779b47658103ad7188cec158d66b46b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9085328_7473a270",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T11:12:54Z",
+      "side": 1,
+      "message": "new line not needed",
+      "revId": "a0cb900b779b47658103ad7188cec158d66b46b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "886cb3b0_eca865a0",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T11:12:54Z",
+      "side": 1,
+      "message": "This new line is not needed too.",
+      "revId": "a0cb900b779b47658103ad7188cec158d66b46b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
