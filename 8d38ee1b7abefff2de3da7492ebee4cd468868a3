@@ -34,6 +34,24 @@
       "parentUuid": "2501d533_ddf41809",
       "revId": "8d38ee1b7abefff2de3da7492ebee4cd468868a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e7263a5_e5f6eb21",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-23T22:42:15Z",
+      "side": 1,
+      "message": "FYI, the buils is green on the dashboard after merging the above CL. Thanks Mythri for bringing this to attention.",
+      "parentUuid": "e7cc1cde_424a111f",
+      "revId": "8d38ee1b7abefff2de3da7492ebee4cd468868a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
