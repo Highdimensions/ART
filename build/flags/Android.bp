@@ -62,6 +62,15 @@ java_aconfig_library {
 }
 
 java_aconfig_library {
+    name: "art-aconfig-flags-java-lib-with-sdk",
+    aconfig_declarations: "art-aconfig-flags",
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+}
+
+java_aconfig_library {
     name: "art-aconfig-flags-java-lib-host",
     host_supported: true,
     aconfig_declarations: "art-aconfig-flags",

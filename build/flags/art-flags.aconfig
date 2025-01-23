@@ -46,6 +46,15 @@ flag {
 }
 
 flag {
+  name: "test_rw"
+  namespace: "art_mainline"
+  description: "Permanent test flag."
+  bug: "352723620"
+  is_fixed_read_only: false
+  is_exported: false
+}
+
+flag {
   namespace: "system_performance"
   name: "executable_method_file_offsets"
   is_exported: true
