@@ -33,6 +33,23 @@
       "message": "Hi, it looks like these CLs now have two +2s (thanks!) but I think the presubmit flag expired. Could it please be retriggered? With autosubmit that should hopefully be the last thing needed.",
       "revId": "3205e7ad4335ff20b2f1bb168b9e7febd2c73db3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbabc887_32f94706",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T12:37:49Z",
+      "side": 1,
+      "message": "I forgot we had to click submit, re-running tests",
+      "revId": "3205e7ad4335ff20b2f1bb168b9e7febd2c73db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
