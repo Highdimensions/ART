@@ -63,6 +63,30 @@
       },
       "revId": "381240427236dfee20c09f3684e63d73f31da4eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdfe61e8_b2299e1f",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T17:14:28Z",
+      "side": 1,
+      "message": "Done.\n\n@solanes@google.com: that\u0027s because ScopedArenaVector line 138 will get destroyed and ots destructor marks the data as inaccessible.",
+      "parentUuid": "193c5882_d8df61ac",
+      "range": {
+        "startLine": 137,
+        "startChar": 2,
+        "endLine": 137,
+        "endChar": 25
+      },
+      "revId": "381240427236dfee20c09f3684e63d73f31da4eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
