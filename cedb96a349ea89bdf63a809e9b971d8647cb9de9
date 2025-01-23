@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2fda3e31_cf8ec8d5",
+        "filename": "compiler/optimizing/fast_compiler.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T14:26:35Z",
+      "side": 1,
+      "message": "Not done, there are still `UNUSED` macros. I meant something like this https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/write_barrier.h;l\u003d40-43;drc\u003df87fc260fb1870f090bca2f3b0ab563681837faa",
+      "parentUuid": "3db56dea_cb98e42a",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 14
+      },
+      "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d98fdace_83cbb798",
         "filename": "compiler/optimizing/fast_compiler_arm64.cc",
         "patchSetId": 11
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "Not for arrays.",
       "parentUuid": "d98fdace_83cbb798",
+      "range": {
+        "startLine": 59,
+        "startChar": 7,
+        "endLine": 59,
+        "endChar": 12
+      },
+      "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28f77cf9_4ead153d",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T14:26:35Z",
+      "side": 1,
+      "message": "Why not? We can make them constexpr e.g. https://cs.android.com/android/platform/superproject/main/+/main:art/compiler/jni/quick/arm/calling_convention_arm.cc;l\u003d33-37;drc\u003d0f6befa0f064d482cc252913f46ba8264b7e0384",
+      "parentUuid": "d5e33759_21e23ad4",
       "range": {
         "startLine": 59,
         "startChar": 7,
@@ -752,6 +800,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0aea08c3_723ddef1",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T14:26:35Z",
+      "side": 1,
+      "message": "I have seen it, but `out` is more common. Fine to keep as-is",
+      "parentUuid": "b7f6ba43_0d941e67",
+      "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "361fcfac_d888a977",
@@ -959,6 +1025,47 @@
       "side": 1,
       "message": "Added a comment instead.",
       "parentUuid": "4c2b76a1_7ce404e1",
+      "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c19d1fdb_2607cf6b",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 811,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T14:26:35Z",
+      "side": 1,
+      "message": "Which comment?",
+      "parentUuid": "4bd487c3_73262ab7",
+      "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bf6088d_e3c9caff",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 874,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T14:26:35Z",
+      "side": 1,
+      "message": "intended removal?",
+      "range": {
+        "startLine": 872,
+        "startChar": 0,
+        "endLine": 874,
+        "endChar": 7
+      },
       "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -1680,6 +1787,30 @@
       "side": 1,
       "message": "Which `if`? Line `1444` doesn\u0027t have one.",
       "parentUuid": "71723d54_11182be2",
+      "range": {
+        "startLine": 1458,
+        "startChar": 0,
+        "endLine": 1458,
+        "endChar": 33
+      },
+      "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67956de2_405c5ef0",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 1458,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T14:26:35Z",
+      "side": 1,
+      "message": "After the rebase is now line 1404. Having said that, that other `if` is inside a `ScopedThreadSuspension` so it is fine to keep the two `if`s",
+      "parentUuid": "15ad3d26_4ff205f0",
       "range": {
         "startLine": 1458,
         "startChar": 0,

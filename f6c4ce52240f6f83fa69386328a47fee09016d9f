@@ -16,6 +16,57 @@
       "message": "Thanks Santiago, PTAL.",
       "revId": "f6c4ce52240f6f83fa69386328a47fee09016d9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90ee106a_4005b5e8",
+        "filename": "compiler/optimizing/code_generator_arm64.cc",
+        "patchSetId": 15
+      },
+      "lineNbr": 1562,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T14:26:35Z",
+      "side": 1,
+      "message": "Do we need to do:\n```\n  GetAssembler()-\u003ecfi().RestoreState();\n  GetAssembler()-\u003ecfi().DefCFAOffset(GetFrameSize());\n```\nhere too? We were doing it before",
+      "revId": "f6c4ce52240f6f83fa69386328a47fee09016d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae70a463_2cb3f359",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 15
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T14:26:35Z",
+      "side": 1,
+      "message": "Same here regarding\n```\n  GetAssembler()-\u003ecfi().RestoreState();\n  GetAssembler()-\u003ecfi().DefCFAOffset(frame_size);\n```",
+      "revId": "f6c4ce52240f6f83fa69386328a47fee09016d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "846cee2e_ba1c5581",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 15
+      },
+      "lineNbr": 1513,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T14:26:35Z",
+      "side": 1,
+      "message": "Can we add a comment explaining the override? Something like ``Our heuristics detected that the baseline compile will be as good as a full compile so we set the compilation kind to be `kOptimized` ``",
+      "revId": "f6c4ce52240f6f83fa69386328a47fee09016d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
