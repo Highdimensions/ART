@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08a9a04a_dec2ff4b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T12:46:15Z",
+      "side": 1,
+      "message": "This line is too long. Please check following on how good commit description should look like:\n\nhttps://github.blog/developer-skills/github/write-better-commits-build-better-projects/#explain-the-context\n\nhttps://gist.github.com/luismts/495d982e8c5b1a0ced4a57cf3d93cf60#git-commit-best-practices",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 132
+      },
+      "revId": "99f55b20263dab71897a357dfb8911a9c0ecc29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

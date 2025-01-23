@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "00fec0f6_beb71550",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T12:46:15Z",
+      "side": 1,
+      "message": "It is still there.\n\nPlease be more careful.",
+      "parentUuid": "5f9ba439_8be40100",
+      "range": {
+        "startLine": 7,
+        "startChar": 21,
+        "endLine": 7,
+        "endChar": 55
+      },
+      "revId": "e600bd3ca1b97963c723118baef3ed34d5eb6cde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f32bf185_bd71b283",
         "filename": "/COMMIT_MSG",
         "patchSetId": 13
