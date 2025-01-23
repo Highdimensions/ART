@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60dcc3cf_902d5319",
+        "filename": "cmdline/cmdline.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-23T20:48:09Z",
+      "side": 1,
+      "message": "CMC gcstress tests are consistently failing (NPE) on host in art::gc::GetSlowPathFlagOffset(), which accesses WellKnownClasses. The stack trace is starting from Runtime::Create() above. Is this initialization late, causing the failures?",
+      "range": {
+        "startLine": 91,
+        "startChar": 2,
+        "endLine": 91,
+        "endChar": 57
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "5588363e_51c561aa",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "cmdline/cmdline.h",
+              "range": {
+                "startLine": 89,
+                "startChar": 0,
+                "endLine": 92,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "cmdline/cmdline.h",
+              "range": {
+                "startLine": 399,
+                "startChar": 0,
+                "endLine": 399,
+                "endChar": 0
+              },
+              "replacement": "\n      // Need well-known-classes.\n      WellKnownClasses::Init(runtime-\u003eGetJniEnv());\n\n"
+            }
+          ]
+        }
+      ],
+      "revId": "70292c9cea31ff6b8ae4697ff0e4dfe3a7d9891e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
