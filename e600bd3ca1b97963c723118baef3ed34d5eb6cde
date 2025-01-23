@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16b53550_e8ba664f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T11:57:25Z",
+      "side": 1,
+      "message": "Should be capital.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 1
+      },
+      "revId": "e600bd3ca1b97963c723118baef3ed34d5eb6cde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac010625_fb706344",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T11:57:25Z",
+      "side": 1,
+      "message": "This is not needed as linux code does not change: buf was always there.",
+      "range": {
+        "startLine": 7,
+        "startChar": 21,
+        "endLine": 7,
+        "endChar": 55
+      },
+      "revId": "e600bd3ca1b97963c723118baef3ed34d5eb6cde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f32bf185_bd71b283",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T11:57:25Z",
+      "side": 1,
+      "message": "Add new line after short commit description. You can see how it is rendered in the gerrit UI - it is just one single long line. That\u0027s how it will be shown everywhere.",
+      "revId": "e600bd3ca1b97963c723118baef3ed34d5eb6cde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ef319dd_4853e806",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-01-23T11:57:25Z",
+      "side": 1,
+      "message": "Text is unnecessarily long. It can just say \"Do not allocate buf to return string literal\" or something similar.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 261
+      },
+      "revId": "e600bd3ca1b97963c723118baef3ed34d5eb6cde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
