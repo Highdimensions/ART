@@ -39,6 +39,30 @@
       },
       "revId": "381240427236dfee20c09f3684e63d73f31da4eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "193c5882_d8df61ac",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T17:07:06Z",
+      "side": 1,
+      "message": "Why does this happen? `Encode` says that `The returned vector is allocated using the allocator passed to the StackMapStream` so the data should be acessible right? Or is this assignment in line 138 creating a new `ScopedArenaVector` which gets destroyed upon return?",
+      "parentUuid": "51d08b66_8ca0a0f3",
+      "range": {
+        "startLine": 137,
+        "startChar": 2,
+        "endLine": 137,
+        "endChar": 25
+      },
+      "revId": "381240427236dfee20c09f3684e63d73f31da4eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
