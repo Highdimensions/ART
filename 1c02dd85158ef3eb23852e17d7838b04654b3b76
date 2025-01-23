@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6302b4ca_ff553f61",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 10052,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T18:56:00Z",
+      "side": 1,
+      "message": "I don\u0027t see any boot test failures on presubmit for PS2. I see:\n```\n  error (0)\n  warning (1)\n  info (2)\n  success (18)\n```\n\nThat sounds like a bug. In my mind if `ShouldDenyAccessToMember` with `kCheck` returns true then it should also return true with `kLinking`. I don\u0027t see how changing the access method from `kCheck` to `kLinking` would mean that it is now fine to access it. Is the policy being changed? Or maybe the access flags?\n\nIf you can repro maybe we can CHECK failure and log more info to understand what\u0027s going on.",
+      "parentUuid": "5fbade4c_6e734fbd",
+      "range": {
+        "startLine": 10052,
+        "startChar": 21,
+        "endLine": 10052,
+        "endChar": 45
+      },
+      "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fabbd0c4_a65647ad",
         "filename": "runtime/hidden_api.cc",
         "patchSetId": 4
@@ -79,6 +103,24 @@
       "side": 1,
       "message": "clang-format wants it this way and I prefer not to fight it.\n\nI swapped the order so that the two check variants end up on the same line at least.\n\n(Btw I\u0027m not sure about the exclusion of kLinking, because it\u0027s probably the most common access method so means a significant gap in the metrics we could collect here. But that\u0027s out of scope.)",
       "parentUuid": "fabbd0c4_a65647ad",
+      "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21df951d_77951245",
+        "filename": "runtime/hidden_api.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T18:56:00Z",
+      "side": 1,
+      "message": "Ack, we should change clang-format because we prefer one per line if it doesn\u0027t fit all in one line. Makes it harder to miss a case this way.\n\nNo idea regarding `Linking`. The comment was added in 2018 and it may be obsolete",
+      "parentUuid": "45bf3584_da545e15",
       "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -149,6 +191,24 @@
       "side": 1,
       "message": "I don\u0027t want to change the API constants in `HiddenApiUsageLogger`, so this is the next available one.",
       "parentUuid": "617e887d_aa2fc8ff",
+      "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d109665c_1680f668",
+        "filename": "runtime/hidden_api.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-23T18:56:00Z",
+      "side": 1,
+      "message": "Ack but I think that the explicit numbering shouldn\u0027t matter here. We are not using the ordering to do comparisons like `\u003c\u003d`, and we are not casting from/to integer. We can handle this on another CL.",
+      "parentUuid": "ebf63f60_a228acaa",
       "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
