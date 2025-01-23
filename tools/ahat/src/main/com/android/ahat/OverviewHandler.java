@@ -21,10 +21,14 @@ import com.android.ahat.heapdump.AhatInstance;
 import com.android.ahat.heapdump.AhatBitmapInstance;
 import com.android.ahat.heapdump.AhatSnapshot;
 import com.android.ahat.heapdump.Reachability;
+import com.android.ahat.heapdump.Site;
 import com.android.ahat.heapdump.Size;
+import com.android.ahat.heapdump.Value;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 class OverviewHandler implements AhatHandler {
 
@@ -63,6 +67,26 @@ class OverviewHandler implements AhatHandler {
 
     doc.section("Heap Analysis Result");
     printDuplicateBitmaps(doc);
+
+    doc.table(new Column("Zygote instances with monitor"));
+    Site rootSite = mSnapshot.getSite(0);
+    Predicate<AhatInstance> hasMonitor = (x) -> {
+      if (!x.getHeap().getName().equals("zygote")) {
+          return false;
+      }
+
+      Value monitor_value = x.getField("shadow$_monitor_");
+      if (monitor_value == null) {
+          return false;
+      }
+      return (monitor_value.asInteger() >>> 30) == 1;
+    };
+    List<AhatInstance> instsWithMonitors = new ArrayList<>();
+    rootSite.getObjects(hasMonitor, x -> instsWithMonitors.add(x));
+    for (AhatInstance inst : instsWithMonitors) {
+        doc.row(Summarizer.summarize(inst));
+    }
+    doc.end();
   }
 
   private void printHeapSizes(Doc doc) {
