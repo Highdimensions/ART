@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fbade4c_6e734fbd",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 10052,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-23T17:09:56Z",
+      "side": 1,
+      "message": "I thought so myself too at first, but see the boot test failures on PS2. This will return false in just-warn mode, and then the resolved method should still be used.",
+      "parentUuid": "185025ac_00fc242a",
+      "range": {
+        "startLine": 10052,
+        "startChar": 21,
+        "endLine": 10052,
+        "endChar": 45
+      },
+      "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fabbd0c4_a65647ad",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-01-23T13:49:48Z",
       "side": 1,
       "message": "nit: one per line",
+      "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "45bf3584_da545e15",
+        "filename": "runtime/hidden_api.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-23T17:09:56Z",
+      "side": 1,
+      "message": "clang-format wants it this way and I prefer not to fight it.\n\nI swapped the order so that the two check variants end up on the same line at least.\n\n(Btw I\u0027m not sure about the exclusion of kLinking, because it\u0027s probably the most common access method so means a significant gap in the metrics we could collect here. But that\u0027s out of scope.)",
+      "parentUuid": "fabbd0c4_a65647ad",
       "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -58,6 +100,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9218bf13_f5ad1f18",
+        "filename": "runtime/hidden_api.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-23T17:09:56Z",
+      "side": 1,
+      "message": "That shouldn\u0027t be necessary. That API is for logged denials, and the old kNone was never logged. Now it\u0027s two values, but neither of them are logged - cf. hidden_api.cc:398. Hence my addition to this comment.",
+      "parentUuid": "aa1a3910_fbe15724",
+      "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "617e887d_aa2fc8ff",
@@ -71,6 +131,24 @@
       "writtenOn": "2025-01-23T13:49:48Z",
       "side": 1,
       "message": "Is there a reason to use `4` here? Can we remove the explicit numbering in the entries?",
+      "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebf63f60_a228acaa",
+        "filename": "runtime/hidden_api.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-23T17:09:56Z",
+      "side": 1,
+      "message": "I don\u0027t want to change the API constants in `HiddenApiUsageLogger`, so this is the next available one.",
+      "parentUuid": "617e887d_aa2fc8ff",
       "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
