@@ -85,6 +85,9 @@ static Runtime* StartRuntime(const std::vector<std::string>& boot_image_location
     return nullptr;
   }
 
+  // Need well-known-classes.
+  WellKnownClasses::Init(Thread::Current()->GetJniEnv());
+
   // Runtime::Create acquired the mutator_lock_ that is normally given away when we Runtime::Start,
   // give it away now and then switch to a more manageable ScopedObjectAccess.
   Thread::Current()->TransitionFromRunnableToSuspended(ThreadState::kNative);
