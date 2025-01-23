@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5f10228_05f7560f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-23T11:32:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a56088ed_91dddf23",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 82
+      },
+      "revId": "a0cb900b779b47658103ad7188cec158d66b46b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9085328_7473a270",
@@ -41,6 +65,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "39e5d6e6_f1555d21",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-23T11:32:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9085328_7473a270",
+      "revId": "a0cb900b779b47658103ad7188cec158d66b46b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "886cb3b0_eca865a0",
@@ -54,6 +96,24 @@
       "writtenOn": "2025-01-23T11:12:54Z",
       "side": 1,
       "message": "This new line is not needed too.",
+      "revId": "a0cb900b779b47658103ad7188cec158d66b46b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63459ce9_498fe4c0",
+        "filename": "libartbase/base/utils.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-23T11:32:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "886cb3b0_eca865a0",
       "revId": "a0cb900b779b47658103ad7188cec158d66b46b0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
