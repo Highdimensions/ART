@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c04e13e8_618ddccd",
+        "filename": "compiler/optimizing/code_generator_arm64.cc",
+        "patchSetId": 15
+      },
+      "lineNbr": 1562,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T15:44:27Z",
+      "side": 1,
+      "message": "My understanding is that we don\u0027t, as we\u0027re not manipulating the stack or register in `Ret`.",
+      "parentUuid": "90ee106a_4005b5e8",
+      "revId": "f6c4ce52240f6f83fa69386328a47fee09016d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ae70a463_2cb3f359",
@@ -52,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "523d2be1_a1be9589",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 15
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T15:44:27Z",
+      "side": 1,
+      "message": "ditto.",
+      "parentUuid": "ae70a463_2cb3f359",
+      "revId": "f6c4ce52240f6f83fa69386328a47fee09016d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "846cee2e_ba1c5581",
@@ -65,6 +101,24 @@
       "writtenOn": "2025-01-23T14:26:35Z",
       "side": 1,
       "message": "Can we add a comment explaining the override? Something like ``Our heuristics detected that the baseline compile will be as good as a full compile so we set the compilation kind to be `kOptimized` ``",
+      "revId": "f6c4ce52240f6f83fa69386328a47fee09016d9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d3b6121_2b4f1260",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 15
+      },
+      "lineNbr": 1513,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T15:44:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "846cee2e_ba1c5581",
       "revId": "f6c4ce52240f6f83fa69386328a47fee09016d9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

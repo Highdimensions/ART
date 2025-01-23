@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bd88a27_b85ba50f",
+        "filename": "compiler/optimizing/fast_compiler.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T15:44:27Z",
+      "side": 1,
+      "message": "I\u0027ve removed the remaining uses of `UNUSED` macros in this CL.",
+      "parentUuid": "2fda3e31_cf8ec8d5",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 14
+      },
+      "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d98fdace_83cbb798",
@@ -133,6 +157,30 @@
       "side": 1,
       "message": "Why not? We can make them constexpr e.g. https://cs.android.com/android/platform/superproject/main/+/main:art/compiler/jni/quick/arm/calling_convention_arm.cc;l\u003d33-37;drc\u003d0f6befa0f064d482cc252913f46ba8264b7e0384",
       "parentUuid": "d5e33759_21e23ad4",
+      "range": {
+        "startLine": 59,
+        "startChar": 7,
+        "endLine": 59,
+        "endChar": 12
+      },
+      "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56d81295_1b74c61c",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T15:44:27Z",
+      "side": 1,
+      "message": "Ah right, the issue is that the vixl registers are not constexpr.",
+      "parentUuid": "28f77cf9_4ead153d",
       "range": {
         "startLine": 59,
         "startChar": 7,
@@ -1047,6 +1095,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1e74666_52a8462c",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 811,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T15:44:27Z",
+      "side": 1,
+      "message": "Oops, got lost. Done.",
+      "parentUuid": "c19d1fdb_2607cf6b",
+      "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3bf6088d_e3c9caff",
@@ -1060,6 +1126,30 @@
       "writtenOn": "2025-01-23T14:26:35Z",
       "side": 1,
       "message": "intended removal?",
+      "range": {
+        "startLine": 872,
+        "startChar": 0,
+        "endLine": 874,
+        "endChar": 7
+      },
+      "revId": "cedb96a349ea89bdf63a809e9b971d8647cb9de9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6a88eb1_8c7f0e5f",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 874,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T15:44:27Z",
+      "side": 1,
+      "message": "Yeah, for first implementation of this compiler. I\u0027ll handle inline caches in a follow-up.",
+      "parentUuid": "3bf6088d_e3c9caff",
       "range": {
         "startLine": 872,
         "startChar": 0,
