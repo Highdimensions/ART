@@ -16,6 +16,29 @@
       "message": "Thanks Santiago, PTAL.",
       "revId": "381240427236dfee20c09f3684e63d73f31da4eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51d08b66_8ca0a0f3",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-23T15:49:43Z",
+      "side": 1,
+      "message": "Please return the whole vector instead. Otherwise, the memory you\u0027re returning gets marked with `MakeInaccessible()` - this should cause crashes under ASAN.",
+      "range": {
+        "startLine": 137,
+        "startChar": 2,
+        "endLine": 137,
+        "endChar": 25
+      },
+      "revId": "381240427236dfee20c09f3684e63d73f31da4eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
