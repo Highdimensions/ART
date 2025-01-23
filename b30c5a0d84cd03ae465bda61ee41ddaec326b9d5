@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ac394cd_4b83b510",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T11:11:24Z",
+      "side": 1,
+      "message": "Thanks Vladimir, comments addressed here: aosp/3462000.",
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2955c773_53b8ac79",
@@ -47,6 +64,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "44acee26_624bf3dc",
+        "filename": "compiler/optimizing/inliner.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T11:11:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb92f06c_03290b24",
+      "range": {
+        "startLine": 249,
+        "startChar": 0,
+        "endLine": 251,
+        "endChar": 0
+      },
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56c98447_bd1c4cee",
+        "filename": "compiler/optimizing/inliner.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T11:11:24Z",
+      "side": 1,
+      "message": "It\u0027s still needed, we\u0027re accessing the declaring class and its class def index, and those have mutator lock requirement.",
+      "parentUuid": "2955c773_53b8ac79",
+      "range": {
+        "startLine": 251,
+        "startChar": 4,
+        "endLine": 251,
+        "endChar": 41
+      },
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2c17295b_4e832d17",
@@ -60,6 +125,30 @@
       "writtenOn": "2025-01-22T08:44:32Z",
       "side": 1,
       "message": "Not needed anymore.",
+      "range": {
+        "startLine": 175,
+        "startChar": 2,
+        "endLine": 175,
+        "endChar": 44
+      },
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afd04320_488755be",
+        "filename": "compiler/optimizing/intrinsics.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T11:11:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c17295b_4e832d17",
       "range": {
         "startLine": 175,
         "startChar": 2,
@@ -93,6 +182,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d68ba08_bfdd00ee",
+        "filename": "compiler/optimizing/intrinsics.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T11:11:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4df5e6fa_32e614f6",
+      "range": {
+        "startLine": 181,
+        "startChar": 2,
+        "endLine": 181,
+        "endChar": 44
+      },
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "264b2f5d_d6620b73",
@@ -106,6 +219,30 @@
       "writtenOn": "2025-01-22T08:44:32Z",
       "side": 1,
       "message": "Not needed anymore.",
+      "range": {
+        "startLine": 280,
+        "startChar": 4,
+        "endLine": 280,
+        "endChar": 46
+      },
+      "revId": "b30c5a0d84cd03ae465bda61ee41ddaec326b9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "737c4abf_7c647493",
+        "filename": "compiler/optimizing/reference_type_propagation.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T11:11:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "264b2f5d_d6620b73",
       "range": {
         "startLine": 280,
         "startChar": 4,
