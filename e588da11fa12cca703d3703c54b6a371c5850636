@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "64a79d68_38452526",
+        "filename": "dex2oat/linker/oat_writer.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1314,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-23T17:22:11Z",
+      "side": 1,
+      "message": "Fixed, thank you!",
+      "parentUuid": "f01560d2_abbf2e65",
+      "range": {
+        "startLine": 1314,
+        "startChar": 76,
+        "endLine": 1314,
+        "endChar": 86
+      },
+      "revId": "e588da11fa12cca703d3703c54b6a371c5850636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "af6d3fe2_377b326f",
         "filename": "dex2oat/linker/oat_writer.cc",
         "patchSetId": 5
@@ -54,6 +78,30 @@
       "writtenOn": "2025-01-20T14:55:38Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 1315,
+        "startChar": 7,
+        "endLine": 1315,
+        "endChar": 15
+      },
+      "revId": "e588da11fa12cca703d3703c54b6a371c5850636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17d40b6f_5b2eb6c8",
+        "filename": "dex2oat/linker/oat_writer.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1315,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-23T17:22:11Z",
+      "side": 1,
+      "message": "Fixed, thank you!",
+      "parentUuid": "af6d3fe2_377b326f",
       "range": {
         "startLine": 1315,
         "startChar": 7,
@@ -89,6 +137,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "51cc8e5b_59ee8354",
+        "filename": "dex2oat/linker/oat_writer.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1620,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-23T17:22:11Z",
+      "side": 1,
+      "message": "Fixed, thank you!",
+      "parentUuid": "1f38ca65_b391f83e",
+      "range": {
+        "startLine": 1620,
+        "startChar": 78,
+        "endLine": 1620,
+        "endChar": 88
+      },
+      "revId": "e588da11fa12cca703d3703c54b6a371c5850636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "310b3c6e_d86e4e65",
         "filename": "dex2oat/linker/oat_writer.cc",
         "patchSetId": 5
@@ -100,6 +172,30 @@
       "writtenOn": "2025-01-20T14:55:38Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 1621,
+        "startChar": 9,
+        "endLine": 1621,
+        "endChar": 17
+      },
+      "revId": "e588da11fa12cca703d3703c54b6a371c5850636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1962673d_c92e90b1",
+        "filename": "dex2oat/linker/oat_writer.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1621,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-23T17:22:11Z",
+      "side": 1,
+      "message": "Fixed, thank you!",
+      "parentUuid": "310b3c6e_d86e4e65",
       "range": {
         "startLine": 1621,
         "startChar": 9,
@@ -135,6 +231,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "edf8744e_355a66ad",
+        "filename": "dex2oat/linker/oat_writer.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1633,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-23T17:22:11Z",
+      "side": 1,
+      "message": "Done, thank you!",
+      "parentUuid": "8916c6b7_441937c8",
+      "range": {
+        "startLine": 1633,
+        "startChar": 27,
+        "endLine": 1633,
+        "endChar": 34
+      },
+      "revId": "e588da11fa12cca703d3703c54b6a371c5850636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "da503b71_e79aab1c",
         "filename": "dex2oat/linker/oat_writer.cc",
         "patchSetId": 5
@@ -146,6 +266,30 @@
       "writtenOn": "2025-01-20T14:55:38Z",
       "side": 1,
       "message": "Odd alignment. We could put `GetOffsetFromOatDataAlignedToFile(` after the `\u003d` and both arguments on the next line.",
+      "range": {
+        "startLine": 3165,
+        "startChar": 12,
+        "endLine": 3165,
+        "endChar": 42
+      },
+      "revId": "e588da11fa12cca703d3703c54b6a371c5850636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caf99548_026c224c",
+        "filename": "dex2oat/linker/oat_writer.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 3165,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-23T17:22:11Z",
+      "side": 1,
+      "message": "Fixed, thank you!",
+      "parentUuid": "da503b71_e79aab1c",
       "range": {
         "startLine": 3165,
         "startChar": 12,
@@ -181,6 +325,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f062a650_f30315cf",
+        "filename": "dex2oat/linker/oat_writer.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 3557,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-23T17:22:11Z",
+      "side": 1,
+      "message": "Fixed, thank you!",
+      "parentUuid": "8c56ab8f_1eeb1773",
+      "range": {
+        "startLine": 3557,
+        "startChar": 8,
+        "endLine": 3557,
+        "endChar": 21
+      },
+      "revId": "e588da11fa12cca703d3703c54b6a371c5850636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ae380c50_9c80929a",
         "filename": "runtime/oat/image.cc",
         "patchSetId": 5
@@ -192,6 +360,30 @@
       "writtenOn": "2025-01-20T14:55:38Z",
       "side": 1,
       "message": "There is no need to change both oat version and image version. This CL is about oat files, so we should keep the image version unchanged.",
+      "range": {
+        "startLine": 38,
+        "startChar": 58,
+        "endLine": 38,
+        "endChar": 59
+      },
+      "revId": "e588da11fa12cca703d3703c54b6a371c5850636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b271a8a_558543fe",
+        "filename": "runtime/oat/image.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-23T17:22:11Z",
+      "side": 1,
+      "message": "Reverted, thank you!",
+      "parentUuid": "ae380c50_9c80929a",
       "range": {
         "startLine": 38,
         "startChar": 58,
