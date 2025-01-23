@@ -16,6 +16,47 @@
       "message": "PTAL. Thanks!",
       "revId": "b1d1cdc13f93d6e8c97f998141dc936cfb896acd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f2e5c93_c3730d51",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1497,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-23T15:26:32Z",
+      "side": 1,
+      "message": "Change this implementation to use GetCpuNanoTime?",
+      "range": {
+        "startLine": 1487,
+        "startChar": 0,
+        "endLine": 1497,
+        "endChar": 6
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "5b592841_aa486c0e",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread.cc",
+              "range": {
+                "startLine": 1487,
+                "startChar": 0,
+                "endLine": 1498,
+                "endChar": 0
+              },
+              "replacement": "  return GetCpuNanoTime() / 1000;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b1d1cdc13f93d6e8c97f998141dc936cfb896acd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
