@@ -70,7 +70,7 @@ enum class OptimizationPass {
   kAggressiveInstructionSimplifier,
   kBoundsCheckElimination,
   kCHAGuardOptimization,
-  kCodeFlowSimplifier,
+  kControlFlowSimplifier,
   kCodeSinking,
   kConstantFolding,
   kConstructorFenceRedundancyElimination,
