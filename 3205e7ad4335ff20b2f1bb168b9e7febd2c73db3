@@ -16,6 +16,23 @@
       "message": "Polite ping on these two CLs, it looks like they just need a second reviewer to approve. I\u0027ve added Santiago in case David is unavailable at the moment - thank you!",
       "revId": "3205e7ad4335ff20b2f1bb168b9e7febd2c73db3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4306f7c9_b0ec7426",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1975620
+      },
+      "writtenOn": "2025-01-23T12:20:29Z",
+      "side": 1,
+      "message": "Hi, it looks like these CLs now have two +2s (thanks!) but I think the presubmit flag expired. Could it please be retriggered? With autosubmit that should hopefully be the last thing needed.",
+      "revId": "3205e7ad4335ff20b2f1bb168b9e7febd2c73db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
