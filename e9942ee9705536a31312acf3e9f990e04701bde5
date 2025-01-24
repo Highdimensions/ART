@@ -59,6 +59,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "66818c1e_013bf546",
+        "filename": "libartservice/service/java/com/android/server/art/Dex2OatStatsReporter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-01-24T13:44:22Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "21382766_361515d4",
+      "range": {
+        "startLine": 52,
+        "startChar": 45,
+        "endLine": 52,
+        "endChar": 46
+      },
+      "revId": "e9942ee9705536a31312acf3e9f990e04701bde5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3269529b_3211d341",
@@ -72,6 +96,30 @@
       "writtenOn": "2025-01-24T12:34:08Z",
       "side": 1,
       "message": "I know `COMPILER_FILTER_NOOP` falls into this case, but plaese explicitly add a `case` clause for better readability.\n\nAlso, please double check if the server can properly process `ART_COMPILATION_FILTER_UNKNOWN` throughout the entire pipeline and make it show up on Pitot.",
+      "range": {
+        "startLine": 90,
+        "startChar": 12,
+        "endLine": 90,
+        "endChar": 22
+      },
+      "revId": "e9942ee9705536a31312acf3e9f990e04701bde5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41684c1a_b4c2e7b4",
+        "filename": "libartservice/service/java/com/android/server/art/Dex2OatStatsReporter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-01-24T13:44:22Z",
+      "side": 1,
+      "message": "I have added an explicit case for COMPILER_FILTER_NOOP as you requested.\n\nI\u0027ll need to double check on ART_COMPILATION_FILTER_UNKNOWN, as far as I can see we have both UNKNOWN and UNSPECIFIED but neither is showing up in Pitot, so there might be some mixup somewhere in the pipeline.",
+      "parentUuid": "3269529b_3211d341",
       "range": {
         "startLine": 90,
         "startChar": 12,
@@ -105,6 +153,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "464440da_118924a1",
+        "filename": "libartservice/service/java/com/android/server/art/Dexopter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-01-24T13:44:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b31937b1_3a03fac9",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 118,
+        "endChar": 52
+      },
+      "revId": "e9942ee9705536a31312acf3e9f990e04701bde5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cb3d4b2d_01cf071e",
@@ -128,6 +200,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e1618d8_6414c775",
+        "filename": "libartservice/service/java/com/android/server/art/Dexopter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-01-24T13:44:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb3d4b2d_01cf071e",
+      "range": {
+        "startLine": 129,
+        "startChar": 23,
+        "endLine": 129,
+        "endChar": 32
+      },
+      "revId": "e9942ee9705536a31312acf3e9f990e04701bde5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f0f283c7_41c9400f",
@@ -141,6 +237,30 @@
       "writtenOn": "2025-01-24T12:34:08Z",
       "side": 1,
       "message": "Sorry, I realized that it\u0027s better to report \"skip\" only in the COMPILER_FILTER_NOOP case. If a package is not dexoptable, then we shouldn\u0027t bother reporting it. In the pre-reboot case, if a dex file doesn\u0027t exist in the new system image, then we shouldn\u0027t bother reporting it either.",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 17
+      },
+      "revId": "e9942ee9705536a31312acf3e9f990e04701bde5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a8469e1_40afe6c6",
+        "filename": "libartservice/service/java/com/android/server/art/Dexopter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-01-24T13:44:22Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "f0f283c7_41c9400f",
       "range": {
         "startLine": 121,
         "startChar": 0,
