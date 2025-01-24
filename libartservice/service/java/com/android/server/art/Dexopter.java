@@ -108,13 +108,30 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
             ProfilePath profile = null;
             boolean succeeded = true;
             List<String> externalProfileErrors = List.of();
+
+            int appId = mPkgState.getAppId();
+            DexMetadataInfo dmInfo =
+                    mInjector.getDexMetadataHelper().getDexMetadataInfo(buildDmPath(dexInfo));
+            String compilerFilter = mParams.getCompilerFilter();
+            String compilationReason = mParams.getReason();
+            int dexMetadataType = dmInfo.type();
+            List<Abi> allAbis = getAllAbis(dexInfo);
+
             try {
                 if (!isDexoptable(dexInfo)) {
+                    mInjector.getReporterExecutor().execute(
+                            ()
+                                    -> Dex2OatStatsReporter.reportSkipped(appId, compilerFilter,
+                                            compilationReason, dexMetadataType, dexInfo, allAbis));
                     continue;
                 }
 
-                String compilerFilter = adjustCompilerFilter(mParams.getCompilerFilter(), dexInfo);
-                if (compilerFilter.equals(DexoptParams.COMPILER_FILTER_NOOP)) {
+                String adjustedCompilerFilter = adjustCompilerFilter(compilerFilter, dexInfo);
+                if (adjustedCompilerFilter.equals(DexoptParams.COMPILER_FILTER_NOOP)) {
+                    mInjector.getReporterExecutor().execute(
+                            ()
+                                    -> Dex2OatStatsReporter.reportSkipped(appId, compilerFilter,
+                                            compilationReason, dexMetadataType, dexInfo, allAbis));
                     continue;
                 }
 
@@ -123,17 +140,18 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                     // new system image. Although code below can gracefully handle failures, those
                     // failures can be red herrings in metrics and bug reports, so we skip
                     // non-existing dex files to avoid them.
+                    mInjector.getReporterExecutor().execute(
+                            ()
+                                    -> Dex2OatStatsReporter.reportSkipped(appId, compilerFilter,
+                                            compilationReason, dexMetadataType, dexInfo, allAbis));
                     continue;
                 }
-
-                DexMetadataInfo dmInfo =
-                        mInjector.getDexMetadataHelper().getDexMetadataInfo(buildDmPath(dexInfo));
 
                 boolean needsToBeShared = needsToBeShared(dexInfo);
                 boolean isOtherReadable = true;
                 // If true, implies that the profile has changed since the last compilation.
                 boolean profileMerged = false;
-                if (DexFile.isProfileGuidedCompilerFilter(compilerFilter)) {
+                if (DexFile.isProfileGuidedCompilerFilter(adjustedCompilerFilter)) {
                     if (!dmInfo.config().getEnableEmbeddedProfile()) {
                         String dmPath = DexMetadataHelper.getDmPath(
                                 Objects.requireNonNull(dmInfo.dmPath()));
@@ -167,7 +185,8 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                         // and dex2oat already makes this transformation. However, we need to
                         // explicitly make this transformation here to guide the later decisions
                         // such as whether the artifacts can be public and whether dexopt is needed.
-                        compilerFilter = printAdjustCompilerFilterReason(compilerFilter,
+                        adjustedCompilerFilter = printAdjustCompilerFilterReason(
+                                adjustedCompilerFilter,
                                 needsToBeShared ? ReasonMapping.getCompilerFilterForShared()
                                                 : "verify",
                                 "there is no valid profile"
@@ -176,7 +195,7 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                     }
                 }
                 boolean isProfileGuidedCompilerFilter =
-                        DexFile.isProfileGuidedCompilerFilter(compilerFilter);
+                        DexFile.isProfileGuidedCompilerFilter(adjustedCompilerFilter);
                 Utils.check(isProfileGuidedCompilerFilter == (profile != null));
 
                 boolean canBePublic = (!isProfileGuidedCompilerFilter || isOtherReadable)
@@ -187,7 +206,7 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                 DexoptOptions dexoptOptions =
                         getDexoptOptions(dexInfo, isProfileGuidedCompilerFilter);
 
-                for (Abi abi : getAllAbis(dexInfo)) {
+                for (Abi abi : allAbis) {
                     @DexoptResult.DexoptResultStatus int status = DexoptResult.DEXOPT_SKIPPED;
                     long wallTimeMs = 0;
                     long cpuTimeMs = 0;
@@ -200,7 +219,7 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                                              .setDexInfo(dexInfo)
                                              .setIsa(abi.isa())
                                              .setIsInDalvikCache(isInDalvikCache)
-                                             .setCompilerFilter(compilerFilter)
+                                             .setCompilerFilter(adjustedCompilerFilter)
                                              .setDmPath(dmInfo.dmPath())
                                              .build();
                         var options = GetDexoptNeededOptions.builder()
@@ -306,9 +325,9 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                             extendedStatusFlags |= DexoptResult.EXTENDED_BAD_EXTERNAL_PROFILE;
                         }
                         var result = DexContainerFileDexoptResult.create(dexInfo.dexPath(),
-                                abi.isPrimaryAbi(), abi.name(), compilerFilter, status, wallTimeMs,
-                                cpuTimeMs, sizeBytes, sizeBeforeBytes, extendedStatusFlags,
-                                externalProfileErrors);
+                                abi.isPrimaryAbi(), abi.name(), adjustedCompilerFilter, status,
+                                wallTimeMs, cpuTimeMs, sizeBytes, sizeBeforeBytes,
+                                extendedStatusFlags, externalProfileErrors);
                         AsLog.i(String.format("Dexopt result: [packageName = %s] %s",
                                 mPkgState.getPackageName(), result));
                         results.add(result);
@@ -324,11 +343,10 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                         Dex2OatResult finalDex2OatResult = dex2OatResult;
                         mInjector.getReporterExecutor().execute(
                                 ()
-                                        -> Dex2OatStatsReporter.report(mPkgState.getAppId(),
-                                                result.getActualCompilerFilter(),
-                                                mParams.getReason(), dmInfo.type(), dexInfo,
-                                                abi.isa(), finalDex2OatResult,
-                                                result.getSizeBytes(),
+                                        -> Dex2OatStatsReporter.report(appId,
+                                                result.getActualCompilerFilter(), compilationReason,
+                                                dexMetadataType, dexInfo, abi.isa(),
+                                                finalDex2OatResult, result.getSizeBytes(),
                                                 result.getDex2oatWallTimeMillis()));
                     }
                 }
