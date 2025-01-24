@@ -16,6 +16,23 @@
       "message": "Thanks Santiago, PTAL, I\u0027ve added a trunk stable flag to guard the code.",
       "revId": "a0624cf41ef23fb5ec129c25c2f6403491521b58",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3571a42_1a35afe2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-24T18:14:12Z",
+      "side": 1,
+      "message": "LGTM thanks!\nAdding Jiakai who might know better about adding the Trunk flag (patchsets 17..18)",
+      "revId": "a0624cf41ef23fb5ec129c25c2f6403491521b58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
