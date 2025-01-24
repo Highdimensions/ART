@@ -24,6 +24,8 @@
 
 namespace art HIDDEN {
 
+class CodeGenerator;
+
 /**
  * Optimization pass performing a simple constant-expression
  * evaluation on the SSA form.
@@ -42,15 +44,18 @@ namespace art HIDDEN {
 class HConstantFolding : public HOptimization {
  public:
   HConstantFolding(HGraph* graph,
+                   CodeGenerator* codegen,
                    OptimizingCompilerStats* stats = nullptr,
                    const char* name = kConstantFoldingPassName)
-      : HOptimization(graph, name, stats) {}
+      : HOptimization(graph, name, stats), codegen_(codegen) {}
 
   bool Run() override;
 
   static constexpr const char* kConstantFoldingPassName = "constant_folding";
 
  private:
+  CodeGenerator* const codegen_;
+
   DISALLOW_COPY_AND_ASSIGN(HConstantFolding);
 };
 

@@ -1825,6 +1825,12 @@ void Artd::AddCompilerConfigFlags(const std::string& instruction_set,
   args.AddRuntimeIf(DenyArtApexDataFiles(), "-Xdeny-art-apex-data-files")
       .AddRuntime("-Xtarget-sdk-version:%d", dexopt_options.targetSdkVersion)
       .AddRuntimeIf(dexopt_options.hiddenApiPolicyEnabled, "-Xhidden-api-policy:enabled");
+
+  // Fetch the appropriate build version based on the target execution environment.
+  const std::string build_sdk_version =
+      pre_reboot_build_props_ ? pre_reboot_build_props_->GetOrEmpty("ro.build.version.sdk")
+                              : props_->GetOrEmpty("ro.build.version.sdk");
+  args.AddIfNonEmpty("--assume-value-sdk-int:%s", build_sdk_version);
 }
 
 void Artd::AddPerfConfigFlags(PriorityClass priority_class,
@@ -1939,6 +1945,10 @@ ScopedAStatus Artd::preRebootInit(
   OR_RETURN_NON_FATAL(PreRebootInitClearEnvs());
   OR_RETURN_NON_FATAL(
       PreRebootInitSetEnvFromFile(init_environ_rc_path_.value_or("/init.environ.rc")));
+  if (pre_reboot_build_props_ == nullptr) {
+    pre_reboot_build_props_ = std::make_unique<BuildSystemProperties>(
+        OR_RETURN_NON_FATAL(BuildSystemProperties::Create("/system/build.prop")));
+  }
   if (!preparation_done) {
     OR_RETURN_NON_FATAL(PreRebootInitDeriveClasspath(classpath_file));
   }
@@ -2009,10 +2019,6 @@ Result<void> Artd::PreRebootInitDeriveClasspath(const std::string& path) {
     return ErrnoErrorf("Failed to create '{}'", path);
   }
 
-  if (pre_reboot_build_props_ == nullptr) {
-    pre_reboot_build_props_ = std::make_unique<BuildSystemProperties>(
-        OR_RETURN(BuildSystemProperties::Create("/system/build.prop")));
-  }
   std::string sdk_version = pre_reboot_build_props_->GetOrEmpty("ro.build.version.sdk");
   std::string codename = pre_reboot_build_props_->GetOrEmpty("ro.build.version.codename");
   std::string known_codenames =

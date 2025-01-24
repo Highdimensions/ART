@@ -18,13 +18,17 @@
 
 #include <algorithm>
 
+#include "art_field-inl.h"
 #include "base/bit_utils.h"
 #include "base/casts.h"
 #include "base/logging.h"
 #include "dex/dex_file-inl.h"
+#include "driver/compiler_options.h"
 #include "intrinsics_enum.h"
+#include "optimizing/code_generator.h"
 #include "optimizing/data_type.h"
 #include "optimizing/nodes.h"
+#include "scoped_thread_state_change-inl.h"
 
 namespace art HIDDEN {
 
@@ -32,8 +36,10 @@ namespace art HIDDEN {
 // as constants.
 class HConstantFoldingVisitor final : public HGraphDelegateVisitor {
  public:
-  explicit HConstantFoldingVisitor(HGraph* graph, OptimizingCompilerStats* stats)
-      : HGraphDelegateVisitor(graph, stats) {}
+  explicit HConstantFoldingVisitor(HGraph* graph,
+                                   CodeGenerator* codegen,
+                                   OptimizingCompilerStats* stats)
+      : HGraphDelegateVisitor(graph, stats), codegen_(codegen) {}
 
  private:
   void VisitBasicBlock(HBasicBlock* block) override;
@@ -53,6 +59,7 @@ class HConstantFoldingVisitor final : public HGraphDelegateVisitor {
   void VisitIf(HIf* inst) override;
   void VisitInvoke(HInvoke* inst) override;
   void VisitTypeConversion(HTypeConversion* inst) override;
+  void VisitStaticFieldGet(HStaticFieldGet* instruction) override;
 
   void PropagateValue(HBasicBlock* starting_block, HInstruction* variable, HConstant* constant);
 
@@ -65,6 +72,8 @@ class HConstantFoldingVisitor final : public HGraphDelegateVisitor {
   void FoldLowestOneBitIntrinsic(HInvoke* invoke);
   void FoldNumberOfLeadingZerosIntrinsic(HInvoke* invoke);
   void FoldNumberOfTrailingZerosIntrinsic(HInvoke* invoke);
+
+  CodeGenerator* const codegen_;
 
   DISALLOW_COPY_AND_ASSIGN(HConstantFoldingVisitor);
 };
@@ -106,7 +115,7 @@ class InstructionWithAbsorbingInputSimplifier final : public HGraphVisitor {
 
 
 bool HConstantFolding::Run() {
-  HConstantFoldingVisitor visitor(graph_, stats_);
+  HConstantFoldingVisitor visitor(graph_, codegen_, stats_);
   // Process basic blocks in reverse post-order in the dominator tree,
   // so that an instruction turned into a constant, used as input of
   // another instruction, may possibly be used to turn that second
@@ -627,6 +636,27 @@ void HConstantFoldingVisitor::VisitTypeConversion(HTypeConversion* inst) {
     select->UpdateType();
     inst->ReplaceWith(select);
     inst->GetBlock()->RemoveInstruction(inst);
+  }
+}
+
+static bool IsSDK_INT(HStaticFieldGet* instruction) {
+  ArtField* field = instruction->GetFieldInfo().GetField();
+  if (!field->IsPublic() || !field->IsFinal()) {
+    return false;
+  }
+  ScopedObjectAccess soa(Thread::Current());
+  return field->GetDeclaringClass()->DescriptorEquals("Landroid/os/Build$VERSION;") &&
+         field->GetNameView() == "SDK_INT";
+}
+
+void HConstantFoldingVisitor::VisitStaticFieldGet(HStaticFieldGet* instruction) {
+  // TODO(jdduke): Gate this with a trunk stable flag.
+  if (IsSDK_INT(instruction)) {
+    const uint32_t sdk_int = codegen_->GetCompilerOptions().SdkInt();
+    if (sdk_int != CompilerOptions::kUnsetSdkInt) {
+      instruction->ReplaceWith(GetGraph()->GetIntConstant(sdk_int));
+      instruction->GetBlock()->RemoveInstruction(instruction);
+    }
   }
 }
 

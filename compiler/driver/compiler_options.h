@@ -26,6 +26,7 @@
 #include "base/globals.h"
 #include "base/hash_set.h"
 #include "base/macros.h"
+#include "base/sdk_version.h"
 #include "base/stl_util.h"
 #include "base/utils.h"
 #include "optimizing/register_allocator.h"
@@ -70,6 +71,7 @@ class CompilerOptions final {
   // We set a lower inlining threshold for baseline to reduce code size and compilation time. This
   // cannot be changed via flags.
   static constexpr size_t kBaselineInlineMaxCodeUnits = 14;
+  static constexpr uint32_t kUnsetSdkInt = static_cast<uint32_t>(SdkVersion::kUnset);
 
   enum class CompilerType : uint8_t {
     kAotCompiler,             // AOT compiler.
@@ -377,6 +379,10 @@ class CompilerOptions final {
   // which at runtime we will need to dirty after initialization.
   EXPORT bool ShouldCompileWithClinitCheck(ArtMethod* method) const;
 
+  // The assumed Build.VERSION.SDK_INT value to use for compilation.
+  // Defaults to kUnsetSdkInt unless explicitly configured.
+  uint32_t SdkInt() const { return sdk_int_; }
+
  private:
   EXPORT bool ParseDumpInitFailures(const std::string& option, std::string* error_msg);
 
@@ -479,6 +485,10 @@ class CompilerOptions final {
   // Passing pass names which are not recognized by the compiler will result in
   // compiler-dependant behavior.
   const std::vector<std::string>* passes_to_run_;
+
+  // The Build.VERSION.SDK_INT to use during compilation.
+  // TODO(jdduke): Make this an optional?
+  uint32_t sdk_int_;
 
   friend class Dex2Oat;
   friend class CommonCompilerDriverTest;

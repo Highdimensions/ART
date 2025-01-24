@@ -92,6 +92,7 @@ inline bool ReadCompilerOptions(Base& map, CompilerOptions* options, std::string
     options->check_profiled_methods_ = *map.Get(Base::CheckProfiledMethods);
   }
   map.AssignIfExists(Base::MaxImageBlockSize, &options->max_image_block_size_);
+  map.AssignIfExists(Base::AssumeValueSdkInt, &options->sdk_int_);
 
   if (map.Exists(Base::DumpTimings)) {
     options->dump_timings_ = true;
@@ -238,6 +239,13 @@ NO_INLINE void AddCompilerOptionsArgumentParserOptions(Builder& b) {
           .template WithType<unsigned int>()
           .WithHelp("Maximum solid block size for compressed images.")
           .IntoKey(Map::MaxImageBlockSize)
+
+      // TODO(jdduke): Save this into a struct that contains any/all --asume-value-* overlay values.
+      .Define("--assume-value-sdk-int=_")
+          .template WithType<unsigned int>()
+          .WithHelp("Optional assumed value for compiling Build.VERSION.SDK_INT.")
+          .IntoKey(Map::AssumeValueSdkInt)
+
       // Obsolete flags
       .Ignore({
         "--num-dex-methods=_",

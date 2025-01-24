@@ -33,6 +33,10 @@
 #include "jit/jit_code_cache.h"
 #include "jit/jit_logger.h"
 
+#ifdef ART_TARGET_ANDROID
+#include <android/api-level.h>
+#endif
+
 namespace art HIDDEN {
 namespace jit {
 
@@ -125,6 +129,11 @@ void JitCompiler::ParseCompilerOptions() {
     jit_logger_.reset(new JitLogger());
     jit_logger_->OpenLog();
   }
+
+#ifdef ART_TARGET_ANDROID
+  // TODO(jdduke): Condition this on trunk table flag.
+  compiler_options_->sdk_int_ = android_get_device_api_level();
+#endif
 }
 
 JitCompilerInterface* jit_create() {

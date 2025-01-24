@@ -1361,6 +1361,10 @@ class Runtime {
   // Specifies target SDK version to allow workarounds for certain API levels.
   uint32_t target_sdk_version_;
 
+  // Specifies the build SDK version associated with the runtime. For AOT execution, this may differ
+  // from the current/active devices's SDK version.
+  uint32_t build_sdk_version_;
+
   // ART counterpart for the compat framework (go/compat-framework).
   CompatFramework compat_framework_;
 
