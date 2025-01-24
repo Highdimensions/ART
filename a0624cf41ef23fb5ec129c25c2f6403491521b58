@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8d36bb5_29d0d1cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-24T17:59:29Z",
+      "side": 1,
+      "message": "Thanks Santiago, PTAL, I\u0027ve added a trunk stable flag to guard the code.",
+      "revId": "a0624cf41ef23fb5ec129c25c2f6403491521b58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
