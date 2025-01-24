@@ -1680,7 +1680,9 @@ void MonitorList::SweepMonitorList(IsMarkedVisitor* visitor) {
       MonitorPool::ReleaseMonitor(self, m);
       it = list_.erase(it);
     } else {
-      m->SetObject(new_obj);
+      if (new_obj != obj) {
+        m->SetObject(new_obj);
+      }
       ++it;
     }
   }
@@ -1697,6 +1699,15 @@ class MonitorDeflateVisitor : public IsMarkedVisitor {
   MonitorDeflateVisitor() : self_(Thread::Current()), deflate_count_(0) {}
 
   mirror::Object* IsMarked(mirror::Object* object) override REQUIRES(Locks::mutator_lock_) {
+    // Avoid deflating monitors in zygote/image spaces because that could
+    // end up dirtying otherwise shared/clean memory.
+    gc::Heap* const heap = Runtime::Current()->GetHeap();
+    const gc::space::ContinuousSpace* const space =
+        heap->FindContinuousSpaceFromObject(object, true);
+    if (space != nullptr && (space->IsZygoteSpace() || space->IsImageSpace())) {
+      return object;  // Monitor was not deflated.
+    }
+
     if (Monitor::Deflate(self_, object)) {
       DCHECK_NE(object->GetLockWord(true).GetState(), LockWord::kFatLocked);
       ++deflate_count_;
