@@ -1682,6 +1682,15 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
 
   target_sdk_version_ = runtime_options.GetOrDefault(Opt::TargetSdkVersion);
 
+  build_sdk_version_ = runtime_options.GetOrDefault(Opt::BuildSdkVersion);
+#ifdef ART_TARGET_ANDROID
+  if (build_sdk_version_ == static_cast<uint32_t>(SdkVersion::kUnset)) {
+    // TODO(jdduke): Consider only doing this if/when the target SDK version is set from VMRuntime?
+    // Or possibly only `if (!IsAotCompiler())`
+    build_sdk_version_ = android_get_device_api_level();
+  }
+#endif
+
   // Set hidden API enforcement policy. The checks are disabled by default and
   // we only enable them if:
   // (a) runtime was started with a command line flag that enables the checks, or
