@@ -16,6 +16,40 @@
       "message": "a",
       "revId": "5d03159d2e27fa9aac195928a1f34bd6536a059e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21c30878_595e4c9b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2061337
+      },
+      "writtenOn": "2025-01-24T04:37:03Z",
+      "side": 1,
+      "message": "I just checked the condition b376814207",
+      "revId": "5d03159d2e27fa9aac195928a1f34bd6536a059e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca9e5476_56e2d643",
+        "filename": "libartbase/base/unix_file/fd_file.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2061337
+      },
+      "writtenOn": "2025-01-24T04:37:03Z",
+      "side": 1,
+      "message": "The condition seems wrong. I think it should be \"api_level() \u003e\u003d 35\", right?",
+      "revId": "5d03159d2e27fa9aac195928a1f34bd6536a059e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
