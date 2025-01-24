@@ -96,6 +96,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7878189_957ffbb2",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 10052,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-24T12:27:56Z",
+      "side": 1,
+      "message": "I was looking at `ShouldDenyAccessToMemberImpl` and I wasn\u0027t seeing how it could happen. The difference is actually in `HandleCorePlatformApiViolation` where `Check` just returns `true`.",
+      "parentUuid": "bddc0400_807ad1b9",
+      "range": {
+        "startLine": 10052,
+        "startChar": 21,
+        "endLine": 10052,
+        "endChar": 45
+      },
+      "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fabbd0c4_a65647ad",
@@ -269,6 +293,24 @@
       "side": 1,
       "message": "The native constants are passed as-is to the Java layer at hidden_api.cc:434 in PS5. That I think is the reason for the comment about keeping them in sync before this enum.",
       "parentUuid": "d109665c_1680f668",
+      "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30058586_cb38dea5",
+        "filename": "runtime/hidden_api.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-24T12:27:56Z",
+      "side": 1,
+      "message": "Ah missed that one, thanks! That will make both `Check` and `CheckWithPolicy` to be the old `None` (https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/com/android/internal/os/StatsdHiddenApiUsageLogger.java;l\u003d57;drc\u003d9500d2b91750c1fea05e6ab82f80a925179d5f3a) which is what you wanted",
+      "parentUuid": "3fd7f5a7_39664121",
       "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
