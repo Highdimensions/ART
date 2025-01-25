@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9acd2c2b_02cecaa5",
+        "filename": "runtime/monitor.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1685,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-25T00:11:23Z",
+      "side": 1,
+      "message": "On 64-bit, this presumably doesn\u0027t matter much? We\u0027re only touching something in the monitor pool, and those pages are unlikely to remain clean anyway. But I\u0027m fine with it.",
+      "range": {
+        "startLine": 1683,
+        "startChar": 5,
+        "endLine": 1685,
+        "endChar": 7
+      },
+      "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "30a8449a_ed9b7f59",
         "filename": "runtime/monitor.cc",
         "patchSetId": 1
@@ -68,6 +91,29 @@
           ]
         }
       ],
+      "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc68f64c_b402f95e",
+        "filename": "runtime/monitor.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1706,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-25T00:11:23Z",
+      "side": 1,
+      "message": "We\u0027re not sure how many ContinuousSpaces there are and whether this needs optimization. If these are really all in ZygoteSpace in practice, then that\u0027s a much quicker check. This is in some sense imperfect anyway, since zygote objects can edn up in LOS. But FileDescriptors shouldn\u0027t.",
+      "range": {
+        "startLine": 1705,
+        "startChar": 3,
+        "endLine": 1706,
+        "endChar": 58
+      },
       "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
