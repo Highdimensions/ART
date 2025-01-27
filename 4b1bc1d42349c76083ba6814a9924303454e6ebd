@@ -16,6 +16,29 @@
       "message": "(for presubmit)",
       "revId": "4b1bc1d42349c76083ba6814a9924303454e6ebd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7aa1200e_528e3841",
+        "filename": "dex2oat/linker/oat_writer.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 3555,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-27T08:06:34Z",
+      "side": 1,
+      "message": "The line breaking still looks a bit off. What about\n\n    size_t rodata_file_offset \u003d GetFileOffset(rodata_offset);\n    const size_t padding_size \u003d\n        RoundUp(rodata_file_offset, alignof(DexLayoutSections)) - rodata_file_offset;\n\nAlternatively, given that `alignof(DexLayoutSections)` is 4 (all fields are `uint32_t`), we could have\n\n    static_assert(alignof(DexLayoutSections) \u003d\u003d alignof(uint32_t));\n    DCHECK_ALIGNED(oat_data_offset_, alignof(DexLayoutSections));\n\nand keep the old `padding_size` calculation.",
+      "range": {
+        "startLine": 3554,
+        "startChar": 4,
+        "endLine": 3555,
+        "endChar": 52
+      },
+      "revId": "4b1bc1d42349c76083ba6814a9924303454e6ebd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

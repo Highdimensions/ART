@@ -46,6 +46,30 @@
       },
       "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e45be89f_ad57ed1d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-27T08:06:34Z",
+      "side": 1,
+      "message": "Please remove this and remove the topic, so that we can merge this CL on its own.",
+      "parentUuid": "e48ea7a0_b296cbcf",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
