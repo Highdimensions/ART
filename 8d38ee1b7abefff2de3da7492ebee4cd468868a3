@@ -75,6 +75,30 @@
       },
       "revId": "8d38ee1b7abefff2de3da7492ebee4cd468868a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e966e75_1808e7f7",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 19
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-01-27T16:56:23Z",
+      "side": 1,
+      "message": "Sure. Will do. And I\u0027m assuming the same to be true for the MOVE ioctl flag as well?",
+      "parentUuid": "3fa95dec_7583a231",
+      "range": {
+        "startLine": 329,
+        "startChar": 48,
+        "endLine": 329,
+        "endChar": 62
+      },
+      "revId": "8d38ee1b7abefff2de3da7492ebee4cd468868a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
