@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "89ec0e2b_d90bf6b8",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-27T21:00:24Z",
+      "side": 1,
+      "message": "Thank you for suggestion! I will update it.",
+      "parentUuid": "24c1d9e1_a292fa8e",
+      "range": {
+        "startLine": 107,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 15
+      },
+      "revId": "3b8d483312fa1b01856301d2c019b7598c5d3e06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b808da29_5a5f8b8d",
         "filename": "runtime/oat/oat_file.cc",
         "patchSetId": 6
@@ -54,6 +78,30 @@
       "writtenOn": "2025-01-27T16:11:11Z",
       "side": 1,
       "message": "I\u0027d prefer to avoid the `static bool` for bionic. You could move more code under the `#if` and have a simple `return true` under `#else`.",
+      "range": {
+        "startLine": 125,
+        "startChar": 9,
+        "endLine": 125,
+        "endChar": 32
+      },
+      "revId": "3b8d483312fa1b01856301d2c019b7598c5d3e06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e937d40a_f3909dfd",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-27T21:00:24Z",
+      "side": 1,
+      "message": "Thank you for suggestion! I will update it to use the static variable only for glibc.",
+      "parentUuid": "b808da29_5a5f8b8d",
       "range": {
         "startLine": 125,
         "startChar": 9,

@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bba7107_57f527c8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-27T21:00:24Z",
+      "side": 1,
+      "message": "As requested, we have pushed the latest version for testing.\n\nWe intend to finalise and drop RFC status by Wednesday (unless test issues delay this).\n\nFor the remaining work, we intend to add a gtest for dlopen compatibility, and add some further in-source comments on the tests.\n\nPlease let us know of any test failures, we are looking into the reported 32bit host failures.",
+      "revId": "e38ac7cf9806191ac43e0a2ac2fcb2fe61c21fcc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24d0a9af_4efb1034",
+        "filename": "dex2oat/linker/elf_writer_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-27T21:00:24Z",
+      "side": 1,
+      "message": "Not a final version. We are considering how much testing is necessary here.",
+      "revId": "e38ac7cf9806191ac43e0a2ac2fcb2fe61c21fcc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
