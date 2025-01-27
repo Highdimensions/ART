@@ -33,6 +33,29 @@
       "message": "LGTM thanks!\nAdding Jiakai who might know better about adding the Trunk flag (patchsets 17..18)",
       "revId": "a0624cf41ef23fb5ec129c25c2f6403491521b58",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c3340ad_0feb4082",
+        "filename": "build/flags/art-flags.aconfig",
+        "patchSetId": 18
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-27T10:32:38Z",
+      "side": 1,
+      "message": "No need to export the flag, unless you\u0027ll use it at the platform side.",
+      "range": {
+        "startLine": 62,
+        "startChar": 2,
+        "endLine": 62,
+        "endChar": 19
+      },
+      "revId": "a0624cf41ef23fb5ec129c25c2f6403491521b58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
