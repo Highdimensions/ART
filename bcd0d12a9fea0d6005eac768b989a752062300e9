@@ -70,6 +70,30 @@
       },
       "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "612e9f4f_eec4b8d5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-27T17:04:12Z",
+      "side": 1,
+      "message": "We should not merge these topics separately, since if it goes in without the other changes, users would use the data which are freed, and then we wouldn\u0027t be able to merge the other CLs. I\u0027ll join Art sync if we want to dig in more detail here about the merging plans.",
+      "parentUuid": "e45be89f_ad57ed1d",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
