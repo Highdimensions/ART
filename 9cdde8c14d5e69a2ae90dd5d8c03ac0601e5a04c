@@ -63,6 +63,30 @@
       ],
       "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65c5665b_368751db",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2632,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-27T15:18:26Z",
+      "side": 1,
+      "message": "The dex_pc_ is used to initialize the environment from the instruction (https://cs.android.com/android/platform/superproject/main/+/main:art/compiler/optimizing/instruction_builder.cc;l\u003d306;drc\u003d990cf07523a5c6ae437a0bd0cc80fb63320def5e). It\u0027s only after that moment where the inliner is free to stomp `dex_pc_`.\n\nThere\u0027s only one other case after `HInstructionBuilder::InitializeInstruction` where we use dex_pc_ and that\u0027s `CodeGenerator::GenerateSlowPaths` in the case of native debuggable and when the instruction has no environment (https://cs.android.com/android/platform/superproject/main/+/main:art/compiler/optimizing/code_generator.cc;l\u003d301;drc\u003d21730ffb790c0f0201eace76e919ee9feb782224). In native debuggable we don\u0027t run the inliner so this change doesn\u0027t affect it.\n\nAlso, I think it helps the mental model to update the DEX PC when inlining. The instruction is inlined in the caller graph so then the current DEX PC that it represents is the one that the HInvoke had. In this manner, all instructions that were part of the inlined HInvoke \"happen\" at that DEX PC.\n\nFor these reasons I\u0027d rather keep the `dex_pc_` name. WDYT?\n\n---\n\nFor future reference, I sent a CL for review that would eliminate a lot of `GetDexPc()` uses as the dex_pc_ was queried but ultimately getting ignored. See aosp/3455351 and related chain for this.",
+      "parentUuid": "e6d5b191_5bc43328",
+      "range": {
+        "startLine": 2627,
+        "startChar": 0,
+        "endLine": 2632,
+        "endChar": 42
+      },
+      "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
