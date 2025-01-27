@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e56b7f4e_4a885287",
+        "filename": "runtime/monitor.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1685,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-27T23:01:43Z",
+      "side": 1,
+      "message": "I removed this part of the change. I didn\u0027t see any clear memory benefits from it.",
+      "parentUuid": "9acd2c2b_02cecaa5",
+      "range": {
+        "startLine": 1683,
+        "startChar": 5,
+        "endLine": 1685,
+        "endChar": 7
+      },
+      "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30a8449a_ed9b7f59",
@@ -95,6 +119,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "27332309_8e757fa5",
+        "filename": "runtime/monitor.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1704,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-27T23:01:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30a8449a_ed9b7f59",
+      "range": {
+        "startLine": 1704,
+        "startChar": 4,
+        "endLine": 1704,
+        "endChar": 57
+      },
+      "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc68f64c_b402f95e",
@@ -155,6 +203,54 @@
       "side": 1,
       "message": "Since these are owners of FileDescriptors, are any of them in an ImageSpace? My immediate guess is that would be odd, but I\u0027m not sure. If we only have to check for ZygoteSpace, that\u0027s cheaper, and would probably resolve our concerns.",
       "parentUuid": "b3bddaf5_fb05c318",
+      "range": {
+        "startLine": 1706,
+        "startChar": 0,
+        "endLine": 1706,
+        "endChar": 58
+      },
+      "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af270470_b7a39174",
+        "filename": "runtime/monitor.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1706,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-27T23:01:43Z",
+      "side": 1,
+      "message": "I switched to explicit checks for zygote and boot image spaces.",
+      "parentUuid": "fc68f64c_b402f95e",
+      "range": {
+        "startLine": 1705,
+        "startChar": 3,
+        "endLine": 1706,
+        "endChar": 58
+      },
+      "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1820aff_59d7a710",
+        "filename": "runtime/monitor.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1706,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-27T23:01:43Z",
+      "side": 1,
+      "message": "In the heap dump I have, there are 2 inflated monitors in the boot image space: the ReferenceQueue.lock object and FinalizerWatchdogDaemon.\n\nFrom dumpsys meminfo of com.android.telephony.imsmedia after boot, it looks to me like avoiding monitor deflation in the image space saves 48KB of \".Boot art\". It\u0027s not as much as the 176KB saved from the Zygote space, but it\u0027s also not nothing.",
+      "parentUuid": "4e03cb8a_a3d761bf",
       "range": {
         "startLine": 1706,
         "startChar": 0,
