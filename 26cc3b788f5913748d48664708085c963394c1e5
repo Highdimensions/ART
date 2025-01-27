@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fd282a5_69eff78b",
+        "filename": "test/1336-short-finalizer-timeout/src/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-27T10:27:50Z",
+      "side": 1,
+      "message": "Move this to line 60?",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 41
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "3efb0212_a17bfbe0",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/1336-short-finalizer-timeout/src/Main.java",
+              "range": {
+                "startLine": 50,
+                "startChar": 0,
+                "endLine": 52,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "test/1336-short-finalizer-timeout/src/Main.java",
+              "range": {
+                "startLine": 54,
+                "startChar": 0,
+                "endLine": 54,
+                "endChar": 0
+              },
+              "replacement": "        snooze(9800);\n\n"
+            }
+          ]
+        }
+      ],
+      "revId": "26cc3b788f5913748d48664708085c963394c1e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
