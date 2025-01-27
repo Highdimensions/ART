@@ -16,6 +16,52 @@
       "message": "(for presubmit)",
       "revId": "3b8d483312fa1b01856301d2c019b7598c5d3e06",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24c1d9e1_a292fa8e",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-27T16:11:11Z",
+      "side": 1,
+      "message": "Please use `const char*` and `atoi`.\n\nLint does not like `std::stoi`: \"Exceptions are disabled by default on Android and your code will abort.\"",
+      "range": {
+        "startLine": 107,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 15
+      },
+      "revId": "3b8d483312fa1b01856301d2c019b7598c5d3e06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b808da29_5a5f8b8d",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-27T16:11:11Z",
+      "side": 1,
+      "message": "I\u0027d prefer to avoid the `static bool` for bionic. You could move more code under the `#if` and have a simple `return true` under `#else`.",
+      "range": {
+        "startLine": 125,
+        "startChar": 9,
+        "endLine": 125,
+        "endChar": 32
+      },
+      "revId": "3b8d483312fa1b01856301d2c019b7598c5d3e06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
