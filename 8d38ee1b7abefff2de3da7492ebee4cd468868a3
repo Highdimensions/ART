@@ -52,6 +52,29 @@
       "parentUuid": "e7cc1cde_424a111f",
       "revId": "8d38ee1b7abefff2de3da7492ebee4cd468868a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fa95dec_7583a231",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 19
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-01-27T14:46:59Z",
+      "side": 1,
+      "message": "We discussed the location of this P/H flag today with the ART Mainline team; given the way telemetry works, we believe this flag should be in the `runtime_native_boot` namespace as it won\u0027t be honoured before the device reboots in practive (even though flipping the flag does not technically requires a proper reboot). Lokesh, would you mind moving this flags from `runtime_native` to `runtime_native_boot`?\n\nCC @jiakaiz@google.com, @scianciulli@google.com",
+      "range": {
+        "startLine": 329,
+        "startChar": 48,
+        "endLine": 329,
+        "endChar": 62
+      },
+      "revId": "8d38ee1b7abefff2de3da7492ebee4cd468868a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
