@@ -116,6 +116,29 @@
       },
       "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3bddaf5_fb05c318",
+        "filename": "runtime/monitor.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1706,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-27T10:25:35Z",
+      "side": 1,
+      "message": "This could look expensive. Could we have a `IsInZygoteSpace` and `IsInBootImageSpace` instead?",
+      "range": {
+        "startLine": 1706,
+        "startChar": 0,
+        "endLine": 1706,
+        "endChar": 58
+      },
+      "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
