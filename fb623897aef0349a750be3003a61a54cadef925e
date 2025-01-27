@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d3eca5b_4fb02459",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-01-27T10:58:24Z",
+      "side": 1,
+      "message": "Hans, could you have a quick look at the CL? I re-uploaded the CL from the internal gerrit.",
+      "revId": "fb623897aef0349a750be3003a61a54cadef925e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
