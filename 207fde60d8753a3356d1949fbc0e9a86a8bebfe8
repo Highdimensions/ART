@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "735cfe9c_b19301ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-01-27T16:00:26Z",
+      "side": 1,
+      "message": "Sorry about the delay in rebasing this patch, one of the later patches had some trouble which took some time to resolve.\n\nThis patch is now ready for review again.",
+      "revId": "207fde60d8753a3356d1949fbc0e9a86a8bebfe8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
