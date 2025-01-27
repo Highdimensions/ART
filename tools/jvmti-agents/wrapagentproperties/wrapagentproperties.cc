@@ -185,7 +185,8 @@ struct ExtraJvmtiInterface : public jvmtiInterface_1_ {
       if (res != JVMTI_ERROR_NONE) {
         return res;
       }
-      strcpy(out_prop_ptr[i], p.c_str());
+      strcpy(out_prop_ptr[i], p.c_str() p.size() + 1);
+      out_prop_ptr[i][p.size()] = '\0';
       i++;
     }
     CHECK_EQ(i, *cnt);
