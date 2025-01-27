@@ -139,6 +139,30 @@
       },
       "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e03cb8a_a3d761bf",
+        "filename": "runtime/monitor.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1706,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-27T16:59:59Z",
+      "side": 1,
+      "message": "Since these are owners of FileDescriptors, are any of them in an ImageSpace? My immediate guess is that would be odd, but I\u0027m not sure. If we only have to check for ZygoteSpace, that\u0027s cheaper, and would probably resolve our concerns.",
+      "parentUuid": "b3bddaf5_fb05c318",
+      "range": {
+        "startLine": 1706,
+        "startChar": 0,
+        "endLine": 1706,
+        "endChar": 58
+      },
+      "revId": "b877422135d3ac5310a746dda0af6ca957da0ae2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
