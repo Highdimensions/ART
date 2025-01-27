@@ -87,6 +87,30 @@
       },
       "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37d2d1e1_4fb52ca3",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2632,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-27T17:34:58Z",
+      "side": 1,
+      "message": "Ack, but please add a comment that after the inliner, the dex pc means the dex pc of the outer method (and it\u0027s the environment that contains the dex pc chain).\n\nThough if we go through with this change, are we loosing a potential optimization of sharing `HEnvironment` objects between instructions?",
+      "parentUuid": "65c5665b_368751db",
+      "range": {
+        "startLine": 2627,
+        "startChar": 0,
+        "endLine": 2632,
+        "endChar": 42
+      },
+      "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
