@@ -111,6 +111,30 @@
       },
       "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd2a21d1_589cd36a",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2632,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-28T09:50:34Z",
+      "side": 1,
+      "message": "\u003e Though if we go through with this change, are we loosing a potential optimization of sharing HEnvironment objects between instructions?\n\nIn what sense? The `HEnvironment` already contains all relevant data and it is not modified.\nDo you mean a potential future implementation where the parent chain is shared but there\u0027s some data at the HInstruction level?",
+      "parentUuid": "37d2d1e1_4fb52ca3",
+      "range": {
+        "startLine": 2627,
+        "startChar": 0,
+        "endLine": 2632,
+        "endChar": 42
+      },
+      "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
