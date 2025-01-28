@@ -50,6 +50,30 @@
       ],
       "revId": "26cc3b788f5913748d48664708085c963394c1e5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5500ec88_d15b3b01",
+        "filename": "test/1336-short-finalizer-timeout/src/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-28T00:51:05Z",
+      "side": 1,
+      "message": "Done, roughly as suggested by Nicolas, but not the AI.",
+      "parentUuid": "0fd282a5_69eff78b",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 41
+      },
+      "revId": "26cc3b788f5913748d48664708085c963394c1e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
