@@ -39,6 +39,30 @@
       },
       "revId": "71fcd63fc6a7106980038f754a517a522f2de84f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14f28546_8b486939",
+        "filename": "runtime/verifier/method_verifier.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 1592,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-28T13:34:07Z",
+      "side": 1,
+      "message": "It\u0027s implicit in the next line `code_item_accessor_.InstructionAt(0u);` will do `DCHECK_LT(0u, InsnsSizeInCodeUnits());` (https://cs.android.com/android/platform/superproject/main/+/main:art/libdexfile/dex/code_item_accessors.h;l\u003d68;drc\u003d554d48465f31b0e073f2c53a09ed9851f8b3e692). Would you prefer I add an explicit DCHECK here?",
+      "parentUuid": "0615f58f_39966953",
+      "range": {
+        "startLine": 1592,
+        "startChar": 2,
+        "endLine": 1592,
+        "endChar": 28
+      },
+      "revId": "71fcd63fc6a7106980038f754a517a522f2de84f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
