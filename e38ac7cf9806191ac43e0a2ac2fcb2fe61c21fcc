@@ -50,6 +50,29 @@
       "message": "Not a final version. We are considering how much testing is necessary here.",
       "revId": "e38ac7cf9806191ac43e0a2ac2fcb2fe61c21fcc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99429dd4_c183ac42",
+        "filename": "dex2oat/linker/elf_writer_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-28T08:54:14Z",
+      "side": 1,
+      "message": "We can return `true` here without checking if `.bss` is valid.",
+      "range": {
+        "startLine": 369,
+        "startChar": 6,
+        "endLine": 369,
+        "endChar": 61
+      },
+      "revId": "e38ac7cf9806191ac43e0a2ac2fcb2fe61c21fcc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
