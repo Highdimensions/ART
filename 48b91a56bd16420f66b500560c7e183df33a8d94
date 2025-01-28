@@ -1,0 +1,105 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e46c6a93_ea54a788",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 8610,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-28T13:54:30Z",
+      "side": 1,
+      "message": "Could we instead always ensure `super_vtable_accessor` and `super_vtable_signatures`see the same method?",
+      "range": {
+        "startLine": 8606,
+        "startChar": 0,
+        "endLine": 8610,
+        "endChar": 39
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "246eb936_acc17635",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/class_linker.cc",
+              "range": {
+                "startLine": 7579,
+                "startChar": 0,
+                "endLine": 7622,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/class_linker.cc",
+              "range": {
+                "startLine": 8549,
+                "startChar": 0,
+                "endLine": 8564,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/class_linker.cc",
+              "range": {
+                "startLine": 8591,
+                "startChar": 0,
+                "endLine": 8622,
+                "endChar": 0
+              },
+              "replacement": "        // This situation should be rare (a superclass implements a method declared in an interface\n        // this class is inheriting).\n        // We allow for duplicate methods within the same class in the direct methods or the virtual\n        // methods, as we will register the first one and ignore the second one.\n        // Caveat: we do not allow duplicates across those lists, so this means that class A can have\n        // two `foo` direct OR virtual methods, but it cannot have one `foo` direct and one `foo`\n        // virtual.\n        size_t super_method_index \u003d\n            (hash \u003c mirror::Object::kVTableLength)\n                ? class_linker_-\u003eobject_virtual_method_hashes_[hash]\n                : dex::kDexNoIndex;\n        if (super_method_index !\u003d dex::kDexNoIndex) {\n          ArtMethod* super_method \u003d super_vtable_accessor.GetVTableEntry(super_method_index);\n          DCHECK_EQ(super_method-\u003eGetDeclaringClass(), interface_method-\u003eGetDeclaringClass());\n          DCHECK_EQ(super_method-\u003eGetInvokeType(), InvokeType::kVirtual);\n          DCHECK_EQ(interface_method-\u003eGetInvokeType(), InvokeType::kVirtual);\n          DCHECK_LT(super_method-\u003eGetMethodIndex(), interface_method-\u003eGetMethodIndex());\n          vtable_method \u003d super_method;\n"
+            },
+            {
+              "path": "runtime/class_linker.cc",
+              "range": {
+                "startLine": 8625,
+                "startChar": 0,
+                "endLine": 8626,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/class_linker.cc",
+              "range": {
+                "startLine": 8627,
+                "startChar": 0,
+                "endLine": 8632,
+                "endChar": 0
+              },
+              "replacement": "        vtable_method-\u003eSetMethodIndexDuringLinking(vtable_length);\n        method_array-\u003eSetElementPtrSize(j, vtable_length, kPointerSize);\n        continue;\n"
+            },
+            {
+              "path": "runtime/class_linker.cc",
+              "range": {
+                "startLine": 8634,
+                "startChar": 0,
+                "endLine": 8634,
+                "endChar": 0
+              },
+              "replacement": "      uint32_t vtable_index \u003d vtable_length;\n"
+            },
+            {
+              "path": "runtime/class_linker.cc",
+              "range": {
+                "startLine": 8636,
+                "startChar": 0,
+                "endLine": 8639,
+                "endChar": 0
+              },
+              "replacement": "      if (inserted) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "48b91a56bd16420f66b500560c7e183df33a8d94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
