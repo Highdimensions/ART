@@ -22,6 +22,30 @@
       },
       "revId": "6c2dc5e61c7b60d4899453b0613aa921268999ec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7843aaad_37b6fda4",
+        "filename": "tools/jvmti-agents/wrapagentproperties/wrapagentproperties.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-01-28T14:22:55Z",
+      "side": 1,
+      "message": "Thanks for pointing i had done this changes and uses memcpy()",
+      "parentUuid": "15e2b6cd_d6f9c8fa",
+      "range": {
+        "startLine": 188,
+        "startChar": 6,
+        "endLine": 189,
+        "endChar": 39
+      },
+      "revId": "6c2dc5e61c7b60d4899453b0613aa921268999ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
