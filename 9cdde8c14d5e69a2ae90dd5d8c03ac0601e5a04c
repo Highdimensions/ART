@@ -135,6 +135,30 @@
       },
       "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c0ef84e_2432b2b0",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2632,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-28T10:12:48Z",
+      "side": 1,
+      "message": "Yeah, a future change. The parent chain is already shared, but grasping at the code yesterday, it looked like we could also try sharing the first environment.",
+      "parentUuid": "dd2a21d1_589cd36a",
+      "range": {
+        "startLine": 2627,
+        "startChar": 0,
+        "endLine": 2632,
+        "endChar": 42
+      },
+      "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
