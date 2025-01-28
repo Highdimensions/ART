@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "070778f6_abc03091",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-28T10:25:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7c84955_05024d48",
+      "range": {
+        "startLine": 7,
+        "startChar": 6,
+        "endLine": 7,
+        "endChar": 18
+      },
+      "revId": "02535c9ff03ce03f4c028082ec0725002c7bf2f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "9ba2f26f_a131064e",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 5
@@ -54,6 +78,30 @@
       "writtenOn": "2025-01-28T10:18:42Z",
       "side": 1,
       "message": "Does while loop look better here? Or should we just break when (i \u003d\u003d kRequiredArguemtns - 1). I am okay with this as well but looks a bit strange.",
+      "range": {
+        "startLine": 4506,
+        "startChar": 4,
+        "endLine": 4508,
+        "endChar": 5
+      },
+      "revId": "02535c9ff03ce03f4c028082ec0725002c7bf2f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ca5bfb1_515d8cf8",
+        "filename": "runtime/verifier/method_verifier.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 4508,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-28T10:25:14Z",
+      "side": 1,
+      "message": "I agree it looks strange but the other alternatives aren\u0027t that good either. The problem is that `Next()` does some verification on top of increasing the iterator. There\u0027s a `MaybeNext()` that doesn\u0027t do verification but we do want to do the verification to the non-last iteration.\n\nAn alternative would be to have a boolean `first` that starts at false and is set to true at the end of the iteration. Then `if (!first) it.Next();` is done at the beginning of the loop.",
+      "parentUuid": "abc109bd_2c769520",
       "range": {
         "startLine": 4506,
         "startChar": 4,
