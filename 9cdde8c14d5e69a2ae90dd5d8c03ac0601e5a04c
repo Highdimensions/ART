@@ -159,6 +159,30 @@
       },
       "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f57dcff5_18295aca",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2632,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-28T10:17:58Z",
+      "side": 1,
+      "message": "An alternative could be to add another `uint32_t tooling_dex_pc_` (willing to bikeshed name) which would be used for the tools. We could create that to be a best-effort outermost dex_pc.\n\nWe could also set other instructions like the implicit entry suspend check to have `kNoDexPc` on `tooling_dex_pc_` to signal that it happens at entry and not at the first instruction. Currently that HSuspendCheck has dex_pc of `0` which confuses the tooling.",
+      "parentUuid": "7c0ef84e_2432b2b0",
+      "range": {
+        "startLine": 2627,
+        "startChar": 0,
+        "endLine": 2632,
+        "endChar": 42
+      },
+      "revId": "9cdde8c14d5e69a2ae90dd5d8c03ac0601e5a04c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
