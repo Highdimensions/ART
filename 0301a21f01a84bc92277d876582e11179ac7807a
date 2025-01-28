@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "54c215c7_4adf2af1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-28T23:03:11Z",
+      "side": 1,
+      "message": "```suggestion\nIn the async flow for OTA, we need to call an update_engine API\n```",
+      "range": {
+        "startLine": 9,
+        "startChar": 46,
+        "endLine": 9,
+        "endChar": 59
+      },
+      "revId": "0301a21f01a84bc92277d876582e11179ac7807a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8c165b1f_27d2bff3",
@@ -14,6 +37,46 @@
       "writtenOn": "2025-01-28T11:00:56Z",
       "side": 1,
       "message": "Friendly ping",
+      "revId": "0301a21f01a84bc92277d876582e11179ac7807a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "369c0eff_029ae3dc",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-28T23:03:11Z",
+      "side": 1,
+      "message": "Consider passing `PreRebootResult` into `recordJobEnded`, so that it\u0027s used consistently as result carrier.",
+      "range": {
+        "startLine": 368,
+        "startChar": 24,
+        "endLine": 368,
+        "endChar": 79
+      },
+      "revId": "0301a21f01a84bc92277d876582e11179ac7807a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "493a4d2f_dcf4c09b",
+        "filename": "libartservice/service/java/com/android/server/art/prereboot/PreRebootDriver.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-28T23:03:11Z",
+      "side": 1,
+      "message": "```suggestion\n     *         the system requirement check failed, or system requirements are not met.\n```",
       "revId": "0301a21f01a84bc92277d876582e11179ac7807a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
