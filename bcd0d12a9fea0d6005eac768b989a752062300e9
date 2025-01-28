@@ -94,6 +94,30 @@
       },
       "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11373356_52983c93",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-28T09:14:57Z",
+      "side": 1,
+      "message": "I really do not understand your concern here. The moment we change the oat file version (as we do in this CL), old oat files cannot be used anymore.\n\nI prefer merging one-by-one to avoid a massive 4-CL revert if something goes wrong.\n\n(You should bump oat version in the \"write zeros\" CL as well and reorder it before the \"Revert\".)",
+      "parentUuid": "612e9f4f_eec4b8d5",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
