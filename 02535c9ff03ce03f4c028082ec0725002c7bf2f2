@@ -110,6 +110,30 @@
       },
       "revId": "02535c9ff03ce03f4c028082ec0725002c7bf2f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ea4a866_ad8b0a14",
+        "filename": "runtime/verifier/method_verifier.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 4508,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-01-28T10:29:03Z",
+      "side": 1,
+      "message": "Ya, I agree altrenatives are great either. I checked ``MaybeNext`` but that doesn\u0027t seem right here. I also thought of HasNext and do something like\n```\nDCHECK_IMPLIES(i \u003c kRequiredArguments - 1, it.HasNext())\nif (it.HasNext()) {\n  it.Next()\n}\n``` \nbut that\u0027s not exactly what we are doing here. So didn\u0027t suggest that.\n\nLet\u0027s leave it as is for now.",
+      "parentUuid": "0ca5bfb1_515d8cf8",
+      "range": {
+        "startLine": 4506,
+        "startChar": 4,
+        "endLine": 4508,
+        "endChar": 5
+      },
+      "revId": "02535c9ff03ce03f4c028082ec0725002c7bf2f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
