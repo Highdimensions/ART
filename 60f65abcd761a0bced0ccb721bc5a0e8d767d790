@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fba933b_ad431c7d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-29T08:25:20Z",
+      "side": 1,
+      "message": "Is `LOG(INFO)` suppressed in tests? Can we also remove some output filtering such as the changes in https://android-review.git.corp.google.com/c/platform/art/+/3326636/4/test/999-redefine-hiddenapi/run.py ? (Maybe in a separate CL.)",
+      "range": {
+        "startLine": 19,
+        "startChar": 19,
+        "endLine": 19,
+        "endChar": 47
+      },
+      "revId": "60f65abcd761a0bced0ccb721bc5a0e8d767d790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
