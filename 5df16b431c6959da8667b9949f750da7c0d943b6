@@ -34,6 +34,24 @@
       "parentUuid": "0ee9665b_2176b94c",
       "revId": "5df16b431c6959da8667b9949f750da7c0d943b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ca6376c_98d44d65",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-29T00:36:43Z",
+      "side": 1,
+      "message": "Right, but not in this case. See http://r.android.com/3356727:\n\n\u003e Please make sure these changes are owned by authorized users or have a Code-Review+2 vote.\n\nNote also b/390744592.",
+      "parentUuid": "16dfdf92_8bc17b28",
+      "revId": "5df16b431c6959da8667b9949f750da7c0d943b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

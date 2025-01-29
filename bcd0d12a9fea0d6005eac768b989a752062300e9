@@ -118,6 +118,30 @@
       },
       "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb8ce2bb_2702def4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-29T00:36:43Z",
+      "side": 1,
+      "message": "Right, so, the motivation of these changes is paying for the 16 KB w/o sparsity changes (a small market segment, due to the issue in b/376814207). If these changes get in, then users get that, users fill up space, then the changes adding 16 KB w/o sparsity would be a real size increase on those devices, causing us not to be able to merge it.\n\nSo, we need to make sure all 4 changes happen in a release atomically, and the easiest way to do that is one at a time. If we wait until after the next merge deadline, we could start merging them one at a time. Though, being able to do it at once (and revert together) even if it is more errorprone or makes it more likely for a full topic revert is a bit easier than tracking branches/dates/etc..",
+      "parentUuid": "11373356_52983c93",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
