@@ -142,6 +142,30 @@
       },
       "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23b621a5_d90d02de",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-29T08:08:31Z",
+      "side": 1,
+      "message": "I see, this is about devices that have very little storage left. And while there are many things that can go wrong on such devices, it\u0027s reasonable to try not making it worse for them.\n\nHowever, submitting to AOSP does not really include the CL in the next ART Module release. So, we can submit one at a time and then make sure we cherry-pick them together to the release branch.\n\n(Unless you\u0027re trying to protect Beta users that fill up space but I would not worry about that particular population - they are getting a lot of more dangerous changes when upgrading to the next Beta.)",
+      "parentUuid": "fb8ce2bb_2702def4",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
