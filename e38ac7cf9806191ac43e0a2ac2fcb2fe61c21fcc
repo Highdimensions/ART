@@ -52,6 +52,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f21a3b90_8d69684c",
+        "filename": "dex2oat/linker/elf_writer_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-29T22:25:42Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "24d0a9af_4efb1034",
+      "revId": "e38ac7cf9806191ac43e0a2ac2fcb2fe61c21fcc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99429dd4_c183ac42",
@@ -65,6 +83,30 @@
       "writtenOn": "2025-01-28T08:54:14Z",
       "side": 1,
       "message": "We can return `true` here without checking if `.bss` is valid.",
+      "range": {
+        "startLine": 369,
+        "startChar": 6,
+        "endLine": 369,
+        "endChar": 61
+      },
+      "revId": "e38ac7cf9806191ac43e0a2ac2fcb2fe61c21fcc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59a93ae9_d1a46cc0",
+        "filename": "dex2oat/linker/elf_writer_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-29T22:25:42Z",
+      "side": 1,
+      "message": "Thank you for suggestion! I\u0027ve reworked the test a little bit, please take a look!",
+      "parentUuid": "99429dd4_c183ac42",
       "range": {
         "startLine": 369,
         "startChar": 6,
