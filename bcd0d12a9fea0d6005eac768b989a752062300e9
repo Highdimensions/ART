@@ -166,6 +166,30 @@
       },
       "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "071c626d_3e9a7530",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1065473
+      },
+      "writtenOn": "2025-01-29T12:16:01Z",
+      "side": 1,
+      "message": "I would second what Vladimir said, let\u0027s test it and land it one by one.\n\nIt can be reasonably fast - I am happy with just 24h to make sure post-submits pass.\n\nAlso note that chaining probably works sufficiently.  I think running TH on later CLs will include the parents even without topic.  (and likewise, you can submit the whole chain, but I would rather not do that.\n\nObviously, we should not land this CL and then wait two months.  Then we would have the space issue Steven mentioned.\n\nHaving said that, I would hope that we handle the case where we don\u0027t have enough disk space for compilation gracefully, so I think even if we released the CLs to users, we would be fine.",
+      "parentUuid": "23b621a5_d90d02de",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
