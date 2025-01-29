@@ -22,6 +22,30 @@
       },
       "revId": "3ba4cbbd856062a1b5c24c5a659cd2b706337fc3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a3041b2_5a66e6d6",
+        "filename": "runtime/mirror/array.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-01-29T10:14:12Z",
+      "side": 1,
+      "message": "Removed the explicit multiplication. PTAL.",
+      "parentUuid": "7b78a5f7_da46fc80",
+      "range": {
+        "startLine": 172,
+        "startChar": 11,
+        "endLine": 172,
+        "endChar": 37
+      },
+      "revId": "3ba4cbbd856062a1b5c24c5a659cd2b706337fc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
