@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b78a5f7_da46fc80",
+        "filename": "runtime/mirror/array.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-29T00:49:54Z",
+      "side": 1,
+      "message": "If you just add index at the end here, I think you can avoid the explict multiplication by sizeof(T). Also below.",
+      "range": {
+        "startLine": 172,
+        "startChar": 11,
+        "endLine": 172,
+        "endChar": 37
+      },
+      "revId": "3ba4cbbd856062a1b5c24c5a659cd2b706337fc3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
