@@ -1,0 +1,323 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de470bfd_7f2043a4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T22:07:54Z",
+      "side": 1,
+      "message": "```suggestion\nAdd ArtShellCommandTest and cover pre-reboot dexopt commands.\n```",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "788ff0a6_64e38e1b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T22:07:54Z",
+      "side": 1,
+      "message": "Nice work! There are of course a lot more commands that could be tested, but it\u0027s a start.",
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5edf7758_ff3f148d",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T22:07:54Z",
+      "side": 1,
+      "message": "I think it\u0027d be helpful if all the fields beginning with `mJob` below are more specific about the type of job, i.e. `mPreRebootJob...`. (AI suggestion is a start, but it missed `mJobScheduler`, except it doesn\u0027t when I add this sentence.)",
+      "range": {
+        "startLine": 69,
+        "startChar": 45,
+        "endLine": 69,
+        "endChar": 56
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "377b5676_fa068c95",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 69,
+                "startChar": 0,
+                "endLine": 70,
+                "endChar": 0
+              },
+              "replacement": "    @Mock private BackgroundDexoptJobService mPreRebootJobService;\n"
+            },
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 72,
+                "startChar": 0,
+                "endLine": 73,
+                "endChar": 0
+              },
+              "replacement": "    @Mock private JobScheduler mPreRebootJobScheduler;\n"
+            },
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 80,
+                "startChar": 0,
+                "endLine": 82,
+                "endChar": 0
+              },
+              "replacement": "    private JobInfo mPreRebootJobInfo;\n    private JobParameters mPreRebootJobParameters;\n"
+            },
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 89,
+                "startChar": 0,
+                "endLine": 94,
+                "endChar": 0
+              },
+              "replacement": "        lenient().when(mPreRebootJobScheduler.schedule(any())).thenAnswer(invocation -\u003e {\n            mPreRebootJobInfo \u003d invocation.\u003cJobInfo\u003egetArgument(0);\n            mPreRebootJobParameters \u003d mock(JobParameters.class);\n            assertThat(mPreRebootJobInfo.getId()).isEqualTo(JOB_ID);\n            lenient().when(mPreRebootJobParameters.getExtras())\n                    .thenReturn(mPreRebootJobInfo.getExtras());\n"
+            },
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 99,
+                "startChar": 0,
+                "endLine": 101,
+                "endChar": 0
+              },
+              "replacement": "                    mPreRebootJobInfo \u003d null;\n                    mPreRebootJobParameters \u003d null;\n"
+            },
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 103,
+                "startChar": 0,
+                "endLine": 104,
+                "endChar": 0
+              },
+              "replacement": "                .when(mPreRebootJobScheduler)\n"
+            },
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 106,
+                "startChar": 0,
+                "endLine": 108,
+                "endChar": 0
+              },
+              "replacement": "        lenient().when(mPreRebootJobScheduler.getPendingJob(JOB_ID)).thenAnswer(invocation -\u003e {\n            return mPreRebootJobInfo;\n"
+            },
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 116,
+                "startChar": 0,
+                "endLine": 117,
+                "endChar": 0
+              },
+              "replacement": "        lenient().when(mPreRebootDexoptJobInjector.getJobScheduler())\n                .thenReturn(mPreRebootJobScheduler);\n"
+            },
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 251,
+                "startChar": 0,
+                "endLine": 252,
+                "endChar": 0
+              },
+              "replacement": "        mPreRebootDexoptJob.onStartJobImpl(mPreRebootJobService, mPreRebootJobParameters);\n"
+            },
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 317,
+                "startChar": 0,
+                "endLine": 318,
+                "endChar": 0
+              },
+              "replacement": "        mPreRebootDexoptJob.onStartJobImpl(mPreRebootJobService, mPreRebootJobParameters);\n"
+            },
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+              "range": {
+                "startLine": 349,
+                "startChar": 0,
+                "endLine": 350,
+                "endChar": 0
+              },
+              "replacement": "        mPreRebootDexoptJob.onStartJobImpl(mPreRebootJobService, mPreRebootJobParameters);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bb5ff3c_28b540f6",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T22:07:54Z",
+      "side": 1,
+      "message": "```suggestion\n                    Semaphore dexoptCancelled \u003d new Semaphore(0 /* permits */);\n```",
+      "range": {
+        "startLine": 181,
+        "startChar": 62,
+        "endLine": 181,
+        "endChar": 63
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abb3faa8_f7f2f725",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T22:07:54Z",
+      "side": 1,
+      "message": "I\u0027m not sure how much coverage you\u0027re aiming for in this CL. E.g. one case that could be tested is `--cancel` when no job is running. I opt to not look overly much for missing use cases.",
+      "range": {
+        "startLine": 197,
+        "startChar": 46,
+        "endLine": 197,
+        "endChar": 79
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c79e899_872bc620",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T22:07:54Z",
+      "side": 1,
+      "message": "Somewhat out of scope here, but wouldn\u0027t it be nicer to report in this shell too that it was cancelled?",
+      "range": {
+        "startLine": 203,
+        "startChar": 42,
+        "endLine": 203,
+        "endChar": 54
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32aa3c08_d20e3888",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T22:07:54Z",
+      "side": 1,
+      "message": "Same.",
+      "range": {
+        "startLine": 213,
+        "startChar": 62,
+        "endLine": 213,
+        "endChar": 63
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97a4cc85_13a19529",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T22:07:54Z",
+      "side": 1,
+      "message": "Maybe show which bit comes from stdout and which from stderr?",
+      "range": {
+        "startLine": 358,
+        "startChar": 29,
+        "endLine": 358,
+        "endChar": 89
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86be7b68_d568d74e",
+        "filename": "libartservice/service/javatests/com/android/server/art/testing/CommandExecution.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T22:07:54Z",
+      "side": 1,
+      "message": "Why this instead of a plain `FileDescriptor`?",
+      "range": {
+        "startLine": 36,
+        "startChar": 12,
+        "endLine": 36,
+        "endChar": 32
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
