@@ -99,6 +99,30 @@
       },
       "revId": "5df16b431c6959da8667b9949f750da7c0d943b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a55ff46_4a7cc20d",
+        "filename": "dex2oat/linker/oat_writer_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 886,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-29T23:47:11Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "c3a057d7_0818a811",
+      "range": {
+        "startLine": 886,
+        "startChar": 16,
+        "endLine": 886,
+        "endChar": 40
+      },
+      "revId": "5df16b431c6959da8667b9949f750da7c0d943b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
