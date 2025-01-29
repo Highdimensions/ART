@@ -1,0 +1,49 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71cb8ca0_57c6038f",
+        "filename": "runtime/hidden_api.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1065473
+      },
+      "writtenOn": "2025-01-29T11:57:03Z",
+      "side": 1,
+      "message": "Is the \"ToLogcat\" unnecessarily specific? (it is stderr on host, right?)",
+      "fixSuggestions": [
+        {
+          "fixId": "b832c42c_de1ef08b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/hidden_api.h",
+              "range": {
+                "startLine": 218,
+                "startChar": 0,
+                "endLine": 225,
+                "endChar": 0
+              },
+              "replacement": "  void LogAccess(AccessMethod access_method,\n                 ApiList list,\n                 bool access_denied,\n                 uint32_t runtime_flags,\n                 const AccessContext\u0026 caller_context,\n                 const AccessContext\u0026 callee_context,\n                 EnforcementPolicy policy) REQUIRES_SHARED(Locks::mutator_lock_);\n"
+            },
+            {
+              "path": "runtime/hidden_api.h",
+              "range": {
+                "startLine": 226,
+                "startChar": 0,
+                "endLine": 227,
+                "endChar": 0
+              },
+              "replacement": "  void LogAccessToEventLog(uint32_t sampled_value,\n                           AccessMethod access_method,\n                           bool access_denied);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b19b3375e4c6582d42d0edc4e96916e2dfa990db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
