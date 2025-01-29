@@ -44,6 +44,24 @@
       ],
       "revId": "b19b3375e4c6582d42d0edc4e96916e2dfa990db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc04ae50_2babdb73",
+        "filename": "runtime/hidden_api.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T15:23:00Z",
+      "side": 1,
+      "message": "It\u0027s in contrast to `LogAccessToEventLog` below.\n\n\u003e (it is stderr on host, right?)\n\nSure, but I regard that more as an implementation detail in our host run test setup. What this function does is use the LOG macro to log via liblog etc, and I think \"logcat\" is the most natural word to describe that log channel.",
+      "parentUuid": "71cb8ca0_57c6038f",
+      "revId": "b19b3375e4c6582d42d0edc4e96916e2dfa990db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
