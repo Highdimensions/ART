@@ -28,6 +28,7 @@ import com.android.art.flags.Flags;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Helper class for <i>ART-managed install files</i> (files installed by Package Manager
@@ -39,8 +40,14 @@ import java.util.stream.Collectors;
 @SystemApi(client = SystemApi.Client.SYSTEM_SERVER)
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 public final class ArtManagedInstallFileHelper {
-    private static final List<String> FILE_TYPES = List.of(ArtConstants.DEX_METADATA_FILE_EXT,
-            ArtConstants.PROFILE_FILE_EXT, ArtConstants.SECURE_DEX_METADATA_FILE_EXT);
+    private static final @NonNull List<String> FILE_TYPES =
+            List.of(ArtConstants.DEX_METADATA_FILE_EXT, ArtConstants.PROFILE_FILE_EXT,
+                    ArtConstants.SECURE_DEX_METADATA_FILE_EXT);
+    private static final @NonNull List<String> SDM_SUFFIXES =
+            Utils.getNativeIsas()
+                    .stream()
+                    .map(isa -> "." + isa + ArtConstants.SECURE_DEX_METADATA_FILE_EXT)
+                    .toList();
 
     private ArtManagedInstallFileHelper() {}
 
@@ -64,9 +71,14 @@ public final class ArtManagedInstallFileHelper {
     @FlaggedApi(Flags.FLAG_ART_SERVICE_V3)
     public static @NonNull List<String> filterPathsForApk(
             @NonNull List<String> paths, @NonNull String apkPath) {
-        Set<String> candidates = FILE_TYPES.stream()
-                                         .map(ext -> Utils.replaceFileExtension(apkPath, ext))
-                                         .collect(Collectors.toSet());
+        Set<String> candidates =
+                FILE_TYPES.stream()
+                        .flatMap(ext
+                                -> ext.equals(ArtConstants.SECURE_DEX_METADATA_FILE_EXT)
+                                        ? SDM_SUFFIXES.stream().map(suffix
+                                                  -> Utils.replaceFileExtension(apkPath, suffix))
+                                        : Stream.of(Utils.replaceFileExtension(apkPath, ext)))
+                        .collect(Collectors.toSet());
         return paths.stream().filter(path -> candidates.contains(path)).toList();
     }
 
@@ -84,8 +96,16 @@ public final class ArtManagedInstallFileHelper {
     public static @NonNull String getTargetPathForApk(
             @NonNull String originalPath, @NonNull String apkPath) {
         for (String ext : FILE_TYPES) {
-            if (originalPath.endsWith(ext)) {
-                return Utils.replaceFileExtension(apkPath, ext);
+            if (ext.equals(ArtConstants.SECURE_DEX_METADATA_FILE_EXT)) {
+                for (String suffix : SDM_SUFFIXES) {
+                    if (originalPath.endsWith(suffix)) {
+                        return Utils.replaceFileExtension(apkPath, suffix);
+                    }
+                }
+            } else {
+                if (originalPath.endsWith(ext)) {
+                    return Utils.replaceFileExtension(apkPath, ext);
+                }
             }
         }
         throw new IllegalArgumentException(
