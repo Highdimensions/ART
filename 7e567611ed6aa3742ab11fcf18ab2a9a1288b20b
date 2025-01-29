@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "528a4adc_c925b5f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-29T15:32:08Z",
+      "side": 1,
+      "message": "Martin, I lost your +2 after making the suggested changes. Could you please give me another?",
+      "revId": "7e567611ed6aa3742ab11fcf18ab2a9a1288b20b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
