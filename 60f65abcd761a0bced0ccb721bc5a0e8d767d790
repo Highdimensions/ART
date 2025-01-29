@@ -22,6 +22,30 @@
       },
       "revId": "60f65abcd761a0bced0ccb721bc5a0e8d767d790",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3040aeda_db01a80a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T09:40:58Z",
+      "side": 1,
+      "message": "Yes, anything below ERROR is suppressed [by default](https://cs.android.com/android/platform/superproject/main/+/main:art/test/default_run.py;l\u003d51;drc\u003d612ee65f6ac572ed60097c7bd9a7016cce37da41).\n\n\u003e Can we also remove some output filtering such as the changes in https://android-review.git.corp.google.com/c/platform/art/+/3326636/4/test/999-redefine-hiddenapi/run.py ?\n\nMaybe in some cases. The reason I added that filtering is that checking those messages seemed brittle (and it kept parity with the testing done before my CL). I only investigated 674-hiddenapi which would generate a long repetitive list, and it checks the result through more programmatic interfaces anyway.\n\nAlso, afaik we only capture these messages on host, so it\u0027d require some work to pass on both host and device since the expected outputs will be different. I\u0027m not sure how to do that in a reasonable way. I guesst I\u0027d need to filter expected-stderr.txt before the diff.\n\nBut I can agree there\u0027s some value in testing the logcat reporting as well.",
+      "parentUuid": "8fba933b_ad431c7d",
+      "range": {
+        "startLine": 19,
+        "startChar": 19,
+        "endLine": 19,
+        "endChar": 47
+      },
+      "revId": "60f65abcd761a0bced0ccb721bc5a0e8d767d790",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
