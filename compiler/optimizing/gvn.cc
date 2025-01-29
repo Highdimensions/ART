@@ -125,6 +125,11 @@ class ValueSet : public ArenaObject<kArenaAllocGvn> {
 
   // Removes all instructions in the set affected by the given side effects.
   void Kill(SideEffects side_effects) {
+    if (side_effects.Equals(SideEffects::None())) {
+      // Nothing to do, as `MayDependOn` will always return false.
+      return;
+    }
+
     DeleteAllImpureWhich([side_effects](Node* node) {
       return node->GetSideEffects().MayDependOn(side_effects);
     });
