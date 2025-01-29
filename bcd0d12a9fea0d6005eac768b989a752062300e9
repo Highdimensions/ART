@@ -214,6 +214,30 @@
       },
       "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e477dd44_4651a21b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-29T16:39:13Z",
+      "side": 1,
+      "message": "I\u0027d prefer to detach the reason for development of these patches from their actual function. These alignment optimizations are generic and benefit all architectures and all page sizes, so I\u0027d like to have them merged even if we did not re-enable 16K pages.\n\nManual comparisons with all 4 CLs together can be done with cherry-picks (or reverts after submission) with very little inconvenience.\n\nNote that the regressions from previously enabling 16K pages have been determined to be acceptable and any regressions from re-enabling should be smaller than before if the alignment optimizations are already submitted. Therefore these regressions should not block re-enabling 16K pages.",
+      "parentUuid": "ef57b73f_aa582a5a",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
