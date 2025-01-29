@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79b3a552_3035186a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-01-29T11:43:33Z",
+      "side": 1,
+      "message": "NB, I haven\u0027t built a qemu test environment to try this out locally, but I\u0027m fairly confident it works.",
+      "revId": "72345a79d5def4b05419cadf0bbcd98bf9265346",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
