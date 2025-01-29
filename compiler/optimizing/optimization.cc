@@ -223,7 +223,7 @@ ArenaVector<HOptimization*> ConstructOptimizations(
       //
       case OptimizationPass::kGlobalValueNumbering:
         CHECK(most_recent_side_effects != nullptr);
-        opt = new (allocator) GVNOptimization(graph, *most_recent_side_effects, pass_name);
+        opt = new (allocator) GVNOptimization(graph, stats, *most_recent_side_effects, pass_name);
         break;
       case OptimizationPass::kInvariantCodeMotion:
         CHECK(most_recent_side_effects != nullptr);

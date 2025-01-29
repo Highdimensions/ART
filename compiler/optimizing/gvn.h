@@ -28,15 +28,17 @@ class SideEffectsAnalysis;
 class GVNOptimization : public HOptimization {
  public:
   GVNOptimization(HGraph* graph,
+                  OptimizingCompilerStats* stats,
                   const SideEffectsAnalysis& side_effects,
                   const char* pass_name = kGlobalValueNumberingPassName)
-      : HOptimization(graph, pass_name), side_effects_(side_effects) {}
+      : HOptimization(graph, pass_name), stats_(stats), side_effects_(side_effects) {}
 
   bool Run() override;
 
   static constexpr const char* kGlobalValueNumberingPassName = "GVN";
 
  private:
+  OptimizingCompilerStats* stats_;
   const SideEffectsAnalysis& side_effects_;
 
   DISALLOW_COPY_AND_ASSIGN(GVNOptimization);

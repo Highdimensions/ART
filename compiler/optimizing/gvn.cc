@@ -21,6 +21,8 @@
 #include "base/scoped_arena_allocator.h"
 #include "base/scoped_arena_containers.h"
 #include "base/utils.h"
+#include "optimizing/nodes.h"
+#include "optimizing/optimizing_compiler_stats.h"
 #include "side_effects_analysis.h"
 
 namespace art HIDDEN {
@@ -37,8 +39,9 @@ namespace art HIDDEN {
 class ValueSet : public ArenaObject<kArenaAllocGvn> {
  public:
   // Constructs an empty ValueSet which owns all its buckets.
-  explicit ValueSet(ScopedArenaAllocator* allocator)
+  ValueSet(ScopedArenaAllocator* allocator, OptimizingCompilerStats* stats)
       : allocator_(allocator),
+        stats_(stats),
         num_buckets_(kMinimumNumberOfBuckets),
         buckets_(allocator->AllocArray<Node*>(num_buckets_, kArenaAllocGvn)),
         buckets_owned_(allocator, num_buckets_, false, kArenaAllocGvn),
@@ -50,8 +53,9 @@ class ValueSet : public ArenaObject<kArenaAllocGvn> {
 
   // Copy constructor. Depending on the load factor, it will either make a deep
   // copy (all buckets owned) or a shallow one (buckets pointing to the parent).
-  ValueSet(ScopedArenaAllocator* allocator, const ValueSet& other)
+  ValueSet(ScopedArenaAllocator* allocator, OptimizingCompilerStats* stats, const ValueSet& other)
       : allocator_(allocator),
+        stats_(stats),
         num_buckets_(other.IdealBucketCount()),
         buckets_(allocator->AllocArray<Node*>(num_buckets_, kArenaAllocGvn)),
         buckets_owned_(allocator, num_buckets_, false, kArenaAllocGvn),
@@ -125,9 +129,17 @@ class ValueSet : public ArenaObject<kArenaAllocGvn> {
 
   // Removes all instructions in the set affected by the given side effects.
   void Kill(SideEffects side_effects) {
+    // Nothing to do if the side effects don't have any change bits set, as MayDependOn will always
+    // return false.
+    if (side_effects.HasSideEffects()) {
+    MaybeRecordStat(stats_, MethodCompilationStat::kGvnTrueKill);
+
     DeleteAllImpureWhich([side_effects](Node* node) {
       return node->GetSideEffects().MayDependOn(side_effects);
     });
+    } else {
+      MaybeRecordStat(stats_, MethodCompilationStat::kGvnFakeKill);
+    }
   }
 
   void Clear() {
@@ -330,6 +342,7 @@ class ValueSet : public ArenaObject<kArenaAllocGvn> {
   }
 
   ScopedArenaAllocator* const allocator_;
+  OptimizingCompilerStats* stats_;
 
   // The internal bucket implementation of the set.
   size_t const num_buckets_;
@@ -353,9 +366,10 @@ class ValueSet : public ArenaObject<kArenaAllocGvn> {
  */
 class GlobalValueNumberer : public ValueObject {
  public:
-  GlobalValueNumberer(HGraph* graph, const SideEffectsAnalysis& side_effects)
+  GlobalValueNumberer(HGraph* graph, OptimizingCompilerStats* stats, const SideEffectsAnalysis& side_effects)
       : graph_(graph),
         allocator_(graph->GetArenaStack()),
+        stats_(stats),
         side_effects_(side_effects),
         sets_(graph->GetBlocks().size(), nullptr, allocator_.Adapter(kArenaAllocGvn)),
         visited_blocks_(
@@ -371,6 +385,7 @@ class GlobalValueNumberer : public ValueObject {
 
   HGraph* graph_;
   ScopedArenaAllocator allocator_;
+  OptimizingCompilerStats* stats_;
   const SideEffectsAnalysis& side_effects_;
 
   ValueSet* FindSetFor(HBasicBlock* block) const {
@@ -412,7 +427,7 @@ class GlobalValueNumberer : public ValueObject {
 
 bool GlobalValueNumberer::Run() {
   DCHECK(side_effects_.HasRun());
-  sets_[graph_->GetEntryBlock()->GetBlockId()] = new (&allocator_) ValueSet(&allocator_);
+  sets_[graph_->GetEntryBlock()->GetBlockId()] = new (&allocator_) ValueSet(&allocator_, stats_);
 
   // Use the reverse post order to ensure the non back-edge predecessors of a block are
   // visited before the block itself.
@@ -430,7 +445,7 @@ void GlobalValueNumberer::VisitBasicBlock(HBasicBlock* block) {
     // The entry block should only accumulate constant instructions, and
     // the builder puts constants only in the entry block.
     // Therefore, there is no need to propagate the value set to the next block.
-    set = new (&allocator_) ValueSet(&allocator_);
+    set = new (&allocator_) ValueSet(&allocator_, stats_);
   } else {
     HBasicBlock* dominator = block->GetDominator();
     ValueSet* dominator_set = FindSetFor(dominator);
@@ -449,7 +464,7 @@ void GlobalValueNumberer::VisitBasicBlock(HBasicBlock* block) {
       if (recyclable == nullptr) {
         // No block with a suitable ValueSet found. Allocate a new one and
         // copy `dominator_set` into it.
-        set = new (&allocator_) ValueSet(&allocator_, *dominator_set);
+        set = new (&allocator_) ValueSet(&allocator_, stats_, *dominator_set);
       } else {
         // Block with a recyclable ValueSet found. Clone `dominator_set` into it.
         set = FindSetFor(recyclable);
@@ -579,7 +594,7 @@ HBasicBlock* GlobalValueNumberer::FindVisitedBlockWithRecyclableSet(
 }
 
 bool GVNOptimization::Run() {
-  GlobalValueNumberer gvn(graph_, side_effects_);
+  GlobalValueNumberer gvn(graph_, stats_, side_effects_);
   return gvn.Run();
 }
 

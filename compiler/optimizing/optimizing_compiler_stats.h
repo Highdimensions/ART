@@ -53,6 +53,8 @@ enum class MethodCompilationStat {
   kRemovedVolatileLoad,
   kRemovedVolatileStore,
   kRemovedMonitorOp,
+  kGvnFakeKill,
+  kGvnTrueKill,
   kNotCompiledSkipped,
   kNotCompiledInvalidBytecode,
   kNotCompiledThrowCatchLoop,
