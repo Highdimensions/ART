@@ -75,6 +75,30 @@
       },
       "revId": "5df16b431c6959da8667b9949f750da7c0d943b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3a057d7_0818a811",
+        "filename": "dex2oat/linker/oat_writer_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 886,
+      "author": {
+        "id": 3050003
+      },
+      "writtenOn": "2025-01-29T22:24:59Z",
+      "side": 1,
+      "message": "Thank you for the information! Should be fixed in the latest PS.",
+      "parentUuid": "236dedc3_4e3a82e7",
+      "range": {
+        "startLine": 886,
+        "startChar": 16,
+        "endLine": 886,
+        "endChar": 40
+      },
+      "revId": "5df16b431c6959da8667b9949f750da7c0d943b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
