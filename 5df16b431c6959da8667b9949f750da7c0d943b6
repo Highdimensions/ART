@@ -52,6 +52,29 @@
       "parentUuid": "16dfdf92_8bc17b28",
       "revId": "5df16b431c6959da8667b9949f750da7c0d943b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "236dedc3_4e3a82e7",
+        "filename": "dex2oat/linker/oat_writer_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 886,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-29T00:39:03Z",
+      "side": 1,
+      "message": "note http://issuetracker.google.com/378792349#comment36 - this is failing in our infra.",
+      "range": {
+        "startLine": 886,
+        "startChar": 16,
+        "endLine": 886,
+        "endChar": 40
+      },
+      "revId": "5df16b431c6959da8667b9949f750da7c0d943b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
