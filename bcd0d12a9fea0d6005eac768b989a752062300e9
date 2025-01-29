@@ -190,6 +190,30 @@
       },
       "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef57b73f_aa582a5a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1975620
+      },
+      "writtenOn": "2025-01-29T15:44:19Z",
+      "side": 1,
+      "message": "Hi. From our position, we are quite keen to have all 4 CLs in a topic because we have created these optimisations specifically to counter overhead introduced when aligning to 16K. Our concern is less about the initial merging of them (which may happen relatively quickly/simultaneous regardless of the topic) and more about potential future reverts of the 16K alignment CL losing the context of these optimisations.\n\nFor a theoretical future situation where some external bug causes 16K alignment to be reverted to 4K, then without the topic, we will have lost the context that these optimisations already addressed the overhead that would be seen when 16K alignment is again raised for re-enablement.\n\nIn other words, (dense 16K alignment + optimisations) would be compared against an unexpected, invalid baseline of (4K alignment + optimisations). With full context, we would ideally be comparing it just with (4K alignment). This is why we currently think keeping the 4 CLs in a topic would be ideal.",
+      "parentUuid": "071c626d_3e9a7530",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "bcd0d12a9fea0d6005eac768b989a752062300e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
