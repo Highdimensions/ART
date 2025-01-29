@@ -16,6 +16,24 @@
       "message": "-2, pending confirmation of resolutions. Please see b/376814207#comment91.",
       "revId": "bcbb906cbf0ae708ebf8a33deebf8742f0ff2ee6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71fa723d_7425a30c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-29T23:47:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "073161b5_fa8f4ff2",
+      "revId": "bcbb906cbf0ae708ebf8a33deebf8742f0ff2ee6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
