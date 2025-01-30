@@ -154,6 +154,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f38c084c_1274742c",
+        "filename": "libartbase/base/unix_file/fd_file.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-30T17:22:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d794e1cb_2198628d",
+      "range": {
+        "startLine": 65,
+        "startChar": 14,
+        "endLine": 65,
+        "endChar": 19
+      },
+      "revId": "8fe2d5d49574e38ab5b50078969238acb73dbc69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "faab7851_74070e94",
