@@ -1,0 +1,1 @@
+Doing invoke-static on a hidden method.
