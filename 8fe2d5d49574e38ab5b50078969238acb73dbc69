@@ -225,6 +225,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6b958ce_262c7402",
+        "filename": "libelffile/stream/file_output_stream.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-30T17:23:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed3ae53d_eea78783",
+      "range": {
+        "startLine": 35,
+        "startChar": 14,
+        "endLine": 35,
+        "endChar": 32
+      },
+      "revId": "8fe2d5d49574e38ab5b50078969238acb73dbc69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3c46fbd2_4e4176e0",
@@ -286,6 +310,30 @@
       "side": 1,
       "message": "In that case, let\u0027s just remove the `0` and write\n\n    static const std::array\u003cuint8_t, 1024\u003e buffer{};\n\nThere is no reason to use different C++ rules for initializing the first element and for initializing the rest.\n\nOr maybe\n\n    static const uint8_t zeros[1024]{};",
       "parentUuid": "5e4e5cbf_9a5484b3",
+      "range": {
+        "startLine": 72,
+        "startChar": 46,
+        "endLine": 72,
+        "endChar": 47
+      },
+      "revId": "8fe2d5d49574e38ab5b50078969238acb73dbc69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca4ccc71_5961fced",
+        "filename": "libelffile/stream/file_output_stream.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-30T17:23:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d4a0bbc_a396bfd2",
       "range": {
         "startLine": 72,
         "startChar": 46,
