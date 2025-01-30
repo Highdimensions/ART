@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b666389c_28e4d167",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1736,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-30T13:29:32Z",
+      "side": 1,
+      "message": "I\u0027d go or a simple `0u` and let the compiler promote it if needed. But `UINT64_C(0)` is also viable, given that on all platforms that we support `uint_least64_t` is `uint64_t`. (I also don\u0027t like the uppercase version - I\u0027m used to seeing uppercase suffix mostly in Java `long` constants.)\n\nBut feel free to acknoledge and submit as is.",
+      "range": {
+        "startLine": 1736,
+        "startChar": 40,
+        "endLine": 1736,
+        "endChar": 44
+      },
+      "revId": "7c233251e556b4277c86dc6ccc911cb5cb0802e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
