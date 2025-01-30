@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5962b015_856e4c94",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-30T08:21:30Z",
+      "side": 1,
+      "message": "I\u0027m not familiar with GNU libc versioning. Can there be a third number? Would we return true for `\"2.34.1\"`? I think it would be cleaner to use `\"2.35\"` with `\u003e\u003d`.",
+      "range": {
+        "startLine": 126,
+        "startChar": 37,
+        "endLine": 126,
+        "endChar": 41
+      },
+      "revId": "cfd32c9543324a031a1e1e2564b627794e9b0f01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72dc2132_781b4c63",
+        "filename": "runtime/oat/oat_file_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-30T08:21:30Z",
+      "side": 1,
+      "message": "`\u003c\u003c error_msg`",
+      "range": {
+        "startLine": 120,
+        "startChar": 37,
+        "endLine": 120,
+        "endChar": 38
+      },
+      "revId": "cfd32c9543324a031a1e1e2564b627794e9b0f01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

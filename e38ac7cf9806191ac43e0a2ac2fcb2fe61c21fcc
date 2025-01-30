@@ -133,6 +133,30 @@
       },
       "revId": "e38ac7cf9806191ac43e0a2ac2fcb2fe61c21fcc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c8a013f_e807d1b4",
+        "filename": "dex2oat/linker/elf_writer_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-30T08:21:30Z",
+      "side": 1,
+      "message": "LGTM. We don\u0027t need to test all valid combinations.",
+      "parentUuid": "59a93ae9_d1a46cc0",
+      "range": {
+        "startLine": 369,
+        "startChar": 6,
+        "endLine": 369,
+        "endChar": 61
+      },
+      "revId": "e38ac7cf9806191ac43e0a2ac2fcb2fe61c21fcc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
