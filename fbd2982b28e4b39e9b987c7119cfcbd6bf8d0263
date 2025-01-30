@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "0e6cdeaf_b6cfa7b8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-30T13:49:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de470bfd_7f2043a4",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "788ff0a6_64e38e1b",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 4
@@ -37,6 +61,24 @@
       "writtenOn": "2025-01-29T22:07:54Z",
       "side": 1,
       "message": "Nice work! There are of course a lot more commands that could be tested, but it\u0027s a start.",
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42bbbc59_45cdb6b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-30T13:49:45Z",
+      "side": 1,
+      "message": "Thank you for the review!",
+      "parentUuid": "788ff0a6_64e38e1b",
       "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -182,6 +224,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43c2ba7d_1964f9c2",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-30T13:49:45Z",
+      "side": 1,
+      "message": "All the fields beginning with `mJob` in this file are generic. (Yes, `BackgroundDexoptJobService` is also generic. I\u0027m regretful of the naming, but I can\u0027t change it because it has been [hardcoded on the platform](https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/res/AndroidManifest.xml;l\u003d9068;drc\u003d8405bd14998ba5a456239659687c869a522b1b24).)\n\nThe fields specific to Pre-reboot Dexopt are `mPreRebootDriver`, `mPreRebootDexoptJobInjector` and `mPreRebootDexoptJob`, and they all already have \"PreRebootDexopt\" in their names.",
+      "parentUuid": "5edf7758_ff3f148d",
+      "range": {
+        "startLine": 69,
+        "startChar": 45,
+        "endLine": 69,
+        "endChar": 56
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9bb5ff3c_28b540f6",
@@ -195,6 +261,30 @@
       "writtenOn": "2025-01-29T22:07:54Z",
       "side": 1,
       "message": "```suggestion\n                    Semaphore dexoptCancelled \u003d new Semaphore(0 /* permits */);\n```",
+      "range": {
+        "startLine": 181,
+        "startChar": 62,
+        "endLine": 181,
+        "endChar": 63
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67879710_36205b1b",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-30T13:49:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9bb5ff3c_28b540f6",
       "range": {
         "startLine": 181,
         "startChar": 62,
@@ -230,6 +320,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "3517f6ca_23ca4a00",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-30T13:49:45Z",
+      "side": 1,
+      "message": "I mainly aim to cover code paths used in production for OTA. I also covered some `pm art pr-dexopt-job` debugging commands on a best effort basis because I think they are complicated and easy to break. I don\u0027t intend to cover all the edge cases, but since you brought it up, I added a test for the `--cancel` but no job running case. The output in this case is not ideal, like the one below, but it\u0027s out of scope.",
+      "parentUuid": "abb3faa8_f7f2f725",
+      "range": {
+        "startLine": 197,
+        "startChar": 46,
+        "endLine": 197,
+        "endChar": 79
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "7c79e899_872bc620",
         "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
         "patchSetId": 4
@@ -241,6 +355,30 @@
       "writtenOn": "2025-01-29T22:07:54Z",
       "side": 1,
       "message": "Somewhat out of scope here, but wouldn\u0027t it be nicer to report in this shell too that it was cancelled?",
+      "range": {
+        "startLine": 203,
+        "startChar": 42,
+        "endLine": 203,
+        "endChar": 54
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bf722e1_c9a6abe0",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-30T13:49:45Z",
+      "side": 1,
+      "message": "I thought about the same, but I realized that it\u0027s not easy to get the exact job state and it\u0027s a bit out of scope, so I left it as is for now.",
+      "parentUuid": "7c79e899_872bc620",
       "range": {
         "startLine": 203,
         "startChar": 42,
@@ -274,6 +412,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d017d299_064cbc30",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-30T13:49:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32aa3c08_d20e3888",
+      "range": {
+        "startLine": 213,
+        "startChar": 62,
+        "endLine": 213,
+        "endChar": 63
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "97a4cc85_13a19529",
@@ -297,6 +459,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec01c989_b9f6a1fc",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-30T13:49:45Z",
+      "side": 1,
+      "message": "I don\u0027t think we have to be that strict for the shell command. We actually only write to stdout unless there is a runtime exception, in which case BasicShellCommandHandler handles it and prints the stacktrace to stderr. Anyway, the outputs are for debugging purposes only.",
+      "parentUuid": "97a4cc85_13a19529",
+      "range": {
+        "startLine": 358,
+        "startChar": 29,
+        "endLine": 358,
+        "endChar": 89
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "86be7b68_d568d74e",
@@ -310,6 +496,30 @@
       "writtenOn": "2025-01-29T22:07:54Z",
       "side": 1,
       "message": "Why this instead of a plain `FileDescriptor`?",
+      "range": {
+        "startLine": 36,
+        "startChar": 12,
+        "endLine": 36,
+        "endChar": 32
+      },
+      "revId": "fbd2982b28e4b39e9b987c7119cfcbd6bf8d0263",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b109129b_b0caff9f",
+        "filename": "libartservice/service/javatests/com/android/server/art/testing/CommandExecution.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-01-30T13:49:45Z",
+      "side": 1,
+      "message": "`ParcelFileDescriptor` [keeps track of the FD state](https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/android/os/ParcelFileDescriptor.java;l\u003d847;drc\u003d83db0626fad8c6e0508754fffcbbd58e539d14a5) and ignores `close()` calls if the FD has already been closed. We need this feature because we call `close()` multiple times.",
+      "parentUuid": "86be7b68_d568d74e",
       "range": {
         "startLine": 36,
         "startChar": 12,
