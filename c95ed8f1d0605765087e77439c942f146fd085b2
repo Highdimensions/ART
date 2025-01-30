@@ -16,6 +16,24 @@
       "message": "`Bug: 378792349`\n\nI\u0027d like to start submitting the chain one CL at a time but I want to keep record of all the CLs in the same bug as the ARM CLs.",
       "revId": "c95ed8f1d0605765087e77439c942f146fd085b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "013c307e_dd667465",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-30T17:26:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14ca418e_2694803f",
+      "revId": "c95ed8f1d0605765087e77439c942f146fd085b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
