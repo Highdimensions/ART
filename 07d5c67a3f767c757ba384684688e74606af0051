@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1af93d08_6a8b9c5e",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1745,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-30T14:50:34Z",
+      "side": 1,
+      "message": "This one was just `0` so I changed it to `0u` like the others. Not sure if it matters at all since zero is zero but at least we have consistency.",
+      "revId": "07d5c67a3f767c757ba384684688e74606af0051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
