@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ed91f492_c0027442",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-30T08:28:51Z",
+      "side": 1,
+      "message": "`Bug: 378792349`\n\nI\u0027d like to start submitting the chain one CL at a time but I want to keep record of all the CLs in the same bug as the ART CLs.",
+      "revId": "8fe2d5d49574e38ab5b50078969238acb73dbc69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "64b874b3_87773d6e",
         "filename": "libartbase/base/unix_file/fd_file.cc",
         "patchSetId": 8
