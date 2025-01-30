@@ -16,6 +16,24 @@
       "message": "Hi! It looks like some tests failed. Could you please share more details? Thank you!",
       "revId": "79146a20fbf51ca028a0f70236a4096f0460eea2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c0b90a2_035a405f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-30T13:12:37Z",
+      "side": 1,
+      "message": "`aosp_cf_arm64_only_phone_hwasan-trunk_staging-userdebug` failing with:\n\n    art/dex2oat/linker/oat_writer_test.cc:(966) Failure in test OatTest.AlignmentCheck\n    Expected: (number_of_compiled_methods) \u003e (0u), actual: 0 vs 0\n    OatTest.AlignmentCheck exited with exitcode 1.\n\nI\u0027m wondering if the \"hwasan\" target is configured to build an empty boot image. I\u0027ll re-run the presubmit but we may want to get rid of that particular check.",
+      "parentUuid": "e633052c_73ba79c1",
+      "revId": "79146a20fbf51ca028a0f70236a4096f0460eea2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
