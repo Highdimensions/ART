@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "24906cc3_4fbc0de5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-30T08:31:05Z",
+      "side": 1,
+      "message": "I meant \"ARM CLs\", not \"ART CLs\". Sorry for the typo.",
+      "parentUuid": "ed91f492_c0027442",
+      "revId": "8fe2d5d49574e38ab5b50078969238acb73dbc69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "64b874b3_87773d6e",
         "filename": "libartbase/base/unix_file/fd_file.cc",
         "patchSetId": 8
