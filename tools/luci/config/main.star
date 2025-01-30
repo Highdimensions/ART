@@ -239,7 +239,7 @@ def add_builder(mode,
 
     # Create builder name based on the configuaration parameters.
     name = mode + '.' + arch
-    name += '.gsctress' if gcstress else ''
+    name += '.gcstress' if gcstress else ''
     name += '.poison' if poison else ''
     name += '.ngen' if ngen else ''
     name += '.cmc' if cmc else ''
@@ -253,6 +253,7 @@ def add_builder(mode,
     category = name.replace(".", "|")
     category = category.replace("host|", "host.")
     category = category.replace("target|", "target.")
+    category = category.replace("gcstress|cmc", "gcstress-cmc")
 
     product = None
     if arch == "arm":
@@ -321,6 +322,7 @@ def add_builders():
       add_builder(mode, arch, bitness, cmc=True)
       add_builder(mode, arch, bitness, poison=True)
       add_builder(mode, arch, bitness, gcstress=True)
+      add_builder(mode, arch, bitness, cmc=True, gcstress=True)
   add_builder('qemu', 'arm', bitness=64)
   add_builder('qemu', 'riscv', bitness=64)
 
