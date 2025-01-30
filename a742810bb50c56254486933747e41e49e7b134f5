@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "7cf18707_c092d918",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-30T09:35:08Z",
+      "side": 1,
+      "message": "Please change the commit message (including the description below).\n\nThere is no actual buffer overflow. You\u0027re just replacing `strcpy()` which is often considered an unsafe API even though the affected code was actually safe.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 51
+      },
+      "revId": "a742810bb50c56254486933747e41e49e7b134f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "6d403bed_34f2a1ea",
