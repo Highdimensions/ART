@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a3f6322_8e77a222",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-30T17:23:51Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "24906cc3_4fbc0de5",
+      "revId": "8fe2d5d49574e38ab5b50078969238acb73dbc69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "64b874b3_87773d6e",
@@ -49,6 +67,30 @@
       "writtenOn": "2025-01-30T07:53:32Z",
       "side": 1,
       "message": "Style: We prefer a then-block with braces and the then-statement on its own line.",
+      "range": {
+        "startLine": 57,
+        "startChar": 43,
+        "endLine": 57,
+        "endChar": 57
+      },
+      "revId": "8fe2d5d49574e38ab5b50078969238acb73dbc69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c1ea655_7c0ff47e",
+        "filename": "libartbase/base/unix_file/fd_file.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2025-01-30T17:23:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64b874b3_87773d6e",
       "range": {
         "startLine": 57,
         "startChar": 43,
