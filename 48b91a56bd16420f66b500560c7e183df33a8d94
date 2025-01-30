@@ -124,6 +124,30 @@
       },
       "revId": "48b91a56bd16420f66b500560c7e183df33a8d94",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a39d55f2_98606c62",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 8610,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-01-30T15:40:31Z",
+      "side": 1,
+      "message": "Sorry I\u0027m not following, why can\u0027t we make sure eg only the first one seen in the dex is put in vtables?",
+      "parentUuid": "03ffb1a5_5b07cbbe",
+      "range": {
+        "startLine": 8606,
+        "startChar": 0,
+        "endLine": 8610,
+        "endChar": 39
+      },
+      "revId": "48b91a56bd16420f66b500560c7e183df33a8d94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
