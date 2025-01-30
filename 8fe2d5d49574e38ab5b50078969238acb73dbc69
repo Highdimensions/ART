@@ -108,6 +108,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ec35c342_d9ca9dfe",
+        "filename": "libartbase/base/unix_file/fd_file.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-30T14:13:00Z",
+      "side": 1,
+      "message": "This may be a \"local variable\" but it is `static` which makes it more like a namespace-scope varriable in some respects. In this case, I strongly recommend using `const` to document that it shall not change after initialization.",
+      "parentUuid": "6bce0a71_4fe9b9f7",
+      "range": {
+        "startLine": 65,
+        "startChar": 14,
+        "endLine": 65,
+        "endChar": 19
+      },
+      "revId": "8fe2d5d49574e38ab5b50078969238acb73dbc69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "faab7851_74070e94",
         "filename": "libelffile/stream/file_output_stream.cc",
         "patchSetId": 8
@@ -190,6 +214,30 @@
       "side": 1,
       "message": "According to https://en.cppreference.com/w/cpp/container/array\n\n\u003e (constructor)\n\u003e   \n\u003e (implicitly declared)\n\u003e  \n\u003e initializes the array following the rules of **aggregate initialization** (note that default initialization may result in indeterminate values for non-class T)\n(public member function)\n\nhttps://en.cppreference.com/w/cpp/language/aggregate_initialization#Implicitly_initialized_elements:\n\n\u003e Implicitly initialized elements\n\u003e For a non-union aggregate, each element that is not an explicitly initialized element is initialized as follows:\n\u003e\n\u003e - If the element has a default member initializer, the element is initialized from that initializer.\n(since C++11)\n\u003e - Otherwise, if the element is not a reference, the element is **copy-initialized from an empty initializer list**.\n\u003e - Otherwise, the program is ill-formed.\n\nhttps://en.cppreference.com/w/cpp/language/list_initialization\n\n\u003e The effects of list-initialization of an object of type (possibly cv-qualified) T are:\n\u003e - /.../\n\u003e - Otherwise, if the brace-enclosed initializer list is empty and T is a class type with a default constructor, **value-initialization is performed**.\n\nhttps://en.cppreference.com/w/cpp/language/value_initialization\n\n\u003e The effects of value-initialization are:\n\u003e\n\u003e - If T is a (possibly cv-qualified) class type:\n\u003e   - If the default-initialization for T selects a constructor, and the constructor is not user-declared(until C++11)user-provided(since C++11), the object is first zero-initialized.\n\u003e   - In any case, the object is default-initialized.\n\u003e - Otherwise, if T is an array type, each element of the array is value-initialized.\n\u003e - Otherwise, the object is zero-initialized.\n\nSo I think the rest are zero-initialized.\n\nAn experiment on Compiler Explorer shows that it does so:\n\nhttps://godbolt.org/z/hKdae4jvd",
       "parentUuid": "3c46fbd2_4e4176e0",
+      "range": {
+        "startLine": 72,
+        "startChar": 46,
+        "endLine": 72,
+        "endChar": 47
+      },
+      "revId": "8fe2d5d49574e38ab5b50078969238acb73dbc69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d4a0bbc_a396bfd2",
+        "filename": "libelffile/stream/file_output_stream.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-30T14:13:00Z",
+      "side": 1,
+      "message": "In that case, let\u0027s just remove the `0` and write\n\n    static const std::array\u003cuint8_t, 1024\u003e buffer{};\n\nThere is no reason to use different C++ rules for initializing the first element and for initializing the rest.\n\nOr maybe\n\n    static const uint8_t zeros[1024]{};",
+      "parentUuid": "5e4e5cbf_9a5484b3",
       "range": {
         "startLine": 72,
         "startChar": 46,
