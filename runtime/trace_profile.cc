@@ -62,8 +62,6 @@ static constexpr size_t kAlwaysOnTraceHeaderSize = 8;
 
 bool TraceProfiler::profile_in_progress_ = false;
 
-int TraceProfiler::num_trace_stop_tasks_ = 0;
-
 TraceData* TraceProfiler::trace_data_ = nullptr;
 
 void TraceData::AddTracedThread(Thread* thread) {
@@ -192,14 +190,17 @@ class TraceStopTask : public gc::HeapTask {
   void Run([[maybe_unused]] Thread* self) override { TraceProfiler::TraceTimeElapsed(); }
 };
 
-class TraceStartCheckpoint final : public Closure {
- public:
-  explicit TraceStartCheckpoint(LowOverheadTraceType type) : trace_type_(type), barrier_(0) {}
+void TraceProfiler::Start(LowOverheadTraceType trace_type, uint64_t trace_duration_ns) {
+  if (!art_flags::always_enable_profile_code()) {
+    LOG(ERROR) << "Feature not supported. Please build with ART_ALWAYS_ENABLE_PROFILE_CODE.";
+    return;
+  }
 
-  void Run(Thread* thread) override REQUIRES_SHARED(Locks::mutator_lock_) {
+  TimestampCounter::InitializeTimestampCounters();
+  static FunctionClosure set_buffer([trace_type](Thread* thread) REQUIRES_SHARED(Locks::mutator_lock_) {
     auto buffer = new uintptr_t[kAlwaysOnTraceBufSize];
 
-    if (trace_type_ == LowOverheadTraceType::kLongRunningMethods) {
+    if (trace_type == LowOverheadTraceType::kLongRunningMethods) {
       // Record methods that are currently on stack.
       RecordMethodsOnThreadStack(thread, buffer);
       thread->UpdateTlsLowOverheadTraceEntrypoints(LowOverheadTraceType::kLongRunningMethods);
@@ -208,57 +209,51 @@ class TraceStartCheckpoint final : public Closure {
       thread->UpdateTlsLowOverheadTraceEntrypoints(LowOverheadTraceType::kAllMethods);
     }
     thread->SetMethodTraceBuffer(buffer, kAlwaysOnTraceBufSize);
-    barrier_.Pass(Thread::Current());
-  }
+  });
 
-  void WaitForThreadsToRunThroughCheckpoint(size_t threads_running_checkpoint) {
-    Thread* self = Thread::Current();
-    ScopedThreadStateChange tsc(self, ThreadState::kWaitingForCheckPointsToRun);
-    barrier_.Increment(self, threads_running_checkpoint);
-  }
-
- private:
-  LowOverheadTraceType trace_type_;
-
-  // The barrier to be passed through and for the requestor to wait upon.
-  Barrier barrier_;
-
-  DISALLOW_COPY_AND_ASSIGN(TraceStartCheckpoint);
-};
-
-void TraceProfiler::Start(LowOverheadTraceType trace_type, uint64_t trace_duration_ns) {
-  if (!art_flags::always_enable_profile_code()) {
-    LOG(ERROR) << "Feature not supported. Please build with ART_ALWAYS_ENABLE_PROFILE_CODE.";
-    return;
-  }
-
-  Thread* self = Thread::Current();
-  MutexLock mu(self, *Locks::trace_lock_);
-  if (profile_in_progress_) {
-    LOG(ERROR) << "Profile already in progress. Ignoring this request";
-    return;
-  }
-
-  if (Trace::IsTracingEnabledLocked()) {
-    LOG(ERROR) << "Cannot start a profile when method tracing is in progress";
-    return;
-  }
-
-  TimestampCounter::InitializeTimestampCounters();
-  profile_in_progress_ = true;
-  trace_data_ = new TraceData(trace_type);
 
   Runtime* runtime = Runtime::Current();
-  TraceStartCheckpoint checkpoint(trace_type);
-  size_t threads_running_checkpoint = runtime->GetThreadList()->RunCheckpoint(&checkpoint);
-  if (threads_running_checkpoint != 0) {
-    checkpoint.WaitForThreadsToRunThroughCheckpoint(threads_running_checkpoint);
+  Thread* self = Thread::Current();
+  uint64_t new_end_time = 0;
+  bool add_trace_end_task = false;
+  {
+    MutexLock mu(self, *Locks::trace_lock_);
+    if (Trace::IsTracingEnabledLocked()) {
+      LOG(ERROR) << "Cannot start a lowoverehad trace when regular tracing is in progress";
+      return;
+    }
+
+    if (profile_in_progress_) {
+      // We allow overlapping starts only when collecting long running methods.
+      // If a trace of different type is in progress we ignore the request.
+      if (trace_type == LowOverheadTraceType::kAllMethods || trace_data_->GetTraceType() != trace_type) {
+        LOG(ERROR) << "Profile already in progress. Ignoring this request";
+        return;
+      }
+
+      // For long running methods, just update the end time if there's a trace already in progress.
+      new_end_time = NanoTime() + trace_duration_ns;
+      if (trace_data_->GetTraceEndTime() < new_end_time) {
+        trace_data_->SetTraceEndTime(new_end_time);
+        add_trace_end_task = true;
+      }
+    } else {
+      profile_in_progress_ = true;
+      trace_data_ = new TraceData(trace_type);
+
+      runtime->GetThreadList()->RunCheckpoint(&set_buffer);
+
+      if (trace_type == LowOverheadTraceType::kLongRunningMethods) {
+        new_end_time = NanoTime() + trace_duration_ns;
+        add_trace_end_task = true;
+        trace_data_->SetTraceEndTime(new_end_time);
+      }
+    }
   }
 
-  if (trace_type == LowOverheadTraceType::kLongRunningMethods) {
+  if (add_trace_end_task) {
     // Add a Task that stops the tracing after trace_duration.
-    runtime->GetHeap()->AddHeapTask(new TraceStopTask(NanoTime() + trace_duration_ns));
-    num_trace_stop_tasks_++;
+    runtime->GetHeap()->AddHeapTask(new TraceStopTask(new_end_time));
   }
 }
 
@@ -471,11 +466,12 @@ void TraceProfiler::StartTraceLongRunningMethods(uint64_t trace_duration_ns) {
 
 void TraceProfiler::TraceTimeElapsed() {
   MutexLock mu(Thread::Current(), *Locks::trace_lock_);
-  num_trace_stop_tasks_--;
-  if (num_trace_stop_tasks_ == 0) {
-    // Only stop the trace if this event corresponds to the currently running trace.
-    TraceProfiler::StopLocked();
+  DCHECK_IMPLIES(!profile_in_progress_, trace_data_ != nullptr);
+  if (!profile_in_progress_ || trace_data_->GetTraceEndTime() > NanoTime()) {
+    // The end duration was extended by another start, so just ignore this task.
+    return;
   }
+  TraceProfiler::StopLocked();
 }
 
 void TraceProfiler::DumpLongRunningMethodBuffer(uint32_t thread_id,
