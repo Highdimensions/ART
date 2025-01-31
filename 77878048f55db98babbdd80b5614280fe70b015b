@@ -16,6 +16,29 @@
       "message": "Thanks!",
       "revId": "77878048f55db98babbdd80b5614280fe70b015b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d4cb49d_a6455dea",
+        "filename": "tools/ahat/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-31T20:46:31Z",
+      "side": 1,
+      "message": "```suggestion\n    test_options: {\n        unit_test: true,\n    },\n```\n\nRemove ahat-tests.xml.",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 34
+      },
+      "revId": "77878048f55db98babbdd80b5614280fe70b015b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
