@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b74542b2_bf80f9de",
+        "filename": "runtime/verifier/method_verifier.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1174,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-01-31T16:17:00Z",
+      "side": 1,
+      "message": "Not for this CL, but maybe `check_boolean_op` can also be a template argument here and in other methods",
+      "revId": "e98a26c67c48c026ab4db2de36e30ad8f81a4420",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
