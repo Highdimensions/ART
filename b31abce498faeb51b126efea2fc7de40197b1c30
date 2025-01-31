@@ -129,6 +129,30 @@
       },
       "revId": "b31abce498faeb51b126efea2fc7de40197b1c30",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75b0c5c0_c27341d1",
+        "filename": "Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1318142
+      },
+      "writtenOn": "2025-01-31T07:26:39Z",
+      "side": 1,
+      "message": "Thanks for the update! I have made another CL aosp/3470659 to convert ahat/Android.mk to Android.bp and I will abandon this one.",
+      "parentUuid": "40c333da_36da3485",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 42
+      },
+      "revId": "b31abce498faeb51b126efea2fc7de40197b1c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
