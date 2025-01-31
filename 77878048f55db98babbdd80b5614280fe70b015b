@@ -87,6 +87,30 @@
       },
       "revId": "77878048f55db98babbdd80b5614280fe70b015b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "189c5107_9d48ab5d",
+        "filename": "tools/ahat/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1318142
+      },
+      "writtenOn": "2025-01-31T21:51:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "711e87e6_fd2665fa",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 34
+      },
+      "revId": "77878048f55db98babbdd80b5614280fe70b015b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
