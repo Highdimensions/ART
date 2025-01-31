@@ -52,6 +52,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bac0458_a81826e5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "For this piece, I\u0027m inclined to say no. There shouldn\u0027t be a significant behavior change. For aosp/3314070, which actualy changes behavior, probably yes.",
+      "parentUuid": "6375f908_40fc5497",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "35760fca_7188ca45",
@@ -65,6 +83,24 @@
       "writtenOn": "2025-01-17T20:12:37Z",
       "side": 1,
       "message": "Please add a TODO with a ticket that tracks this, to help future readers (with Google access) judge the accuracy.",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3026c708_e7410efb",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35760fca_7188ca45",
       "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -86,6 +122,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42b34f01_31e5d3cc",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Attempted to clarify this explicitly up front. Thanks for the suggestion.",
+      "parentUuid": "d0038f38_83bb4af9",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68725316_b922ebc4",
@@ -99,6 +153,30 @@
       "writtenOn": "2025-01-17T20:12:37Z",
       "side": 1,
       "message": "There is also the reverse race - if the other thread\u0027s raise to y comes first then A may read y as the old priority and hence restore that rather than x afterwards. Whether that is a problem or not depends on how the other thread operates, but given #3 and #4 below I understand it\u0027s not expected that it will ever try to restore an earlier priority if the app has had an opportunity to do its own restore.\n\nGiven that, to avoid this reverse race it\u0027s important that the app reads the cached priority as x, presumably through `Thread.getPriority`. That seems worth mentioning in #1 below.",
+      "range": {
+        "startLine": 58,
+        "startChar": 85,
+        "endLine": 59,
+        "endChar": 65
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dcbdd4b7_be604e52",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Good point. Attempted to address that.",
+      "parentUuid": "68725316_b922ebc4",
       "range": {
         "startLine": 58,
         "startChar": 85,
@@ -132,6 +210,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b748c05f_7555d346",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Referred to the code.",
+      "parentUuid": "61938bc7_611505be",
+      "range": {
+        "startLine": 73,
+        "startChar": 53,
+        "endLine": 74,
+        "endChar": 12
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "87c59ee3_45e2e533",
@@ -145,6 +247,30 @@
       "writtenOn": "2025-01-17T20:12:37Z",
       "side": 1,
       "message": "This doesn\u0027t have a precise meaning to me - make it more explicit?\n\nOr else, iiuc the gist here is that an external process really can\u0027t make any assumptions that a priority it sets will remain set for any amount of time. Presumably in a situation like that there would be some sort understanding between the app and the external process so they don\u0027t fight each other, but ART can still always come in and change the priority and then restore it to the cached one.\n\nIf that understanding is correct then I\u0027d express it something like this instead: External processes should avoid updating priorities of threads executing managed code (and hence enters ART). If they do, ART can at any moment overwrite their updates and restore the cached priority.",
+      "range": {
+        "startLine": 87,
+        "startChar": 25,
+        "endLine": 87,
+        "endChar": 41
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f8afa78_3c333411",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Largely used your wording.",
+      "parentUuid": "87c59ee3_45e2e533",
       "range": {
         "startLine": 87,
         "startChar": 25,
@@ -172,6 +298,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "04666927_4d212845",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfa1fdaf_8286a04b",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44399c55_45cd0c8b",
@@ -185,6 +329,30 @@
       "writtenOn": "2025-01-17T20:12:37Z",
       "side": 1,
       "message": "Does this mean \u003cdo high priority stuff\u003e can reenter app code? If so, what if the app lowers the priority? We won\u0027t overwrite that value here, but still, a more or less large portion of the high priority stuff will then be executed at a lower priority than we intended, which also isn\u0027t great. right?",
+      "range": {
+        "startLine": 101,
+        "startChar": 47,
+        "endLine": 102,
+        "endChar": 22
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "027f1ae7_97c76ecc",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "I don\u0027t expect that to happen. Clarified. The problem is with runtime code, like GC code, that can block other threads, including high priority ones, indefinitely. Currently, explicitly running the garbage collector from a low-priority thread is a very subtle way to shoot yourself in the foot.",
+      "parentUuid": "44399c55_45cd0c8b",
       "range": {
         "startLine": 101,
         "startChar": 47,
@@ -236,6 +404,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c81c73f_0acb58ce",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19655a6e_e45f894f",
+      "range": {
+        "startLine": 109,
+        "startChar": 68,
+        "endLine": 109,
+        "endChar": 71
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1c0b8754_d80ebca3",
@@ -267,6 +459,24 @@
           ]
         }
       ],
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f2f3ecd_213519e8",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c0b8754_d80ebca3",
       "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -312,6 +522,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d167fdc6_8f206c8e",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa82f148_c39b283c",
+      "range": {
+        "startLine": 131,
+        "startChar": 14,
+        "endLine": 131,
+        "endChar": 22
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ced05b29_19e301fc",
@@ -353,6 +587,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f94f0ed3_f4f37024",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ced05b29_19e301fc",
+      "range": {
+        "startLine": 139,
+        "startChar": 73,
+        "endLine": 139,
+        "endChar": 78
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a8c427ea_7613088d",
@@ -390,6 +648,30 @@
           ]
         }
       ],
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb60fc2f_bea00c09",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-01-31T04:42:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a8c427ea_7613088d",
+      "range": {
+        "startLine": 142,
+        "startChar": 3,
+        "endLine": 142,
+        "endChar": 5
+      },
       "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
