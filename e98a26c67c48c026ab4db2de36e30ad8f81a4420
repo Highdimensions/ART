@@ -16,6 +16,24 @@
       "message": "Not for this CL, but maybe `check_boolean_op` can also be a template argument here and in other methods",
       "revId": "e98a26c67c48c026ab4db2de36e30ad8f81a4420",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3dac7930_48d7daa0",
+        "filename": "runtime/verifier/method_verifier.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1174,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-01-31T16:23:20Z",
+      "side": 1,
+      "message": "With `ALWAYS_INLINE`, this does not matter for the compiled code and it\u0027s essentially a matter of style. I decided to make this one a template argument because I didn\u0027t want to use one-arg-per-line at the call sites (template argument goes neatly on the previous line). And I kept `check_boolean_op` as normal argument because I didn\u0027t want to make addititional changes for `CheckBinaryOp*()` functions using the same argument.",
+      "parentUuid": "b74542b2_bf80f9de",
+      "revId": "e98a26c67c48c026ab4db2de36e30ad8f81a4420",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
