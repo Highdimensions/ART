@@ -105,6 +105,30 @@
       },
       "revId": "b31abce498faeb51b126efea2fc7de40197b1c30",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40c333da_36da3485",
+        "filename": "Android.mk",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-01-31T00:22:37Z",
+      "side": 1,
+      "message": "I removed the heap dump generation in aosp/3456561. b/342330305 tracks work to migrate the rest of ahat/Android.mk to .bp.",
+      "parentUuid": "27edc311_625fe625",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 42
+      },
+      "revId": "b31abce498faeb51b126efea2fc7de40197b1c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
