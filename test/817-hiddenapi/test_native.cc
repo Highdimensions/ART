@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
+#include "jni.h"
+
 #include <android-base/logging.h>
-#include <jni.h>
-#include <nativehelper/ScopedUtfChars.h>
 
-#include <iostream>
-
-#include "libarttest_api.h"
+#include "nativehelper/ScopedUtfChars.h"
+#include "runtime.h"
 
 namespace art {
 
@@ -53,7 +52,7 @@ extern "C" JNIEXPORT jboolean JNICALL Java_TestCase_testAccessInternal(JNIEnv* e
 }
 
 extern "C" JNIEXPORT void JNICALL Java_TestCase_dedupeHiddenApiWarnings(JNIEnv*, jclass) {
-  art::test_817_hiddenapi::SetDedupeHiddenApiWarnings(true);
+  Runtime::Current()->SetDedupeHiddenApiWarnings(true);
 }
 
 }  // namespace art
