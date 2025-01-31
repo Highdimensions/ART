@@ -2581,6 +2581,7 @@ class JNI {
     }
 
     bool is_class_loader_namespace_natively_bridged = false;
+    bool check_method_pointers_with_native_bridge = false;
     {
       // Making sure to release mutator_lock_ before proceeding.
       // FindNativeLoaderNamespaceByClassLoader eventually acquires lock on g_namespaces_mutex
@@ -2588,9 +2589,20 @@ class JNI {
       // for IsSameObject call in libnativeloader's CreateClassLoaderNamespace (which happens
       // under g_namespace_mutex lock)
       ScopedThreadSuspension sts(soa.Self(), ThreadState::kNative);
+      bool namespace_exists_for_classloader = false;
 
-      is_class_loader_namespace_natively_bridged =
-          IsClassLoaderNamespaceNativelyBridged(env, jclass_loader.get());
+      is_class_loader_namespace_natively_bridged = IsClassLoaderNamespaceNativelyBridged(
+          env, jclass_loader.get(), &namespace_exists_for_classloader);
+
+      // It is possible to link a class with native methods from a library loaded by
+      // a different classloader. If current classloader does not have a linker
+      // namespace associated with it IsClassLoaderNamespaceNativelyBridged
+      // fails to detect if native bridge is enabled and will return false.
+      // In this case we need to fallback to checking every pointer with
+      // native bridge.
+      // This flag detects this situation and enables the fallback (see b/393035780
+      // for details).
+      check_method_pointers_with_native_bridge = !namespace_exists_for_classloader;
     }
 
     CHECK_NON_NULL_ARGUMENT_FN_NAME("RegisterNatives", methods, JNI_ERR);
@@ -2701,7 +2713,9 @@ class JNI {
         // TODO: make this a hard register error in the future.
       }
 
-      if (is_class_loader_namespace_natively_bridged) {
+      if (is_class_loader_namespace_natively_bridged ||
+          (check_method_pointers_with_native_bridge &&
+           android::NativeBridgeIsNativeBridgeFunctionPointer(fnPtr))) {
         fnPtr = GenerateNativeBridgeTrampoline(fnPtr, m);
       }
       const void* final_function_ptr = class_linker->RegisterNative(soa.Self(), m, fnPtr);
@@ -2926,13 +2940,17 @@ class JNI {
     return array;
   }
 
-  static bool IsClassLoaderNamespaceNativelyBridged(JNIEnv* env, jobject jclass_loader) {
+  static bool IsClassLoaderNamespaceNativelyBridged(JNIEnv* env,
+                                                    jobject jclass_loader,
+                                                    bool* namespace_exists_for_classloader) {
 #if defined(ART_TARGET_ANDROID)
     android::NativeLoaderNamespace* ns =
         android::FindNativeLoaderNamespaceByClassLoader(env, jclass_loader);
+    *namespace_exists_for_classloader = (ns != nullptr);
     return ns != nullptr && android::IsNamespaceNativeBridged(ns);
 #else
     UNUSED(env, jclass_loader);
+    *namespace_exists_for_classloader = false;
     return false;
 #endif
   }
