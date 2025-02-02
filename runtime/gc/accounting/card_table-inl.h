@@ -51,12 +51,11 @@ static inline bool byte_cas(uint8_t old_value, uint8_t new_value, uint8_t* addre
 #endif
 }
 
-template <bool kClearCard, typename Visitor, typename ModifyVisitor>
+template <bool kClearCard, typename Visitor>
 inline size_t CardTable::Scan(ContinuousSpaceBitmap* bitmap,
                               uint8_t* const scan_begin,
                               uint8_t* const scan_end,
                               const Visitor& visitor,
-                              const ModifyVisitor& mod_visitor,
                               const uint8_t minimum_age) {
   DCHECK_GE(scan_begin, reinterpret_cast<uint8_t*>(bitmap->HeapBegin()));
   // scan_end is the byte after the last byte we scan.
@@ -70,11 +69,9 @@ inline size_t CardTable::Scan(ContinuousSpaceBitmap* bitmap,
 
   // Handle any unaligned cards at the start.
   while (!IsAligned<sizeof(intptr_t)>(card_cur) && card_cur < card_end) {
-    uint8_t cur_val = *card_cur;
-    if (cur_val >= minimum_age) {
+    if (*card_cur >= minimum_age) {
       uintptr_t start = reinterpret_cast<uintptr_t>(AddrFromCard(card_cur));
       bitmap->VisitMarkedRange(start, start + kCardSize, visitor);
-      mod_visitor(card_cur, cur_val);
       ++cards_scanned;
     }
     ++card_cur;
@@ -103,13 +100,11 @@ inline size_t CardTable::Scan(ContinuousSpaceBitmap* bitmap,
       // TODO: Investigate if processing continuous runs of dirty cards with
       // a single bitmap visit is more efficient.
       for (size_t i = 0; i < sizeof(uintptr_t); ++i) {
-        uint8_t cur_val = static_cast<uint8_t>(start_word);
-        if (cur_val >= minimum_age) {
+        if (static_cast<uint8_t>(start_word) >= minimum_age) {
           auto* card = reinterpret_cast<uint8_t*>(word_cur) + i;
           DCHECK(*card == static_cast<uint8_t>(start_word) || *card == kCardDirty)
-              << "card " << static_cast<size_t>(*card) << " intptr_t " << cur_val;
+              << "card " << static_cast<size_t>(*card) << " intptr_t " << (start_word & 0xFF);
           bitmap->VisitMarkedRange(start, start + kCardSize, visitor);
-          mod_visitor(card, cur_val);
           ++cards_scanned;
         }
         start_word >>= 8;
@@ -121,11 +116,9 @@ inline size_t CardTable::Scan(ContinuousSpaceBitmap* bitmap,
     // Handle any unaligned cards at the end.
     card_cur = reinterpret_cast<uint8_t*>(word_end);
     while (card_cur < card_end) {
-      uint8_t cur_val = *card_cur;
-      if (cur_val >= minimum_age) {
+      if (*card_cur >= minimum_age) {
         uintptr_t start = reinterpret_cast<uintptr_t>(AddrFromCard(card_cur));
         bitmap->VisitMarkedRange(start, start + kCardSize, visitor);
-        mod_visitor(card_cur, cur_val);
         ++cards_scanned;
       }
       ++card_cur;
