@@ -165,7 +165,7 @@ TEST_F(HeapTest, GCMetrics) {
   if (fg_collector_type == kCollectorTypeCC || fg_collector_type == kCollectorTypeCMC) {
     // Only the Concurrent Copying and Concurrent Mark-Compact collectors enable
     // GC metrics at the moment.
-    if (heap->GetUseGenerational()) {
+    if (heap->GetUseGenerationalCC()) {
       // Check that full-heap and/or young-generation GC metrics are non-null
       // after trigerring the collection.
       EXPECT_PRED2(
