@@ -326,7 +326,7 @@ bool ShouldUseGenerationalGC() {
   }
   // Generational GC feature doesn't need a reboot. Any process (like dex2oat)
   // can pick a different values than zygote and will be able to execute.
-  return GetBoolProperty("persist.device_config.runtime_native.use_generational_gc", true);
+  return GetBoolProperty("persist.device_config.runtime_native_boot.use_generational_gc", true);
 }
 #else
 bool ShouldUseGenerationalGC() { return true; }
@@ -845,8 +845,8 @@ void MarkCompact::RunPhases() {
   Thread* self = Thread::Current();
   thread_running_gc_ = self;
   Runtime* runtime = Runtime::Current();
-  InitializePhase();
   GetHeap()->PreGcVerification(this);
+  InitializePhase();
   {
     ReaderMutexLock mu(self, *Locks::mutator_lock_);
     MarkingPhase();
@@ -1297,7 +1297,7 @@ void MarkCompact::ReMarkRoots(Runtime* runtime) {
                                                   | kVisitRootFlagStopLoggingNewRoots
                                                   | kVisitRootFlagClearRootLog),
                       runtime);
-
+  ProcessMarkStack();
   if (kVerifyRootsMarked) {
     TimingLogger::ScopedTiming t2("(Paused)VerifyRoots", GetTimings());
     VerifyRootMarkedVisitor visitor(this);
@@ -4366,6 +4366,7 @@ void MarkCompact::MarkRoots(VisitRootFlags flags) {
   MarkRootsCheckpoint(thread_running_gc_, runtime);
   MarkNonThreadRoots(runtime);
   MarkConcurrentRoots(flags, runtime);
+  ProcessMarkStack();
 }
 
 void MarkCompact::PreCleanCards() {
@@ -4530,21 +4531,15 @@ void MarkCompact::ScanObject(mirror::Object* obj) {
       usleep(1000);
       klass = obj->GetClass<kVerifyNone, kWithoutReadBarrier>();
       if (klass != nullptr) {
-        std::ostringstream oss;
-        klass->DumpClass(oss, mirror::Class::kDumpClassFullDetail);
-        LOG(FATAL_WITHOUT_ABORT) << "klass pointer for obj: " << obj
-                                 << " found to be null first. Reloading after " << i
-                                 << " iterations of 1ms sleep fetched klass: " << oss.str();
         break;
       }
     }
-
-    if (UNLIKELY(klass == nullptr)) {
+    if (klass == nullptr) {
       // It must be heap corruption.
       LOG(FATAL_WITHOUT_ABORT) << "klass pointer for obj: " << obj << " found to be null.";
+      heap_->GetVerification()->LogHeapCorruption(
+          obj, mirror::Object::ClassOffset(), klass, /*fatal=*/true);
     }
-    heap_->GetVerification()->LogHeapCorruption(
-        obj, mirror::Object::ClassOffset(), klass, /*fatal=*/true);
   }
   // The size of `obj` is used both here (to update `bytes_scanned_`) and in
   // `UpdateLivenessInfo`. As fetching this value can be expensive, do it once
@@ -4848,7 +4843,7 @@ void MarkCompact::FinishPhase() {
       size_t index = (old_gen_end_ - moving_space_begin_) / kObjectAlignment / BitVector::kWordBits;
       mid_to_old_promo_bit_vec_->CopyTo(&bitmap_begin[index],
                                         mid_to_old_promo_bit_vec_->GetSizeOf());
-      mid_to_old_promo_bit_vec_.release();
+      mid_to_old_promo_bit_vec_.reset(nullptr);
     }
     // Promote all mid-gen objects to old-gen and young-gen objects to mid-gen
     // for next GC cycle.

@@ -660,6 +660,14 @@ class CodeGeneratorARM64 : public CodeGenerator {
   void GenerateFrameEntry() override;
   void GenerateFrameExit() override;
 
+  static void DropFrameAndReturn(Arm64Assembler* assembler,
+                                 vixl::aarch64::MacroAssembler* vixl_assembler,
+                                 int32_t frame_size,
+                                 uint32_t core_spill_size,
+                                 vixl::aarch64::CPURegList preserved_core_registers,
+                                 uint32_t frame_entry_spill_size,
+                                 vixl::aarch64::CPURegList preserved_fp_registers);
+
   vixl::aarch64::CPURegList GetFramePreservedCoreRegisters() const;
   vixl::aarch64::CPURegList GetFramePreservedFPRegisters() const;
 
@@ -789,7 +797,6 @@ class CodeGeneratorARM64 : public CodeGenerator {
   // Generate code to invoke a runtime entry point.
   void InvokeRuntime(QuickEntrypointEnum entrypoint,
                      HInstruction* instruction,
-                     uint32_t dex_pc,
                      SlowPathCode* slow_path = nullptr) override;
 
   // Generate code to invoke a runtime entry point, but do not record
