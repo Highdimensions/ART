@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "007131a4_870986ba",
+        "filename": "tools/jvmti-agents/field-counts/fieldcount.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-03T13:47:59Z",
+      "side": 1,
+      "message": "Please move this else on the previous line, as this triggers a CPPLint violation (you can verify it\u0027s fixed with `m cpplint-art-all`).",
+      "range": {
+        "startLine": 252,
+        "startChar": 2,
+        "endLine": 252,
+        "endChar": 6
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "72404086_ecf4fb7b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/jvmti-agents/field-counts/fieldcount.cc",
+              "range": {
+                "startLine": 251,
+                "startChar": 0,
+                "endLine": 253,
+                "endChar": 0
+              },
+              "replacement": "  } else {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "cf6b43fc3710935186e50edb9da2f4b580f21957",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
