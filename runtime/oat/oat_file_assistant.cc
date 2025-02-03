@@ -819,34 +819,6 @@ bool OatFileAssistant::IsPrimaryBootImageUsable() {
 
 OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
   ScopedTrace trace("GetBestInfo");
-  // TODO(calin): Document the side effects of class loading when
-  // running dalvikvm command line.
-  if (dex_parent_writable_ || UseFdToReadFiles()) {
-    // If the parent of the dex file is writable it means that we can
-    // create the odex file. In this case we unconditionally pick the odex
-    // as the best oat file. This corresponds to the regular use case when
-    // apps gets installed or when they load private, secondary dex file.
-    // For apps on the system partition the odex location will not be
-    // writable and thus the oat location might be more up to date.
-
-    // If the odex is not useable, and we have a useable vdex, return the vdex
-    // instead.
-    VLOG(oat) << ART_FORMAT("GetBestInfo checking odex next to the dex file ({})",
-                            odex_->DisplayFilename());
-    if (!odex_->IsUseable()) {
-      VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex next to the dex file ({})",
-                              vdex_for_odex_->DisplayFilename());
-      if (vdex_for_odex_->IsUseable()) {
-        return *vdex_for_odex_;
-      }
-      VLOG(oat) << ART_FORMAT("GetBestInfo checking dm ({})", dm_for_odex_->DisplayFilename());
-      if (dm_for_odex_->IsUseable()) {
-        return *dm_for_odex_;
-      }
-    }
-    return *odex_;
-  }
-
   // We cannot write to the odex location. This must be a system app.
 
   // If the oat location is useable take it.
