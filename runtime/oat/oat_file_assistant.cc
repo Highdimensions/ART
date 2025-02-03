@@ -204,23 +204,6 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                    << error_msg;
     }
   }
-
-  // Check if the dex directory is writable.
-  // This will be needed in most uses of OatFileAssistant and so it's OK to
-  // compute it eagerly.
-  size_t pos = dex_location_.rfind('/');
-  if (pos == std::string::npos) {
-    LOG(WARNING) << "Failed to determine dex file parent directory: " << dex_location_;
-  } else if (!UseFdToReadFiles()) {
-    // We cannot test for parent access when using file descriptors. That's ok
-    // because in this case we will always pick the odex file anyway.
-    std::string parent = dex_location_.substr(0, pos);
-    if (access(parent.c_str(), W_OK) == 0) {
-      dex_parent_writable_ = true;
-    } else {
-      VLOG(oat) << "Dex parent of " << dex_location_ << " is not writable: " << strerror(errno);
-    }
-  }
 }
 
 // Must be defined outside of the class, to prevent inlining, which causes callers to access hidden
@@ -827,44 +810,10 @@ bool OatFileAssistant::IsPrimaryBootImageUsable() {
 
 OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
   ScopedTrace trace("GetBestInfo");
-  // TODO(calin): Document the side effects of class loading when
-  // running dalvikvm command line.
-  if (dex_parent_writable_ || UseFdToReadFiles()) {
-    // If the parent of the dex file is writable it means that we can
-    // create the odex file. In this case we unconditionally pick the odex
-    // as the best oat file. This corresponds to the regular use case when
-    // apps gets installed or when they load private, secondary dex file.
-    // For apps on the system partition the odex location will not be
-    // writable and thus the oat location might be more up to date.
 
-    // If the odex is not useable, and we have a useable vdex, return the vdex
-    // instead.
-    if (odex_.has_value()) {
-      VLOG(oat) << ART_FORMAT("GetBestInfo checking odex next to the dex file ({})",
-                              odex_->DisplayFilename());
-      if (odex_->IsUseable()) {
-        return *odex_;
-      }
-    }
-    if (vdex_for_odex_.has_value()) {
-      VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex next to the dex file ({})",
-                              vdex_for_odex_->DisplayFilename());
-      if (vdex_for_odex_->IsUseable()) {
-        return *vdex_for_odex_;
-      }
-    }
-    if (dm_for_odex_.has_value()) {
-      VLOG(oat) << ART_FORMAT("GetBestInfo checking dm ({})", dm_for_odex_->DisplayFilename());
-      if (dm_for_odex_->IsUseable()) {
-        return *dm_for_odex_;
-      }
-    }
-    return odex_.has_value() ? *odex_ : empty_info_;
-  }
-
-  // We cannot write to the odex location. This must be a system app.
-
-  // If the oat location is useable take it.
+  // If the oat location is useable, take it. This must be an app on a readonly filesystem
+  // (typically, a system app or an incremental app). This must be prioritized over the odex
+  // location, because the odex location probably has the dexpreopt artifacts.
   if (oat_.has_value()) {
     VLOG(oat) << ART_FORMAT("GetBestInfo checking odex in dalvik-cache ({})",
                             oat_->DisplayFilename());
@@ -873,9 +822,7 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
     }
   }
 
-  // The oat file is not useable but the odex file might be up to date.
-  // This is an indication that we are dealing with an up to date prebuilt
-  // (that doesn't need relocation).
+  // The odex location, which is the most common.
   if (odex_.has_value()) {
     VLOG(oat) << ART_FORMAT("GetBestInfo checking odex next to the dex file ({})",
                             odex_->DisplayFilename());
@@ -884,7 +831,7 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
     }
   }
 
-  // Look for a useable vdex file.
+  // No odex/oat available, look for a useable vdex file.
   if (vdex_for_oat_.has_value()) {
     VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex in dalvik-cache ({})",
                             vdex_for_oat_->DisplayFilename());
@@ -899,6 +846,8 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
       return *vdex_for_odex_;
     }
   }
+
+  // A .dm file may be available, look for it.
   if (dm_for_oat_.has_value()) {
     VLOG(oat) << ART_FORMAT("GetBestInfo checking dm ({})", dm_for_oat_->DisplayFilename());
     if (dm_for_oat_->IsUseable()) {
@@ -913,12 +862,7 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
     }
   }
 
-  // We got into the worst situation here:
-  // - the oat location is not useable
-  // - the prebuild odex location is not up to date
-  // - the vdex-only file is not useable
-  // - and we don't have the original dex file anymore (stripped).
-  // Pick the odex if it exists, or the oat if not.
+  // No usable artifact. Pick the odex if it exists, or the oat if not.
   VLOG(oat) << "GetBestInfo no usable artifacts";
   return (oat_.has_value() && oat_->Status() != kOatCannotOpen)     ? *oat_
          : (odex_.has_value() && odex_->Status() != kOatCannotOpen) ? *odex_
