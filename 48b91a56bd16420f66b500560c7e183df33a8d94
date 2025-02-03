@@ -148,6 +148,30 @@
       },
       "revId": "48b91a56bd16420f66b500560c7e183df33a8d94",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bcece5a_46aa467f",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 8610,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-03T14:11:26Z",
+      "side": 1,
+      "message": "Yes, only the first one of the duplicates should make it to the vtable. And therefore super vtable should not have duplicates.\n\nI think we could even avoid putting the duplicates to the method array as we do for fields.",
+      "parentUuid": "a39d55f2_98606c62",
+      "range": {
+        "startLine": 8606,
+        "startChar": 0,
+        "endLine": 8610,
+        "endChar": 39
+      },
+      "revId": "48b91a56bd16420f66b500560c7e183df33a8d94",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
