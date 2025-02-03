@@ -347,53 +347,6 @@ std::unique_ptr<OatFile> OatFileAssistant::GetBestOatFile() {
   return GetBestInfo().ReleaseFileForUse();
 }
 
-std::string OatFileAssistant::GetStatusDump() {
-  std::ostringstream status;
-  bool oat_file_exists = false;
-  bool odex_file_exists = false;
-  if (oat_.Status() != kOatCannotOpen) {
-    // If we can open the file, Filename should not return null.
-    CHECK(oat_.Filename() != nullptr);
-
-    oat_file_exists = true;
-    status << *oat_.Filename() << "[status=" << oat_.Status() << ", ";
-    const OatFile* file = oat_.GetFile();
-    if (file == nullptr) {
-      // If the file is null even though the status is not kOatCannotOpen, it
-      // means we must have a vdex file with no corresponding oat file. In
-      // this case we cannot determine the compilation filter. Indicate that
-      // we have only the vdex file instead.
-      status << "vdex-only";
-    } else {
-      status << "compilation_filter=" << CompilerFilter::NameOfFilter(file->GetCompilerFilter());
-    }
-  }
-
-  if (odex_.Status() != kOatCannotOpen) {
-    // If we can open the file, Filename should not return null.
-    CHECK(odex_.Filename() != nullptr);
-
-    odex_file_exists = true;
-    if (oat_file_exists) {
-      status << "] ";
-    }
-    status << *odex_.Filename() << "[status=" << odex_.Status() << ", ";
-    const OatFile* file = odex_.GetFile();
-    if (file == nullptr) {
-      status << "vdex-only";
-    } else {
-      status << "compilation_filter=" << CompilerFilter::NameOfFilter(file->GetCompilerFilter());
-    }
-  }
-
-  if (!oat_file_exists && !odex_file_exists) {
-    status << "invalid[";
-  }
-
-  status << "]";
-  return status.str();
-}
-
 std::vector<std::unique_ptr<const DexFile>> OatFileAssistant::LoadDexFiles(
     const OatFile& oat_file, const char* dex_location) {
   std::vector<std::unique_ptr<const DexFile>> dex_files;
