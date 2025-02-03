@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "894bfe6b_3f645c53",
+        "filename": "runtime/jni/jni_internal.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2604,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2025-02-03T17:22:20Z",
+      "side": 1,
+      "message": "There is still a case where the second classloader is initialized with native linker namespace in which case linking agains native methods loaded by the first classloader (native-bridged one) will still fail.\n\nIt is probably in the realm of \"you shound\u0027t be doing this\", but I have thoughs about simply using this check for every method in non-natively bridged classloaders.",
+      "revId": "6ce52240f9f2587551be30be652ecd04babf8bd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
