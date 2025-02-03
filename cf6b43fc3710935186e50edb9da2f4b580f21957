@@ -40,6 +40,30 @@
       ],
       "revId": "cf6b43fc3710935186e50edb9da2f4b580f21957",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7032ba3_248366c1",
+        "filename": "tools/jvmti-agents/field-counts/fieldcount.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-02-03T15:24:47Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "007131a4_870986ba",
+      "range": {
+        "startLine": 252,
+        "startChar": 2,
+        "endLine": 252,
+        "endChar": 6
+      },
+      "revId": "cf6b43fc3710935186e50edb9da2f4b580f21957",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
