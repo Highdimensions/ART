@@ -406,6 +406,9 @@ class OatFileAssistant {
     DexOptNeeded GetDexOptNeeded(CompilerFilter::Filter target_compiler_filter,
                                  const DexOptTrigger dexopt_trigger);
 
+    // Returns true if the file exists.
+    virtual bool FileExists() const;
+
     // Returns the loaded file.
     // Loads the file if needed. Returns null if the file failed to load.
     // The caller shouldn't clean up or free the returned pointer.
@@ -492,6 +495,8 @@ class OatFileAssistant {
           vdex_fd_(vdex_fd),
           oat_fd_(oat_fd) {}
 
+    bool FileExists() const override;
+
    protected:
     std::unique_ptr<OatFile> LoadFile(std::string* error_msg) const override;
 
@@ -514,6 +519,8 @@ class OatFileAssistant {
           use_fd_(use_fd),
           zip_fd_(zip_fd),
           vdex_fd_(vdex_fd) {}
+
+    bool FileExists() const override;
 
    protected:
     std::unique_ptr<OatFile> LoadFile(std::string* error_msg) const override;
@@ -629,8 +636,7 @@ class OatFileAssistant {
   std::optional<OatFileInfoBackedByVdex> vdex_for_oat_ = std::nullopt;
 
   // The vdex-only file next to the apk.
-  std::optional<OatFileInfoBackedByDm> dm_for_odex_ = std::nullopt;
-  std::optional<OatFileInfoBackedByDm> dm_for_oat_ = std::nullopt;
+  std::optional<OatFileInfoBackedByDm> dm_ = std::nullopt;
 
   // File descriptor corresponding to apk, dex file, or zip.
   int zip_fd_;
