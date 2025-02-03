@@ -16,6 +16,223 @@
       "message": "Ready for review.",
       "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6df68d6c_134c6f1f",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-02-03T20:36:02Z",
+      "side": 1,
+      "message": "Some comments say `\"Restricted\" mode`, and some say `Restricted mode`. I\u0027d probably just call it `restricted mode`, but whatever is your preference, let\u0027s make it consistent.",
+      "range": {
+        "startLine": 773,
+        "startChar": 9,
+        "endLine": 773,
+        "endChar": 19
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c3010a1d_85cec8b1",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/optimizing_compiler.cc",
+              "range": {
+                "startLine": 773,
+                "startChar": 0,
+                "endLine": 774,
+                "endChar": 0
+              },
+              "replacement": "  // the restricted mode.\n"
+            },
+            {
+              "path": "compiler/optimizing/optimizing_compiler.cc",
+              "range": {
+                "startLine": 788,
+                "startChar": 0,
+                "endLine": 789,
+                "endChar": 0
+              },
+              "replacement": "// Returns whether an ArtMethod, specified by a name, should be compiled. Used in restricted\n"
+            },
+            {
+              "path": "compiler/optimizing/optimizing_compiler.cc",
+              "range": {
+                "startLine": 791,
+                "startChar": 0,
+                "endLine": 792,
+                "endChar": 0
+              },
+              "replacement": "// In restricted mode, the simulator will execute only those methods which are compiled; thus\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff99e30a_da97e1a6",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 778,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-02-03T20:36:02Z",
+      "side": 1,
+      "message": "Is it `$compile$` as on line 796?",
+      "range": {
+        "startLine": 778,
+        "startChar": 84,
+        "endLine": 778,
+        "endChar": 92
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "17ca2e9d_5e951e06",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/optimizing_compiler.cc",
+              "range": {
+                "startLine": 778,
+                "startChar": 0,
+                "endLine": 779,
+                "endChar": 0
+              },
+              "replacement": "    // Currently we don\u0027t support compiling methods unless they were annotated with $compile$.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a96225c_6a608c88",
+        "filename": "runtime/arch/arm64/entrypoints_init_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-02-03T20:36:02Z",
+      "side": 1,
+      "message": "Is this change related or a separate cleanup?",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 1
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0771a4bc_9a13cb23",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/arch/arm64/entrypoints_init_arm64.cc",
+              "range": {
+                "startLine": 59,
+                "startChar": 0,
+                "endLine": 60,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/arch/arm64/entrypoints_init_arm64.cc",
+              "range": {
+                "startLine": 61,
+                "startChar": 0,
+                "endLine": 62,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5dbb8191_ee5fdac1",
+        "filename": "runtime/art_method.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-02-03T20:36:02Z",
+      "side": 1,
+      "message": "Please fix this ERROR reported by Common Typos: Common typo found: \" i.e:\" -- should it be \" i.e.:\"?\n\nAnalyzer Description: Linter for catching common typos motivated by go/todo-fail and go/lol-codesearch. Shared with google3 common typos library go/common-typos.\nOwner: ayeaye-team@google.com\n\nCommon typo found: \" i.e:\" -- should it be \" i.e.:\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 475,
+        "startChar": 90,
+        "endLine": 475,
+        "endChar": 95
+      },
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7659853_8ab03478",
+        "filename": "runtime/runtime_globals.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-02-03T20:36:02Z",
+      "side": 1,
+      "message": "I think there\u0027s a macro `UNUSED` for this.",
+      "range": {
+        "startLine": 114,
+        "startChar": 2,
+        "endLine": 114,
+        "endChar": 17
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "8dabe7ec_418bf929",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/runtime_globals.h",
+              "range": {
+                "startLine": 114,
+                "startChar": 0,
+                "endLine": 115,
+                "endChar": 0
+              },
+              "replacement": "  UNUSED(offset);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
