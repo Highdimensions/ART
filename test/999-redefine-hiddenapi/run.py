@@ -17,7 +17,3 @@
 
 def run(ctx, args):
   ctx.default_run(args, jvmti=True)
-
-  # Delete hiddenapi's denial errors which go to stderr on host.
-  if args.host:
-    ctx.run(fr"sed -i -E '/ E dalvikvm.* hiddenapi: /d' '{args.stderr_file}'")
