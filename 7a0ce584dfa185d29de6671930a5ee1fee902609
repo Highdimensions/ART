@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4d20cd7_4926218c",
+        "filename": "compiler/optimizing/gvn.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-03T09:08:31Z",
+      "side": 0,
+      "message": "This was just used to do `block-\u003eGetGraph()`, which we can get with `graph_`",
+      "range": {
+        "startLine": 552,
+        "startChar": 4,
+        "endLine": 552,
+        "endChar": 22
+      },
+      "revId": "7a0ce584dfa185d29de6671930a5ee1fee902609",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

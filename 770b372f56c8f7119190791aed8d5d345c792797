@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "727f8c09_674b9694",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-03T09:08:31Z",
+      "side": 1,
+      "message": "Except corner cases like the `Exit` block (which we don\u0027t care anymore about reusing the ValueSets), or infinite loops graphs (which doesn\u0027t seem worth it to optimize as they are not common)",
+      "range": {
+        "startLine": 12,
+        "startChar": 41,
+        "endLine": 13,
+        "endChar": 6
+      },
+      "revId": "770b372f56c8f7119190791aed8d5d345c792797",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b802f560_fc663d58",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-03T09:08:31Z",
+      "side": 1,
+      "message": "as in, a comparison versus the previous implementation which traversed through all the already visited blocks.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 27
+      },
+      "revId": "770b372f56c8f7119190791aed8d5d345c792797",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
