@@ -183,6 +183,8 @@ class OatFileAssistant {
                           int oat_fd,
                           int zip_fd);
 
+  EXPORT ~OatFileAssistant();
+
   // A convenient factory function that accepts ISA, class loader context, and compiler filter in
   // strings. Returns the created instance and ClassLoaderContext on success, or returns nullptr and
   // outputs an error message if it fails to parse the input strings.
@@ -296,6 +298,8 @@ class OatFileAssistant {
   // ASLR. The odex file is treated as if it were read-only.
   //
   // Returns the status of the odex file for the dex location.
+  //
+  // For testing purposes only.
   OatStatus OdexFileStatus();
 
   // When the dex files is compiled on the target device, the oat file is the
@@ -303,6 +307,8 @@ class OatFileAssistant {
   // (possibly-out-of-date) offset for ASLR.
   //
   // Returns the status of the oat file for the dex location.
+  //
+  // For testing purposes only.
   OatStatus OatFileStatus();
 
   OatStatus GetBestStatus() {
@@ -373,18 +379,18 @@ class OatFileAssistant {
  private:
   class OatFileInfo {
    public:
-    // Initially the info is for no file in particular. It will treat the
-    // file as out of date until Reset is called with a real filename to use
-    // the cache for.
-    // Pass true for is_oat_location if the information associated with this
-    // OatFileInfo is for the oat location, as opposed to the odex location.
-    OatFileInfo(OatFileAssistant* oat_file_assistant, bool is_oat_location);
+    // Empty info. Treated as kOatCannotOpen.
+    // Use constructors in subclasses to construct a real instance.
+    explicit OatFileInfo(OatFileAssistant* oat_file_assistant)
+        : oat_file_assistant_(oat_file_assistant), filename_(""), is_oat_location_(false) {}
 
-    bool IsOatLocation();
+    virtual ~OatFileInfo() = default;
 
-    const std::string* Filename();
+    bool IsOatLocation() const;
 
-    const char* DisplayFilename();
+    const std::string* Filename() const;
+
+    const char* DisplayFilename() const;
 
     // Returns true if this oat file can be used for running code. The oat
     // file can be used for running code as long as it is not out of date with
@@ -404,7 +410,7 @@ class OatFileAssistant {
                                  const DexOptTrigger dexopt_trigger);
 
     // Returns true if the file exists.
-    bool FileExists() const;
+    virtual bool FileExists() const;
 
     // Returns the loaded file.
     // Loads the file if needed. Returns null if the file failed to load.
@@ -414,18 +420,6 @@ class OatFileAssistant {
 
     // Returns true if the file is opened executable.
     bool IsExecutable();
-
-    // Clear any cached information about the file that depends on the
-    // contents of the file. This does not reset the provided filename.
-    void Reset();
-
-    // Clear any cached information and switch to getting info about the oat
-    // file with the given filename.
-    void Reset(const std::string& filename,
-               bool use_fd,
-               int zip_fd = -1,
-               int vdex_fd = -1,
-               int oat_fd = -1);
 
     // Release the loaded oat file for runtime use.
     // Returns null if the oat file hasn't been loaded or is out of date.
@@ -442,9 +436,27 @@ class OatFileAssistant {
     // TODO(b/256664509): Clean this up.
     bool CheckDisableCompactDex();
 
-   private:
-    std::unique_ptr<OatFile> LoadFile(std::string* error_msg) const;
+   protected:
+    // Constructs a real instance.
+    // Pass true for is_oat_location if the information associated with this
+    // OatFileInfo is for the oat location, as opposed to the odex location.
+    OatFileInfo(OatFileAssistant* oat_file_assistant,
+                const std::string& filename,
+                bool is_oat_location)
+        : oat_file_assistant_(oat_file_assistant),
+          filename_(filename),
+          is_oat_location_(is_oat_location) {}
 
+    // Loads the file.
+    virtual std::unique_ptr<OatFile> LoadFile(std::string* error_msg) const {
+      *error_msg = "Not implemented";
+      return nullptr;
+    }
+
+    OatFileAssistant* const oat_file_assistant_;
+    const std::string filename_;
+
+   private:
     // Returns true if the oat file is usable but at least one dexopt trigger is matched. This
     // function should only be called if the oat file is usable.
     bool ShouldRecompileForFilter(CompilerFilter::Filter target,
@@ -458,16 +470,7 @@ class OatFileAssistant {
     // the OatFileInfo object.
     std::unique_ptr<OatFile> ReleaseFile();
 
-    OatFileAssistant* oat_file_assistant_;
     const bool is_oat_location_;
-
-    bool filename_provided_ = false;
-    std::string filename_;
-
-    int zip_fd_ = -1;
-    int oat_fd_ = -1;
-    int vdex_fd_ = -1;
-    bool use_fd_ = false;
 
     // A pair of the loaded file and the error message, if `GetFile` has been attempted.
     // `std::nullopt` if `GetFile` has not been attempted.
@@ -481,6 +484,66 @@ class OatFileAssistant {
     // If this flag is set, the file has been released to the user and the
     // OatFileInfo object is in a bad state and should no longer be used.
     bool file_released_ = false;
+  };
+
+  class OatFileInfoBackedByOat : public OatFileInfo {
+   public:
+    OatFileInfoBackedByOat(OatFileAssistant* oat_file_assistant,
+                           const std::string& filename,
+                           bool is_oat_location,
+                           bool use_fd,
+                           int zip_fd = -1,
+                           int vdex_fd = -1,
+                           int oat_fd = -1)
+        : OatFileInfo(oat_file_assistant, filename, is_oat_location),
+          use_fd_(use_fd),
+          zip_fd_(zip_fd),
+          vdex_fd_(vdex_fd),
+          oat_fd_(oat_fd) {}
+
+    bool FileExists() const override;
+
+   protected:
+    std::unique_ptr<OatFile> LoadFile(std::string* error_msg) const override;
+
+   private:
+    const bool use_fd_;
+    const int zip_fd_;
+    const int vdex_fd_;
+    const int oat_fd_;
+  };
+
+  class OatFileInfoBackedByVdex : public OatFileInfo {
+   public:
+    OatFileInfoBackedByVdex(OatFileAssistant* oat_file_assistant,
+                            const std::string& filename,
+                            bool is_oat_location,
+                            bool use_fd,
+                            int zip_fd = -1,
+                            int vdex_fd = -1)
+        : OatFileInfo(oat_file_assistant, filename, is_oat_location),
+          use_fd_(use_fd),
+          zip_fd_(zip_fd),
+          vdex_fd_(vdex_fd) {}
+
+    bool FileExists() const override;
+
+   protected:
+    std::unique_ptr<OatFile> LoadFile(std::string* error_msg) const override;
+
+   private:
+    const bool use_fd_;
+    const int zip_fd_;
+    const int vdex_fd_;
+  };
+
+  class OatFileInfoBackedByDm : public OatFileInfo {
+   public:
+    OatFileInfoBackedByDm(OatFileAssistant* oat_file_assistant, const std::string& filename)
+        : OatFileInfo(oat_file_assistant, filename, /*is_oat_location=*/false) {}
+
+   protected:
+    std::unique_ptr<OatFile> LoadFile(std::string* error_msg) const override;
   };
 
   // Return info for the best oat file.
@@ -564,21 +627,22 @@ class OatFileAssistant {
   std::optional<std::string> cached_required_dex_checksums_error_;
   bool required_dex_checksums_attempted_ = false;
 
+  OatFileInfo empty_info_ = OatFileInfo(this);
+
   // The AOT-compiled file of an app when the APK of the app is in /data.
-  OatFileInfo odex_;
+  std::optional<OatFileInfoBackedByOat> odex_ = std::nullopt;
   // The AOT-compiled file of an app when the APK of the app is on a read-only partition
   // (for example /system).
-  OatFileInfo oat_;
-
+  std::optional<OatFileInfoBackedByOat> oat_ = std::nullopt;
   // The vdex-only file next to `odex_` when `odex_' cannot be used (for example
   // it is out of date).
-  OatFileInfo vdex_for_odex_;
+  std::optional<OatFileInfoBackedByVdex> vdex_for_odex_ = std::nullopt;
   // The vdex-only file next to 'oat_` when `oat_' cannot be used (for example
   // it is out of date).
-  OatFileInfo vdex_for_oat_;
+  std::optional<OatFileInfoBackedByVdex> vdex_for_oat_ = std::nullopt;
 
   // The vdex-only file next to the apk.
-  OatFileInfo dm_;
+  std::optional<OatFileInfoBackedByDm> dm_ = std::nullopt;
 
   // File descriptor corresponding to apk, dex file, or zip.
   int zip_fd_;
