@@ -174,8 +174,6 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                                                                UseFdToReadFiles(),
                                                                DupCloexec(zip_fd),
                                                                DupCloexec(vdex_fd));
-
-    dm_for_odex_ = std::make_unique<OatFileInfoBackedByDm>(this, GetDmFilename(dex_location_));
   } else {
     LOG(WARNING) << "Failed to determine odex file name: " << error_msg;
   }
@@ -196,7 +194,7 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
                                                                 /*is_oat_location=*/true,
                                                                 GetVdexFilename(oat_file_name),
                                                                 /*use_fd=*/false);
-      dm_for_oat_ = std::make_unique<OatFileInfoBackedByDm>(this, GetDmFilename(dex_location_));
+      dm_ = std::make_unique<OatFileInfoBackedByDm>(this, GetDmFilename(dex_location_));
     } else if (kIsTargetAndroid) {
       // No need to warn on host. We are probably in oatdump, where we only need OatFileAssistant to
       // validate BCP checksums.
@@ -297,8 +295,7 @@ int OatFileAssistant::GetDexOptNeeded(CompilerFilter::Filter target_compiler_fil
   }
   DexOptNeeded dexopt_needed = info.GetDexOptNeeded(
       target_compiler_filter, GetDexOptTrigger(target_compiler_filter, profile_changed, downgrade));
-  if (dexopt_needed != kNoDexOptNeeded &&
-      (&info == dm_for_oat_.get() || &info == dm_for_odex_.get())) {
+  if (dexopt_needed != kNoDexOptNeeded && &info == dm_.get()) {
     // The usable vdex file is in the DM file. This information cannot be encoded in the integer.
     // Return kDex2OatFromScratch so that neither the vdex in the "oat" location nor the vdex in the
     // "odex" location will be picked by installd.
@@ -805,40 +802,45 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
   // If the oat location is useable, take it. This must be an app on a readonly filesystem
   // (typically, a system app or an incremental app). This must be prioritized over the odex
   // location, because the odex location probably has the dexpreopt artifacts.
-  VLOG(oat) << ART_FORMAT("GetBestInfo checking odex in dalvik-cache ({})",
-                          oat_->DisplayFilename());
-  if (oat_->IsUseable()) {
-    return *oat_;
+  if (oat_->FileExists()) {
+    VLOG(oat) << ART_FORMAT("GetBestInfo checking odex in dalvik-cache ({})",
+                            oat_->DisplayFilename());
+    if (oat_->IsUseable()) {
+      return *oat_;
+    }
   }
 
   // The odex location, which is the most common.
-  VLOG(oat) << ART_FORMAT("GetBestInfo checking odex next to the dex file ({})",
-                          odex_->DisplayFilename());
-  if (odex_->IsUseable()) {
-    return *odex_;
+  if (odex_->FileExists()) {
+    VLOG(oat) << ART_FORMAT("GetBestInfo checking odex next to the dex file ({})",
+                            odex_->DisplayFilename());
+    if (odex_->IsUseable()) {
+      return *odex_;
+    }
   }
 
   // No odex/oat available, look for a useable vdex file.
-  VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex in dalvik-cache ({})",
-                          vdex_for_oat_->DisplayFilename());
-  if (vdex_for_oat_->IsUseable()) {
-    return *vdex_for_oat_;
+  if (vdex_for_oat_->FileExists()) {
+    VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex in dalvik-cache ({})",
+                            vdex_for_oat_->DisplayFilename());
+    if (vdex_for_oat_->IsUseable()) {
+      return *vdex_for_oat_;
+    }
   }
-  VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex next to the dex file ({})",
-                          vdex_for_odex_->DisplayFilename());
-  if (vdex_for_odex_->IsUseable()) {
-    return *vdex_for_odex_;
+  if (vdex_for_odex_->FileExists()) {
+    VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex next to the dex file ({})",
+                            vdex_for_odex_->DisplayFilename());
+    if (vdex_for_odex_->IsUseable()) {
+      return *vdex_for_odex_;
+    }
   }
 
   // A .dm file may be available, look for it.
-  VLOG(oat) << ART_FORMAT("GetBestInfo checking dm ({})", dm_for_oat_->DisplayFilename());
-  if (dm_for_oat_->IsUseable()) {
-    return *dm_for_oat_;
-  }
-  // TODO(jiakaiz): Is this the same as above?
-  VLOG(oat) << ART_FORMAT("GetBestInfo checking dm ({})", dm_for_odex_->DisplayFilename());
-  if (dm_for_odex_->IsUseable()) {
-    return *dm_for_odex_;
+  if (dm_->FileExists()) {
+    VLOG(oat) << ART_FORMAT("GetBestInfo checking dm ({})", dm_->DisplayFilename());
+    if (dm_->IsUseable()) {
+      return *dm_;
+    }
   }
 
   // No usable artifact. Pick the odex if it exists, or the oat if not.
@@ -930,6 +932,18 @@ OatFileAssistant::DexOptNeeded OatFileAssistant::OatFileInfo::GetDexOptNeeded(
     LOG(WARNING) << error_msg;
     return kNoDexOptNeeded;
   }
+}
+
+bool OatFileAssistant::OatFileInfo::FileExists() {
+  return !filename_.empty() && OS::FileExists(filename_.c_str());
+}
+
+bool OatFileAssistant::OatFileInfoBackedByOat::FileExists() {
+  return use_fd_ || OatFileInfo::FileExists();
+}
+
+bool OatFileAssistant::OatFileInfoBackedByVdex::FileExists() {
+  return use_fd_ || OatFileInfo::FileExists();
 }
 
 const OatFile* OatFileAssistant::OatFileInfo::GetFile() {
@@ -1036,9 +1050,8 @@ std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByDm::LoadFile(std::
   if (dm_file == nullptr) {
     return nullptr;
   }
-  std::unique_ptr<VdexFile> vdex(VdexFile::OpenFromDm(filename_, *dm_file));
+  std::unique_ptr<VdexFile> vdex(VdexFile::OpenFromDm(filename_, *dm_file, error_msg));
   if (vdex == nullptr) {
-    *error_msg = "Unable to open vdex from dm file";
     return nullptr;
   }
   return std::unique_ptr<OatFile>(OatFile::OpenFromVdex(/*zip_fd=*/-1,
@@ -1280,7 +1293,7 @@ bool OatFileAssistant::ZipFileOnlyContainsUncompressedDex() {
 
 OatFileAssistant::Location OatFileAssistant::GetLocation(OatFileInfo& info) {
   if (info.IsUseable()) {
-    if (&info == dm_for_oat_.get() || &info == dm_for_odex_.get()) {
+    if (&info == dm_.get()) {
       return kLocationDm;
     } else if (info.IsOatLocation()) {
       return kLocationOat;
