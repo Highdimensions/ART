@@ -195,6 +195,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac58574d_64bb2c30",
+        "filename": "runtime/arch/arm64/entrypoints_init_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-02-04T20:30:30Z",
+      "side": 1,
+      "message": "Fine by me to just mention in commit message.",
+      "parentUuid": "2c6b8a45_a0c4e604",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 1
+      },
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5dbb8191_ee5fdac1",
