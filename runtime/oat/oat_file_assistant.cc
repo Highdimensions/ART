@@ -21,6 +21,8 @@
 #include <memory>
 #include <optional>
 #include <sstream>
+#include <string_view>
+#include <utility>
 #include <vector>
 
 #include "android-base/file.h"
@@ -49,6 +51,7 @@
 #include "gc/space/image_space.h"
 #include "image.h"
 #include "oat.h"
+#include "oat/oat_file.h"
 #include "oat_file_assistant_context.h"
 #include "runtime.h"
 #include "scoped_thread_state_change-inl.h"
@@ -433,55 +436,51 @@ bool OatFileAssistant::DexChecksumUpToDate(const OatFile& file, std::string* err
   return true;
 }
 
-OatFileAssistant::OatStatus OatFileAssistant::GivenOatFileStatus(const OatFile& file) {
+OatFileAssistant::OatStatus OatFileAssistant::GivenOatFileStatus(const OatFile& file,
+                                                                 /*out*/ std::string* error_msg) {
   // Verify the ART_USE_READ_BARRIER state.
   // TODO: Don't fully reject files due to read barrier state. If they contain
   // compiled code and are otherwise okay, we should return something like
   // kOatRelocationOutOfDate. If they don't contain compiled code, the read
   // barrier state doesn't matter.
   if (file.GetOatHeader().IsConcurrentCopying() != gUseReadBarrier) {
+    *error_msg = "Read barrier state mismatch";
     return kOatCannotOpen;
   }
 
   // Verify the dex checksum.
-  std::string error_msg;
-  if (!DexChecksumUpToDate(file, &error_msg)) {
-    LOG(ERROR) << error_msg;
+  if (!DexChecksumUpToDate(file, error_msg)) {
+    LOG(ERROR) << *error_msg;
     return kOatDexOutOfDate;
   }
 
   CompilerFilter::Filter current_compiler_filter = file.GetCompilerFilter();
 
   // Verify the image checksum
-  if (file.IsBackedByVdexOnly()) {
-    VLOG(oat) << "Image checksum test skipped for vdex file " << file.GetLocation();
-  } else if (CompilerFilter::DependsOnImageChecksum(current_compiler_filter)) {
-    if (!ValidateBootClassPathChecksums(file)) {
-      VLOG(oat) << "Oat image checksum does not match image checksum.";
+  if (!file.IsBackedByVdexOnly() &&
+      CompilerFilter::DependsOnImageChecksum(current_compiler_filter)) {
+    if (!ValidateBootClassPathChecksums(file, error_msg)) {
       return kOatBootImageOutOfDate;
     }
     if (!gc::space::ImageSpace::ValidateApexVersions(
             file.GetOatHeader(),
             GetOatFileAssistantContext()->GetApexVersions(),
             file.GetLocation(),
-            &error_msg)) {
-      VLOG(oat) << error_msg;
+            error_msg)) {
       return kOatBootImageOutOfDate;
     }
-  } else {
-    VLOG(oat) << "Image checksum test skipped for compiler filter " << current_compiler_filter;
   }
 
   // The constraint is only enforced if the zip has uncompressed dex code.
   if (only_load_trusted_executable_ &&
       !LocationIsTrusted(file.GetLocation(), !GetRuntimeOptions().deny_art_apex_data_files) &&
       file.ContainsDexCode() && ZipFileOnlyContainsUncompressedDex()) {
-    LOG(ERROR) << "Not loading " << dex_location_
-               << ": oat file has dex code, but APK has uncompressed dex code";
+    *error_msg = "Oat file has dex code, but APK has uncompressed dex code";
+    LOG(ERROR) << "Not loading " << dex_location_ << ": " << *error_msg;
     return kOatDexOutOfDate;
   }
 
-  if (!ClassLoaderContextIsOkay(file)) {
+  if (!ClassLoaderContextIsOkay(file, error_msg)) {
     return kOatContextOutOfDate;
   }
 
@@ -775,29 +774,23 @@ bool OatFileAssistant::ValidateBootClassPathChecksums(OatFileAssistantContext* o
   return true;
 }
 
-bool OatFileAssistant::ValidateBootClassPathChecksums(const OatFile& oat_file) {
+bool OatFileAssistant::ValidateBootClassPathChecksums(const OatFile& oat_file,
+                                                      /*out*/ std::string* error_msg) {
   // Get the checksums and the BCP from the oat file.
   const char* oat_boot_class_path_checksums =
       oat_file.GetOatHeader().GetStoreValueByKey(OatHeader::kBootClassPathChecksumsKey);
   const char* oat_boot_class_path =
       oat_file.GetOatHeader().GetStoreValueByKey(OatHeader::kBootClassPathKey);
   if (oat_boot_class_path_checksums == nullptr || oat_boot_class_path == nullptr) {
+    *error_msg = "Missing boot image information from oat file";
     return false;
   }
 
-  std::string error_msg;
-  bool result = ValidateBootClassPathChecksums(GetOatFileAssistantContext(),
-                                               isa_,
-                                               oat_boot_class_path_checksums,
-                                               oat_boot_class_path,
-                                               &error_msg);
-  if (!result) {
-    VLOG(oat) << "Failed to verify checksums of oat file " << oat_file.GetLocation()
-              << " error: " << error_msg;
-    return false;
-  }
-
-  return true;
+  return ValidateBootClassPathChecksums(GetOatFileAssistantContext(),
+                                        isa_,
+                                        oat_boot_class_path_checksums,
+                                        oat_boot_class_path,
+                                        error_msg);
 }
 
 bool OatFileAssistant::IsPrimaryBootImageUsable() {
@@ -807,12 +800,31 @@ bool OatFileAssistant::IsPrimaryBootImageUsable() {
 OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
   ScopedTrace trace("GetBestInfo");
 
+  auto log_status = [&](std::string_view location, OatFileInfo* info) {
+    if (!VLOG_IS_ON(oat)) {
+      return;
+    }
+    std::string error_msg;
+    OatStatus status = info->Status(&error_msg);
+    std::string message = ART_FORMAT(
+        "GetBestInfo: {} ({}) is {}", location, info->DisplayFilename(), fmt::streamed(status));
+    const OatFile* file = info->GetFile();
+    if (file != nullptr) {
+      message += ART_FORMAT(" with filter '{}' executable '{}'",
+                            fmt::streamed(file->GetCompilerFilter()),
+                            file->IsExecutable());
+    }
+    if (!info->IsUseable()) {
+      message += ": " + error_msg;
+    }
+    VLOG(oat) << message;
+  };
+
   // If the oat location is useable, take it. This must be an app on a readonly filesystem
   // (typically, a system app or an incremental app). This must be prioritized over the odex
   // location, because the odex location probably has the dexpreopt artifacts.
   if (oat_.has_value() && oat_->FileExists()) {
-    VLOG(oat) << ART_FORMAT("GetBestInfo checking odex in dalvik-cache ({})",
-                            oat_->DisplayFilename());
+    log_status("odex in dalvik-cache", &oat_.value());
     if (oat_->IsUseable()) {
       return *oat_;
     }
@@ -820,8 +832,7 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
 
   // The odex location, which is the most common.
   if (odex_.has_value() && odex_->FileExists()) {
-    VLOG(oat) << ART_FORMAT("GetBestInfo checking odex next to the dex file ({})",
-                            odex_->DisplayFilename());
+    log_status("odex next to the dex file", &odex_.value());
     if (odex_->IsUseable()) {
       return *odex_;
     }
@@ -829,15 +840,13 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
 
   // No odex/oat available, look for a useable vdex file.
   if (vdex_for_oat_.has_value() && vdex_for_oat_->FileExists()) {
-    VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex in dalvik-cache ({})",
-                            vdex_for_oat_->DisplayFilename());
+    log_status("vdex in dalvik-cache", &vdex_for_oat_.value());
     if (vdex_for_oat_->IsUseable()) {
       return *vdex_for_oat_;
     }
   }
   if (vdex_for_odex_.has_value() && vdex_for_odex_->FileExists()) {
-    VLOG(oat) << ART_FORMAT("GetBestInfo checking vdex next to the dex file ({})",
-                            vdex_for_odex_->DisplayFilename());
+    log_status("vdex next to the dex file", &vdex_for_odex_.value());
     if (vdex_for_odex_->IsUseable()) {
       return *vdex_for_odex_;
     }
@@ -845,14 +854,14 @@ OatFileAssistant::OatFileInfo& OatFileAssistant::GetBestInfo() {
 
   // A .dm file may be available, look for it.
   if (dm_.has_value() && dm_->FileExists()) {
-    VLOG(oat) << ART_FORMAT("GetBestInfo checking dm ({})", dm_->DisplayFilename());
+    log_status("dm", &dm_.value());
     if (dm_->IsUseable()) {
       return *dm_;
     }
   }
 
   // No usable artifact. Pick the odex if it exists, or the oat if not.
-  VLOG(oat) << "GetBestInfo no usable artifacts";
+  VLOG(oat) << ART_FORMAT("GetBestInfo: {} has no usable artifacts", dex_location_);
   return (oat_.has_value() && oat_->Status() != kOatCannotOpen)     ? *oat_
          : (odex_.has_value() && odex_->Status() != kOatCannotOpen) ? *odex_
                                                                     : empty_info_;
@@ -895,20 +904,22 @@ bool OatFileAssistant::OatFileInfo::IsUseable() {
   }
 }
 
-OatFileAssistant::OatStatus OatFileAssistant::OatFileInfo::Status() {
+OatFileAssistant::OatStatus OatFileAssistant::OatFileInfo::Status(/*out*/ std::string* error_msg) {
   ScopedTrace trace("Status");
-  if (!status_attempted_) {
-    status_attempted_ = true;
-    const OatFile* file = GetFile();
+  if (!status_.has_value()) {
+    std::string temp_error_msg;
+    const OatFile* file = GetFile(&temp_error_msg);
     if (file == nullptr) {
-      status_ = kOatCannotOpen;
+      status_ = std::make_pair(kOatCannotOpen, std::move(temp_error_msg));
     } else {
-      status_ = oat_file_assistant_->GivenOatFileStatus(*file);
-      VLOG(oat) << file->GetLocation() << " is " << status_ << " with filter "
-                << file->GetCompilerFilter();
+      status_ = std::make_pair(oat_file_assistant_->GivenOatFileStatus(*file, &temp_error_msg),
+                               std::move(temp_error_msg));
     }
   }
-  return status_;
+  if (error_msg != nullptr) {
+    *error_msg = status_->second;
+  }
+  return status_->first;
 }
 
 OatFileAssistant::DexOptNeeded OatFileAssistant::OatFileInfo::GetDexOptNeeded(
@@ -956,29 +967,24 @@ bool OatFileAssistant::OatFileInfoBackedByVdex::FileExists() const {
   return use_fd_ || OatFileInfo::FileExists();
 }
 
-const OatFile* OatFileAssistant::OatFileInfo::GetFile() {
+const OatFile* OatFileAssistant::OatFileInfo::GetFile(/*out*/ std::string* error_msg) {
   CHECK(!file_released_) << "GetFile called after oat file released.";
-  if (load_attempted_) {
-    return file_.get();
-  }
-  load_attempted_ = true;
 
-  if (LocationIsOnArtApexData(filename_) &&
-      oat_file_assistant_->GetRuntimeOptions().deny_art_apex_data_files) {
-    LOG(WARNING) << "OatFileAssistant rejected file " << filename_
-                 << ": ART apexdata is untrusted.";
-    return nullptr;
-  }
-
-  std::string error_msg;
-  file_ = LoadFile(&error_msg);
-  if (file_ == nullptr) {
-    VLOG(oat) << "OatFileAssistant test for existing oat file " << filename_ << ": " << error_msg;
-    return nullptr;
+  if (!file_.has_value()) {
+    if (LocationIsOnArtApexData(filename_) &&
+        oat_file_assistant_->GetRuntimeOptions().deny_art_apex_data_files) {
+      file_ = std::make_pair(nullptr, "ART apexdata is untrusted");
+      LOG(WARNING) << "OatFileAssistant rejected file " << filename_ << ": " << file_->second;
+    } else {
+      std::string temp_error_msg;
+      file_ = std::make_pair(LoadFile(&temp_error_msg), std::move(temp_error_msg));
+    }
   }
 
-  VLOG(oat) << "Successfully loaded " << filename_ << " with executable: " << file_->IsExecutable();
-  return file_.get();
+  if (error_msg != nullptr) {
+    *error_msg = file_->second;
+  }
+  return file_->first.get();
 }
 
 std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByOat::LoadFile(
@@ -987,7 +993,6 @@ std::unique_ptr<OatFile> OatFileAssistant::OatFileInfoBackedByOat::LoadFile(
   if (executable && oat_file_assistant_->only_load_trusted_executable_) {
     executable = LocationIsTrusted(filename_, /*trust_art_apex_data_files=*/true);
   }
-  VLOG(oat) << "Loading " << filename_ << " with executable: " << executable;
 
   if (use_fd_) {
     if (oat_fd_ < 0 || vdex_fd_ < 0) {
@@ -1131,7 +1136,8 @@ bool OatFileAssistant::OatFileInfo::ShouldRecompileForFilter(CompilerFilter::Fil
   return false;
 }
 
-bool OatFileAssistant::ClassLoaderContextIsOkay(const OatFile& oat_file) const {
+bool OatFileAssistant::ClassLoaderContextIsOkay(const OatFile& oat_file,
+                                                /*out*/ std::string* error_msg) const {
   if (context_ == nullptr) {
     // The caller requests to skip the check.
     return true;
@@ -1153,9 +1159,10 @@ bool OatFileAssistant::ClassLoaderContextIsOkay(const OatFile& oat_file) const {
                                               /*verify_names=*/true,
                                               /*verify_checksums=*/true);
   if (matches == ClassLoaderContext::VerificationResult::kMismatch) {
-    VLOG(oat) << "ClassLoaderContext check failed. Context was " << oat_file.GetClassLoaderContext()
-              << ". The expected context is "
-              << context_->EncodeContextForOatFile(android::base::Dirname(dex_location_));
+    *error_msg =
+        ART_FORMAT("ClassLoaderContext check failed. Context was {}. The expected context is {}",
+                   oat_file.GetClassLoaderContext(),
+                   context_->EncodeContextForOatFile(android::base::Dirname(dex_location_)));
     return false;
   }
   return true;
@@ -1168,7 +1175,7 @@ bool OatFileAssistant::OatFileInfo::IsExecutable() {
 
 std::unique_ptr<OatFile> OatFileAssistant::OatFileInfo::ReleaseFile() {
   file_released_ = true;
-  return std::move(file_);
+  return std::move(file_->first);
 }
 
 std::unique_ptr<OatFile> OatFileAssistant::OatFileInfo::ReleaseFileForUse() {
