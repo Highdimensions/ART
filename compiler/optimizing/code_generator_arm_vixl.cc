@@ -2420,7 +2420,7 @@ void CodeGeneratorARMVIXL::GenerateFrameEntry() {
                            vixl32::kMaxInstructionSizeInBytes,
                            CodeBufferCheckScope::kMaximumSize);
     __ ldr(temp, MemOperand(temp));
-    RecordPcInfoForFrameOrBlockEntry();
+    RecordPcInfo(nullptr, 0);
   }
 
   uint32_t frame_size = GetFrameSize();
@@ -2787,7 +2787,7 @@ void CodeGeneratorARMVIXL::AddLocationAsTemp(Location location, LocationSummary*
 
 void CodeGeneratorARMVIXL::InvokeRuntime(QuickEntrypointEnum entrypoint,
                                          HInstruction* instruction,
-                                         [[maybe_unused]] uint32_t dex_pc,
+                                         uint32_t dex_pc,
                                          SlowPathCode* slow_path) {
   ValidateInvokeRuntime(entrypoint, instruction, slow_path);
 
@@ -2804,7 +2804,7 @@ void CodeGeneratorARMVIXL::InvokeRuntime(QuickEntrypointEnum entrypoint,
                            CodeBufferCheckScope::kExactSize);
     __ blx(lr);
     if (EntrypointRequiresStackMap(entrypoint)) {
-      RecordPcInfo(instruction, slow_path);
+      RecordPcInfo(instruction, dex_pc, slow_path);
     }
   } else {
     // Ensure the pc position is recorded immediately after the `bl` instruction.
@@ -2813,7 +2813,7 @@ void CodeGeneratorARMVIXL::InvokeRuntime(QuickEntrypointEnum entrypoint,
                            CodeBufferCheckScope::kExactSize);
     EmitEntrypointThunkCall(entrypoint_offset);
     if (EntrypointRequiresStackMap(entrypoint)) {
-      RecordPcInfo(instruction, slow_path);
+      RecordPcInfo(instruction, dex_pc, slow_path);
     }
   }
 }
@@ -3803,7 +3803,7 @@ void InstructionCodeGeneratorARMVIXL::VisitInvokeInterface(HInvokeInterface* inv
                            CodeBufferCheckScope::kExactSize);
     // LR();
     __ blx(lr);
-    codegen_->RecordPcInfo(invoke);
+    codegen_->RecordPcInfo(invoke, invoke->GetDexPc());
     DCHECK(!codegen_->IsLeafMethod());
   }
 
@@ -6530,7 +6530,7 @@ void CodeGeneratorARMVIXL::GenerateImplicitNullCheck(HNullCheck* instruction) {
                          vixl32::kMaxInstructionSizeInBytes,
                          CodeBufferCheckScope::kMaximumSize);
   __ ldr(temps.Acquire(), MemOperand(InputRegisterAt(instruction, 0)));
-  RecordPcInfo(instruction);
+  RecordPcInfo(instruction, instruction->GetDexPc());
 }
 
 void CodeGeneratorARMVIXL::GenerateExplicitNullCheck(HNullCheck* instruction) {
@@ -9631,7 +9631,7 @@ void CodeGeneratorARMVIXL::GenerateStaticOrDirectCall(
                              CodeBufferCheckScope::kExactSize);
       // LR()
       __ blx(lr);
-      RecordPcInfo(invoke, slow_path);
+      RecordPcInfo(invoke, invoke->GetDexPc(), slow_path);
     }
   };
   switch (invoke->GetCodePtrLocation()) {
@@ -9643,7 +9643,7 @@ void CodeGeneratorARMVIXL::GenerateStaticOrDirectCall(
                                vixl32::k32BitT32InstructionSizeInBytes,
                                CodeBufferCheckScope::kMaximumSize);
         __ bl(GetFrameEntryLabel());
-        RecordPcInfo(invoke, slow_path);
+        RecordPcInfo(invoke, invoke->GetDexPc(), slow_path);
       }
       break;
     case CodePtrLocation::kCallCriticalNative: {
@@ -9733,7 +9733,7 @@ void CodeGeneratorARMVIXL::GenerateVirtualCall(
                            CodeBufferCheckScope::kExactSize);
     // LR();
     __ blx(lr);
-    RecordPcInfo(invoke, slow_path);
+    RecordPcInfo(invoke, invoke->GetDexPc(), slow_path);
   }
 }
 
