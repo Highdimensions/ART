@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a764078_e1c76192",
+        "filename": "compiler/optimizing/load_store_analysis.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-04T15:21:59Z",
+      "side": 1,
+      "message": "Unnecessary, passing null to `delete` is a no-op. Without this, we can revert to `STLDeleteContainerPointers()`.",
+      "range": {
+        "startLine": 204,
+        "startChar": 6,
+        "endLine": 204,
+        "endChar": 26
+      },
+      "revId": "b69c100ff29594e71b509da313af2d42b75974b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a5e16f2_9a1cd6b4",
+        "filename": "compiler/optimizing/load_store_analysis.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-04T15:21:59Z",
+      "side": 1,
+      "message": "Nit: Increment on its own line.",
+      "range": {
+        "startLine": 432,
+        "startChar": 61,
+        "endLine": 432,
+        "endChar": 81
+      },
+      "revId": "b69c100ff29594e71b509da313af2d42b75974b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
