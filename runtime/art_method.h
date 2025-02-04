@@ -906,12 +906,13 @@ class EXPORT ArtMethod final {
   }
 
   bool HasCodeItem() REQUIRES_SHARED(Locks::mutator_lock_) {
-    uint32_t access_flags = GetAccessFlags();
+    return NeedsCodeItem(GetAccessFlags()) && !IsRuntimeMethod() && !IsProxyMethod();
+  }
+
+  static bool NeedsCodeItem(uint32_t access_flags) {
     return !IsNative(access_flags) &&
            !IsAbstract(access_flags) &&
-           !IsDefaultConflicting(access_flags) &&
-           !IsRuntimeMethod() &&
-           !IsProxyMethod();
+           !IsDefaultConflicting(access_flags);
   }
 
   void SetCodeItem(const dex::CodeItem* code_item)
@@ -1038,7 +1039,11 @@ class EXPORT ArtMethod final {
 
   ALWAYS_INLINE uint32_t GetImtIndex() REQUIRES_SHARED(Locks::mutator_lock_);
 
-  void CalculateAndSetImtIndex() REQUIRES_SHARED(Locks::mutator_lock_);
+  void SetImtIndexOrHotnessCount(uint16_t imt_index_or_hotness_count)
+      REQUIRES_SHARED(Locks::mutator_lock_) {
+    // The two fields of the union have the same type. It does not matter which one we set.
+    hotness_count_ = imt_index_or_hotness_count;
+  }
 
   static constexpr MemberOffset HotnessCountOffset() {
     return MemberOffset(OFFSETOF_MEMBER(ArtMethod, hotness_count_));
