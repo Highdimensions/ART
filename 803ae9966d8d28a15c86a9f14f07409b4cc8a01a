@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11571d8e_d7f1856e",
+        "filename": "test/generate-boot-image/generate-boot-image.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-04T14:48:18Z",
+      "side": 1,
+      "message": "I think adding a prefix to the dex locations is kind of against the point of `GetLibCoreDexLocations`, because `GetLibCoreDexLocations` is supposed to return where the dex files would be located on an Android device at runtime. I think this change will break our usages of generate-boot-image on Golem and the local Compiler Explorer.\n\nIf you need to generate a boot image with a special dex location prefix for the simulator, could you please add a flag (suggested names: `--target-android-root`, `--device-android-root`, `--runtime-android-root`, `--android-root-for-location`), and call `GetLibCoreDexFileNames` with the value of the flag to build the dex locations?",
+      "range": {
+        "startLine": 136,
+        "startChar": 66,
+        "endLine": 136,
+        "endChar": 86
+      },
+      "revId": "803ae9966d8d28a15c86a9f14f07409b4cc8a01a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
