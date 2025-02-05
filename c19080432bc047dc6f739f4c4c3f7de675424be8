@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1b57098_7e4f5543",
+        "filename": "libnativebridge/tests/NativeBridge8IdentifyTrampolines_lib.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2025-02-05T03:22:25Z",
+      "side": 1,
+      "message": "nit: for symmetry\n\n```suggestion\nvoid SetIsFunctionPointerExecutableWithNativeBridgeCalledFor(const void* ptr) {\n```",
+      "revId": "c19080432bc047dc6f739f4c4c3f7de675424be8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
