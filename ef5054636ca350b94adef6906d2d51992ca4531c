@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cf2f664_a9177ef9",
+        "filename": "runtime/jit/debugger_interface.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-05T18:48:57Z",
+      "side": 0,
+      "message": "For peace of mind, what about adding `CHECK` assertions for this in code paths that would silently fail, until this predicate is removed completely (https://r.android.com/3119943)?",
+      "range": {
+        "startLine": 431,
+        "startChar": 6,
+        "endLine": 431,
+        "endChar": 33
+      },
+      "revId": "ef5054636ca350b94adef6906d2d51992ca4531c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
