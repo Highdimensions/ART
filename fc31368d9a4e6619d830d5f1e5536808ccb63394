@@ -70,6 +70,30 @@
       },
       "revId": "fc31368d9a4e6619d830d5f1e5536808ccb63394",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04cd94e3_5c7ef592",
+        "filename": "libnativebridge/native_bridge.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2025-02-05T16:56:28Z",
+      "side": 1,
+      "message": "changed to ALOGW (could be useful to have it in the logs as a warning.)",
+      "parentUuid": "0c83aeb5_109262b3",
+      "range": {
+        "startLine": 742,
+        "startChar": 6,
+        "endLine": 742,
+        "endChar": 11
+      },
+      "revId": "fc31368d9a4e6619d830d5f1e5536808ccb63394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
