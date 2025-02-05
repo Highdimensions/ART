@@ -48,12 +48,8 @@ class ElfFileImpl {
                            bool writable,
                            bool program_header_only,
                            bool low_4gb,
-                           /*out*/std::string* error_msg);
-  static ElfFileImpl* Open(File* file,
-                           int mmap_prot,
-                           int mmap_flags,
-                           bool low_4gb,
-                           /*out*/std::string* error_msg);
+                           /*out*/ std::string* error_msg);
+
   ~ElfFileImpl();
 
   const std::string& GetFilePath() const {
@@ -126,8 +122,6 @@ class ElfFileImpl {
             bool low_4gb,
             /*inout*/MemMap* reservation,
             /*out*/std::string* error_msg);
-
-  bool Strip(File* file, std::string* error_msg);
 
  private:
   ElfFileImpl(File* file, bool writable, bool program_header_only);
