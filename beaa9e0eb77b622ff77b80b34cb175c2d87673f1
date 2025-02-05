@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0e41160_fe1703a7",
+        "filename": "runtime/imtable-inl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-05T15:01:54Z",
+      "side": 1,
+      "message": "`DCHECK(method-\u003eIsAbstract());`?",
+      "revId": "beaa9e0eb77b622ff77b80b34cb175c2d87673f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
