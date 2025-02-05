@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "181aa4ac_6d72240e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-05T17:01:23Z",
+      "side": 1,
+      "message": "Nit: Suggest \"http://\" prefix to make the link clickable. Also please break long line.",
+      "range": {
+        "startLine": 9,
+        "startChar": 14,
+        "endLine": 9,
+        "endChar": 35
+      },
+      "revId": "b44762e2e520cc78a5c5d517d51767c4d97b0414",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
