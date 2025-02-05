@@ -18,18 +18,18 @@
 #define ART_RUNTIME_OAT_ELF_FILE_IMPL_H_
 
 #include <map>
-#include <memory>
 #include <type_traits>
 #include <vector>
 
 #include "base/macros.h"
 #include "base/mem_map.h"
 #include "elf/elf_utils.h"
+#include "elf_file.h"
 
 namespace art HIDDEN {
 
 template <typename ElfTypes>
-class ElfFileImpl {
+class ElfFileImpl : public ElfFile {
  public:
   using Elf_Addr = typename ElfTypes::Addr;
   using Elf_Off = typename ElfTypes::Off;
@@ -50,25 +50,15 @@ class ElfFileImpl {
 
   ~ElfFileImpl();
 
-  const std::string& GetFilePath() const {
-    return file_path_;
-  }
+  const std::string& GetFilePath() const override { return file_path_; }
 
-  uint8_t* GetBaseAddress() const {
-    return base_address_;
-  }
+  uint8_t* GetBaseAddress() const override { return base_address_; }
 
-  uint8_t* Begin() const {
-    return map_.Begin();
-  }
+  uint8_t* Begin() const override { return map_.Begin(); }
 
-  uint8_t* End() const {
-    return map_.End();
-  }
+  uint8_t* End() const override { return map_.End(); }
 
-  size_t Size() const {
-    return map_.Size();
-  }
+  size_t Size() const override { return map_.Size(); }
 
   Elf_Ehdr& GetHeader() const;
 
@@ -79,7 +69,7 @@ class ElfFileImpl {
   Elf_Shdr* FindSectionByType(Elf_Word type) const;
 
   // Find .dynsym using .hash for more efficient lookup than FindSymbolAddress.
-  const uint8_t* FindDynamicSymbolAddress(const std::string& symbol_name) const;
+  const uint8_t* FindDynamicSymbolAddress(const std::string& symbol_name) const override;
 
   static bool IsSymbolSectionType(Elf_Word section_type);
   Elf_Word GetSymbolNum(Elf_Shdr&) const;
@@ -95,21 +85,23 @@ class ElfFileImpl {
   Elf_Rela& GetRela(Elf_Shdr&, Elf_Word) const;
 
   // Retrieves the expected size when the file is loaded at runtime. Returns true if successful.
-  bool GetLoadedSize(size_t* size, std::string* error_msg) const;
+  bool GetLoadedSize(size_t* size, std::string* error_msg) const override;
 
   // Get the alignment of the first loadable program segment. Return 0 if no loadable segment found.
-  size_t GetElfSegmentAlignmentFromFile() const;
+  size_t GetElfSegmentAlignmentFromFile() const override;
 
   // Load segments into memory based on PT_LOAD program headers.
   // executable is true at run time, false at compile time.
   bool Load(File* file,
             bool executable,
             bool low_4gb,
-            /*inout*/MemMap* reservation,
-            /*out*/std::string* error_msg);
+            /*inout*/ MemMap* reservation,
+            /*out*/ std::string* error_msg) override;
+
+  bool Is64Bit() const override { return std::is_same_v<ElfTypes, ElfTypes64>; }
 
  private:
-  ElfFileImpl(File* file);
+  explicit ElfFileImpl(File* file);
 
   bool GetLoadedAddressRange(/*out*/uint8_t** vaddr_begin,
                              /*out*/size_t* vaddr_size,
