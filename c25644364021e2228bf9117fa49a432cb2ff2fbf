@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "05cec746_e849302d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fd3a51d_0a8cc3f6",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 35
+      },
+      "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f287a21f_eb798a4e",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 5
@@ -77,6 +101,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "301d528f_bc3da0e5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 1,
+      "message": "Solved most of them - for the `vogar` one is just a matter of switching the testing APEX for the debug APEX?",
+      "parentUuid": "51369074_06b7e49f",
+      "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2703c06c_46b0648e",
         "filename": "build/apex/art_apex_test.py",
         "patchSetId": 5
@@ -88,6 +130,30 @@
       "writtenOn": "2024-10-15T19:08:21Z",
       "side": 1,
       "message": "This should be removed too.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 26
+      },
+      "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0cd702d7_78f9717e",
+        "filename": "build/apex/art_apex_test.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2703c06c_46b0648e",
       "range": {
         "startLine": 34,
         "startChar": 0,
@@ -115,6 +181,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e5eda15_394289f0",
+        "filename": "build/apex/art_apex_test.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c96dac5_d284ecaa",
+      "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5a29c634_c8635b87",
@@ -128,6 +212,30 @@
       "writtenOn": "2024-10-15T19:08:21Z",
       "side": 1,
       "message": "To be removed.",
+      "range": {
+        "startLine": 6,
+        "startChar": 15,
+        "endLine": 6,
+        "endChar": 31
+      },
+      "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dde22db8_15dd0f14",
+        "filename": "build/apex/manifest-art-debug.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a29c634_c8635b87",
       "range": {
         "startLine": 6,
         "startChar": 15,
@@ -161,6 +269,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5dbf97db_102e3b04",
+        "filename": "test/Android.run-test.mk",
+        "patchSetId": 5
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0ba3615_fe81c646",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 43
+      },
+      "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e98c2ed6_075b231f",
@@ -174,6 +306,24 @@
       "writtenOn": "2024-10-15T19:08:21Z",
       "side": 1,
       "message": "This file should be kept (see https://android-review.git.corp.google.com/c/platform/art/+/3283202/5/test/Android.bp).",
+      "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "793919ce_c2280578",
+        "filename": "test/art-gtests-target-chroot.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e98c2ed6_075b231f",
       "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -201,6 +351,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ab6b662_9fde2729",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "659777b0_faf2cc16",
+      "range": {
+        "startLine": 241,
+        "startChar": 4,
+        "endLine": 241,
+        "endChar": 20
+      },
+      "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be59f71f_44775359",
@@ -214,6 +388,24 @@
       "writtenOn": "2024-10-15T19:08:21Z",
       "side": 1,
       "message": "This script (which is used by [the ART Buildbot on LUCI](https://source.chromium.org/chromium/infra/infra_superproject/+/main:build/recipes/recipes/art.py;l\u003d415;drc\u003d85ce33abf81ab3e89b10def222f3b61a80278adb) and referenced in the [chroot-based on-device testing workflow](https://cs.android.com/android/platform/superproject/main/+/main:art/test/README.chroot.md;l\u003d140;drc\u003d20bcfc03bb7fc254dbeecb89117ab3453fda561e)) needs to be adjusted.",
+      "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16b3bdb1_62c3ad72",
+        "filename": "tools/run-gtests.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be59f71f_44775359",
       "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

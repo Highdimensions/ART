@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ffc1175_e4f94ba9",
+        "filename": "build/apex/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 0,
+      "message": "Acknowledged",
+      "parentUuid": "3cc04d63_73aef302",
+      "range": {
+        "startLine": 305,
+        "startChar": 16,
+        "endLine": 305,
+        "endChar": 46
+      },
+      "revId": "23cfc82c8eaad0b7e613dcbc2447061c06f310a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a56cfa42_9f29a342",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cff0cd3_88fd2be5",
+        "filename": "test/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1364,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "a56cfa42_9f29a342",
+      "range": {
+        "startLine": 1364,
+        "startChar": 11,
+        "endLine": 1364,
+        "endChar": 32
+      },
+      "revId": "23cfc82c8eaad0b7e613dcbc2447061c06f310a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "17b45cbe_9707325b",
@@ -60,6 +108,30 @@
       "writtenOn": "2024-10-15T19:08:21Z",
       "side": 0,
       "message": "Only this option should be removed; the other ones should be kept.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 14
+      },
+      "revId": "23cfc82c8eaad0b7e613dcbc2447061c06f310a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94b3f7fb_ea5fae35",
+        "filename": "test/README.atest.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "17b45cbe_9707325b",
       "range": {
         "startLine": 50,
         "startChar": 0,
@@ -107,6 +179,30 @@
       "side": 0,
       "message": "Maybe this is no longer needed, but I\u0027m surprised why we did not hit this before. @mast@google.com, do you know about this?\n\nI suggest putting this change in its own CL, as it looks unrelated to this Gerrit topic.",
       "parentUuid": "64de64f9_100c33c2",
+      "range": {
+        "startLine": 64,
+        "startChar": 108,
+        "endLine": 64,
+        "endChar": 115
+      },
+      "revId": "23cfc82c8eaad0b7e613dcbc2447061c06f310a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00494f1c_36abca54",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T10:43:35Z",
+      "side": 0,
+      "message": "This error is no longer there - resolving.",
+      "parentUuid": "5831976a_a3c06765",
       "range": {
         "startLine": 64,
         "startChar": 108,
