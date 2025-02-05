@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8260c3d1_50d4b953",
+        "filename": "libnativebridge/native_bridge.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-05T16:30:03Z",
+      "side": 1,
+      "message": "Why `ALOGV`? Other functions use `ALOGE`.",
+      "range": {
+        "startLine": 742,
+        "startChar": 6,
+        "endLine": 742,
+        "endChar": 11
+      },
+      "revId": "fc31368d9a4e6619d830d5f1e5536808ccb63394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
