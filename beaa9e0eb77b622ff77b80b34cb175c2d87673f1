@@ -16,6 +16,24 @@
       "message": "`DCHECK(method-\u003eIsAbstract());`?",
       "revId": "beaa9e0eb77b622ff77b80b34cb175c2d87673f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "45419292_602d14ce",
+        "filename": "runtime/imtable-inl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-05T15:41:40Z",
+      "side": 1,
+      "message": "We don\u0027t have the `method` here, so we cannot check this. And I didn\u0027t want to pass an extra `access_flags` parameter just for the `DCHECK(ArtMethod::IsAbstract(access_flags))`.",
+      "parentUuid": "e0e41160_fe1703a7",
+      "revId": "beaa9e0eb77b622ff77b80b34cb175c2d87673f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
