@@ -45,8 +45,6 @@ class ElfFileImpl {
   using Elf_Dyn = typename ElfTypes::Dyn;
 
   static ElfFileImpl* Open(File* file,
-                           bool writable,
-                           bool program_header_only,
                            bool low_4gb,
                            /*out*/ std::string* error_msg);
 
@@ -78,11 +76,7 @@ class ElfFileImpl {
   Elf_Phdr* GetProgramHeader(Elf_Word) const;
 
   Elf_Word GetSectionHeaderNum() const;
-  Elf_Shdr* GetSectionHeader(Elf_Word) const;
   Elf_Shdr* FindSectionByType(Elf_Word type) const;
-  Elf_Shdr* FindSectionByName(const std::string& name) const;
-
-  Elf_Shdr* GetSectionNameStringSection() const;
 
   // Find .dynsym using .hash for more efficient lookup than FindSymbolAddress.
   const uint8_t* FindDynamicSymbolAddress(const std::string& symbol_name) const;
@@ -90,15 +84,6 @@ class ElfFileImpl {
   static bool IsSymbolSectionType(Elf_Word section_type);
   Elf_Word GetSymbolNum(Elf_Shdr&) const;
   Elf_Sym* GetSymbol(Elf_Word section_type, Elf_Word i) const;
-
-  // Find address of symbol in specified table, returning 0 if it is
-  // not found. See FindSymbolByName for an explanation of build_map.
-  Elf_Addr FindSymbolAddress(Elf_Word section_type,
-                             const std::string& symbol_name,
-                             bool build_map);
-
-  // Lookup a string given string section and offset. Returns null for special 0 offset.
-  const char* GetString(Elf_Shdr&, Elf_Word) const;
 
   Elf_Word GetDynamicNum() const;
   Elf_Dyn& GetDynamic(Elf_Word) const;
@@ -124,7 +109,7 @@ class ElfFileImpl {
             /*out*/std::string* error_msg);
 
  private:
-  ElfFileImpl(File* file, bool writable, bool program_header_only);
+  ElfFileImpl(File* file);
 
   bool GetLoadedAddressRange(/*out*/uint8_t** vaddr_begin,
                              /*out*/size_t* vaddr_size,
@@ -135,7 +120,6 @@ class ElfFileImpl {
   bool SetMap(File* file, MemMap&& map, std::string* error_msg);
 
   uint8_t* GetProgramHeadersStart() const;
-  uint8_t* GetSectionHeadersStart() const;
   Elf_Phdr& GetDynamicProgramHeader() const;
   Elf_Dyn* GetDynamicSectionStart() const;
   Elf_Sym* GetSymbolSectionStart(Elf_Word section_type) const;
@@ -158,23 +142,8 @@ class ElfFileImpl {
   // Check that certain sections and their dependencies exist.
   bool CheckSectionsExist(File* file, std::string* error_msg) const;
 
-  // Check that the link of the first section links to the second section.
-  bool CheckSectionsLinked(const uint8_t* source, const uint8_t* target) const;
-
   // Check whether the offset is in range, and set to target to Begin() + offset if OK.
   bool CheckAndSet(Elf32_Off offset, const char* label, uint8_t** target, std::string* error_msg);
-
-  // Find symbol in specified table, returning null if it is not found.
-  //
-  // If build_map is true, builds a map to speed repeated access. The
-  // map does not included untyped symbol values (aka STT_NOTYPE)
-  // since they can contain duplicates. If build_map is false, the map
-  // will be used if it was already created. Typically build_map
-  // should be set unless only a small number of symbols will be
-  // looked up.
-  Elf_Sym* FindSymbolByName(Elf_Word section_type,
-                            const std::string& symbol_name,
-                            bool build_map);
 
   Elf_Phdr* FindProgamHeaderByType(Elf_Word type) const;
 
@@ -185,8 +154,6 @@ class ElfFileImpl {
   const char* GetString(Elf_Word section_type, Elf_Word) const;
 
   const std::string file_path_;
-  const bool writable_;
-  const bool program_header_only_;
 
   // ELF header mapping. If program_header_only_ is false, will
   // actually point to the entire elf file.
