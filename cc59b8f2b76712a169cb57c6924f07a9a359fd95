@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51fcb7f8_bef99ad9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1975361
+      },
+      "writtenOn": "2025-02-05T10:58:03Z",
+      "side": 1,
+      "message": "Hi!\n\nWe haven\u0027t seen this type of reverts before; could share please whether you suspect the 16k pages re-enablement to have some issues?",
+      "range": {
+        "startLine": 9,
+        "startChar": 11,
+        "endLine": 9,
+        "endChar": 44
+      },
+      "revId": "cc59b8f2b76712a169cb57c6924f07a9a359fd95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
