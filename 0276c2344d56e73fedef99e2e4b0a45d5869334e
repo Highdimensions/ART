@@ -16,6 +16,24 @@
       "message": "There\u0027s another caller https://cs.android.com/android/platform/superproject/main/+/main:art/oatdump/oatdump.cc;l\u003d3009;drc\u003d7e3cf2bac4db55a735a3f35b2e6e0e7b4b49210e. Do you know if we might encounter proxy methods in that case?",
       "revId": "0276c2344d56e73fedef99e2e4b0a45d5869334e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bbc73ff_7bc3c875",
+        "filename": "runtime/imtable-inl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-05T14:09:57Z",
+      "side": 1,
+      "message": "We never write proxy methods in oat file, so `oatdump` shall never see a proy method.",
+      "parentUuid": "099ab803_c5534d13",
+      "revId": "0276c2344d56e73fedef99e2e4b0a45d5869334e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
