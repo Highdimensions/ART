@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5bada97_a00eb14b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2025-02-05T15:02:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d51ec04_f4c1ff47",
+      "revId": "6ce52240f9f2587551be30be652ecd04babf8bd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da1ff018_eeffe0bb",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-02-05T00:29:18Z",
       "side": 1,
       "message": "```suggestion\n      // This flag detects this situation and enables the fallback (see b/393035780\n```",
+      "revId": "6ce52240f9f2587551be30be652ecd04babf8bd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fa57948_715d7b26",
+        "filename": "runtime/jni/jni_internal.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2603,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2025-02-05T15:02:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da1ff018_eeffe0bb",
       "revId": "6ce52240f9f2587551be30be652ecd04babf8bd0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
