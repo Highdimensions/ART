@@ -17,7 +17,6 @@
 #ifndef ART_RUNTIME_OAT_ELF_FILE_H_
 #define ART_RUNTIME_OAT_ELF_FILE_H_
 
-#include <memory>
 #include <string>
 
 #include "base/macros.h"
@@ -44,46 +43,39 @@ class ElfFile {
                        bool low_4gb,
                        /*out*/ std::string* error_msg);
 
-  ~ElfFile();
+  virtual ~ElfFile() = default;
 
   // Load segments into memory based on PT_LOAD program headers
-  bool Load(File* file,
-            bool executable,
-            bool low_4gb,
-            /*inout*/ MemMap* reservation,
-            /*out*/ std::string* error_msg);
+  virtual bool Load(File* file,
+                    bool executable,
+                    bool low_4gb,
+                    /*inout*/ MemMap* reservation,
+                    /*out*/ std::string* error_msg) = 0;
 
-  const uint8_t* FindDynamicSymbolAddress(const std::string& symbol_name) const;
+  virtual const uint8_t* FindDynamicSymbolAddress(const std::string& symbol_name) const = 0;
 
-  size_t Size() const;
+  virtual size_t Size() const = 0;
 
   // The start of the memory map address range for this ELF file.
-  uint8_t* Begin() const;
+  virtual uint8_t* Begin() const = 0;
 
   // The end of the memory map address range for this ELF file.
-  uint8_t* End() const;
+  virtual uint8_t* End() const = 0;
 
-  const std::string& GetFilePath() const;
+  virtual const std::string& GetFilePath() const = 0;
 
-  bool GetLoadedSize(size_t* size, std::string* error_msg) const;
+  virtual bool GetLoadedSize(size_t* size, std::string* error_msg) const = 0;
 
-  size_t GetElfSegmentAlignmentFromFile() const;
+  virtual size_t GetElfSegmentAlignmentFromFile() const = 0;
 
-  const uint8_t* GetBaseAddress() const;
+  virtual const uint8_t* GetBaseAddress() const = 0;
 
-  bool Is64Bit() const { return elf64_.get() != nullptr; }
+  virtual bool Is64Bit() const = 0;
 
-  ElfFileImpl32* GetImpl32() const { return elf32_.get(); }
-
-  ElfFileImpl64* GetImpl64() const { return elf64_.get(); }
+ protected:
+  ElfFile() = default;
 
  private:
-  explicit ElfFile(ElfFileImpl32* elf32);
-  explicit ElfFile(ElfFileImpl64* elf64);
-
-  const std::unique_ptr<ElfFileImpl32> elf32_;
-  const std::unique_ptr<ElfFileImpl64> elf64_;
-
   DISALLOW_COPY_AND_ASSIGN(ElfFile);
 };
 
