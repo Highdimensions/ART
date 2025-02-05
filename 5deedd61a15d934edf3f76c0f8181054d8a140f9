@@ -18,6 +18,92 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fce6965_25124a99",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-05T15:30:39Z",
+      "side": 1,
+      "message": "Sorry for the delay, I missed this earlier.",
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5a3ebbd_7dfd8199",
+        "filename": "build/art.go",
+        "patchSetId": 8
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-05T15:30:39Z",
+      "side": 1,
+      "message": "Maybe `TODO(Simulator):` for consistency",
+      "range": {
+        "startLine": 51,
+        "startChar": 5,
+        "endLine": 51,
+        "endChar": 10
+      },
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9334f243_424f0458",
+        "filename": "compiler/driver/compiler_options.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-05T15:30:39Z",
+      "side": 1,
+      "message": "Instead of changing it here, should we actually change where we set implicit_null_checks_ to true. i.e. change in Runtime::Init (https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/runtime.cc;l\u003d1886;) to check for ART_USE_RESTRICTED_MODE and not set it to true.",
+      "range": {
+        "startLine": 182,
+        "startChar": 0,
+        "endLine": 187,
+        "endChar": 34
+      },
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ef17789_015bb39d",
+        "filename": "compiler/driver/compiler_options.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-05T15:30:39Z",
+      "side": 1,
+      "message": "Same as above, setting it implicit_suspend_checks_ instead of changing the Get function.",
+      "range": {
+        "startLine": 208,
+        "startChar": 0,
+        "endLine": 213,
+        "endChar": 6
+      },
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6df68d6c_134c6f1f",
@@ -116,6 +202,98 @@
           ]
         }
       ],
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9c95555_7ddb336d",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 778,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-05T15:30:39Z",
+      "side": 1,
+      "message": "IIUC, when there is $compile$ we just return true and don\u0027t check for what instructions are there. Is the onus on the users of $compile$ to mark it only on the functions that have all instructions that are supported in the simulator?",
+      "range": {
+        "startLine": 778,
+        "startChar": 4,
+        "endLine": 778,
+        "endChar": 93
+      },
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35d14261_13a0a895",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 995,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-05T15:30:39Z",
+      "side": 1,
+      "message": "Why don\u0027t we do this sooner? I understand we should have built a graph but maybe we could do it before running the optimizations? Maybe on lines 963?",
+      "range": {
+        "startLine": 995,
+        "startChar": 7,
+        "endLine": 995,
+        "endChar": 49
+      },
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e536bdd_82f24ea4",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 1162,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-05T15:30:39Z",
+      "side": 1,
+      "message": "Should we just return early at the start of method. Something like on line 1128 at the very start? \n```\n// TODO(Simulator): Reenable compilation of intrinsics.\n#ifdef ART_USE_RESTRICTED_MODE\n  return nullptr;\n#endif\n```",
+      "range": {
+        "startLine": 1162,
+        "startChar": 0,
+        "endLine": 1162,
+        "endChar": 31
+      },
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f2b0eeb_02ce052a",
+        "filename": "runtime/arch/arm/native_entrypoints_arm.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-05T15:30:39Z",
+      "side": 1,
+      "message": "Does it make sense to not set the kAccCriticalNative in the restricted mode instead of adjusting the checks here?",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 6
+      },
       "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -221,6 +399,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "922c2af9_88529adc",
+        "filename": "runtime/art_method.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-05T15:30:39Z",
+      "side": 1,
+      "message": "Usual style is to add maybe_unused at the start: ``[[maybe_unused]] uint32_t access_flags``",
+      "range": {
+        "startLine": 473,
+        "startChar": 53,
+        "endLine": 473,
+        "endChar": 69
+      },
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5dbb8191_ee5fdac1",
         "filename": "runtime/art_method.h",
         "patchSetId": 8
@@ -237,6 +438,29 @@
         "startChar": 90,
         "endLine": 475,
         "endChar": 95
+      },
+      "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff8458cc_2522f681",
+        "filename": "runtime/entrypoints/quick/quick_trampoline_entrypoints.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 1941,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-05T15:30:39Z",
+      "side": 1,
+      "message": "I am not very familiar with this code but is this just an optimization to avoid pushing a couple of arguments onto the stack? Or is it somehow not safe to do this for critical native?  If it is just an optimization can we just not set `kAccCriticalNative` when `ART_USE_RESTRICTED_MODE` is set and not special case this here.",
+      "range": {
+        "startLine": 1933,
+        "startChar": 0,
+        "endLine": 1941,
+        "endChar": 0
       },
       "revId": "5deedd61a15d934edf3f76c0f8181054d8a140f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
