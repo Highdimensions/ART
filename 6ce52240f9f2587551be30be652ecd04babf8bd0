@@ -3,6 +3,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1d51ec04_f4c1ff47",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2025-02-05T00:29:18Z",
+      "side": 1,
+      "message": "```suggestion\nBetter linking of native bridged methods\n```",
+      "revId": "6ce52240f9f2587551be30be652ecd04babf8bd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da1ff018_eeffe0bb",
+        "filename": "runtime/jni/jni_internal.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2603,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2025-02-05T00:29:18Z",
+      "side": 1,
+      "message": "```suggestion\n      // This flag detects this situation and enables the fallback (see b/393035780\n```",
+      "revId": "6ce52240f9f2587551be30be652ecd04babf8bd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "894bfe6b_3f645c53",
         "filename": "runtime/jni/jni_internal.cc",
         "patchSetId": 1
