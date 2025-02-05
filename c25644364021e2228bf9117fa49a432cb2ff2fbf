@@ -117,6 +117,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eda77a2f_551ed7f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-05T12:02:21Z",
+      "side": 1,
+      "message": "Actually I tried running `vogar` following the instructions in `libcore/benchmarks/README.md` with these changes and it worked fine:\n\n```\n  benchmarks.regression.ScannerBenchmark OK (SUCCESS)\n```",
+      "parentUuid": "301d528f_bc3da0e5",
+      "revId": "c25644364021e2228bf9117fa49a432cb2ff2fbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2703c06c_46b0648e",
