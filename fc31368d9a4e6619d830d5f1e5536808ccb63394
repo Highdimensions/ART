@@ -46,6 +46,30 @@
       },
       "revId": "fc31368d9a4e6619d830d5f1e5536808ccb63394",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c83aeb5_109262b3",
+        "filename": "libnativebridge/native_bridge.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-05T16:53:27Z",
+      "side": 1,
+      "message": "If this error is less serious than the other errors, I\u0027m fine with keeping `ALOGV`. Up to you.",
+      "parentUuid": "7db90d38_a7c35c4d",
+      "range": {
+        "startLine": 742,
+        "startChar": 6,
+        "endLine": 742,
+        "endChar": 11
+      },
+      "revId": "fc31368d9a4e6619d830d5f1e5536808ccb63394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
