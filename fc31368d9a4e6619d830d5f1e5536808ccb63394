@@ -22,6 +22,30 @@
       },
       "revId": "fc31368d9a4e6619d830d5f1e5536808ccb63394",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7db90d38_a7c35c4d",
+        "filename": "libnativebridge/native_bridge.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2025-02-05T16:50:44Z",
+      "side": 1,
+      "message": "I was thinking it doesn\u0027t hurt to have it work for v7 as well... i can change it to ALOGE if you want. have no prefernce here.",
+      "parentUuid": "8260c3d1_50d4b953",
+      "range": {
+        "startLine": 742,
+        "startChar": 6,
+        "endLine": 742,
+        "endChar": 11
+      },
+      "revId": "fc31368d9a4e6619d830d5f1e5536808ccb63394",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
