@@ -45,6 +45,23 @@
       },
       "revId": "770b372f56c8f7119190791aed8d5d345c792797",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "758e01fc_979660d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-05T15:49:04Z",
+      "side": 1,
+      "message": "Friendly ping",
+      "revId": "770b372f56c8f7119190791aed8d5d345c792797",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
