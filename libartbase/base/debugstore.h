@@ -23,7 +23,7 @@
 #include "palette/palette.h"
 
 namespace art {
-static constexpr size_t STORE_MAX_SIZE = 1024;
+static constexpr size_t STORE_MAX_SIZE = 4096;
 
 inline std::string DebugStoreGetString() {
   std::array<char, STORE_MAX_SIZE> result{};
