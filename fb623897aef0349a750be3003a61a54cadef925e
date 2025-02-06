@@ -58,6 +58,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "63419075_3bc7e1bd",
+        "filename": "runtime/interpreter/interpreter_common.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1374,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-06T17:27:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3840aa48_100aa20a",
+      "range": {
+        "startLine": 1374,
+        "startChar": 2,
+        "endLine": 1374,
+        "endChar": 40
+      },
+      "revId": "fb623897aef0349a750be3003a61a54cadef925e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "beb982e9_cd78b910",
@@ -81,6 +105,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbb54c7d_3d87ca3a",
+        "filename": "runtime/interpreter/interpreter_common.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1375,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-06T17:27:00Z",
+      "side": 1,
+      "message": "Done for getting rid of handles.",
+      "parentUuid": "beb982e9_cd78b910",
+      "range": {
+        "startLine": 1375,
+        "startChar": 0,
+        "endLine": 1375,
+        "endChar": 32
+      },
+      "revId": "fb623897aef0349a750be3003a61a54cadef925e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5e5ffdd4_fa459f58",
@@ -94,6 +142,30 @@
       "writtenOn": "2025-02-06T09:51:38Z",
       "side": 1,
       "message": "This seems a bit at odds with lines 47-49. \"ShadowFrame\" --\u003e \"interpreter ShadowFrame\"?",
+      "range": {
+        "startLine": 84,
+        "startChar": 1,
+        "endLine": 84,
+        "endChar": 68
+      },
+      "revId": "fb623897aef0349a750be3003a61a54cadef925e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa14610b_c07f1a11",
+        "filename": "runtime/interpreter/shadow_frame.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-06T17:27:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e5ffdd4_fa459f58",
       "range": {
         "startLine": 84,
         "startChar": 1,
