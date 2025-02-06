@@ -49,6 +49,7 @@ art_cc_binary {
         "libartbase",
         "libartbase-testing",
         "libbase",
+        "libziparchive", // For "libartbase".
     ],
     stl: "c++_static",
     tidy: true,

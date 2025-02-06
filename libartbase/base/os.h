@@ -18,6 +18,11 @@
 #define ART_LIBARTBASE_BASE_OS_H_
 
 #include <stdint.h>
+#include <sys/types.h>
+
+#include <cstddef>
+#include <memory>
+#include <string>
 
 namespace unix_file {
 class FdFile;
@@ -27,8 +32,15 @@ namespace art {
 
 using File = ::unix_file::FdFile;
 
-// Interface to the underlying OS platform.
+struct FileWithRange {
+  std::unique_ptr<File> file;
+  off_t start;
+  size_t length;
 
+  static FileWithRange Invalid();
+};
+
+// Interface to the underlying OS platform.
 class OS {
  public:
   // Open an existing file with read only access.
@@ -56,6 +68,11 @@ class OS {
 
   // Get the size of a file (or -1 if it does not exist).
   static int64_t GetFileSizeBytes(const char* name);
+
+  static FileWithRange OpenFileDirectlyOrFromZip(const std::string& name_and_zip_entry,
+                                                 const char* zip_separator,
+                                                 size_t alignment,
+                                                 std::string* error_msg);
 };
 
 }  // namespace art

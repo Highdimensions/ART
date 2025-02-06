@@ -22,6 +22,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <optional>
+
+#include "base/macros.h"
+
 #if defined(__BIONIC__)
 #include <android/fdsan.h>
 #include <android/api-level.h>
@@ -411,6 +415,15 @@ int64_t FdFile::GetLength() const {
   struct stat s;
   int rc = TEMP_FAILURE_RETRY(fstat(fd_, &s));
   return (rc == -1) ? -errno : s.st_size;
+}
+
+std::optional<size_t> FdFile::GetLength(std::string* error_msg) const {
+  struct stat s;
+  if (fstat(fd_, &s) != 0) {
+    *error_msg = ART_FORMAT("Failed to get file length of '{}': {}", GetPath(), strerror(errno));
+    return std::nullopt;
+  }
+  return s.st_size;
 }
 
 int64_t FdFile::Write(const char* buf, int64_t byte_count, int64_t offset) {
