@@ -1119,7 +1119,11 @@ bool ClassLoaderContext::CreateInfoFromClassLoader(
   } else if (IsInMemoryDexClassLoader(class_loader)) {
     type = kInMemoryDexClassLoader;
   } else {
-    LOG(WARNING) << "Unsupported class loader";
+    std::string descriptor = "null";
+    if (auto clazz = class_loader->GetClass()) {
+      descriptor = clazz->PrettyDescriptor();
+    }
+    LOG(WARNING) << "Unsupported class loader: " << descriptor;
     return false;
   }
 
