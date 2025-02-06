@@ -17,6 +17,7 @@
 #ifndef ART_RUNTIME_OAT_ELF_FILE_H_
 #define ART_RUNTIME_OAT_ELF_FILE_H_
 
+#include <cstddef>
 #include <string>
 
 #include "base/macros.h"
@@ -39,15 +40,23 @@ using ElfFileImpl64 = ElfFileImpl<ElfTypes64>;
 // ELFObjectFile.
 class ElfFile {
  public:
+  // Loads the program headers.
+  // Does not take the ownership of the file. It must stay alive during the `Load` call.
+  static ElfFile* Open(File* file,
+                       off_t start,
+                       size_t file_length,
+                       const std::string& file_location,
+                       bool low_4gb,
+                       /*out*/ std::string* error_msg);
+
   static ElfFile* Open(File* file,
                        bool low_4gb,
                        /*out*/ std::string* error_msg);
 
   virtual ~ElfFile() = default;
 
-  // Load segments into memory based on PT_LOAD program headers
-  virtual bool Load(File* file,
-                    bool executable,
+  // Load segments into memory based on PT_LOAD program headers.
+  virtual bool Load(bool executable,
                     bool low_4gb,
                     /*inout*/ MemMap* reservation,
                     /*out*/ std::string* error_msg) = 0;
@@ -62,7 +71,10 @@ class ElfFile {
   // The end of the memory map address range for this ELF file.
   virtual uint8_t* End() const = 0;
 
-  virtual const std::string& GetFilePath() const = 0;
+  // Returns the location of the ELF file, for debugging purposes only.
+  // Note that the location is not necessarily a path to a file on disk. It can also be a zip entry
+  // inside a zip file.
+  virtual const std::string& GetFileLocation() const = 0;
 
   virtual bool GetLoadedSize(size_t* size, std::string* error_msg) const = 0;
 
