@@ -22,6 +22,30 @@
       },
       "revId": "a63a1380cfa4c1e0419c8affdcc355cd5f7ce54e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f278846_7e44b807",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 4017,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-06T15:12:20Z",
+      "side": 1,
+      "message": "This `inline` function is used only in this compilation unit, so I don\u0027t see any reason to put it to any `.h` file, `-inl.h` or otherwise.\n\n(This file is quite big, however, so one could split out some parts, such as `class_linker-load_class.cc` that would contain only `ClassLinker::LoadClass()` and everything it needs, such as `ClassLinker::LoadClassHelper` and `ClassLinker::MethodAnnotationsIterator`.)",
+      "parentUuid": "bb41ae9a_d4550794",
+      "range": {
+        "startLine": 4017,
+        "startChar": 0,
+        "endLine": 4017,
+        "endChar": 6
+      },
+      "revId": "a63a1380cfa4c1e0419c8affdcc355cd5f7ce54e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
