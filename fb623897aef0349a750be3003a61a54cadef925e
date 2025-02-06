@@ -16,6 +16,92 @@
       "message": "Hans, could you have a quick look at the CL? I re-uploaded the CL from the internal gerrit.",
       "revId": "fb623897aef0349a750be3003a61a54cadef925e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "958bf6f2_d21d1427",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-06T09:51:38Z",
+      "side": 1,
+      "message": "Some more preliminary comments. I\u0027m not an interpreter expert, so this may eventually also need a quick look by Nicolas.",
+      "revId": "fb623897aef0349a750be3003a61a54cadef925e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3840aa48_100aa20a",
+        "filename": "runtime/interpreter/interpreter_common.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1374,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-06T09:51:38Z",
+      "side": 1,
+      "message": "Needed? You already have the mutator lock.",
+      "range": {
+        "startLine": 1374,
+        "startChar": 2,
+        "endLine": 1374,
+        "endChar": 40
+      },
+      "revId": "fb623897aef0349a750be3003a61a54cadef925e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "beb982e9_cd78b910",
+        "filename": "runtime/interpreter/interpreter_common.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1375,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-06T09:51:38Z",
+      "side": 1,
+      "message": "Why do we need handles here? It superficially looks as though you remain runnable, i.e. hold the mutator lock throughout this. That prevents the GC from moving objects. Is there something in here that can release the muator lock or otherwise run a checkpoint?\n\nIf we can get rid of those, I would also prefer to see explicit types rather than \"auto\" wherever they are short enough to not clutter things up.\n\nIf Handles are needed, I\u0027d like to see a comment explaining why?",
+      "range": {
+        "startLine": 1375,
+        "startChar": 0,
+        "endLine": 1375,
+        "endChar": 32
+      },
+      "revId": "fb623897aef0349a750be3003a61a54cadef925e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e5ffdd4_fa459f58",
+        "filename": "runtime/interpreter/shadow_frame.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-06T09:51:38Z",
+      "side": 1,
+      "message": "This seems a bit at odds with lines 47-49. \"ShadowFrame\" --\u003e \"interpreter ShadowFrame\"?",
+      "range": {
+        "startLine": 84,
+        "startChar": 1,
+        "endLine": 84,
+        "endChar": 68
+      },
+      "revId": "fb623897aef0349a750be3003a61a54cadef925e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
