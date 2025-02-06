@@ -19,6 +19,10 @@
 
 #include <stdint.h>
 
+#include <cstddef>
+#include <optional>
+#include <string>
+
 namespace unix_file {
 
 // A file interface supporting random-access reading and writing of content,
@@ -52,6 +56,7 @@ class RandomAccessFile {
 
   // Returns the current size of this file.
   virtual int64_t GetLength() const = 0;
+  virtual std::optional<size_t> GetLength(std::string* error_msg) const = 0;
 
   // Writes 'byte_count' bytes from 'buf' starting at offset 'offset' in the
   // file. Zero-byte writes are acceptable, and writes past the end are as if
