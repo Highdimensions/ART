@@ -21,6 +21,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "android-base/logging.h"
 #include "base/macros.h"
 #include "base/mem_map.h"
 #include "elf/elf_utils.h"
@@ -45,12 +46,14 @@ class ElfFileImpl : public ElfFile {
   using Elf_Dyn = typename ElfTypes::Dyn;
 
   static ElfFileImpl* Open(File* file,
+                           off_t start,
+                           size_t file_length,
+                           const std::string& file_location,
                            bool low_4gb,
+                           /*inout*/ MemMap* reservation,
                            /*out*/ std::string* error_msg);
 
-  ~ElfFileImpl();
-
-  const std::string& GetFilePath() const override { return file_path_; }
+  const std::string& GetFileLocation() const override { return file_location_; }
 
   uint8_t* GetBaseAddress() const override { return base_address_; }
 
@@ -78,12 +81,6 @@ class ElfFileImpl : public ElfFile {
   Elf_Word GetDynamicNum() const;
   Elf_Dyn& GetDynamic(Elf_Word) const;
 
-  Elf_Word GetRelNum(Elf_Shdr&) const;
-  Elf_Rel& GetRel(Elf_Shdr&, Elf_Word) const;
-
-  Elf_Word GetRelaNum(Elf_Shdr&) const;
-  Elf_Rela& GetRela(Elf_Shdr&, Elf_Word) const;
-
   // Retrieves the expected size when the file is loaded at runtime. Returns true if successful.
   bool GetLoadedSize(size_t* size, std::string* error_msg) const override;
 
@@ -92,40 +89,44 @@ class ElfFileImpl : public ElfFile {
 
   // Load segments into memory based on PT_LOAD program headers.
   // executable is true at run time, false at compile time.
-  bool Load(File* file,
-            bool executable,
-            bool low_4gb,
-            /*inout*/ MemMap* reservation,
-            /*out*/ std::string* error_msg) override;
+  bool Load(bool executable, /*out*/ std::string* error_msg) override;
 
   bool Is64Bit() const override { return std::is_same_v<ElfTypes, ElfTypes64>; }
 
  private:
-  explicit ElfFileImpl(File* file);
+  ElfFileImpl(File* file,
+              off_t start,
+              size_t file_length,
+              const std::string& file_location,
+              bool low_4gb,
+              /*inout*/ MemMap* reservation)
+      : file_(file),
+        start_(start),
+        file_length_(file_length),
+        file_location_(file_location),
+        low_4gb_(low_4gb),
+        reservation_(reservation) {
+    CHECK(file != nullptr);
+  }
 
   bool GetLoadedAddressRange(/*out*/uint8_t** vaddr_begin,
                              /*out*/size_t* vaddr_size,
                              /*out*/std::string* error_msg) const;
 
-  bool Setup(File* file, int prot, int flags, bool low_4gb, std::string* error_msg);
+  bool Setup(std::string* error_msg);
 
-  bool SetMap(File* file, MemMap&& map, std::string* error_msg);
+  bool SetMap(MemMap&& map, std::string* error_msg);
 
   uint8_t* GetProgramHeadersStart() const;
   Elf_Phdr& GetDynamicProgramHeader() const;
   Elf_Dyn* GetDynamicSectionStart() const;
   Elf_Sym* GetSymbolSectionStart(Elf_Word section_type) const;
   const char* GetStringSectionStart(Elf_Word section_type) const;
-  Elf_Rel* GetRelSectionStart(Elf_Shdr&) const;
-  Elf_Rela* GetRelaSectionStart(Elf_Shdr&) const;
   Elf_Word* GetHashSectionStart() const;
   Elf_Word GetHashBucketNum() const;
   Elf_Word GetHashChainNum() const;
   Elf_Word GetHashBucket(size_t i, bool* ok) const;
   Elf_Word GetHashChain(size_t i, bool* ok) const;
-
-  using SymbolTable = std::map<std::string, Elf_Sym*>;
-  SymbolTable** GetSymbolTable(Elf_Word section_type);
 
   bool ValidPointer(const uint8_t* start) const;
 
@@ -134,44 +135,40 @@ class ElfFileImpl : public ElfFile {
   // Check that certain sections and their dependencies exist.
   bool CheckSectionsExist(File* file, std::string* error_msg) const;
 
-  // Check whether the offset is in range, and set to target to Begin() + offset if OK.
-  bool CheckAndSet(Elf32_Off offset, const char* label, uint8_t** target, std::string* error_msg);
-
   Elf_Phdr* FindProgamHeaderByType(Elf_Word type) const;
-
-  Elf_Dyn* FindDynamicByType(Elf_Sword type) const;
-  Elf_Word FindDynamicValueByType(Elf_Sword type) const;
 
   // Lookup a string by section type. Returns null for special 0 offset.
   const char* GetString(Elf_Word section_type, Elf_Word) const;
 
-  const std::string file_path_;
+  File* file_;
+  off_t start_;
+  size_t file_length_;
+  const std::string& file_location_;
+  bool low_4gb_;
+  MemMap* reservation_;
 
   // ELF header mapping. If program_header_only_ is false, will
   // actually point to the entire elf file.
   MemMap map_;
-  Elf_Ehdr* header_;
+  Elf_Ehdr* header_ = nullptr;
   std::vector<MemMap> segments_;
 
   // Pointer to start of first PT_LOAD program segment after Load()
   // when program_header_only_ is true.
-  uint8_t* base_address_;
+  uint8_t* base_address_ = nullptr;
 
   // The program header should always available but use GetProgramHeadersStart() to be sure.
-  uint8_t* program_headers_start_;
+  uint8_t* program_headers_start_ = nullptr;
 
   // Conditionally available values. Use accessors to ensure they exist if they are required.
-  uint8_t* section_headers_start_;
-  Elf_Phdr* dynamic_program_header_;
-  Elf_Dyn* dynamic_section_start_;
-  Elf_Sym* symtab_section_start_;
-  Elf_Sym* dynsym_section_start_;
-  char* strtab_section_start_;
-  char* dynstr_section_start_;
-  Elf_Word* hash_section_start_;
-
-  SymbolTable* symtab_symbol_table_;
-  SymbolTable* dynsym_symbol_table_;
+  uint8_t* section_headers_start_ = nullptr;
+  Elf_Phdr* dynamic_program_header_ = nullptr;
+  Elf_Dyn* dynamic_section_start_ = nullptr;
+  Elf_Sym* symtab_section_start_ = nullptr;
+  Elf_Sym* dynsym_section_start_ = nullptr;
+  char* strtab_section_start_ = nullptr;
+  char* dynstr_section_start_ = nullptr;
+  Elf_Word* hash_section_start_ = nullptr;
 
   DISALLOW_COPY_AND_ASSIGN(ElfFileImpl);
 };
