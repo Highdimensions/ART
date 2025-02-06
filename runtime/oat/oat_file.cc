@@ -40,6 +40,7 @@
 #include "base/systrace.h"
 #include "base/unix_file/fd_file.h"
 #include "base/utils.h"
+#include "base/zip_archive.h"
 #include "class_loader_context.h"
 #include "dex/art_dex_file_loader.h"
 #include "dex/dex_file.h"
@@ -1622,6 +1623,9 @@ class ElfOatFile final : public OatFileBase {
 
  private:
   bool ElfFileOpen(File* file,
+                   off_t start,
+                   size_t file_length,
+                   const std::string& file_location,
                    bool executable,
                    bool low_4gb,
                    /*inout*/ MemMap* reservation,  // Where to load if not null.
@@ -1640,12 +1644,66 @@ bool ElfOatFile::Load(const std::string& elf_filename,
                       /*inout*/ MemMap* reservation,
                       /*out*/ std::string* error_msg) {
   ScopedTrace trace(__PRETTY_FUNCTION__);
-  std::unique_ptr<File> file(OS::OpenFileForReading(elf_filename.c_str()));
+
+  std::string filename = elf_filename;
+  std::string zip_entry_name;
+  size_t pos = filename.find("!/");
+  if (pos != std::string::npos) {
+    zip_entry_name = elf_filename.substr(pos + 2);
+    filename.resize(pos);
+    if (filename.empty() || zip_entry_name.empty()) {
+      *error_msg = ART_FORMAT("Malformed zip path '{}'", elf_filename);
+      return false;
+    }
+  }
+
+  std::unique_ptr<File> file(OS::OpenFileForReading(filename.c_str()));
   if (file == nullptr) {
-    *error_msg = StringPrintf("Failed to open oat filename for reading: %s", strerror(errno));
+    *error_msg = ART_FORMAT("Failed to open '{}' for reading oat: {}", filename, strerror(errno));
     return false;
   }
-  return ElfOatFile::ElfFileOpen(file.get(), executable, low_4gb, reservation, error_msg);
+
+  off_t start = 0;
+  size_t total_file_length = file->GetLength();
+  size_t file_length = total_file_length;
+  if (total_file_length < 0) {
+    *error_msg = ART_FORMAT("Failed to get file length of '{}': {}", filename, strerror(errno));
+    return false;
+  }
+
+  if (!zip_entry_name.empty()) {
+    std::unique_ptr<ZipArchive> zip_archive(
+        ZipArchive::OpenFromOwnedFd(file->Fd(), filename.c_str(), error_msg));
+    if (zip_archive == nullptr) {
+      *error_msg = ART_FORMAT("Failed to open '{}' as zip", filename);
+      return false;
+    }
+    std::unique_ptr<ZipEntry> zip_entry(zip_archive->Find(zip_entry_name.c_str(), error_msg));
+    if (zip_entry == nullptr) {
+      *error_msg = ART_FORMAT("Failed to find entry '{}' in zip '{}'", zip_entry_name, filename);
+      return false;
+    }
+    // Mirrors the condition in the Bionic's dlopen. Actually, ART's MemMap only requires 4096 byte
+    // alignment, but we want to be more strict here, to reflect what the Bionic's dlopen would be
+    // able to load.
+    if (!zip_entry->IsUncompressed() || !zip_entry->IsAlignedTo(MemMap::GetPageSize())) {
+      *error_msg = "The oat file in sdm must be uncompressed and aligned to page size";
+      return false;
+    }
+    start = zip_entry->GetOffset();
+    file_length = zip_entry->GetUncompressedLength();
+    if (start + file_length > total_file_length) {
+      *error_msg = ART_FORMAT(
+          "Invalid zip entry offset or length (offset: {}, length: {}, total_file_length: {})",
+          start,
+          file_length,
+          total_file_length);
+      return false;
+    }
+  }
+
+  return ElfOatFile::ElfFileOpen(
+      file.get(), start, file_length, elf_filename, executable, low_4gb, reservation, error_msg);
 }
 
 bool ElfOatFile::Load(int oat_fd,
@@ -1662,23 +1720,40 @@ bool ElfOatFile::Load(int oat_fd,
                                 strerror(errno));
       return false;
     }
-    return ElfOatFile::ElfFileOpen(file.get(), executable, low_4gb, reservation, error_msg);
+    size_t file_length = file->GetLength();
+    if (file_length < 0) {
+      *error_msg =
+          ART_FORMAT("Failed to get file length of '{}': {}", file->GetPath(), strerror(errno));
+      return false;
+    }
+    return ElfOatFile::ElfFileOpen(file.get(),
+                                   /*start=*/0,
+                                   file_length,
+                                   file->GetPath(),
+                                   executable,
+                                   low_4gb,
+                                   reservation,
+                                   error_msg);
   }
   return false;
 }
 
 bool ElfOatFile::ElfFileOpen(File* file,
+                             off_t start,
+                             size_t file_length,
+                             const std::string& file_location,
                              bool executable,
                              bool low_4gb,
                              /*inout*/ MemMap* reservation,
                              /*out*/ std::string* error_msg) {
   ScopedTrace trace(__PRETTY_FUNCTION__);
-  elf_file_.reset(ElfFile::Open(file, low_4gb, error_msg));
+  elf_file_.reset(
+      ElfFile::Open(file, start, file_length, file_location, low_4gb, reservation, error_msg));
   if (elf_file_ == nullptr) {
     DCHECK(!error_msg->empty());
     return false;
   }
-  bool loaded = elf_file_->Load(file, executable, low_4gb, reservation, error_msg);
+  bool loaded = elf_file_->Load(executable, error_msg);
   DCHECK(loaded || !error_msg->empty());
   return loaded;
 }

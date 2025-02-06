@@ -17,6 +17,7 @@
 #ifndef ART_RUNTIME_OAT_ELF_FILE_H_
 #define ART_RUNTIME_OAT_ELF_FILE_H_
 
+#include <cstddef>
 #include <string>
 
 #include "base/macros.h"
@@ -39,18 +40,23 @@ using ElfFileImpl64 = ElfFileImpl<ElfTypes64>;
 // ELFObjectFile.
 class ElfFile {
  public:
+  // Loads the program headers.
+  // Does not take the ownership of the file and the reservation. They must stay alive during the
+  // `Load` call.
+  // Note that loading the program headers does not respect the reservation. Only the segments will
+  // be loaded into the reservation, by `Load`.
   static ElfFile* Open(File* file,
+                       off_t start,
+                       size_t file_length,
+                       const std::string& file_location,
                        bool low_4gb,
+                       /*inout*/ MemMap* reservation,
                        /*out*/ std::string* error_msg);
 
   virtual ~ElfFile() = default;
 
-  // Load segments into memory based on PT_LOAD program headers
-  virtual bool Load(File* file,
-                    bool executable,
-                    bool low_4gb,
-                    /*inout*/ MemMap* reservation,
-                    /*out*/ std::string* error_msg) = 0;
+  // Load segments into memory based on PT_LOAD program headers.
+  virtual bool Load(bool executable, /*out*/ std::string* error_msg) = 0;
 
   virtual const uint8_t* FindDynamicSymbolAddress(const std::string& symbol_name) const = 0;
 
@@ -62,7 +68,10 @@ class ElfFile {
   // The end of the memory map address range for this ELF file.
   virtual uint8_t* End() const = 0;
 
-  virtual const std::string& GetFilePath() const = 0;
+  // Returns the location of the ELF file, for debugging purposes only.
+  // Note that the location is not necessarily a path to a file on disk. It can also be a zip entry
+  // inside a zip file.
+  virtual const std::string& GetFileLocation() const = 0;
 
   virtual bool GetLoadedSize(size_t* size, std::string* error_msg) const = 0;
 
