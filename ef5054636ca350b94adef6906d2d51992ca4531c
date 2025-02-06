@@ -22,6 +22,30 @@
       },
       "revId": "ef5054636ca350b94adef6906d2d51992ca4531c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "446b6288_956cdad7",
+        "filename": "runtime/jit/debugger_interface.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-06T09:40:52Z",
+      "side": 0,
+      "message": "I\u0027d rather not add anything that I\u0027d need to remove later. If you have a suggestion other than `CHECK(!dexfile-\u003eIsCompactDexFile());`, please tell me.",
+      "parentUuid": "1cf2f664_a9177ef9",
+      "range": {
+        "startLine": 431,
+        "startChar": 6,
+        "endLine": 431,
+        "endChar": 33
+      },
+      "revId": "ef5054636ca350b94adef6906d2d51992ca4531c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
