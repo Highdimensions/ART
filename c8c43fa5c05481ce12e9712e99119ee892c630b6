@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f552177f_0ebf9a52",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-06T22:20:41Z",
+      "side": 1,
+      "message": "I will separate out the monitor change, though IMO, that\u0027s a basically a pure bug fix that changes behavior only in rare cases that are currently pretty clearly broken. There\u0027s an argument that we should back off to sleeping in all cases, but that would be a more major change. Thanks for the code improvement suggestions.\n\nThe more major code is the priority to niceness and vice-versa mapping stuff. I think our current niceness to priority mapping stuff doesn\u0027t round well, so there is some minor change there, but I don\u0027t think there could be much impact. We already test that reasonably well, and perhaps should do a bit better still.\n\nDid you have a specific kind of risk in mind?",
+      "parentUuid": "327e8ddf_8e0ea26c",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "35760fca_7188ca45",
         "filename": "runtime/thread_priorities.md",
         "patchSetId": 14
