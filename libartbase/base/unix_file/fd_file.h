@@ -19,6 +19,7 @@
 
 #include <fcntl.h>
 
+#include <optional>
 #include <string>
 
 #include "base/macros.h"
@@ -73,7 +74,10 @@ class FdFile : public RandomAccessFile {
   int Close() override WARN_UNUSED;
   int64_t Read(char* buf, int64_t byte_count, int64_t offset) const override WARN_UNUSED;
   int SetLength(int64_t new_length) override WARN_UNUSED;
+  // DEPRECATED because it does not prevent unsafe casting to an unsigned integer. Use the other
+  // overload instead.
   int64_t GetLength() const override;
+  std::optional<size_t> GetLength(std::string* error_msg) const override;
   int64_t Write(const char* buf, int64_t byte_count, int64_t offset) override WARN_UNUSED;
 
   int Flush() override WARN_UNUSED { return Flush(/*flush_metadata=*/false); }
