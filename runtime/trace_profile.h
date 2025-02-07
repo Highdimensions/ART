@@ -107,7 +107,8 @@ class TraceData {
 
 class TraceDumpCheckpoint final : public Closure {
  public:
-  explicit TraceDumpCheckpoint(TraceData* trace_data) : barrier_(0), trace_data_(trace_data) {}
+  explicit TraceDumpCheckpoint(TraceData* trace_data, const std::unique_ptr<File>& trace_file)
+      : barrier_(0), trace_data_(trace_data), trace_file_(trace_file) {}
 
   void Run(Thread* thread) override REQUIRES_SHARED(Locks::mutator_lock_);
   void WaitForThreadsToRunThroughCheckpoint(size_t threads_running_checkpoint);
@@ -118,6 +119,9 @@ class TraceDumpCheckpoint final : public Closure {
 
   // Trace data to record the data from each thread.
   TraceData* trace_data_;
+
+  // Trace file to flush the data.
+  const std::unique_ptr<File>& trace_file_;
 };
 
 // This class implements low-overhead tracing. This feature is available only when
@@ -172,31 +176,20 @@ class TraceProfiler {
   static void Start(LowOverheadTraceType trace_type, uint64_t trace_duration_ns);
 
   // Dumps the tracing data into the specified trace_file
-  static void Dump(std::unique_ptr<File>&& trace_file);
+  static void Dump(std::unique_ptr<File>&& trace_file, std::ostringstream& os);
 
   // Stops tracing.
   static void StopLocked() REQUIRES(Locks::trace_lock_);
 
-  // Returns the information about long running methods as a string. Used both by Dump
-  // and GetLongRunningMethodsString.
-  static std::string GetLongRunningMethodsStringLocked() REQUIRES(Locks::trace_lock_);
-
-  // Dumps the events from all threads into the trace_file.
-  static void DumpTrace(std::unique_ptr<File>&& trace_file) REQUIRES(Locks::trace_lock_);
-
-  // Dumps the long running methods from all threads into the trace_file.
-  static void DumpLongRunningMethods(std::unique_ptr<File>&& trace_file)
-      REQUIRES(Locks::trace_lock_);
-
   // This method goes over all the events in the thread_buffer and stores the encoded event in the
-  // buffer. It returns the pointer to the next free entry in the buffer.
+  // buffer. It returns the number of bytes written into the buffer.
   // This also records the ArtMethods from the events in the thread_buffer in a set. This set is
   // used to dump the information about the methods once buffers from all threads have been
   // processed.
-  static uint8_t* DumpBuffer(uint32_t thread_id,
-                             uintptr_t* thread_buffer,
-                             uint8_t* buffer /* out */,
-                             std::unordered_set<ArtMethod*>& methods /* out */);
+  static size_t DumpBuffer(uint32_t thread_id,
+                           uintptr_t* thread_buffer,
+                           uint8_t* buffer /* out */,
+                           std::unordered_set<ArtMethod*>& methods /* out */);
 
   // Dumps all the events in the buffer into the file. Also records the ArtMethods from the events
   // which is then used to record information about these methods.
