@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0382a53e_fcb61342",
+        "filename": "runtime/art_method.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-07T14:55:42Z",
+      "side": 1,
+      "message": "I remember that in a union of PODs you can safely access the leading members as long as long as they are identical but I don\u0027t remember where to find it in the standard.\n\n    struct A { int x; short y; long z; };\n    struct B { int x; short y; int z; };\n    union U { A a; B b; } u;\n    u.a \u003d getA();\n    short y \u003d u.b.y;  // OK\n    int x \u003d u.b.z;  // UB even if sizeof(int) \u003d\u003d sizeof(long)\n\nOr do I remember it wrong? (There was also something similar about accessing identical initial fields after `reinterpret_cast\u003c\u003e`.)\n\nSo, I would assume that there is some exception for primitive members of a union when they have the same type, even if they are not wrapped in a POD.\n\nThe fields cannot be concurrently accessed in the `LoadClass()` context before we publish the methods through the class. But we do not properly enforce any ordering for the \"publishing\", so it would be good to make the field atomic. However, that\u0027s outside the scope of this CL.",
+      "parentUuid": "ad2a7d7a_881dcf03",
+      "range": {
+        "startLine": 1044,
+        "startChar": 4,
+        "endLine": 1044,
+        "endChar": 91
+      },
+      "revId": "a63a1380cfa4c1e0419c8affdcc355cd5f7ce54e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6f40e18d_cda6d253",
         "filename": "runtime/class_linker.cc",
         "patchSetId": 2
