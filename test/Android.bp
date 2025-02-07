@@ -543,6 +543,7 @@ art_cc_defaults {
     defaults: ["art_test_defaults"],
     header_libs: ["libnativebridge-headers"],
     srcs: ["115-native-bridge/nativebridge.cc"],
+    apex_available: ["//apex_available:platform"],
 }
 
 art_cc_test_library {
@@ -572,6 +573,7 @@ cc_defaults {
         "liblog",
         "libnativehelper",
     ],
+    apex_available: ["//apex_available:platform"],
 }
 
 art_cc_test_library {
@@ -815,6 +817,7 @@ art_cc_defaults {
         "slicer_no_rtti",
         "libz", // for slicer (using adler32).
     ],
+    apex_available: ["//apex_available:platform"],
 }
 
 art_cc_test_library {
@@ -844,6 +847,7 @@ art_cc_defaults {
         "libtistress-srcs",
     ],
     static_libs: ["slicer_no_rtti"],
+    apex_available: ["//apex_available:platform"],
 }
 
 art_cc_test_library {
@@ -955,6 +959,7 @@ cc_defaults {
             shared_libs: ["libdl_android"],
         },
     },
+    apex_available: ["//apex_available:platform"],
 }
 
 art_cc_test_library {
@@ -999,6 +1004,7 @@ cc_defaults {
         "liblog",
         "libnativehelper",
     ],
+    apex_available: ["//apex_available:platform"],
 }
 
 art_cc_test_library {
