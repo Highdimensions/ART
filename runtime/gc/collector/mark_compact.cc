@@ -880,11 +880,10 @@ void MarkCompact::RunPhases() {
   } else {
     if (use_generational_) {
       DCHECK_IMPLIES(post_compact_end_ != nullptr, post_compact_end_ == black_allocations_begin_);
-      mid_gen_end_ = black_allocations_begin_;
     }
     post_compact_end_ = black_allocations_begin_;
   }
-  FinishPhase();
+  FinishPhase(perform_compaction);
   GetHeap()->PostGcVerification(this);
   thread_running_gc_ = nullptr;
 }
@@ -1072,6 +1071,7 @@ bool MarkCompact::PrepareForCompaction() {
   DCHECK_ALIGNED_PARAM(vector_length_, chunk_info_per_page);
   if (UNLIKELY(vector_len == 0)) {
     // Nothing to compact. Entire heap is empty.
+    black_dense_end_ = mid_gen_end_ = moving_space_begin_;
     return false;
   }
   for (size_t i = 0; i < vector_len; i++) {
@@ -1113,6 +1113,7 @@ bool MarkCompact::PrepareForCompaction() {
     if (black_dense_idx == vector_len) {
       // There is nothing live in young-gen.
       DCHECK_EQ(old_gen_end_, black_allocations_begin_);
+      mid_gen_end_ = black_allocations_begin_;
       return false;
     }
     InitNonMovingFirstObjects(reinterpret_cast<uintptr_t>(moving_space_begin_),
@@ -1170,6 +1171,7 @@ bool MarkCompact::PrepareForCompaction() {
     DCHECK_LE(black_dense_idx, vector_len);
     if (black_dense_idx == vector_len) {
       // There is nothing to compact. All the in-use pages are completely full.
+      mid_gen_end_ = black_allocations_begin_;
       return false;
     }
     InitNonMovingFirstObjects(reinterpret_cast<uintptr_t>(moving_space_begin_),
@@ -1217,7 +1219,7 @@ bool MarkCompact::PrepareForCompaction() {
   }
   if (black_objs_slide_diff_ == 0) {
     // Regardless of the gc-type, there are no pages to be compacted.
-    black_dense_end_ = black_allocations_begin_;
+    mid_gen_end_ = black_dense_end_;
     return false;
   }
   if (use_generational_) {
@@ -4766,13 +4768,53 @@ void MarkCompact::DelayReferenceReferent(ObjPtr<mirror::Class> klass,
   heap_->GetReferenceProcessor()->DelayReferenceReferent(klass, ref, this);
 }
 
-void MarkCompact::FinishPhase() {
+class MarkCompact::CheckOldToMidRefVisitor {
+ public:
+  explicit CheckOldToMidRefVisitor(mirror::Object* begin, mirror::Object* end)
+      : mid_gen_begin_(begin), mid_gen_end_(end), dirty_card_(false) {}
+
+  void ClearDirtyCard() { dirty_card_ = false; }
+  bool GetDirtyCard() const { return dirty_card_; }
+
+  ALWAYS_INLINE void operator()(mirror::Object* obj,
+                                MemberOffset offset,
+                                [[maybe_unused]] bool is_static) const
+      REQUIRES(Locks::heap_bitmap_lock_) REQUIRES_SHARED(Locks::mutator_lock_) {
+    CheckReference(obj->GetFieldObject<mirror::Object>(offset));
+  }
+
+  ALWAYS_INLINE void operator()([[maybe_unused]] ObjPtr<mirror::Class> klass,
+                                ObjPtr<mirror::Reference> ref) const
+      REQUIRES(Locks::heap_bitmap_lock_) REQUIRES_SHARED(Locks::mutator_lock_) {
+    CheckReference(ref.Ptr());
+  }
+
+  void VisitRootIfNonNull([[maybe_unused]] mirror::CompressedReference<mirror::Object>* root) const
+      REQUIRES(Locks::heap_bitmap_lock_) REQUIRES_SHARED(Locks::mutator_lock_) {
+    UNIMPLEMENTED(FATAL);
+  }
+
+  void VisitRoot([[maybe_unused]] mirror::CompressedReference<mirror::Object>* root) const
+      REQUIRES(Locks::heap_bitmap_lock_) REQUIRES_SHARED(Locks::mutator_lock_) {
+    UNIMPLEMENTED(FATAL);
+  }
+
+ private:
+  void CheckReference(mirror::Object* ref) const {
+    dirty_card_ |= ref >= mid_gen_begin_ && ref < mid_gen_end_;
+  }
+
+  mirror::Object* mid_gen_begin_;
+  mirror::Object* mid_gen_end_;
+  mutable bool dirty_card_;
+};
+
+void MarkCompact::FinishPhase(bool performed_compaction) {
   TimingLogger::ScopedTiming t(__FUNCTION__, GetTimings());
   GetCurrentIteration()->SetScannedBytes(bytes_scanned_);
   bool is_zygote = Runtime::Current()->IsZygote();
   compacting_ = false;
   marking_done_ = false;
-
   uint8_t* mark_bitmap_clear_end = black_dense_end_;
   if (use_generational_) {
     {
@@ -4831,6 +4873,30 @@ void MarkCompact::FinishPhase() {
           card_table->MarkCard(PostCompactAddress(obj, black_dense_end_, moving_space_end_));
         }
       }
+
+      if (UNLIKELY(!performed_compaction && post_compact_end_ != nullptr)) {
+        // Since we didn't perform compaction, we need to identify old objects
+        // referring to the mid-gen. Find objects pointing into [mid_gen_end_,
+        // post_compact_end_);
+        CheckOldToMidRefVisitor visitor(reinterpret_cast<mirror::Object*>(mid_gen_end_),
+                                        reinterpret_cast<mirror::Object*>(post_compact_end_));
+        auto obj_visitor = [card_table, &visitor](mirror::Object* obj) {
+          uint8_t* card = card_table->CardFromAddr(obj);
+          if (*card == accounting::CardTable::kCardDirty) {
+            return;
+          }
+          visitor.ClearDirtyCard();
+          // Native-roots are captured during Marking and are already marked above.
+          obj->VisitReferences</*kVisitNativeRoots=*/false>(visitor, visitor);
+          if (visitor.GetDirtyCard()) {
+            *card = accounting::CardTable::kCardDirty;
+          }
+        };
+        moving_space_bitmap_->VisitMarkedRange(reinterpret_cast<uintptr_t>(moving_space_begin_),
+                                               reinterpret_cast<uintptr_t>(mid_gen_end_),
+                                               obj_visitor);
+        non_moving_space_bitmap_->VisitAllMarked(obj_visitor);
+      }
     }
     dirty_cards_later_vec_.clear();
 
@@ -4844,6 +4910,9 @@ void MarkCompact::FinishPhase() {
       mid_to_old_promo_bit_vec_->CopyTo(&bitmap_begin[index],
                                         mid_to_old_promo_bit_vec_->GetSizeOf());
       mid_to_old_promo_bit_vec_.reset(nullptr);
+    } else if (!performed_compaction) {
+      DCHECK_LE(old_gen_end_, post_compact_end_);
+      mark_bitmap_clear_end = post_compact_end_;
     }
     // Promote all mid-gen objects to old-gen and young-gen objects to mid-gen
     // for next GC cycle.
