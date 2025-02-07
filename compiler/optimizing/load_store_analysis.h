@@ -78,9 +78,7 @@ class ReferenceInfo : public DeletableArenaObject<kArenaAllocLSA> {
 
  private:
   HInstruction* const reference_;
-  // Position in which it was inserted into the ref_infos_ vector. A smaller number means that this
-  // reference was seen before a reference with a bigger number.
-  const size_t position_;
+  const size_t position_;  // position in HeapLocationCollector's ref_info_array_.
 
   // Can only be referred to by a single name in the method.
   bool is_singleton_;
@@ -188,8 +186,7 @@ class HeapLocationCollector : public HGraphVisitor {
   HeapLocationCollector(HGraph* graph, ScopedArenaAllocator* allocator)
       : HGraphVisitor(graph),
         allocator_(allocator),
-        ref_infos_(graph->GetCurrentInstructionId(), nullptr, allocator->Adapter(kArenaAllocLSA)),
-        ref_infos_created_(0u),
+        ref_info_array_(allocator->Adapter(kArenaAllocLSA)),
         heap_locations_(allocator->Adapter(kArenaAllocLSA)),
         aliasing_matrix_(allocator, kInitialAliasingMatrixBitVectorSize, true, kArenaAllocLSA),
         has_heap_stores_(false) {}
@@ -200,8 +197,8 @@ class HeapLocationCollector : public HGraphVisitor {
 
   void CleanUp() {
     heap_locations_.clear();
-    STLDeleteContainerPointers(ref_infos_.begin(), ref_infos_.end());
-    ref_infos_.clear();
+    STLDeleteContainerPointers(ref_info_array_.begin(), ref_info_array_.end());
+    ref_info_array_.clear();
   }
 
   size_t GetNumberOfHeapLocations() const {
@@ -230,7 +227,14 @@ class HeapLocationCollector : public HGraphVisitor {
   }
 
   ReferenceInfo* FindReferenceInfoOf(HInstruction* ref) const {
-    return ref_infos_[ref->GetId()];
+    for (size_t i = 0; i < ref_info_array_.size(); i++) {
+      ReferenceInfo* ref_info = ref_info_array_[i];
+      if (ref_info->GetReference() == ref) {
+        DCHECK_EQ(i, ref_info->GetPosition());
+        return ref_info;
+      }
+    }
+    return nullptr;
   }
 
   size_t GetFieldHeapLocation(HInstruction* object, const FieldInfo* field) const {
@@ -425,9 +429,9 @@ class HeapLocationCollector : public HGraphVisitor {
   ReferenceInfo* GetOrCreateReferenceInfo(HInstruction* instruction) {
     ReferenceInfo* ref_info = FindReferenceInfoOf(instruction);
     if (ref_info == nullptr) {
-      ref_info = new (allocator_) ReferenceInfo(instruction, ref_infos_created_);
-      ref_infos_created_++;
-      ref_infos_[instruction->GetId()] = ref_info;
+      size_t pos = ref_info_array_.size();
+      ref_info = new (allocator_) ReferenceInfo(instruction, pos);
+      ref_info_array_.push_back(ref_info);
     }
     return ref_info;
   }
@@ -544,8 +548,9 @@ class HeapLocationCollector : public HGraphVisitor {
 
   void VisitInstruction(HInstruction* instruction) override {
     // Any new-instance or new-array cannot alias with references that
-    // pre-exist the new-instance/new-array. The entries of ref_infos_ keep track of the order of
-    // creation of reference values since we visit the blocks in reverse post order.
+    // pre-exist the new-instance/new-array. We append entries into
+    // ref_info_array_ which keeps track of the order of creation
+    // of reference values since we visit the blocks in reverse post order.
     //
     // By default, VisitXXX() (including VisitPhi()) calls VisitInstruction(),
     // unless VisitXXX() is overridden. VisitInstanceFieldGet() etc. above
@@ -554,10 +559,7 @@ class HeapLocationCollector : public HGraphVisitor {
   }
 
   ScopedArenaAllocator* allocator_;
-  // All references used for heap accesses, accessed via instruction id.
-  ScopedArenaVector<ReferenceInfo*> ref_infos_;
-  // How many non-null ReferenceInfo* are in ref_infos_.
-  size_t ref_infos_created_;
+  ScopedArenaVector<ReferenceInfo*> ref_info_array_;   // All references used for heap accesses.
   ScopedArenaVector<HeapLocation*> heap_locations_;    // All heap locations.
   ArenaBitVector aliasing_matrix_;    // aliasing info between each pair of locations.
   bool has_heap_stores_;    // If there is no heap stores, LSE acts as GVN with better
