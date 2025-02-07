@@ -29,6 +29,7 @@
 #include <string>
 #include <string_view>
 #include <tuple>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -92,6 +93,7 @@
 #include "gc/space/image_space.h"
 #include "gc/space/space-inl.h"
 #include "gc_root-inl.h"
+#include "handle.h"
 #include "handle_scope-inl.h"
 #include "hidden_api.h"
 #include "imt_conflict_table.h"
@@ -1681,17 +1683,26 @@ static void VerifyInternedStringReferences(gc::space::ImageSpace* space)
     InternTable::UnorderedSet image_set(data, /*make_copy_of_data=*/ false, &read_count);
     image_set.swap(image_interns);
   }
+  std::unordered_set<std::string> extra_strings;
+  // The intern table may contain patched dex locations, added by `ClassLinker::OpenImageDexFiles`.
+  const OatFile* oat_file = space->GetOatFile();
+  for (const OatDexFile* oat_dex_file : oat_file->GetOatDexFiles()) {
+    extra_strings.insert(oat_dex_file->GetDexFileLocation());
+  }
   size_t num_recorded_refs = 0u;
   VisitInternedStringReferences(
       space,
-      [&image_interns, &num_recorded_refs](ObjPtr<mirror::String> str)
+      [&image_interns, &num_recorded_refs, &extra_strings](ObjPtr<mirror::String> str)
           REQUIRES_SHARED(Locks::mutator_lock_) {
-        auto it = image_interns.find(GcRoot<mirror::String>(str));
-        CHECK(it != image_interns.end());
-        CHECK(it->Read() == str);
-        ++num_recorded_refs;
-        return str;
-      });
+            auto it = image_interns.find(GcRoot<mirror::String>(str));
+            if (it != image_interns.end()) {
+              CHECK(it->Read() == str);
+              ++num_recorded_refs;
+            } else {
+              CHECK(extra_strings.find(str->ToModifiedUtf8()) != extra_strings.end());
+            }
+            return str;
+          });
   size_t num_found_refs = CountInternedStringReferences(*space, image_interns);
   CHECK_EQ(num_recorded_refs, num_found_refs);
 }
@@ -1920,6 +1931,7 @@ bool ClassLinker::OpenAndInitImageDexFiles(
   StackHandleScope<3> hs(self);
   Handle<mirror::ObjectArray<mirror::DexCache>> dex_caches(
       hs.NewHandle(dex_caches_object->AsObjectArray<mirror::DexCache>()));
+  MutableHandle<mirror::DexCache> dex_cache = hs.NewHandle<mirror::DexCache>(nullptr);
   const OatFile* oat_file = space->GetOatFile();
   if (oat_file->GetOatHeader().GetDexFileCount() !=
       static_cast<uint32_t>(dex_caches->GetLength())) {
@@ -1928,12 +1940,28 @@ bool ClassLinker::OpenAndInitImageDexFiles(
     return false;
   }
 
-  for (auto dex_cache : dex_caches.Iterate<mirror::DexCache>()) {
+  for (auto dex_cache_ptr : dex_caches.Iterate<mirror::DexCache>()) {
+    dex_cache.Assign(dex_cache_ptr);
+
     std::string dex_file_location = dex_cache->GetLocation()->ToModifiedUtf8();
     std::unique_ptr<const DexFile> dex_file =
         OpenOatDexFile(oat_file, dex_file_location.c_str(), error_msg);
     if (dex_file == nullptr) {
       return false;
+    }
+
+    // Replace the location in the dex cache in the app image with the actual location if needed.
+    // The actual location is computed by the logic in `OatFileBase::Setup`.
+    // This is needed when the location is unknown at compile-time, typically during Cloud
+    // Compilation.
+    if (dex_file_location != dex_file->GetLocation()) {
+      ObjPtr<mirror::String> location = intern_table_->InternWeak(dex_file->GetLocation().c_str());
+      if (location == nullptr) {
+        self->AssertPendingOOMException();
+        *error_msg = "Failed to intern string for dex cache location";
+        return false;
+      }
+      dex_cache->SetLocation(location);
     }
 
     {
@@ -1943,7 +1971,7 @@ bool ClassLinker::OpenAndInitImageDexFiles(
     }
     if (!app_image) {
       // Register dex files, keep track of existing ones that are conflicts.
-      AppendToBootClassPath(dex_file.get(), dex_cache);
+      AppendToBootClassPath(dex_file.get(), dex_cache.Get());
     }
     out_dex_files->push_back(std::move(dex_file));
   }
