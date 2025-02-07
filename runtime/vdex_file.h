@@ -122,8 +122,8 @@ class VdexFile {
     static constexpr uint8_t kVdexMagic[] = { 'v', 'd', 'e', 'x' };
 
     // The format version of the verifier deps header and the verifier deps.
-    // Last update: Introduce vdex sections.
-    static constexpr uint8_t kVdexVersion[] = { '0', '2', '7', '\0' };
+    // Last update: Disallow compact dex.
+    static constexpr uint8_t kVdexVersion[] = {'0', '2', '8', '\0'};
 
     uint8_t magic_[4];
     uint8_t vdex_version_[4];
@@ -294,10 +294,6 @@ class VdexFile {
   // the checksums in `dex_headers`. Both the number of dex files and their
   // order must match too.
   bool MatchesDexFileChecksums(const std::vector<const DexFile::Header*>& dex_headers) const;
-
-  // Returns true if all dex files are standard dex rather than compact dex.
-  // Also returns true if there are no dex files at all.
-  bool HasOnlyStandardDexFiles() const;
 
   ClassStatus ComputeClassStatus(Thread* self, Handle<mirror::Class> cls) const
       REQUIRES_SHARED(Locks::mutator_lock_);
