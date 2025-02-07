@@ -46,6 +46,30 @@
       },
       "revId": "ef5054636ca350b94adef6906d2d51992ca4531c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "140504c2_651aa61b",
+        "filename": "runtime/jit/debugger_interface.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-07T11:50:35Z",
+      "side": 0,
+      "message": "No, that\u0027s exactly the check I have in mind, and also (at least) in the more frequent code paths in class_linker.cc. By necessity I\u0027d have to clean them up when I can start working on https://r.android.com/3119943 again, so that\u0027d be on me.",
+      "parentUuid": "446b6288_956cdad7",
+      "range": {
+        "startLine": 431,
+        "startChar": 6,
+        "endLine": 431,
+        "endChar": 33
+      },
+      "revId": "ef5054636ca350b94adef6906d2d51992ca4531c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
