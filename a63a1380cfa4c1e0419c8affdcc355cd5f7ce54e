@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5ba07f64_69ac1f61",
+        "filename": "runtime/art_method.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-07T15:25:39Z",
+      "side": 1,
+      "message": "wg21.link/n5001 says in [class.union.general] p2: \"If a standard-layout union contains several standard-layout structs that share a common initial sequence (11.4), and if a non-static data member of an object of this standard-layout union type is active and is one of the standard-layout structs, the common initial sequence of any of the standard-layout struct members can be inspected\".\n\nFor some reason it says that in a note, rather than normative text, which I don\u0027t understand.\n\nSo if you used structs containing an int, you are probably OK. But once we really fix this one union member should be int, and the other atomic\u003cint\u003e, so this may not really be useful.\n\nI was more concerned about concurrent accesses to actually udate the hotness counter once the code is running. We can probably get away with ordinary relaxed accesses without CAS, but I think it still needs to be atomic.",
+      "parentUuid": "0382a53e_fcb61342",
+      "range": {
+        "startLine": 1044,
+        "startChar": 4,
+        "endLine": 1044,
+        "endChar": 91
+      },
+      "revId": "a63a1380cfa4c1e0419c8affdcc355cd5f7ce54e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6f40e18d_cda6d253",
         "filename": "runtime/class_linker.cc",
         "patchSetId": 2
