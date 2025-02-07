@@ -1807,8 +1807,6 @@ void Artd::AddCompilerConfigFlags(const std::string& instruction_set,
   args.Add("--compiler-filter=%s", compiler_filter)
       .Add("--compilation-reason=%s", dexopt_options.compilationReason);
 
-  args.AddIf(priority_class >= PriorityClass::INTERACTIVE, "--compact-dex-level=none");
-
   args.AddIfNonEmpty("--max-image-block-size=%s",
                      props_->GetOrEmpty("dalvik.vm.dex2oat-max-image-block-size"))
       .AddIfNonEmpty("--very-large-app-threshold=%s",
