@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0dfaf4ce_1160eeba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-07T14:18:04Z",
+      "side": 1,
+      "message": "Nice! Is there a plan to clean up [here]9https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat_file_assistant.cc;l\u003d1272;drc\u003dd29f6d68b2671468332981ca1075c956d375db0a) and perhaps some other places?",
+      "revId": "0d6b76bbbcabcc373b6c5dd6788aa409c634bb63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
