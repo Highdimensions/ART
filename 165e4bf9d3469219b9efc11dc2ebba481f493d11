@@ -22,6 +22,30 @@
       },
       "revId": "165e4bf9d3469219b9efc11dc2ebba481f493d11",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0ff76c8_10b499ad",
+        "filename": "runtime/jni/jni_internal.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 2709,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2025-02-07T15:51:20Z",
+      "side": 1,
+      "message": "keeping it for compatibility with native bridge v7.",
+      "parentUuid": "095983e8_a02a9694",
+      "range": {
+        "startLine": 2709,
+        "startChar": 10,
+        "endLine": 2709,
+        "endChar": 52
+      },
+      "revId": "165e4bf9d3469219b9efc11dc2ebba481f493d11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
