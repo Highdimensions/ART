@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "095983e8_a02a9694",
+        "filename": "runtime/jni/jni_internal.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 2709,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-07T14:41:52Z",
+      "side": 1,
+      "message": "This could be seen as unnecessary if we make the check below but it is actually needed when using an older version of the native bridge, right?",
+      "range": {
+        "startLine": 2709,
+        "startChar": 10,
+        "endLine": 2709,
+        "endChar": 52
+      },
+      "revId": "165e4bf9d3469219b9efc11dc2ebba481f493d11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
