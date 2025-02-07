@@ -1,6 +1,69 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "050ccf82_3127cf2a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-07T14:39:12Z",
+      "side": 1,
+      "message": "LGTM, other than the detail below, which I\u0027m not sure we\u0027re making worse. I\u0027m not really an expert here, beyond really wanting this fixed.",
+      "revId": "a63a1380cfa4c1e0419c8affdcc355cd5f7ce54e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad2a7d7a_881dcf03",
+        "filename": "runtime/art_method.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-07T14:39:12Z",
+      "side": 1,
+      "message": "The C++ standard disagrees. Only the field that was most recently assigned to is live, so reading from the other one is technically UB. See https://en.cppreference.com/w/cpp/language/union, \"member lifetime\".\n\nAre we otherwise playing by the rules here, or should the hotness count also really be atomic, because it can be concurently accessed?\n\nSo long as this CL doesn\u0027t make us less conforming than we already were, I\u0027m OK.",
+      "range": {
+        "startLine": 1044,
+        "startChar": 4,
+        "endLine": 1044,
+        "endChar": 91
+      },
+      "revId": "a63a1380cfa4c1e0419c8affdcc355cd5f7ce54e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f40e18d_cda6d253",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 3949,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-07T14:39:12Z",
+      "side": 1,
+      "message": "Maybe add an explicit \"usually called without mutator lock\" comment. Or maybe just \"called without mutator lock\"? The corresponding REQUIRES clause seems too strong.",
+      "range": {
+        "startLine": 3947,
+        "startChar": 2,
+        "endLine": 3949,
+        "endChar": 48
+      },
+      "revId": "a63a1380cfa4c1e0419c8affdcc355cd5f7ce54e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bb41ae9a_d4550794",
