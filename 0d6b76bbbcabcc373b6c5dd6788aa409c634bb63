@@ -16,6 +16,24 @@
       "message": "Nice! Is there a plan to clean up [here]9https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat_file_assistant.cc;l\u003d1272;drc\u003dd29f6d68b2671468332981ca1075c956d375db0a) and perhaps some other places?",
       "revId": "0d6b76bbbcabcc373b6c5dd6788aa409c634bb63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3c7516d_9e911f03",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-07T14:51:26Z",
+      "side": 1,
+      "message": "There\u0027s https://r.android.com/3119943 that has most of the cleanups, but not that bit. Removing that is contingent on that the vdex loader doesn\u0027t allow cdex files. I\u0027ve taken a stab at it in https://r.android.com/3482652.",
+      "parentUuid": "0dfaf4ce_1160eeba",
+      "revId": "0d6b76bbbcabcc373b6c5dd6788aa409c634bb63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
