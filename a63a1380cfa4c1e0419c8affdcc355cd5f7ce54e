@@ -91,6 +91,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6d3d8322_80bcab64",
+        "filename": "runtime/art_method.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-07T15:39:38Z",
+      "side": 1,
+      "message": "I found the relevant text in 11.4/28, so there is no need to repeat it as normative text in 11.5/2.\n\nMaybe we should use just a plain atomic member (not a `union`) and interpret it according to the access flags.",
+      "parentUuid": "5ba07f64_69ac1f61",
+      "range": {
+        "startLine": 1044,
+        "startChar": 4,
+        "endLine": 1044,
+        "endChar": 91
+      },
+      "revId": "a63a1380cfa4c1e0419c8affdcc355cd5f7ce54e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6f40e18d_cda6d253",
         "filename": "runtime/class_linker.cc",
         "patchSetId": 2
