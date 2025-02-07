@@ -22,6 +22,30 @@
       },
       "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6620c3bb_66ff7557",
+        "filename": "runtime/vdex_file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-07T17:21:40Z",
+      "side": 1,
+      "message": "IIUC, the vdex format is supposed to be as stable as possible. If we reject old vdex files, I can see two major issues:\n\n1. A device that took a Mainline update will not be able to use the old vdex files (assuming Pre-reboot Dexopt hasn\u0027t run), causing huge performance regressions.\n2. Cloud Verification will not work.\n\nCan we avoid bumping the vdex version?",
+      "parentUuid": "4b808be6_d5d5fcb2",
+      "range": {
+        "startLine": 126,
+        "startChar": 57,
+        "endLine": 126,
+        "endChar": 60
+      },
+      "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
