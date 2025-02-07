@@ -784,9 +784,10 @@ bool OatFileBase::Setup(int zip_fd,
     std::string dex_file_name = dex_file_location;
     if (!dex_filenames.empty()) {
       dex_file_name.replace(/*pos*/ 0u, primary_location.size(), primary_location_replacement);
-      // If the location does not contain path and matches the file name component,
-      // use the provided file name also as the location.
-      // TODO: Do we need this for anything other than tests?
+      // If the location does not contain path and matches the file name component, use the provided
+      // file name also as the location.
+      // This is needed when the location is unknown at compile-time, typically during Cloud
+      // Compilation.
       if (dex_file_location.find('/') == std::string::npos &&
           dex_file_name.size() > dex_file_location.size() &&
           dex_file_name[dex_file_name.size() - dex_file_location.size() - 1u] == '/' &&
