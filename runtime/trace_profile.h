@@ -48,6 +48,7 @@ class TraceData {
   explicit TraceData(LowOverheadTraceType trace_type)
       : trace_type_(trace_type),
         trace_end_time_(0),
+        trace_file_(nullptr),
         trace_data_lock_("Trace Data lock", LockLevel::kGenericBottomLock) {}
 
   LowOverheadTraceType GetTraceType() const {
@@ -70,6 +71,13 @@ class TraceData {
     MutexLock mu(Thread::Current(), trace_data_lock_);
     long_running_methods_.append(str);
   }
+
+  void SetTraceFile(File* file) {
+    MutexLock mu(Thread::Current(), trace_data_lock_);
+    trace_file_ = file;
+  }
+
+  void WriteToFile(uint8_t* buffer_ptr, size_t num_bytes);
 
   void AddTracedMethods(std::unordered_set<ArtMethod*>& methods) {
     MutexLock mu(Thread::Current(), trace_data_lock_);
@@ -100,6 +108,9 @@ class TraceData {
   // thread.
   std::unordered_map<size_t, std::string> traced_threads_ GUARDED_BY(trace_data_lock_);
 
+  // Trace file to flush the data.
+  File* trace_file_ GUARDED_BY(trace_data_lock_);
+
   // Lock to synchronize access to traced_methods_, traced_threads_ and long_running_methods_ which
   // can be accessed simultaneously by multiple threads when running TraceDumpCheckpoint.
   Mutex trace_data_lock_;
@@ -107,7 +118,8 @@ class TraceData {
 
 class TraceDumpCheckpoint final : public Closure {
  public:
-  explicit TraceDumpCheckpoint(TraceData* trace_data) : barrier_(0), trace_data_(trace_data) {}
+  explicit TraceDumpCheckpoint(TraceData* trace_data)
+      : barrier_(0), trace_data_(trace_data) {}
 
   void Run(Thread* thread) override REQUIRES_SHARED(Locks::mutator_lock_);
   void WaitForThreadsToRunThroughCheckpoint(size_t threads_running_checkpoint);
@@ -172,31 +184,20 @@ class TraceProfiler {
   static void Start(LowOverheadTraceType trace_type, uint64_t trace_duration_ns);
 
   // Dumps the tracing data into the specified trace_file
-  static void Dump(std::unique_ptr<File>&& trace_file);
+  static void Dump(std::unique_ptr<File>&& trace_file, std::ostringstream& os);
 
   // Stops tracing.
   static void StopLocked() REQUIRES(Locks::trace_lock_);
 
-  // Returns the information about long running methods as a string. Used both by Dump
-  // and GetLongRunningMethodsString.
-  static std::string GetLongRunningMethodsStringLocked() REQUIRES(Locks::trace_lock_);
-
-  // Dumps the events from all threads into the trace_file.
-  static void DumpTrace(std::unique_ptr<File>&& trace_file) REQUIRES(Locks::trace_lock_);
-
-  // Dumps the long running methods from all threads into the trace_file.
-  static void DumpLongRunningMethods(std::unique_ptr<File>&& trace_file)
-      REQUIRES(Locks::trace_lock_);
-
   // This method goes over all the events in the thread_buffer and stores the encoded event in the
-  // buffer. It returns the pointer to the next free entry in the buffer.
+  // buffer. It returns the number of bytes written into the buffer.
   // This also records the ArtMethods from the events in the thread_buffer in a set. This set is
   // used to dump the information about the methods once buffers from all threads have been
   // processed.
-  static uint8_t* DumpBuffer(uint32_t thread_id,
-                             uintptr_t* thread_buffer,
-                             uint8_t* buffer /* out */,
-                             std::unordered_set<ArtMethod*>& methods /* out */);
+  static size_t DumpBuffer(uint32_t thread_id,
+                           uintptr_t* thread_buffer,
+                           uint8_t* buffer /* out */,
+                           std::unordered_set<ArtMethod*>& methods /* out */);
 
   // Dumps all the events in the buffer into the file. Also records the ArtMethods from the events
   // which is then used to record information about these methods.
