@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd2c5a1c_33089bb1",
+        "filename": "runtime/native/dalvik_system_VMRuntime.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-07T13:23:44Z",
+      "side": 1,
+      "message": "As `attribute_name_str` is a parameter, should this method called `getIntSystemProperty` instead of `getSdkExtensionNative`?",
+      "range": {
+        "startLine": 247,
+        "startChar": 22,
+        "endLine": 247,
+        "endChar": 43
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ab739150_bd6bf176",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/native/dalvik_system_VMRuntime.cc",
+              "range": {
+                "startLine": 247,
+                "startChar": 0,
+                "endLine": 251,
+                "endChar": 0
+              },
+              "replacement": "static jint VMRuntime_getIntSystemProperty([[maybe_unused]] JNIEnv* env,\n                                          [[maybe_unused]] jclass klass,\n                                          jstring attribute_name,\n                                          jint default_value) {\n"
+            },
+            {
+              "path": "runtime/native/dalvik_system_VMRuntime.cc",
+              "range": {
+                "startLine": 569,
+                "startChar": 0,
+                "endLine": 570,
+                "endChar": 0
+              },
+              "replacement": "    FAST_NATIVE_METHOD(VMRuntime, getIntSystemProperty, \"(Ljava/lang/String;I)I\"),\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7cdb39804015d28718ba7dc2ab24dbef7e79b279",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
