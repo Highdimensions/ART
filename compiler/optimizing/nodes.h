@@ -2169,7 +2169,24 @@ class HInstruction : public ArenaObject<kArenaAllocInstruction> {
 
   uint32_t GetDexPc() const { return dex_pc_; }
 
-  virtual bool IsControlFlow() const { return false; }
+  bool IsControlFlow() const {
+    switch (GetKind()) {
+      case kExit:
+      case kGoto:
+      case kIf:
+      case kPackedSwitch:
+      case kReturn:
+      case kReturnVoid:
+      case kThrow:
+      case kTryBoundary:
+#if defined(ART_ENABLE_CODEGEN_x86)
+      case kX86PackedSwitch:
+#endif
+        return true;
+      default:
+        return false;
+    }
+  }
 
   // Can the instruction throw?
   // TODO: We should rename to CanVisiblyThrow, as some instructions (like HNewInstance),
@@ -2274,18 +2291,16 @@ class HInstruction : public ArenaObject<kArenaAllocInstruction> {
   }
 
   bool IsRemovable() const {
-    return
-        !DoesAnyWrite() &&
-        // TODO(solanes): Merge calls from IsSuspendCheck to IsControlFlow into one that doesn't
-        // do virtual dispatching.
-        !IsSuspendCheck() &&
-        !IsNop() &&
-        !IsParameterValue() &&
-        // If we added an explicit barrier then we should keep it.
-        !IsMemoryBarrier() &&
-        !IsConstructorFence() &&
-        !IsControlFlow() &&
-        !CanThrow();
+    switch (GetKind()) {
+      case kConstructorFence:
+      case kMemoryBarrier:
+      case kNop:
+      case kParameterValue:
+      case kSuspendCheck:
+        return false;
+      default:
+        return !DoesAnyWrite() && !IsControlFlow() && !CanThrow();
+    }
   }
 
   bool IsDeadAndRemovable() const {
@@ -2940,8 +2955,6 @@ class HReturnVoid final : public HExpression<0> {
       : HExpression(kReturnVoid, SideEffects::None(), dex_pc) {
   }
 
-  bool IsControlFlow() const override { return true; }
-
   DECLARE_INSTRUCTION(ReturnVoid);
 
  protected:
@@ -2956,8 +2969,6 @@ class HReturn final : public HExpression<1> {
       : HExpression(kReturn, SideEffects::None(), dex_pc) {
     SetRawInputAt(0, value);
   }
-
-  bool IsControlFlow() const override { return true; }
 
   DECLARE_INSTRUCTION(Return);
 
@@ -3073,8 +3084,6 @@ class HExit final : public HExpression<0> {
       : HExpression(kExit, SideEffects::None(), dex_pc) {
   }
 
-  bool IsControlFlow() const override { return true; }
-
   DECLARE_INSTRUCTION(Exit);
 
  protected:
@@ -3089,8 +3098,6 @@ class HGoto final : public HExpression<0> {
   }
 
   bool IsClonable() const override { return true; }
-  bool IsControlFlow() const override { return true; }
-
   HBasicBlock* GetSuccessor() const {
     return GetBlock()->GetSingleSuccessor();
   }
@@ -3362,7 +3369,6 @@ class HIf final : public HExpression<1> {
   }
 
   bool IsClonable() const override { return true; }
-  bool IsControlFlow() const override { return true; }
 
   HBasicBlock* IfTrueSuccessor() const {
     return GetBlock()->GetSuccessors()[0];
@@ -3413,8 +3419,6 @@ class HTryBoundary final : public HExpression<0> {
                     dex_pc) {
     SetPackedField<BoundaryKindField>(kind);
   }
-
-  bool IsControlFlow() const override { return true; }
 
   // Returns the block's non-exceptional successor (index zero).
   HBasicBlock* GetNormalFlowSuccessor() const { return GetBlock()->GetSuccessors()[0]; }
@@ -3660,8 +3664,6 @@ class HPackedSwitch final : public HExpression<1> {
   }
 
   bool IsClonable() const override { return true; }
-
-  bool IsControlFlow() const override { return true; }
 
   int32_t GetStartValue() const { return start_value_; }
 
@@ -7560,8 +7562,6 @@ class HThrow final : public HExpression<1> {
       : HExpression(kThrow, SideEffects::CanTriggerGC(), dex_pc) {
     SetRawInputAt(0, exception);
   }
-
-  bool IsControlFlow() const override { return true; }
 
   bool NeedsEnvironment() const override { return true; }
 
