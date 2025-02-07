@@ -108,6 +108,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6afa3e54_c8d6fe32",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-02-07T00:31:20Z",
+      "side": 1,
+      "message": "The kinds of risks I have in mind:\n* Some app does reflection on the priority field that breaks with this change.\n* A typo in the code none of us have caught where nicencess and priority are mixed up.\n* Unexpected performance impacts of the monitor change.\n* Accidental (or intentional?) change in priority of some system thread that has unexpected performance impact. Particularly around the logic to self discover priority to niceness mapping.\n\nThat\u0027s not to say we shouldn\u0027t go ahead with the change. Just something to watch out for and be prepared for in case it comes up.",
+      "parentUuid": "f552177f_0ebf9a52",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "35760fca_7188ca45",
         "filename": "runtime/thread_priorities.md",
         "patchSetId": 14
