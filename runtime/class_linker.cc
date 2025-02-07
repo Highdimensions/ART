@@ -1936,6 +1936,20 @@ bool ClassLinker::OpenAndInitImageDexFiles(
       return false;
     }
 
+    // Replace the location in the dex cache in the app image with the actual location if needed.
+    // The actual location is computed by the logic in `OatFileBase::Setup`.
+    // This is needed when the location is unknown at compile-time, typically during Cloud
+    // Compilation.
+    if (dex_file_location != dex_file->GetLocation()) {
+      ObjPtr<mirror::String> location = intern_table_->InternWeak(dex_file->GetLocation().c_str());
+      if (location == nullptr) {
+        self->AssertPendingOOMException();
+        *error_msg = "Failed to intern string for dex cache location";
+        return false;
+      }
+      dex_cache->SetLocation(location);
+    }
+
     {
       // Native fields are all null.  Initialize them.
       WriterMutexLock mu(self, *Locks::dex_lock_);
