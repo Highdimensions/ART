@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b808be6_d5d5fcb2",
+        "filename": "runtime/vdex_file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-07T17:16:38Z",
+      "side": 1,
+      "message": "I\u0027m assuming this is enough to ensure we won\u0027t try to load vdex files with compact dex in them (I couldn\u0027t find any code that checks the embedded dex headers explicitly). Please confirm that assumption.",
+      "range": {
+        "startLine": 126,
+        "startChar": 57,
+        "endLine": 126,
+        "endChar": 60
+      },
+      "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
