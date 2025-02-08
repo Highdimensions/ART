@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9864db2_fc8d7322",
+        "filename": "compiler/optimizing/induction_var_range.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2025-02-08T00:50:17Z",
+      "side": 0,
+      "message": "For the record, I saw two interesting ways this code would fail:\n\n * a \u003d\u003d INT64_MIN, b \u003d\u003d -1: *overflow isn\u0027t set, but the multiply has UB.\n \n * a and b are both positive, but `a * b` overflows: we set *overflow, but then fall through to the multiply with UB.",
+      "revId": "6fbb37a7513bf93f63f7a84925cc4d9913590abd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
