@@ -1,0 +1,88 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be7e13d6_3417825a",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 4771,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-08T09:09:01Z",
+      "side": 1,
+      "message": "I\u0027m not a fan of the name. We generally use \"Check\" to mean something else. Maybe \"Detect\"?",
+      "range": {
+        "startLine": 4771,
+        "startChar": 19,
+        "endLine": 4771,
+        "endChar": 24
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "f23958be_7464d7c9",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 4771,
+                "startChar": 0,
+                "endLine": 4772,
+                "endChar": 0
+              },
+              "replacement": "class MarkCompact::DetectOldToMidRefVisitor {\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 4773,
+                "startChar": 0,
+                "endLine": 4774,
+                "endChar": 0
+              },
+              "replacement": "  explicit DetectOldToMidRefVisitor(mirror::Object* begin, mirror::Object* end)\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 4880,
+                "startChar": 0,
+                "endLine": 4881,
+                "endChar": 0
+              },
+              "replacement": "        DetectOldToMidRefVisitor visitor(reinterpret_cast\u003cmirror::Object*\u003e(mid_gen_end_),\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b4651eba9ac532d876f6ba427a4bc4514d52258c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b2920f1_b4d84ebe",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 4896,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-08T09:09:01Z",
+      "side": 1,
+      "message": "Why is mid_gen_end_ used as the beginning of the middle generation above, and presumably as the end of the old generation here? I\u0027m confused...",
+      "range": {
+        "startLine": 4896,
+        "startChar": 75,
+        "endLine": 4896,
+        "endChar": 87
+      },
+      "revId": "b4651eba9ac532d876f6ba427a4bc4514d52258c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
