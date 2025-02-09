@@ -157,6 +157,7 @@ class OatSymbolizer final {
     builder_.reset(new ElfBuilder<ElfTypes>(isa, output_stream.get()));
 
     builder_->Start();
+    builder_->ReserveSpaceForDynamicSection(elf_file->GetPath());
 
     auto* rodata = builder_->GetRoData();
     auto* text = builder_->GetText();
@@ -3005,10 +3006,18 @@ class IMTDumper {
 
       for (ArtMethod& iface_method : iface->GetVirtualMethods(pointer_size)) {
         uint32_t class_hash, name_hash, signature_hash;
-        ImTable::GetImtHashComponents(&iface_method, &class_hash, &name_hash, &signature_hash);
+        ImTable::GetImtHashComponents(*iface_method.GetDexFile(),
+                                      iface_method.GetDexMethodIndex(),
+                                      &class_hash,
+                                      &name_hash,
+                                      &signature_hash);
         uint32_t imt_slot = ImTable::GetImtIndex(&iface_method);
+        // Note: For default methods we use the dex method index for calculating the slot.
+        // For abstract methods the compile-time constant `kImTableHashUseName` determines
+        // whether we use the component hashes (current behavior) or the dex method index.
         std::cerr << "    " << iface_method.PrettyMethod(true)
             << " slot=" << imt_slot
+            << " dex_method_index=" << iface_method.GetDexMethodIndex()
             << std::hex
             << " class_hash=0x" << class_hash
             << " name_hash=0x" << name_hash
