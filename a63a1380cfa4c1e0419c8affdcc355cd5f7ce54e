@@ -113,6 +113,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7879659_ed70a957",
+        "filename": "runtime/art_method.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-10T10:24:49Z",
+      "side": 1,
+      "message": "Done as discussed offline. (Not making it atomic in this CL.)\n\nI also moved the comment on `imt_index_` to indicate that for abstract non-interface methods we actually set the `imt_member_` (and not `hotness_count_`) to zero.",
+      "parentUuid": "6d3d8322_80bcab64",
+      "range": {
+        "startLine": 1044,
+        "startChar": 4,
+        "endLine": 1044,
+        "endChar": 91
+      },
+      "revId": "a63a1380cfa4c1e0419c8affdcc355cd5f7ce54e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6f40e18d_cda6d253",
