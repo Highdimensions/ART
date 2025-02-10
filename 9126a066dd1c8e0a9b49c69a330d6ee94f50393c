@@ -46,6 +46,30 @@
       },
       "revId": "9126a066dd1c8e0a9b49c69a330d6ee94f50393c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eca00a13_b02ab833",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-10T15:59:39Z",
+      "side": 1,
+      "message": "Thanks, that sounds good.\n\nHow about extending that `apex_available` with the `//apex_available:platform` entry, to keep it all in one place?",
+      "parentUuid": "0c152093_b6d23f47",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 42
+      },
+      "revId": "9126a066dd1c8e0a9b49c69a330d6ee94f50393c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
