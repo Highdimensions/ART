@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5649bef_288e06d4",
+        "filename": "runtime/class_loader_context.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1963262
+      },
+      "writtenOn": "2025-02-10T15:51:55Z",
+      "side": 1,
+      "message": "Looks like the check can be replaced by using: `Class::PrettyDescriptor(ObjPtr\u003cmirror::Class\u003e klass)`\nhttps://cs.android.com/android/platform/superproject/main/+/main:art/runtime/mirror/class.cc;l\u003d2096;drc\u003d2bd1c1b20871bcf4ef4660beaa218f2c2bce4630;bpv\u003d1;bpt\u003d1",
+      "range": {
+        "startLine": 1122,
+        "startChar": 0,
+        "endLine": 1125,
+        "endChar": 5
+      },
+      "revId": "f3fe8f48bff22fa8dbffd21568745a54544a7545",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
