@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9909d3a8_3d472358",
+        "filename": "runtime/native/dalvik_system_VMRuntime.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1556717
+      },
+      "writtenOn": "2025-02-10T14:12:56Z",
+      "side": 1,
+      "message": "This variable is unnecessary, and could be inlined. https://abseil.io/tips/161",
+      "range": {
+        "startLine": 251,
+        "startChar": 17,
+        "endLine": 251,
+        "endChar": 35
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "32505a94_95a5ff75",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/native/dalvik_system_VMRuntime.cc",
+              "range": {
+                "startLine": 251,
+                "startChar": 0,
+                "endLine": 253,
+                "endChar": 0
+              },
+              "replacement": "  return android::base::GetIntProperty(std::string(ScopedUtfChars(env, attribute_name)),\n                                       default_value);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "d488e14567b3ebc9d1ad03fd3af5907d5b0b2431",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
