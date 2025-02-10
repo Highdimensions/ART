@@ -46,6 +46,30 @@
       },
       "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9476c1d_bd3028ec",
+        "filename": "runtime/vdex_file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T11:02:40Z",
+      "side": 1,
+      "message": "That\u0027s right, we shouldn\u0027t change the vdex version at this point.",
+      "parentUuid": "6620c3bb_66ff7557",
+      "range": {
+        "startLine": 126,
+        "startChar": 57,
+        "endLine": 126,
+        "endChar": 60
+      },
+      "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
