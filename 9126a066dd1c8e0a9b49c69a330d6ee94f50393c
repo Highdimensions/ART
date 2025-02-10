@@ -22,6 +22,30 @@
       },
       "revId": "9126a066dd1c8e0a9b49c69a330d6ee94f50393c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c152093_b6d23f47",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2025-02-10T15:42:47Z",
+      "side": 1,
+      "message": "Correct, that `apex_available` is causing the problem.  Unfortunately removing it still caused the duplicate rule issues, and I haven\u0027t looked into it yet.  I can file a bug and add TODO\u0027s to all of these to remove them when the extraneous apex_available is removed.",
+      "parentUuid": "e72043f0_b9bd6886",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 42
+      },
+      "revId": "9126a066dd1c8e0a9b49c69a330d6ee94f50393c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
