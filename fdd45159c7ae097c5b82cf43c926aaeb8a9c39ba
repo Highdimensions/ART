@@ -94,6 +94,30 @@
       },
       "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d92d623_f22a32b7",
+        "filename": "runtime/vdex_file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:35:53Z",
+      "side": 1,
+      "message": "I suggest just to reject vdex files containing cdex.",
+      "parentUuid": "f3166954_03032b7c",
+      "range": {
+        "startLine": 126,
+        "startChar": 57,
+        "endLine": 126,
+        "endChar": 60
+      },
+      "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
