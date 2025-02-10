@@ -70,6 +70,30 @@
       },
       "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3166954_03032b7c",
+        "filename": "runtime/vdex_file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-10T11:31:53Z",
+      "side": 1,
+      "message": "Ok. What does #2 entail? Is the vdex version practically frozen indefinitely?\n\nFrom [this code](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/vdex_file.cc;l\u003d126-147;drc\u003d01df4b3a9bb31f21f451452f0ce47632dd8916ad) I get that the vdex file is simply mapped and some checks are only done on the header. Checking for cdex there would mean adding a loop that iterates over the dex sections.\n\nHowever, a cleaner way to handle it is to just ignore any cdex code in the file so that the rest can be used. E.g. [here](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/vdex_file.cc;l\u003d226-234;drc\u003d01df4b3a9bb31f21f451452f0ce47632dd8916ad) that means skipping over them and continuing, but I\u0027ve no idea how many other places needs to be modified to make that work consistently.\n\nRegardless of approach it\u0027s a bit more involved than I have time to take on here, so I\u0027ll leave this CL for now.",
+      "parentUuid": "b9476c1d_bd3028ec",
+      "range": {
+        "startLine": 126,
+        "startChar": 57,
+        "endLine": 126,
+        "endChar": 60
+      },
+      "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
