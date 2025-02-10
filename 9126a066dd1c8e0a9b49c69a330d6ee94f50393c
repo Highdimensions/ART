@@ -94,6 +94,30 @@
       },
       "revId": "9126a066dd1c8e0a9b49c69a330d6ee94f50393c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9176374e_793cd451",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-10T22:59:41Z",
+      "side": 1,
+      "message": "Thanks. I suppose there\u0027s a reason you don\u0027t want to put `//apex_available:platform` in `art_test_defaults` instead. I thought that\u0027d cover all these places. But this works too.",
+      "parentUuid": "dce57cfa_06cd639a",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 42
+      },
+      "revId": "9126a066dd1c8e0a9b49c69a330d6ee94f50393c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
