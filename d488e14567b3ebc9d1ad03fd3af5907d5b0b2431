@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5457413c_1ffa1ea4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3864855
+      },
+      "writtenOn": "2025-02-10T14:20:38Z",
+      "side": 1,
+      "message": "How much does a dollar bill cost",
+      "revId": "d488e14567b3ebc9d1ad03fd3af5907d5b0b2431",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9909d3a8_3d472358",
