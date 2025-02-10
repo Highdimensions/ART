@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e72043f0_b9bd6886",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-10T11:43:06Z",
+      "side": 1,
+      "message": "I find it confusing that tests have apex_available at all - they\u0027re not going into either platform or any APEX.\n\nFrom the explanation below I gather that the problem is that we have other apex_available in our tests, in particular [this one](https://cs.android.com/android/platform/superproject/main/+/main:art/test/Android.bp;l\u003d89-93;drc\u003d1107d58d6fb1e4c421f9d4df44220fed3ebf6b06) (possibly the only one), which I suspect was a workaround for the old implicit logic around APEX variants. Can we delete that instead now?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 42
+      },
+      "revId": "9126a066dd1c8e0a9b49c69a330d6ee94f50393c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
