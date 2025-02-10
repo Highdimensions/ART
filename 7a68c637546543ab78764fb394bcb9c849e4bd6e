@@ -22,6 +22,30 @@
       },
       "revId": "7a68c637546543ab78764fb394bcb9c849e4bd6e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4199b074_8b080f82",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2172,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-10T14:50:14Z",
+      "side": 1,
+      "message": "We have a check for that already https://cs.android.com/android/platform/superproject/main/+/main:art/compiler/optimizing/graph_checker.cc;l\u003d239-246;drc\u003dd0bc68e1f40259230329e6709c72af187f72144c",
+      "parentUuid": "7e565861_5b63ba23",
+      "range": {
+        "startLine": 2172,
+        "startChar": 7,
+        "endLine": 2172,
+        "endChar": 20
+      },
+      "revId": "7a68c637546543ab78764fb394bcb9c849e4bd6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
