@@ -1,6 +1,98 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "8608fd0b_94047d9c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:26:06Z",
+      "side": 1,
+      "message": "Why do we want to allow that?",
+      "range": {
+        "startLine": 11,
+        "startChar": 40,
+        "endLine": 12,
+        "endChar": 43
+      },
+      "revId": "2c4586e526269bc56eb3e2c44390736a554fb33e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54199276_9ffa320d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:26:06Z",
+      "side": 1,
+      "message": "RunCheckpoint",
+      "range": {
+        "startLine": 29,
+        "startChar": 43,
+        "endLine": 29,
+        "endChar": 55
+      },
+      "revId": "2c4586e526269bc56eb3e2c44390736a554fb33e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe895e53_0a68e28a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:26:06Z",
+      "side": 1,
+      "message": "a thread",
+      "range": {
+        "startLine": 30,
+        "startChar": 65,
+        "endLine": 30,
+        "endChar": 71
+      },
+      "revId": "2c4586e526269bc56eb3e2c44390736a554fb33e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "abb80039_52187c79",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:26:06Z",
+      "side": 1,
+      "message": "performance critical ?",
+      "range": {
+        "startLine": 31,
+        "startChar": 31,
+        "endLine": 31,
+        "endChar": 39
+      },
+      "revId": "2c4586e526269bc56eb3e2c44390736a554fb33e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "1843305c_9b998536",
@@ -14,6 +106,91 @@
       "writtenOn": "2025-02-03T12:49:30Z",
       "side": 1,
       "message": "Nicolas, PTAL. Thanks!",
+      "revId": "2c4586e526269bc56eb3e2c44390736a554fb33e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de0fe425_8a321e2d",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:26:06Z",
+      "side": 1,
+      "message": "You can drop the static no? Or move out the the closuer to its own method again?",
+      "range": {
+        "startLine": 200,
+        "startChar": 2,
+        "endLine": 200,
+        "endChar": 8
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "5d4b3acb_56c090e7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 200,
+                "startChar": 0,
+                "endLine": 201,
+                "endChar": 0
+              },
+              "replacement": "  FunctionClosure set_buffer([trace_type](Thread* thread) REQUIRES_SHARED(Locks::mutator_lock_) {\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 281,
+                "startChar": 0,
+                "endLine": 282,
+                "endChar": 0
+              },
+              "replacement": "  FunctionClosure reset_buffer([](Thread* thread) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "2c4586e526269bc56eb3e2c44390736a554fb33e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1f71be1_0bd46c84",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:26:06Z",
+      "side": 1,
+      "message": "Line too long",
+      "revId": "2c4586e526269bc56eb3e2c44390736a554fb33e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "591a553d_a7b53944",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:26:06Z",
+      "side": 1,
+      "message": "Line too long",
       "revId": "2c4586e526269bc56eb3e2c44390736a554fb33e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
