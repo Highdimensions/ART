@@ -70,6 +70,29 @@
       },
       "revId": "7a68c637546543ab78764fb394bcb9c849e4bd6e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6cd8329_36e72eb1",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2302,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-10T16:17:49Z",
+      "side": 1,
+      "message": "Please look at the disassembly to check if clang can optimize this properly. If not, just add the control flow kinds to the switch cases and add a `DCHECK(!IsContolFlow())` to the `default`.",
+      "range": {
+        "startLine": 2302,
+        "startChar": 34,
+        "endLine": 2302,
+        "endChar": 50
+      },
+      "revId": "7a68c637546543ab78764fb394bcb9c849e4bd6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
