@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e565861_5b63ba23",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2172,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:40:46Z",
+      "side": 1,
+      "message": "Ensure graph_checker checks that the ending instruction of a block is a control flow instruction?",
+      "range": {
+        "startLine": 2172,
+        "startChar": 7,
+        "endLine": 2172,
+        "endChar": 20
+      },
+      "revId": "7a68c637546543ab78764fb394bcb9c849e4bd6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
