@@ -118,6 +118,30 @@
       },
       "revId": "9126a066dd1c8e0a9b49c69a330d6ee94f50393c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fb0bab2_c357167f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2025-02-10T23:09:29Z",
+      "side": 1,
+      "message": "Yeah, I think that would just undo the workaround and cause the duplicate rule issues.",
+      "parentUuid": "9176374e_793cd451",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 42
+      },
+      "revId": "9126a066dd1c8e0a9b49c69a330d6ee94f50393c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
