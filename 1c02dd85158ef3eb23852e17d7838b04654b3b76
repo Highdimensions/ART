@@ -313,6 +313,24 @@
       "parentUuid": "3fd7f5a7_39664121",
       "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "24fc0557_d37f78bb",
+        "filename": "runtime/hidden_api.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-10T12:26:28Z",
+      "side": 1,
+      "message": "Actually it shouldn\u0027t even get there at all because of the condition on [this line](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/hidden_api.cc;l\u003d398;drc\u003d0f64014c8516e163e44c07f87a462d2f3ca7c142).",
+      "parentUuid": "30058586_cb38dea5",
+      "revId": "1c02dd85158ef3eb23852e17d7838b04654b3b76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
