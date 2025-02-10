@@ -22,6 +22,30 @@
       },
       "revId": "f3fe8f48bff22fa8dbffd21568745a54544a7545",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7562668d_c6eee208",
+        "filename": "runtime/class_loader_context.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1135107
+      },
+      "writtenOn": "2025-02-10T17:53:36Z",
+      "side": 1,
+      "message": "Done. I used PrettyClass to be consistent with the other use in this file.",
+      "parentUuid": "f5649bef_288e06d4",
+      "range": {
+        "startLine": 1122,
+        "startChar": 0,
+        "endLine": 1125,
+        "endChar": 5
+      },
+      "revId": "f3fe8f48bff22fa8dbffd21568745a54544a7545",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
