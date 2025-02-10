@@ -1,0 +1,178 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3554de77_9d80f2a1",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:55:49Z",
+      "side": 1,
+      "message": "nit: keep same order as parameters?",
+      "range": {
+        "startLine": 437,
+        "startChar": 10,
+        "endLine": 440,
+        "endChar": 0
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "34e606c7_a3df4c62",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 381,
+                "startChar": 0,
+                "endLine": 382,
+                "endChar": 0
+              },
+              "replacement": "        : filename_(\"\"), oat_file_assistant_(oat_file_assistant), is_oat_location_(false) {}\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 437,
+                "startChar": 0,
+                "endLine": 439,
+                "endChar": 0
+              },
+              "replacement": "        : filename_(filename),\n          oat_file_assistant_(oat_file_assistant),\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 447,
+                "startChar": 0,
+                "endLine": 447,
+                "endChar": 0
+              },
+              "replacement": "    const std::string filename_;\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 448,
+                "startChar": 0,
+                "endLine": 449,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 488,
+                "startChar": 0,
+                "endLine": 489,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 491,
+                "startChar": 0,
+                "endLine": 492,
+                "endChar": 0
+              },
+              "replacement": "          oat_fd_(oat_fd),\n          use_fd_(use_fd) {}\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 497,
+                "startChar": 0,
+                "endLine": 498,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 501,
+                "startChar": 0,
+                "endLine": 501,
+                "endChar": 0
+              },
+              "replacement": "    const bool use_fd_;\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 512,
+                "startChar": 0,
+                "endLine": 513,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 514,
+                "startChar": 0,
+                "endLine": 515,
+                "endChar": 0
+              },
+              "replacement": "          vdex_fd_(vdex_fd),\n          use_fd_(use_fd) {}\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 520,
+                "startChar": 0,
+                "endLine": 521,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 523,
+                "startChar": 0,
+                "endLine": 523,
+                "endChar": 0
+              },
+              "replacement": "    const bool use_fd_;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ed313fedf6cd927d9e856a02c6dbce3e5c5ddcee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e2abf2c_5f37552e",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-10T14:55:49Z",
+      "side": 1,
+      "message": "I find this a very odd pattern. Why not keeping the value types with their concrete types?",
+      "range": {
+        "startLine": 619,
+        "startChar": 0,
+        "endLine": 619,
+        "endChar": 75
+      },
+      "revId": "ed313fedf6cd927d9e856a02c6dbce3e5c5ddcee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
