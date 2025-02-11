@@ -28,6 +28,8 @@ import subprocess
 import sys
 import tempfile
 
+import utils
+
 THIS_PATH = os.path.dirname(os.path.realpath(__file__))
 
 TOOLS_GEN_SRCS = [
@@ -58,15 +60,6 @@ def is_interesting(f, tool_dict):
   """
   path = pathlib.Path(f)
   return str(path) in tool_dict['interesting_files']
-
-def get_changed_files(commit):
-  """
-  Gets the files changed in the given commit.
-  """
-  return subprocess.check_output(
-      ["git", 'diff-tree', '--no-commit-id', '--name-only', '-r', commit],
-      stderr=subprocess.STDOUT,
-      universal_newlines=True).split()
 
 def command_line_for_tool(tool_dict, output):
   """
@@ -142,16 +135,12 @@ def run_gen_srcs(files):
 
 
 def main():
-  if 'PREUPLOAD_COMMIT' in os.environ:
-    commit = os.environ['PREUPLOAD_COMMIT']
-  else:
-    print("WARNING: Not running as a pre-upload hook. Assuming commit to check = 'HEAD'", file=sys.stderr)
-    commit = "HEAD"
+  commit = utils.get_commit()
 
   os.chdir(os.path.join(THIS_PATH, '..')) # run tool relative to 'art' directory
   debug_print("CWD: %s" %(os.getcwd()))
 
-  changed_files = get_changed_files(commit)
+  changed_files = utils.get_changed_files_in_commit(commit)
   debug_print("Changed files: %s" %(changed_files))
   return run_gen_srcs(changed_files)
 
