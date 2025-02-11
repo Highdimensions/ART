@@ -1,0 +1,120 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ed33ff5_167c7f4d",
+        "filename": "imgdiag/ati_download_artifacts.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T12:53:50Z",
+      "side": 1,
+      "message": "Add a high-level comment what this script does, and provide some examples.",
+      "fixSuggestions": [
+        {
+          "fixId": "cb418908_25ef4740",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "imgdiag/ati_download_artifacts.py",
+              "range": {
+                "startLine": 3,
+                "startChar": 0,
+                "endLine": 3,
+                "endChar": 0
+              },
+              "replacement": "\"\"\"\nDownload artifacts from ATI.\n\nThis script downloads artifacts from ATI based on the specified invocation IDs or\nthe latest N imgdiag runs.\n\nUsage:\n\n  ati_download_artifacts.py --invocation-id I1234567890 --invocation-id I9876543210\n  ati_download_artifacts.py --imgdiag-atp 10\n\"\"\"\n\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0c94e30f02a687bbc1fd1abc1fac873acb371f99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fe7df8c_89d4c756",
+        "filename": "imgdiag/compare_imgdiag_runs.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T12:53:50Z",
+      "side": 1,
+      "message": "ditto",
+      "fixSuggestions": [
+        {
+          "fixId": "c67b6ce5_5c704367",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "imgdiag/compare_imgdiag_runs.py",
+              "range": {
+                "startLine": 11,
+                "startChar": 0,
+                "endLine": 11,
+                "endChar": 0
+              },
+              "replacement": "\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0c94e30f02a687bbc1fd1abc1fac873acb371f99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0285041_d16295ca",
+        "filename": "imgdiag/dirty_image_objects.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T12:53:50Z",
+      "side": 1,
+      "message": "Can you add to the output of `compare_imgdiag_runs` warnings or messages towards that information? Looks like we could return some confidence of the results based on these thresholds.",
+      "range": {
+        "startLine": 100,
+        "startChar": 127,
+        "endLine": 101,
+        "endChar": 89
+      },
+      "revId": "0c94e30f02a687bbc1fd1abc1fac873acb371f99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd8f2bda_e4e97e05",
+        "filename": "imgdiag/dirty_image_objects.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T12:53:50Z",
+      "side": 1,
+      "message": "mention that these instructions are for an aosp build.",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 53
+      },
+      "revId": "0c94e30f02a687bbc1fd1abc1fac873acb371f99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
