@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb1a32e4_38794ebe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-11T23:39:35Z",
+      "side": 1,
+      "message": "Friendly ping, in case you got lost in a bunch of CLs.",
+      "revId": "996662681d2280ae9d49adfe2d5830c879dc39f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
