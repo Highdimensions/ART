@@ -417,9 +417,9 @@ std::unique_ptr<const DexFile> CommonArtTestImpl::LoadExpectSingleDexFile(const 
 }
 
 void CommonArtTestImpl::ClearDirectory(const char* dirpath, bool recursive) {
-  CHECK(dirpath != nullptr) << std::string(dirpath);
+  ASSERT_TRUE(dirpath != nullptr);
   DIR* dir = opendir(dirpath);
-  CHECK(dir != nullptr) << std::string(dirpath);
+  ASSERT_TRUE(dir != nullptr);
   dirent* e;
   struct stat s;
   while ((e = readdir(dir)) != nullptr) {
