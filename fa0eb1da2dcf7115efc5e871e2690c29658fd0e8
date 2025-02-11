@@ -16,6 +16,24 @@
       "message": "As discussed, could we use memfd from a ziparchive mmap\u0027ed file?",
       "revId": "fa0eb1da2dcf7115efc5e871e2690c29658fd0e8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efa410c1_718e4050",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-11T13:05:50Z",
+      "side": 1,
+      "message": "I did some research and couldn\u0027t find a way to map a file to a memfd or to create an fd from a memory region.",
+      "parentUuid": "54a99b18_6c355abc",
+      "revId": "fa0eb1da2dcf7115efc5e871e2690c29658fd0e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
