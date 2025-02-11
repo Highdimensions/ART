@@ -152,6 +152,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e0b9f30_1c26af0e",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-11T17:49:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3554de77_9d80f2a1",
+      "range": {
+        "startLine": 437,
+        "startChar": 10,
+        "endLine": 440,
+        "endChar": 0
+      },
+      "revId": "ed313fedf6cd927d9e856a02c6dbce3e5c5ddcee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3e2abf2c_5f37552e",
@@ -165,6 +189,30 @@
       "writtenOn": "2025-02-10T14:55:49Z",
       "side": 1,
       "message": "I find this a very odd pattern. Why not keeping the value types with their concrete types?",
+      "range": {
+        "startLine": 619,
+        "startChar": 0,
+        "endLine": 619,
+        "endChar": 75
+      },
+      "revId": "ed313fedf6cd927d9e856a02c6dbce3e5c5ddcee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7c85312_20cc5e4a",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-11T17:49:59Z",
+      "side": 1,
+      "message": "There are two aspects.\n\n1. Use of the abstract type instead of the concrete types.\n\n  This is not strictly needed. I can use the concrete types, but then I\u0027ll have to add a constructor to every concrete type to create the placeholder objects or use something like std::nullopt/nullptr as placeholders. This is probably okay and actually cleaner. I changed to using std::optional with concrete types and using std::nullopt as placeholders. As a side effect, I had to create an empty OatFileInfo because the callers of `GetBestInfo` always expect an OatFileInfo, no matter whether there are files to use or not.\n  \n  \n2. Use of std::unique_ptr instead of the value types.\n\n  The benefit of using std::unique_ptr is that it supports re-assignment and naturally deconstructs the placeholder instance on re-assignment. This is something I cannot do with plain value types because re-assigning to a value type is considered a copy-assignment and it\u0027s prohibited since I have const fields. However, I realized that I can achieve the same with std::optional. I changed to using std::optional, to keep things in the same place and avoid extra memory allocations/deallocations.",
+      "parentUuid": "3e2abf2c_5f37552e",
       "range": {
         "startLine": 619,
         "startChar": 0,
