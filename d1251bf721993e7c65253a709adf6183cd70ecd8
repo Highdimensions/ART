@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7b0f43f_9ca9e9c3",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1691,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T17:30:08Z",
+      "side": 1,
+      "message": "Why do you need this new code?",
+      "range": {
+        "startLine": 1686,
+        "startChar": 0,
+        "endLine": 1691,
+        "endChar": 3
+      },
+      "revId": "d1251bf721993e7c65253a709adf6183cd70ecd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3b29ce5_5a2c0e60",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1956,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T17:30:08Z",
+      "side": 1,
+      "message": "be more specific, see my other comment.",
+      "range": {
+        "startLine": 1955,
+        "startChar": 68,
+        "endLine": 1956,
+        "endChar": 19
+      },
+      "revId": "d1251bf721993e7c65253a709adf6183cd70ecd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26adbf30_f4f6de0c",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T17:30:08Z",
+      "side": 1,
+      "message": "not sure what this means here, should you say \"typically when loading an oat file from a zip file\" ?",
+      "range": {
+        "startLine": 794,
+        "startChar": 80,
+        "endLine": 795,
+        "endChar": 21
+      },
+      "revId": "d1251bf721993e7c65253a709adf6183cd70ecd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
