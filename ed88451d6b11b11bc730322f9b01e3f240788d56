@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3227b0e_f449638d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-11T20:24:40Z",
+      "side": 1,
+      "message": "Any opinions about distinguishing user builds in this way? I don\u0027t want to entirely lose the suspend timeout information. I think the number we see in the field is going down as more specific issues are getting fixed, but probably not enough.",
+      "revId": "ed88451d6b11b11bc730322f9b01e3f240788d56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
