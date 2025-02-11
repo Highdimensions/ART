@@ -539,6 +539,15 @@
       "name": "art-run-test-2283-checker-remove-null-check"
     },
     {
+      "name": "art-run-test-2284-regression-test-368984521-loop-opt"
+    },
+    {
+      "name": "art-run-test-2285-var-and-methodhandles-staticfield-initialization"
+    },
+    {
+      "name": "art-run-test-2286-method-tracing-aot-code"
+    },
+    {
       "name": "art-run-test-300-package-override"
     },
     {
@@ -1334,6 +1343,9 @@
       "name": "art-run-test-731-bounds-check-slow-path"
     },
     {
+      "name": "art-run-test-735-checker-condition-merging"
+    },
+    {
       "name": "art-run-test-805-TooDeepClassInstanceOf"
     },
     {
@@ -2028,6 +2040,15 @@
     },
     {
       "name": "art-run-test-2283-checker-remove-null-check[com.google.android.art.apex]"
+    },
+    {
+      "name": "art-run-test-2284-regression-test-368984521-loop-opt[com.google.android.art.apex]"
+    },
+    {
+      "name": "art-run-test-2285-var-and-methodhandles-staticfield-initialization[com.google.android.art.apex]"
+    },
+    {
+      "name": "art-run-test-2286-method-tracing-aot-code[com.google.android.art.apex]"
     },
     {
       "name": "art-run-test-300-package-override[com.google.android.art.apex]"
@@ -2825,6 +2846,9 @@
       "name": "art-run-test-731-bounds-check-slow-path[com.google.android.art.apex]"
     },
     {
+      "name": "art-run-test-735-checker-condition-merging[com.google.android.art.apex]"
+    },
+    {
       "name": "art-run-test-805-TooDeepClassInstanceOf[com.google.android.art.apex]"
     },
     {
@@ -3536,6 +3560,15 @@
       "name": "art-run-test-2283-checker-remove-null-check"
     },
     {
+      "name": "art-run-test-2284-regression-test-368984521-loop-opt"
+    },
+    {
+      "name": "art-run-test-2285-var-and-methodhandles-staticfield-initialization"
+    },
+    {
+      "name": "art-run-test-2286-method-tracing-aot-code"
+    },
+    {
       "name": "art-run-test-300-package-override"
     },
     {
@@ -4329,6 +4362,9 @@
     },
     {
       "name": "art-run-test-731-bounds-check-slow-path"
+    },
+    {
+      "name": "art-run-test-735-checker-condition-merging"
     },
     {
       "name": "art-run-test-805-TooDeepClassInstanceOf"
@@ -5029,6 +5065,15 @@
       "name": "art-run-test-2283-checker-remove-null-check"
     },
     {
+      "name": "art-run-test-2284-regression-test-368984521-loop-opt"
+    },
+    {
+      "name": "art-run-test-2285-var-and-methodhandles-staticfield-initialization"
+    },
+    {
+      "name": "art-run-test-2286-method-tracing-aot-code"
+    },
+    {
       "name": "art-run-test-300-package-override"
     },
     {
@@ -5822,6 +5867,9 @@
     },
     {
       "name": "art-run-test-731-bounds-check-slow-path"
+    },
+    {
+      "name": "art-run-test-735-checker-condition-merging"
     },
     {
       "name": "art-run-test-805-TooDeepClassInstanceOf"
