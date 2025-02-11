@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bdc2981_7e65e7f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T13:04:19Z",
+      "side": 1,
+      "message": "PTAL, I had to fix it too for `OatFileBackedByVdex`.",
+      "revId": "7a45afe0a99a119592f830b486b6de94513f52ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
