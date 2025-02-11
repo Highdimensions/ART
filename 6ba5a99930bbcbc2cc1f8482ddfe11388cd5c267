@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "637f5ee2_26cf1245",
+        "filename": "runtime/oat/elf_file_impl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T17:21:57Z",
+      "side": 1,
+      "message": "Can\u0027t those be non-virtual in the super class?",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 54
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "17f91f7b_6cd89072",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/elf_file_impl.h",
+              "range": {
+                "startLine": 49,
+                "startChar": 0,
+                "endLine": 59,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/oat/elf_file_impl.h",
+              "range": {
+                "startLine": 69,
+                "startChar": 0,
+                "endLine": 70,
+                "endChar": 0
+              },
+              "replacement": "  const uint8_t* FindDynamicSymbolAddress(const std::string\u0026 symbol_name) const;\n"
+            },
+            {
+              "path": "runtime/oat/elf_file_impl.h",
+              "range": {
+                "startLine": 79,
+                "startChar": 0,
+                "endLine": 80,
+                "endChar": 0
+              },
+              "replacement": "  bool GetLoadedSize(size_t* size, std::string* error_msg) const;\n"
+            },
+            {
+              "path": "runtime/oat/elf_file_impl.h",
+              "range": {
+                "startLine": 82,
+                "startChar": 0,
+                "endLine": 83,
+                "endChar": 0
+              },
+              "replacement": "  size_t GetElfSegmentAlignmentFromFile() const;\n"
+            },
+            {
+              "path": "runtime/oat/elf_file_impl.h",
+              "range": {
+                "startLine": 90,
+                "startChar": 0,
+                "endLine": 91,
+                "endChar": 0
+              },
+              "replacement": "            /*out*/ std::string* error_msg);\n"
+            },
+            {
+              "path": "runtime/oat/elf_file_impl.h",
+              "range": {
+                "startLine": 92,
+                "startChar": 0,
+                "endLine": 93,
+                "endChar": 0
+              },
+              "replacement": "  bool Is64Bit() const { return std::is_same_v\u003cElfTypes, ElfTypes64\u003e; }\n"
+            }
+          ]
+        }
+      ],
+      "revId": "6ba5a99930bbcbc2cc1f8482ddfe11388cd5c267",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
