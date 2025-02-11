@@ -131,6 +131,30 @@
       },
       "revId": "b4651eba9ac532d876f6ba427a4bc4514d52258c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f26a36e0_e8765a00",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 4896,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-11T18:55:48Z",
+      "side": 1,
+      "message": "Much less mysterious. Thanks!",
+      "parentUuid": "8bb8cda4_10e74674",
+      "range": {
+        "startLine": 4896,
+        "startChar": 75,
+        "endLine": 4896,
+        "endChar": 87
+      },
+      "revId": "b4651eba9ac532d876f6ba427a4bc4514d52258c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
