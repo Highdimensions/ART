@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "460ad153_ddacd29c",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1691,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-11T18:05:32Z",
+      "side": 1,
+      "message": "Because I added intern strings in `ClassLinker::OpenImageDexFiles`.",
+      "parentUuid": "e7b0f43f_9ca9e9c3",
+      "range": {
+        "startLine": 1686,
+        "startChar": 0,
+        "endLine": 1691,
+        "endChar": 3
+      },
+      "revId": "d1251bf721993e7c65253a709adf6183cd70ecd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f3b29ce5_5a2c0e60",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "11842691_9bed7a82",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1956,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-11T18:05:32Z",
+      "side": 1,
+      "message": "See my other reply.",
+      "parentUuid": "f3b29ce5_5a2c0e60",
+      "range": {
+        "startLine": 1955,
+        "startChar": 68,
+        "endLine": 1956,
+        "endChar": 19
+      },
+      "revId": "d1251bf721993e7c65253a709adf6183cd70ecd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "26adbf30_f4f6de0c",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-02-11T17:30:08Z",
       "side": 1,
       "message": "not sure what this means here, should you say \"typically when loading an oat file from a zip file\" ?",
+      "range": {
+        "startLine": 794,
+        "startChar": 80,
+        "endLine": 795,
+        "endChar": 21
+      },
+      "revId": "d1251bf721993e7c65253a709adf6183cd70ecd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "845675a0_c4856288",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-11T18:05:32Z",
+      "side": 1,
+      "message": "This actually has nothing to do with loading from a zip file or not. During Cloud Compilation, we can\u0027t pass the full path through `--dex-location` to dex2oat. Instead, we can only pass a partial path (`--dex-location\u003dbase.apk`).",
+      "parentUuid": "26adbf30_f4f6de0c",
       "range": {
         "startLine": 794,
         "startChar": 80,
