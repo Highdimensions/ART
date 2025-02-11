@@ -69,6 +69,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00e20c52_07a84e84",
+        "filename": "libartbase/base/debugstore.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1951730
+      },
+      "writtenOn": "2025-02-11T10:15:46Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "8a1520f0_1cb5d23f",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 17
+      },
+      "revId": "cfea1be3bec9af69e7213871aaf4205dcf707d7c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "270dd882_622d92f8",
@@ -126,6 +150,30 @@
           ]
         }
       ],
+      "revId": "cfea1be3bec9af69e7213871aaf4205dcf707d7c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "429fab9e_5ea1aec0",
+        "filename": "libartbase/base/debugstore.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1951730
+      },
+      "writtenOn": "2025-02-11T10:15:46Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "270dd882_622d92f8",
+      "range": {
+        "startLine": 26,
+        "startChar": 24,
+        "endLine": 26,
+        "endChar": 37
+      },
       "revId": "cfea1be3bec9af69e7213871aaf4205dcf707d7c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
