@@ -165,7 +165,7 @@ TEST_F(HeapTest, GCMetrics) {
   if (fg_collector_type == kCollectorTypeCC || fg_collector_type == kCollectorTypeCMC) {
     // Only the Concurrent Copying and Concurrent Mark-Compact collectors enable
     // GC metrics at the moment.
-    if (heap->GetUseGenerationalCC()) {
+    if (heap->GetUseGenerational()) {
       // Check that full-heap and/or young-generation GC metrics are non-null
       // after trigerring the collection.
       EXPECT_PRED2(
@@ -190,7 +190,7 @@ TEST_F(HeapTest, GCMetrics) {
       // young-generation collections) is null (b/271112044). Temporarily
       // suspend the following checks while we investigate.
       //
-      // TODO(b/271112044): Investigate and adjust these expectations and/or the
+      // TODO(b/271990567): Investigate and adjust these expectations and/or the
       // corresponding metric logic.
 #if 0
       EXPECT_PRED2(AnyIsFalse, full_gc_duration->IsNull(), young_gc_duration->IsNull());
@@ -209,8 +209,15 @@ TEST_F(HeapTest, GCMetrics) {
       EXPECT_FALSE(full_gc_scanned_bytes_delta->IsNull());
       EXPECT_FALSE(full_gc_freed_bytes->IsNull());
       EXPECT_FALSE(full_gc_freed_bytes_delta->IsNull());
+      // Like the generational case, these GC duration can be less than a
+      // millisecond here as well (b/391531096). Temporarily disabling the
+      // tests.
+      // TODO(b/271990567): Possibly make the GCs above more time consuming to
+      // avoid the situation.
+#if 0
       EXPECT_FALSE(full_gc_duration->IsNull());
       EXPECT_FALSE(full_gc_duration_delta->IsNull());
+#endif
 
       EXPECT_TRUE(young_gc_collection_time->IsNull());
       EXPECT_TRUE(young_gc_count->IsNull());

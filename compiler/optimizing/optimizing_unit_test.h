@@ -90,6 +90,11 @@ inline std::ostream& operator<<(std::ostream& os, const InstructionDumper& id) {
 #define ASSERT_INS_REMOVED(a) ASSERT_TRUE(IsRemoved(a)) << "Not removed: " << (InstructionDumper{a})
 #define ASSERT_INS_RETAINED(a) ASSERT_FALSE(IsRemoved(a)) << "Removed: " << (InstructionDumper{a})
 
+#define EXPECT_BLOCK_REMOVED(b) EXPECT_TRUE(IsRemoved(b)) << "Not removed: B" << b->GetBlockId()
+#define EXPECT_BLOCK_RETAINED(b) EXPECT_FALSE(IsRemoved(b)) << "Removed: B" << b->GetBlockId()
+#define ASSERT_BLOCK_REMOVED(b) ASSERT_TRUE(IsRemoved(b)) << "Not removed: B" << b->GetBlockId()
+#define ASSERT_BLOCK_RETAINED(b) ASSERT_FALSE(IsRemoved(b)) << "Removed: B" << b->GetBlockId()
+
 inline LiveInterval* BuildInterval(const size_t ranges[][2],
                                    size_t number_of_ranges,
                                    ScopedArenaAllocator* allocator,
@@ -348,6 +353,8 @@ class OptimizingUnitTestHelper {
   // empty, leaving the construction of an appropriate condition and `HIf` to the caller.
   // Note: The `loop_exit` shall be the "then" successor of the "loop-header". If the `loop_exit`
   // is needed as the "else" successor, use `HBlock::SwapSuccessors()` to adjust the order.
+  // Note: A `do { ... } while (...);` loop pattern has the same block structure, except that
+  // the `loop_body` is a single-goto block that exists purely to avoid a critical edge.
   std::tuple<HBasicBlock*, HBasicBlock*, HBasicBlock*> CreateWhileLoop(HBasicBlock* loop_exit) {
     HBasicBlock* pre_header = AddNewBlock();
     HBasicBlock* loop_header = AddNewBlock();
@@ -367,26 +374,54 @@ class OptimizingUnitTestHelper {
     return {pre_header, loop_header, loop_body};
   }
 
-  // Insert "pre-header" and "loop" blocks before a given `loop_exit` block and connect them in a
-  // `do { ... } while (...);` loop pattern. Return the new blocks. Adds `HGoto` to the "pre-header"
-  // block but leaves the "loop" block empty, leaving the construction of an appropriate condition
-  // and `HIf` to the caller.
-  // Note: The `loop_exit` shall be the "then" successor of the "loop". If the `loop_exit`
-  // is needed as the "else" successor, use `HBlock::SwapSuccessors()` to adjust the order.
-  std::tuple<HBasicBlock*, HBasicBlock*> CreateDoWhileLoop(HBasicBlock* loop_exit) {
-    HBasicBlock* pre_header = AddNewBlock();
-    HBasicBlock* loop = AddNewBlock();
+  // Insert blocks for an irreducible loop before the `loop_exit`:
+  //
+  //      <loop_exit's old predecessor>
+  //                    |
+  //                  split
+  //                 /     \
+  //   left_preheader       right_preheader
+  //         |                     |
+  //    left_header <------- right_header <-+
+  //     |  |                               |
+  //     |  +------------> body ------------+
+  //     |
+  //    loop_exit
+  //
+  // Note that `left_preheader`, `right_preheader` and `body` are needed to avoid critical edges.
+  //
+  // `HGoto` instructions are added to `left_preheader`, `right_preheader`, `body`
+  // and `right_header`. To complete the control flow, the caller should add `HIf`
+  // to `split` and `left_header`.
+  //
+  // Returns `{split, left_header, right_header, body}`.
+  std::tuple<HBasicBlock*, HBasicBlock*, HBasicBlock*, HBasicBlock*> CreateIrreducibleLoop(
+      HBasicBlock* loop_exit) {
+    HBasicBlock* split = AddNewBlock();
+    HBasicBlock* left_preheader = AddNewBlock();
+    HBasicBlock* right_preheader = AddNewBlock();
+    HBasicBlock* left_header = AddNewBlock();
+    HBasicBlock* right_header = AddNewBlock();
+    HBasicBlock* body = AddNewBlock();
 
     HBasicBlock* predecessor = loop_exit->GetSinglePredecessor();
-    predecessor->ReplaceSuccessor(loop_exit, pre_header);
+    predecessor->ReplaceSuccessor(loop_exit, split);
 
-    pre_header->AddSuccessor(loop);
-    loop->AddSuccessor(loop_exit);  // true successor
-    loop->AddSuccessor(loop);  // false successor
+    split->AddSuccessor(left_preheader);  // true successor
+    split->AddSuccessor(right_preheader);  // false successor
+    left_preheader->AddSuccessor(left_header);
+    right_preheader->AddSuccessor(right_header);
+    left_header->AddSuccessor(loop_exit);  // true successor
+    left_header->AddSuccessor(body);  // false successor
+    body->AddSuccessor(right_header);
+    right_header->AddSuccessor(left_header);
 
-    MakeGoto(pre_header);
+    MakeGoto(left_preheader);
+    MakeGoto(right_preheader);
+    MakeGoto(body);
+    MakeGoto(right_header);
 
-    return {pre_header, loop};
+    return {split, left_header, right_header, body};
   }
 
   HBasicBlock* AddNewBlock() {
@@ -873,6 +908,19 @@ class OptimizingUnitTestHelper {
     return {phi, add};
   }
 
+  std::tuple<HPhi*, HPhi*, HAdd*> MakeLinearIrreducibleLoopVar(HBasicBlock* left_header,
+                                                               HBasicBlock* right_header,
+                                                               HBasicBlock* body,
+                                                               HInstruction* left_initial,
+                                                               HInstruction* right_initial,
+                                                               HInstruction* increment) {
+    HPhi* left_phi = MakePhi(left_header, {left_initial, /* placeholder */ left_initial});
+    HAdd* add = MakeBinOp<HAdd>(body, left_phi->GetType(), left_phi, increment);
+    HPhi* right_phi = MakePhi(right_header, {right_initial, add});
+    left_phi->ReplaceInput(right_phi, 1u);  // Update back-edge input.
+    return {left_phi, right_phi, add};
+  }
+
   dex::TypeIndex DefaultTypeIndexForType(DataType::Type type) {
     switch (type) {
       case DataType::Type::kBool:
@@ -909,12 +957,38 @@ class OptimizingUnitTestHelper {
     return val;
   }
 
+  static bool PredecessorsEqual(HBasicBlock* block,
+                                std::initializer_list<HBasicBlock*> expected) {
+    return RangeEquals(block->GetPredecessors(), expected);
+  }
+
+  static bool InputsEqual(HInstruction* instruction,
+                          std::initializer_list<HInstruction*> expected) {
+    return RangeEquals(instruction->GetInputs(), expected);
+  }
+
+  // Returns if the `instruction` is removed from the graph.
+  static inline bool IsRemoved(HInstruction* instruction) {
+    return instruction->GetBlock() == nullptr;
+  }
+
+  // Returns if the `block` is removed from the graph.
+  static inline bool IsRemoved(HBasicBlock* block) {
+    return block->GetGraph() == nullptr;
+  }
+
  protected:
   bool CheckGraph(HGraph* graph, std::ostream& oss) {
     GraphChecker checker(graph);
     checker.Run();
     checker.Dump(oss);
     return checker.IsValid();
+  }
+
+  template <typename Range, typename ElementType>
+  static bool RangeEquals(Range&& range, std::initializer_list<ElementType> expected) {
+    return std::distance(range.begin(), range.end()) == expected.size() &&
+           std::equal(range.begin(), range.end(), expected.begin());
   }
 
   std::vector<std::unique_ptr<const StandardDexFile>> dex_files_;
@@ -954,11 +1028,6 @@ inline std::string Patch(const std::string& original, const diff_t& diff) {
     result.replace(pos, p.first.size(), p.second);
   }
   return result;
-}
-
-// Returns if the instruction is removed from the graph.
-inline bool IsRemoved(HInstruction* instruction) {
-  return instruction->GetBlock() == nullptr;
 }
 
 inline std::ostream& operator<<(std::ostream& oss, const AdjacencyListGraph& alg) {

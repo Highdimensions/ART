@@ -157,6 +157,7 @@ class OatSymbolizer final {
     builder_.reset(new ElfBuilder<ElfTypes>(isa, output_stream.get()));
 
     builder_->Start();
+    builder_->ReserveSpaceForDynamicSection(elf_file->GetPath());
 
     auto* rodata = builder_->GetRoData();
     auto* text = builder_->GetText();
@@ -699,7 +700,7 @@ class OatDumper {
         return false;
       }
       for (ClassAccessor accessor : dex_file->GetClasses()) {
-        const char* descriptor = accessor.GetDescriptor();
+        std::string_view descriptor = accessor.GetDescriptorView();
         if (DescriptorToDot(descriptor).find(options_.class_filter_) == std::string::npos) {
           continue;
         }
@@ -933,7 +934,7 @@ class OatDumper {
     ScopedIndentation indent1(&vios);
     for (ClassAccessor accessor : dex_file->GetClasses()) {
       // TODO: Support regex
-      const char* descriptor = accessor.GetDescriptor();
+      std::string_view descriptor = accessor.GetDescriptorView();
       if (DescriptorToDot(descriptor).find(options_.class_filter_) == std::string::npos) {
         continue;
       }
@@ -941,12 +942,10 @@ class OatDumper {
       const uint16_t class_def_index = accessor.GetClassDefIndex();
       uint32_t oat_class_offset = oat_dex_file.GetOatClassOffset(class_def_index);
       const OatFile::OatClass oat_class = oat_dex_file.GetOatClass(class_def_index);
-      os << StringPrintf("%zd: %s (offset=0x%08zx) (type_idx=%d)",
-                         static_cast<ssize_t>(class_def_index),
-                         descriptor,
-                         AdjustOffset(oat_class_offset),
-                         accessor.GetClassIdx().index_)
-         << " (" << oat_class.GetStatus() << ")" << " (" << oat_class.GetType() << ")\n";
+      os << static_cast<ssize_t>(class_def_index) << ": " << descriptor << " (offset=0x"
+         << StringPrintf("%08zx", AdjustOffset(oat_class_offset))
+         << ") (type_idx=" << accessor.GetClassIdx().index_
+         << ") (" << oat_class.GetStatus() << ")" << " (" << oat_class.GetType() << ")\n";
       // TODO: include bitmap here if type is kOatClassSomeCompiled?
       if (options_.list_classes_) {
         continue;
@@ -2075,8 +2074,10 @@ class ImageDumper {
     if (super != nullptr) {
       DumpFields(os, obj, super);
     }
-    for (ArtField& field : klass->GetIFields()) {
-      PrintField(os, &field, obj);
+    for (ArtField& field : klass->GetFields()) {
+      if (!field.IsStatic()) {
+        PrintField(os, &field, obj);
+      }
     }
   }
 
@@ -2190,11 +2191,13 @@ class ImageDumper {
         }
       }
 
-      if (klass->NumStaticFields() != 0) {
+      if (klass->HasStaticFields()) {
         os << "STATICS:\n";
         ScopedIndentation indent2(&vios_);
-        for (ArtField& field : klass->GetSFields()) {
-          PrintField(os, &field, field.GetDeclaringClass());
+        for (ArtField& field : klass->GetFields()) {
+          if (field.IsStatic()) {
+            PrintField(os, &field, field.GetDeclaringClass());
+          }
         }
       }
     }
@@ -2927,7 +2930,7 @@ class IMTDumper {
     if (class_name[0] == 'L') {
       descriptor = class_name;
     } else {
-      descriptor = DotToDescriptor(class_name.c_str());
+      descriptor = DotToDescriptor(class_name);
     }
 
     ObjPtr<mirror::Class> klass = runtime->GetClassLinker()->FindClass(
@@ -3001,10 +3004,18 @@ class IMTDumper {
 
       for (ArtMethod& iface_method : iface->GetVirtualMethods(pointer_size)) {
         uint32_t class_hash, name_hash, signature_hash;
-        ImTable::GetImtHashComponents(&iface_method, &class_hash, &name_hash, &signature_hash);
+        ImTable::GetImtHashComponents(*iface_method.GetDexFile(),
+                                      iface_method.GetDexMethodIndex(),
+                                      &class_hash,
+                                      &name_hash,
+                                      &signature_hash);
         uint32_t imt_slot = ImTable::GetImtIndex(&iface_method);
+        // Note: For default methods we use the dex method index for calculating the slot.
+        // For abstract methods the compile-time constant `kImTableHashUseName` determines
+        // whether we use the component hashes (current behavior) or the dex method index.
         std::cerr << "    " << iface_method.PrettyMethod(true)
             << " slot=" << imt_slot
+            << " dex_method_index=" << iface_method.GetDexMethodIndex()
             << std::hex
             << " class_hash=0x" << class_hash
             << " name_hash=0x" << name_hash

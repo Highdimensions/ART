@@ -15,6 +15,16 @@
 package: "com.android.art.flags"
 container: "com.android.art"
 
+# Flag for generational CMC feature
+flag {
+  name: "use_generational_cmc"
+  namespace: "art_performance"
+  description: "Flag to control whether CMC's generational logic should be used or not"
+  bug: "343220989"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
 # Flag for the experimental feature of on-demand method tracing
 flag {
   name: "always_enable_profile_code"
@@ -51,4 +61,13 @@ flag {
   bug: "373820009"
   is_fixed_read_only: true
   is_exported: true
+}
+
+flag {
+  name: "fast_baseline_compiler"
+  namespace: "art_performance"
+  description: "Flag to enable the fast ARM64 baseline compiler"
+  bug: "384433113"
+  is_fixed_read_only: true
+  is_exported: false
 }

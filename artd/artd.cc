@@ -1172,8 +1172,7 @@ ndk::ScopedAStatus Artd::dexopt(
   }
 
   AddBootImageFlags(args);
-  AddCompilerConfigFlags(
-      in_instructionSet, in_compilerFilter, in_priorityClass, in_dexoptOptions, args);
+  AddCompilerConfigFlags(in_instructionSet, in_compilerFilter, in_dexoptOptions, args);
   AddPerfConfigFlags(in_priorityClass, art_exec_args, args);
 
   // For being surfaced in crash reports on crashes.
@@ -1629,7 +1628,6 @@ ScopedAStatus Artd::checkPreRebootSystemRequirements(const std::string& in_chroo
 Result<void> Artd::Start() {
   OR_RETURN(SetLogVerbosity());
   MemMap::Init();
-  Runtime::AllowPageSizeAccess();
 
   ScopedAStatus status = ScopedAStatus::fromStatus(AServiceManager_registerLazyService(
       this->asBinder().get(), options_.is_pre_reboot ? kPreRebootServiceName : kServiceName));
@@ -1795,7 +1793,6 @@ void Artd::AddBootImageFlags(/*out*/ CmdlineBuilder& args) {
 
 void Artd::AddCompilerConfigFlags(const std::string& instruction_set,
                                   const std::string& compiler_filter,
-                                  PriorityClass priority_class,
                                   const DexoptOptions& dexopt_options,
                                   /*out*/ CmdlineBuilder& args) {
   args.Add("--instruction-set=%s", instruction_set);
@@ -1806,8 +1803,6 @@ void Artd::AddCompilerConfigFlags(const std::string& instruction_set,
 
   args.Add("--compiler-filter=%s", compiler_filter)
       .Add("--compilation-reason=%s", dexopt_options.compilationReason);
-
-  args.AddIf(priority_class >= PriorityClass::INTERACTIVE, "--compact-dex-level=none");
 
   args.AddIfNonEmpty("--max-image-block-size=%s",
                      props_->GetOrEmpty("dalvik.vm.dex2oat-max-image-block-size"))
@@ -2009,10 +2004,25 @@ Result<void> Artd::PreRebootInitDeriveClasspath(const std::string& path) {
     return ErrnoErrorf("Failed to create '{}'", path);
   }
 
+  if (pre_reboot_build_props_ == nullptr) {
+    pre_reboot_build_props_ = std::make_unique<BuildSystemProperties>(
+        OR_RETURN(BuildSystemProperties::Create("/system/build.prop")));
+  }
+  std::string sdk_version = pre_reboot_build_props_->GetOrEmpty("ro.build.version.sdk");
+  std::string codename = pre_reboot_build_props_->GetOrEmpty("ro.build.version.codename");
+  std::string known_codenames =
+      pre_reboot_build_props_->GetOrEmpty("ro.build.version.known_codenames");
+  if (sdk_version.empty() || codename.empty() || known_codenames.empty()) {
+    return Errorf("Failed to read system properties");
+  }
+
   CmdlineBuilder args = OR_RETURN(GetArtExecCmdlineBuilder());
   args.Add("--keep-fds=%d", output->Fd())
       .Add("--")
       .Add("/apex/com.android.sdkext/bin/derive_classpath")
+      .Add("--override-device-sdk-version=%s", sdk_version)
+      .Add("--override-device-codename=%s", codename)
+      .Add("--override-device-known-codenames=%s", known_codenames)
       .Add("/proc/self/fd/%d", output->Fd());
 
   LOG(INFO) << "Running derive_classpath: " << Join(args.Get(), /*separator=*/" ");

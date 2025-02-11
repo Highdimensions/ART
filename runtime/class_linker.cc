@@ -1092,36 +1092,6 @@ void ClassLinker::FinishInit(Thread* self) {
 
   CreateStringInitBindings(self, this);
 
-  // Let the heap know some key offsets into java.lang.ref instances
-  // Note: we hard code the field indexes here rather than using FindInstanceField
-  // as the types of the field can't be resolved prior to the runtime being
-  // fully initialized
-  StackHandleScope<3> hs(self);
-  Handle<mirror::Class> java_lang_ref_Reference =
-      hs.NewHandle(GetClassRoot<mirror::Reference>(this));
-  Handle<mirror::Class> java_lang_ref_FinalizerReference =
-      hs.NewHandle(FindSystemClass(self, "Ljava/lang/ref/FinalizerReference;"));
-
-  ArtField* pendingNext = java_lang_ref_Reference->GetInstanceField(0);
-  CHECK_STREQ(pendingNext->GetName(), "pendingNext");
-  CHECK_STREQ(pendingNext->GetTypeDescriptor(), "Ljava/lang/ref/Reference;");
-
-  ArtField* queue = java_lang_ref_Reference->GetInstanceField(1);
-  CHECK_STREQ(queue->GetName(), "queue");
-  CHECK_STREQ(queue->GetTypeDescriptor(), "Ljava/lang/ref/ReferenceQueue;");
-
-  ArtField* queueNext = java_lang_ref_Reference->GetInstanceField(2);
-  CHECK_STREQ(queueNext->GetName(), "queueNext");
-  CHECK_STREQ(queueNext->GetTypeDescriptor(), "Ljava/lang/ref/Reference;");
-
-  ArtField* referent = java_lang_ref_Reference->GetInstanceField(3);
-  CHECK_STREQ(referent->GetName(), "referent");
-  CHECK_STREQ(referent->GetTypeDescriptor(), "Ljava/lang/Object;");
-
-  ArtField* zombie = java_lang_ref_FinalizerReference->GetInstanceField(2);
-  CHECK_STREQ(zombie->GetName(), "zombie");
-  CHECK_STREQ(zombie->GetTypeDescriptor(), "Ljava/lang/Object;");
-
   // ensure all class_roots_ are initialized
   for (size_t i = 0; i < static_cast<size_t>(ClassRoot::kMax); i++) {
     ClassRoot class_root = static_cast<ClassRoot>(i);
@@ -1143,6 +1113,7 @@ void ClassLinker::FinishInit(Thread* self) {
   // ensure that the class will be initialized.
   if (kMemoryToolIsAvailable && !Runtime::Current()->IsAotCompiler()) {
     ObjPtr<mirror::Class> soe_klass = FindSystemClass(self, "Ljava/lang/StackOverflowError;");
+    StackHandleScope<1> hs(self);
     if (soe_klass == nullptr || !EnsureInitialized(self, hs.NewHandle(soe_klass), true, true)) {
       // Strange, but don't crash.
       LOG(WARNING) << "Could not prepare StackOverflowError.";
@@ -2003,10 +1974,7 @@ class ImageChecker final {
       CHECK(class_class != nullptr) << "Null class class " << obj;
       if (obj_klass == class_class) {
         auto klass = obj->AsClass();
-        for (ArtField& field : klass->GetIFields()) {
-          CHECK_EQ(field.GetDeclaringClass<kWithoutReadBarrier>(), klass);
-        }
-        for (ArtField& field : klass->GetSFields()) {
+        for (ArtField& field : klass->GetFields()) {
           CHECK_EQ(field.GetDeclaringClass<kWithoutReadBarrier>(), klass);
         }
         for (ArtMethod& m : klass->GetMethods(kPointerSize)) {
@@ -2310,6 +2278,10 @@ bool ClassLinker::AddImageSpace(gc::space::ImageSpace* space,
       }, space->Begin(), image_pointer_size_);
     }
 
+    for (auto dex_cache : dex_caches.Iterate<mirror::DexCache>()) {
+      CHECK(!dex_cache->GetDexFile()->IsCompactDexFile());
+    }
+
     ScopedTrace trace("AppImage:UpdateCodeItemAndNterp");
     bool can_use_nterp = interpreter::CanRuntimeUseNterp();
     uint16_t hotness_threshold = runtime->GetJITOptions()->GetWarmupThreshold();
@@ -2319,7 +2291,7 @@ bool ClassLinker::AddImageSpace(gc::space::ImageSpace* space,
       if (method.HasCodeItem()) {
         const dex::CodeItem* code_item = method.GetDexFile()->GetCodeItem(
             reinterpret_cast32<uint32_t>(method.GetDataPtrSize(image_pointer_size_)));
-        method.SetCodeItem(code_item, method.GetDexFile()->IsCompactDexFile());
+        method.SetCodeItem(code_item);
         // The hotness counter may have changed since we compiled the image, so
         // reset it with the runtime value.
         method.ResetCounter(hotness_threshold);
@@ -3859,44 +3831,6 @@ class ClassLinker::OatClassCodeIterator {
   const uint32_t num_methods_;
 };
 
-inline void ClassLinker::LinkCode(ArtMethod* method,
-                                  uint32_t class_def_method_index,
-                                  /*inout*/ OatClassCodeIterator* occi) {
-  ScopedAssertNoThreadSuspension sants(__FUNCTION__);
-  Runtime* const runtime = Runtime::Current();
-  if (runtime->IsAotCompiler()) {
-    // The following code only applies to a non-compiler runtime.
-    return;
-  }
-
-  // Method shouldn't have already been linked.
-  DCHECK_EQ(method->GetEntryPointFromQuickCompiledCode(), nullptr);
-  DCHECK(!method->GetDeclaringClass()->IsVisiblyInitialized());  // Actually ClassStatus::Idx.
-
-  if (!method->IsInvokable()) {
-    EnsureThrowsInvocationError(this, method);
-    occi->SkipAbstract(class_def_method_index);
-    return;
-  }
-
-  const void* quick_code = occi->GetAndAdvance(class_def_method_index);
-  if (method->IsNative() && quick_code == nullptr) {
-    const void* boot_jni_stub = FindBootJniStub(method);
-    if (boot_jni_stub != nullptr) {
-      // Use boot JNI stub if found.
-      quick_code = boot_jni_stub;
-    }
-  }
-  runtime->GetInstrumentation()->InitializeMethodsCode(method, quick_code);
-
-  if (method->IsNative()) {
-    // Set up the dlsym lookup stub. Do not go through `UnregisterNative()`
-    // as the extra processing for @CriticalNative is not needed yet.
-    method->SetEntryPointFromJni(
-        method->IsCriticalNative() ? GetJniDlsymLookupCriticalStub() : GetJniDlsymLookupStub());
-  }
-}
-
 void ClassLinker::SetupClass(const DexFile& dex_file,
                              const dex::ClassDef& dex_class_def,
                              Handle<mirror::Class> klass,
@@ -4000,124 +3934,6 @@ class ClassLinker::MethodAnnotationsIterator {
   const dex::MethodAnnotationsItem* const end_;
 };
 
-void ClassLinker::LoadClass(Thread* self,
-                            const DexFile& dex_file,
-                            const dex::ClassDef& dex_class_def,
-                            Handle<mirror::Class> klass) {
-  ClassAccessor accessor(dex_file,
-                         dex_class_def,
-                         /* parse_hiddenapi_class_data= */ klass->IsBootStrapClassLoaded());
-  if (!accessor.HasClassData()) {
-    return;
-  }
-  Runtime* const runtime = Runtime::Current();
-  {
-    // Note: We cannot have thread suspension until the field and method arrays are setup or else
-    // Class::VisitFieldRoots may miss some fields or methods.
-    ScopedAssertNoThreadSuspension nts(__FUNCTION__);
-    // Load static fields.
-    // We allow duplicate definitions of the same field in a class_data_item
-    // but ignore the repeated indexes here, b/21868015.
-    LinearAlloc* const allocator = GetAllocatorForClassLoader(klass->GetClassLoader());
-    LengthPrefixedArray<ArtField>* sfields = AllocArtFieldArray(self,
-                                                                allocator,
-                                                                accessor.NumStaticFields());
-    LengthPrefixedArray<ArtField>* ifields = AllocArtFieldArray(self,
-                                                                allocator,
-                                                                accessor.NumInstanceFields());
-    size_t num_sfields = 0u;
-    size_t num_ifields = 0u;
-    uint32_t last_static_field_idx = 0u;
-    uint32_t last_instance_field_idx = 0u;
-
-    // Methods
-    bool has_oat_class = false;
-    const OatFile::OatClass oat_class = (runtime->IsStarted() && !runtime->IsAotCompiler())
-        ? OatFile::FindOatClass(dex_file, klass->GetDexClassDefIndex(), &has_oat_class)
-        : OatFile::OatClass::Invalid();
-    OatClassCodeIterator occi(oat_class);
-    klass->SetMethodsPtr(
-        AllocArtMethodArray(self, allocator, accessor.NumMethods()),
-        accessor.NumDirectMethods(),
-        accessor.NumVirtualMethods());
-    size_t class_def_method_index = 0;
-    uint32_t last_dex_method_index = dex::kDexNoIndex;
-    size_t last_class_def_method_index = 0;
-
-    // Initialize separate `MethodAnnotationsIterator`s for direct and virtual methods.
-    MethodAnnotationsIterator mai_direct(dex_file, dex_file.GetAnnotationsDirectory(dex_class_def));
-    MethodAnnotationsIterator mai_virtual = mai_direct;
-
-    uint16_t hotness_threshold = runtime->GetJITOptions()->GetWarmupThreshold();
-    // Use the visitor since the ranged based loops are bit slower from seeking. Seeking to the
-    // methods needs to decode all of the fields.
-    accessor.VisitFieldsAndMethods([&](
-        const ClassAccessor::Field& field) REQUIRES_SHARED(Locks::mutator_lock_) {
-          uint32_t field_idx = field.GetIndex();
-          DCHECK_GE(field_idx, last_static_field_idx);  // Ordering enforced by DexFileVerifier.
-          if (num_sfields == 0 || LIKELY(field_idx > last_static_field_idx)) {
-            LoadField(field, klass, &sfields->At(num_sfields));
-            ++num_sfields;
-            last_static_field_idx = field_idx;
-          }
-        }, [&](const ClassAccessor::Field& field) REQUIRES_SHARED(Locks::mutator_lock_) {
-          uint32_t field_idx = field.GetIndex();
-          DCHECK_GE(field_idx, last_instance_field_idx);  // Ordering enforced by DexFileVerifier.
-          if (num_ifields == 0 || LIKELY(field_idx > last_instance_field_idx)) {
-            LoadField(field, klass, &ifields->At(num_ifields));
-            ++num_ifields;
-            last_instance_field_idx = field_idx;
-          }
-        }, [&](const ClassAccessor::Method& method) REQUIRES_SHARED(Locks::mutator_lock_) {
-          ArtMethod* art_method = klass->GetDirectMethodUnchecked(class_def_method_index,
-              image_pointer_size_);
-          LoadMethod(dex_file, method, klass.Get(), &mai_direct, art_method);
-          LinkCode(art_method, class_def_method_index, &occi);
-          uint32_t it_method_index = method.GetIndex();
-          if (last_dex_method_index == it_method_index) {
-            // duplicate case
-            art_method->SetMethodIndex(last_class_def_method_index);
-          } else {
-            art_method->SetMethodIndex(class_def_method_index);
-            last_dex_method_index = it_method_index;
-            last_class_def_method_index = class_def_method_index;
-          }
-          art_method->ResetCounter(hotness_threshold);
-          ++class_def_method_index;
-        }, [&](const ClassAccessor::Method& method) REQUIRES_SHARED(Locks::mutator_lock_) {
-          ArtMethod* art_method = klass->GetVirtualMethodUnchecked(
-              class_def_method_index - accessor.NumDirectMethods(),
-              image_pointer_size_);
-          art_method->ResetCounter(hotness_threshold);
-          LoadMethod(dex_file, method, klass.Get(), &mai_virtual, art_method);
-          LinkCode(art_method, class_def_method_index, &occi);
-          ++class_def_method_index;
-        });
-
-    if (UNLIKELY(num_ifields + num_sfields != accessor.NumFields())) {
-      LOG(WARNING) << "Duplicate fields in class " << klass->PrettyDescriptor()
-          << " (unique static fields: " << num_sfields << "/" << accessor.NumStaticFields()
-          << ", unique instance fields: " << num_ifields << "/" << accessor.NumInstanceFields()
-          << ")";
-      // NOTE: Not shrinking the over-allocated sfields/ifields, just setting size.
-      if (sfields != nullptr) {
-        sfields->SetSize(num_sfields);
-      }
-      if (ifields != nullptr) {
-        ifields->SetSize(num_ifields);
-      }
-    }
-    // Set the field arrays.
-    klass->SetSFieldsPtr(sfields);
-    DCHECK_EQ(klass->NumStaticFields(), num_sfields);
-    klass->SetIFieldsPtr(ifields);
-    DCHECK_EQ(klass->NumInstanceFields(), num_ifields);
-  }
-  // Ensure that the card is marked so that remembered sets pick up native roots.
-  WriteBarrier::ForEveryFieldWrite(klass.Get());
-  self->AllowThreadSuspension();
-}
-
 void ClassLinker::LoadField(const ClassAccessor::Field& field,
                             Handle<mirror::Class> klass,
                             ArtField* dst) {
@@ -4213,7 +4029,7 @@ void ClassLinker::LoadMethod(const DexFile& dex_file,
     if (Runtime::Current()->IsAotCompiler()) {
       dst->SetDataPtrSize(reinterpret_cast32<void*>(code_item_offset), image_pointer_size_);
     } else {
-      dst->SetCodeItem(dex_file.GetCodeItem(code_item_offset), dex_file.IsCompactDexFile());
+      dst->SetCodeItem(dex_file.GetCodeItem(code_item_offset));
     }
   }
 
@@ -4225,6 +4041,167 @@ void ClassLinker::LoadMethod(const DexFile& dex_file,
     dst->SetMemorySharedMethod();
     dst->SetHotCounter();
   }
+}
+
+inline void ClassLinker::LinkCode(ArtMethod* method,
+                                  uint32_t class_def_method_index,
+                                  /*inout*/ OatClassCodeIterator* occi) {
+  ScopedAssertNoThreadSuspension sants(__FUNCTION__);
+  Runtime* const runtime = Runtime::Current();
+  if (runtime->IsAotCompiler()) {
+    // The following code only applies to a non-compiler runtime.
+    return;
+  }
+
+  // Method shouldn't have already been linked.
+  DCHECK_EQ(method->GetEntryPointFromQuickCompiledCode(), nullptr);
+  DCHECK(!method->GetDeclaringClass()->IsVisiblyInitialized());  // Actually ClassStatus::Idx.
+
+  if (!method->IsInvokable()) {
+    EnsureThrowsInvocationError(this, method);
+    occi->SkipAbstract(class_def_method_index);
+    return;
+  }
+
+  const void* quick_code = occi->GetAndAdvance(class_def_method_index);
+  if (method->IsNative() && quick_code == nullptr) {
+    const void* boot_jni_stub = FindBootJniStub(method);
+    if (boot_jni_stub != nullptr) {
+      // Use boot JNI stub if found.
+      quick_code = boot_jni_stub;
+    }
+  }
+  runtime->GetInstrumentation()->InitializeMethodsCode(method, quick_code);
+
+  if (method->IsNative()) {
+    // Set up the dlsym lookup stub. Do not go through `UnregisterNative()`
+    // as the extra processing for @CriticalNative is not needed yet.
+    method->SetEntryPointFromJni(
+        method->IsCriticalNative() ? GetJniDlsymLookupCriticalStub() : GetJniDlsymLookupStub());
+  }
+}
+
+void ClassLinker::LoadClass(Thread* self,
+                            const DexFile& dex_file,
+                            const dex::ClassDef& dex_class_def,
+                            Handle<mirror::Class> klass) {
+  CHECK(!dex_file.IsCompactDexFile());
+  ClassAccessor accessor(dex_file,
+                         dex_class_def,
+                         /* parse_hiddenapi_class_data= */ klass->IsBootStrapClassLoaded());
+  if (!accessor.HasClassData()) {
+    return;
+  }
+  Runtime* const runtime = Runtime::Current();
+  {
+    // Note: We cannot have thread suspension until the field and method arrays are setup or else
+    // Class::VisitFieldRoots may miss some fields or methods.
+    ScopedAssertNoThreadSuspension nts(__FUNCTION__);
+    // Load static fields.
+    // We allow duplicate definitions of the same field in a class_data_item
+    // but ignore the repeated indexes here, b/21868015.
+    LinearAlloc* const allocator = GetAllocatorForClassLoader(klass->GetClassLoader());
+    LengthPrefixedArray<ArtField>* fields =
+        AllocArtFieldArray(self,
+                           allocator,
+                           accessor.NumStaticFields() + accessor.NumInstanceFields());
+    size_t num_fields = 0u;
+    size_t num_sfields = 0u;
+    size_t num_ifields = 0u;
+    uint32_t last_static_field_idx = 0u;
+    uint32_t last_instance_field_idx = 0u;
+
+    // Methods
+    bool has_oat_class = false;
+    const OatFile::OatClass oat_class = (runtime->IsStarted() && !runtime->IsAotCompiler())
+        ? OatFile::FindOatClass(dex_file, klass->GetDexClassDefIndex(), &has_oat_class)
+        : OatFile::OatClass::Invalid();
+    OatClassCodeIterator occi(oat_class);
+    klass->SetMethodsPtr(
+        AllocArtMethodArray(self, allocator, accessor.NumMethods()),
+        accessor.NumDirectMethods(),
+        accessor.NumVirtualMethods());
+    size_t class_def_method_index = 0;
+    uint32_t last_dex_method_index = dex::kDexNoIndex;
+    size_t last_class_def_method_index = 0;
+
+    // Initialize separate `MethodAnnotationsIterator`s for direct and virtual methods.
+    MethodAnnotationsIterator mai_direct(dex_file, dex_file.GetAnnotationsDirectory(dex_class_def));
+    MethodAnnotationsIterator mai_virtual = mai_direct;
+
+    uint16_t hotness_threshold = runtime->GetJITOptions()->GetWarmupThreshold();
+    // Use the visitor since the ranged based loops are bit slower from seeking. Seeking to the
+    // methods needs to decode all of the fields.
+    accessor.VisitFieldsAndMethods([&](
+        const ClassAccessor::Field& field) REQUIRES_SHARED(Locks::mutator_lock_) {
+          uint32_t field_idx = field.GetIndex();
+          DCHECK_GE(field_idx, last_static_field_idx);  // Ordering enforced by DexFileVerifier.
+          if (num_sfields == 0 || LIKELY(field_idx > last_static_field_idx)) {
+            LoadField(field, klass, &fields->At(num_fields));
+            ++num_fields;
+            ++num_sfields;
+            last_static_field_idx = field_idx;
+          }
+        }, [&](const ClassAccessor::Field& field) REQUIRES_SHARED(Locks::mutator_lock_) {
+          uint32_t field_idx = field.GetIndex();
+          DCHECK_GE(field_idx, last_instance_field_idx);  // Ordering enforced by DexFileVerifier.
+          if (num_ifields == 0 || LIKELY(field_idx > last_instance_field_idx)) {
+            LoadField(field, klass, &fields->At(num_fields));
+            ++num_fields;
+            ++num_ifields;
+            last_instance_field_idx = field_idx;
+          }
+        }, [&](const ClassAccessor::Method& method) REQUIRES_SHARED(Locks::mutator_lock_) {
+          ArtMethod* art_method = klass->GetDirectMethodUnchecked(class_def_method_index,
+              image_pointer_size_);
+          LoadMethod(dex_file, method, klass.Get(), &mai_direct, art_method);
+          LinkCode(art_method, class_def_method_index, &occi);
+          uint32_t it_method_index = method.GetIndex();
+          if (last_dex_method_index == it_method_index) {
+            // duplicate case
+            art_method->SetMethodIndex(last_class_def_method_index);
+          } else {
+            art_method->SetMethodIndex(class_def_method_index);
+            last_dex_method_index = it_method_index;
+            last_class_def_method_index = class_def_method_index;
+          }
+          art_method->ResetCounter(hotness_threshold);
+          ++class_def_method_index;
+        }, [&](const ClassAccessor::Method& method) REQUIRES_SHARED(Locks::mutator_lock_) {
+          ArtMethod* art_method = klass->GetVirtualMethodUnchecked(
+              class_def_method_index - accessor.NumDirectMethods(),
+              image_pointer_size_);
+          art_method->ResetCounter(hotness_threshold);
+          LoadMethod(dex_file, method, klass.Get(), &mai_virtual, art_method);
+          LinkCode(art_method, class_def_method_index, &occi);
+          ++class_def_method_index;
+        });
+
+    if (UNLIKELY(num_fields != accessor.NumFields())) {
+      LOG(WARNING) << "Duplicate fields in class " << klass->PrettyDescriptor()
+          << " (unique static fields: " << num_sfields << "/" << accessor.NumStaticFields()
+          << ", unique instance fields: " << num_ifields << "/" << accessor.NumInstanceFields()
+          << ")";
+      // NOTE: Not shrinking the over-allocated fields, just setting size.
+      if (fields != nullptr) {
+        fields->SetSize(num_fields);
+      }
+    }
+    if (fields != nullptr) {
+      // Sort the fields by dex field index to facilitate fast lookups.
+      std::sort(fields->begin(),
+                fields->end(),
+                [](ArtField& lhs, ArtField& rhs) {
+                  return lhs.GetDexFieldIndex() < rhs.GetDexFieldIndex();
+                });
+    }
+
+    // Set the field array.
+    klass->SetFieldsPtr(fields);
+  }
+  // Ensure that the card is marked so that remembered sets pick up native roots.
+  WriteBarrier::ForEveryFieldWrite(klass.Get());
+  self->AllowThreadSuspension();
 }
 
 void ClassLinker::AppendToBootClassPath(Thread* self, const DexFile* dex_file) {
@@ -5228,8 +5205,7 @@ void ClassLinker::ResolveMethodExceptionHandlerTypes(ArtMethod* method) {
   CHECK(method->GetDexFile()->IsInDataSection(handlers_ptr))
       << method->PrettyMethod()
       << "@" << method->GetDexFile()->GetLocation()
-      << "@" << reinterpret_cast<const void*>(handlers_ptr)
-      << " is_compact_dex=" << method->GetDexFile()->IsCompactDexFile();
+      << "@" << reinterpret_cast<const void*>(handlers_ptr);
 
   uint32_t handlers_size = DecodeUnsignedLeb128(&handlers_ptr);
   for (uint32_t idx = 0; idx < handlers_size; idx++) {
@@ -5304,18 +5280,18 @@ ObjPtr<mirror::Class> ClassLinker::CreateProxyClass(ScopedObjectAccessAlreadyRun
 
   // Instance fields are inherited, but we add a couple of static fields...
   const size_t num_fields = 2;
-  LengthPrefixedArray<ArtField>* sfields = AllocArtFieldArray(self, allocator, num_fields);
-  temp_klass->SetSFieldsPtr(sfields);
+  LengthPrefixedArray<ArtField>* fields = AllocArtFieldArray(self, allocator, num_fields);
+  temp_klass->SetFieldsPtr(fields);
 
   // 1. Create a static field 'interfaces' that holds the _declared_ interfaces implemented by
   // our proxy, so Class.getInterfaces doesn't return the flattened set.
-  ArtField& interfaces_sfield = sfields->At(0);
+  ArtField& interfaces_sfield = fields->At(0);
   interfaces_sfield.SetDexFieldIndex(0);
   interfaces_sfield.SetDeclaringClass(temp_klass.Get());
   interfaces_sfield.SetAccessFlags(kAccStatic | kAccPublic | kAccFinal);
 
   // 2. Create a static field 'throws' that holds exceptions thrown by our methods.
-  ArtField& throws_sfield = sfields->At(1);
+  ArtField& throws_sfield = fields->At(1);
   throws_sfield.SetDexFieldIndex(1);
   throws_sfield.SetDeclaringClass(temp_klass.Get());
   throws_sfield.SetAccessFlags(kAccStatic | kAccPublic | kAccFinal);
@@ -5455,7 +5431,6 @@ ObjPtr<mirror::Class> ClassLinker::CreateProxyClass(ScopedObjectAccessAlreadyRun
 
   // Consistency checks.
   if (kIsDebugBuild) {
-    CHECK(klass->GetIFieldsPtr() == nullptr);
     CheckProxyConstructor(klass->GetDirectMethod(0, image_pointer_size_));
 
     for (size_t i = 0; i < num_virtual_methods; ++i) {
@@ -5467,11 +5442,11 @@ ObjPtr<mirror::Class> ClassLinker::CreateProxyClass(ScopedObjectAccessAlreadyRun
     Handle<mirror::String> decoded_name = hs2.NewHandle(soa.Decode<mirror::String>(name));
     std::string interfaces_field_name(StringPrintf("java.lang.Class[] %s.interfaces",
                                                    decoded_name->ToModifiedUtf8().c_str()));
-    CHECK_EQ(ArtField::PrettyField(klass->GetStaticField(0)), interfaces_field_name);
+    CHECK_EQ(ArtField::PrettyField(klass->GetField(0)), interfaces_field_name);
 
     std::string throws_field_name(StringPrintf("java.lang.Class[][] %s.throws",
                                                decoded_name->ToModifiedUtf8().c_str()));
-    CHECK_EQ(ArtField::PrettyField(klass->GetStaticField(1)), throws_field_name);
+    CHECK_EQ(ArtField::PrettyField(klass->GetField(1)), throws_field_name);
 
     CHECK_EQ(klass.Get()->GetProxyInterfaces(),
              soa.Decode<mirror::ObjectArray<mirror::Class>>(interfaces));
@@ -5576,7 +5551,7 @@ bool ClassLinker::CanWeInitializeClass(ObjPtr<mirror::Class> klass,
       return false;
     }
     // Check if there are encoded static values needing initialization.
-    if (klass->NumStaticFields() != 0) {
+    if (klass->HasStaticFields()) {
       const dex::ClassDef* dex_class_def = klass->GetClassDef();
       DCHECK(dex_class_def != nullptr);
       if (dex_class_def->static_values_off_ != 0) {
@@ -5804,18 +5779,20 @@ bool ClassLinker::InitializeClass(Thread* self,
     }
   }
 
-  const size_t num_static_fields = klass->NumStaticFields();
-  if (num_static_fields > 0) {
+  if (klass->HasStaticFields()) {
     const dex::ClassDef* dex_class_def = klass->GetClassDef();
     CHECK(dex_class_def != nullptr);
-    StackHandleScope<3> hs(self);
+    StackHandleScope<2> hs(self);
     Handle<mirror::ClassLoader> class_loader(hs.NewHandle(klass->GetClassLoader()));
     Handle<mirror::DexCache> dex_cache(hs.NewHandle(klass->GetDexCache()));
 
     // Eagerly fill in static fields so that the we don't have to do as many expensive
     // Class::FindStaticField in ResolveField.
-    for (size_t i = 0; i < num_static_fields; ++i) {
-      ArtField* field = klass->GetStaticField(i);
+    for (size_t i = 0; i < klass->NumFields(); ++i) {
+      ArtField* field = klass->GetField(i);
+      if (!field->IsStatic()) {
+        continue;
+      }
       const uint32_t field_idx = field->GetDexFieldIndex();
       ArtField* resolved_field = dex_cache->GetResolvedField(field_idx);
       if (resolved_field == nullptr) {
@@ -5823,7 +5800,7 @@ bool ClassLinker::InitializeClass(Thread* self,
         DCHECK(!hiddenapi::ShouldDenyAccessToMember(
             field,
             hiddenapi::AccessContext(class_loader.Get(), dex_cache.Get()),
-            hiddenapi::AccessMethod::kNone));
+            hiddenapi::AccessMethod::kCheckWithPolicy));
         dex_cache->SetResolvedField(field_idx, field);
       } else {
         DCHECK_EQ(field, resolved_field);
@@ -6258,15 +6235,8 @@ bool ClassLinker::EnsureInitialized(Thread* self,
 
 void ClassLinker::FixupTemporaryDeclaringClass(ObjPtr<mirror::Class> temp_class,
                                                ObjPtr<mirror::Class> new_class) {
-  DCHECK_EQ(temp_class->NumInstanceFields(), 0u);
-  for (ArtField& field : new_class->GetIFields()) {
-    if (field.GetDeclaringClass() == temp_class) {
-      field.SetDeclaringClass(new_class);
-    }
-  }
-
-  DCHECK_EQ(temp_class->NumStaticFields(), 0u);
-  for (ArtField& field : new_class->GetSFields()) {
+  DCHECK_EQ(temp_class->NumFields(), 0u);
+  for (ArtField& field : new_class->GetFields()) {
     if (field.GetDeclaringClass() == temp_class) {
       field.SetDeclaringClass(new_class);
     }
@@ -6413,8 +6383,7 @@ bool ClassLinker::LinkClass(Thread* self,
     // may not see any references to the target space and clean the card for a class if another
     // class had the same array pointer.
     klass->SetMethodsPtrUnchecked(nullptr, 0, 0);
-    klass->SetSFieldsPtrUnchecked(nullptr);
-    klass->SetIFieldsPtrUnchecked(nullptr);
+    klass->SetFieldsPtrUnchecked(nullptr);
     if (UNLIKELY(h_new_class == nullptr)) {
       self->AssertPendingOOMException();
       mirror::Class::SetStatus(klass, ClassStatus::kErrorUnresolved, self);
@@ -9283,9 +9252,7 @@ bool ClassLinker::LinkFieldsHelper::LinkFields(ClassLinker* class_linker,
                                                bool is_static,
                                                size_t* class_size) {
   self->AllowThreadSuspension();
-  const size_t num_fields = is_static ? klass->NumStaticFields() : klass->NumInstanceFields();
-  LengthPrefixedArray<ArtField>* const fields = is_static ? klass->GetSFieldsPtr() :
-      klass->GetIFieldsPtr();
+  LengthPrefixedArray<ArtField>* const fields = klass->GetFieldsPtr();
 
   // Initialize field_offset
   MemberOffset field_offset(0);
@@ -9301,7 +9268,8 @@ bool ClassLinker::LinkFieldsHelper::LinkFields(ClassLinker* class_linker,
     }
   }
 
-  CHECK_EQ(num_fields == 0, fields == nullptr) << klass->PrettyClass();
+  size_t num_fields =
+      is_static ? klass->ComputeNumStaticFields() : klass->ComputeNumInstanceFields();
 
   // we want a relatively stable order so that adding new fields
   // minimizes disruption of C++ version such as Class and Method.
@@ -9341,8 +9309,11 @@ bool ClassLinker::LinkFieldsHelper::LinkFields(ClassLinker* class_linker,
   size_t num_reference_fields = 0;
   size_t primitive_fields_start = num_fields;
   DCHECK_LE(num_fields, 1u << 16);
-  for (size_t i = 0; i != num_fields; ++i) {
+  for (size_t i = 0; i != klass->NumFields(); ++i) {
     ArtField* field = &fields->At(i);
+    if (field->IsStatic() != is_static) {
+      continue;
+    }
     const char* descriptor = field->GetTypeDescriptor();
     FieldTypeOrder field_type_order = FieldTypeOrderFromFirstDescriptorCharacter(descriptor[0]);
     uint16_t field_index = dchecked_integral_cast<uint16_t>(i);
@@ -9489,10 +9460,14 @@ bool ClassLinker::LinkFieldsHelper::LinkFields(ClassLinker* class_linker,
       UNLIKELY(!class_linker->init_done_) &&
       klass->DescriptorEquals("Ljava/lang/ref/Reference;")) {
     // We know there are no non-reference fields in the Reference classes, and we know
-    // that 'referent' is alphabetically last, so this is easy...
+    // that 'referent' is alphabetically the last instance field, so this is easy...
+    // Note that we cannot use WellKnownClasses fields yet, as this is not
+    // initialized.
     CHECK_EQ(num_reference_fields, num_fields) << klass->PrettyClass();
-    CHECK_STREQ(fields->At(num_fields - 1).GetName(), "referent")
-        << klass->PrettyClass();
+    CHECK_STREQ(fields->At(klass->NumFields() - 2).GetName(), "referent");
+    CHECK(!fields->At(klass->NumFields() - 2).IsStatic());
+    CHECK_STREQ(fields->At(klass->NumFields() - 1).GetName(), "slowPathEnabled");
+    CHECK(fields->At(klass->NumFields() - 1).IsStatic());
     --num_reference_fields;
   }
 
@@ -9550,8 +9525,11 @@ bool ClassLinker::LinkFieldsHelper::LinkFields(ClassLinker* class_linker,
                                 num_reference_fields *
                                     sizeof(mirror::HeapReference<mirror::Object>));
     MemberOffset current_ref_offset = start_ref_offset;
-    for (size_t i = 0; i < num_fields; i++) {
+    for (size_t i = 0; i < klass->NumFields(); i++) {
       ArtField* field = &fields->At(i);
+      if (field->IsStatic() != is_static) {
+        continue;
+      }
       VLOG(class_linker) << "LinkFields: " << (is_static ? "static" : "instance")
           << " class=" << klass->PrettyClass() << " field=" << field->PrettyField()
           << " offset=" << field->GetOffsetDuringLinking();
@@ -10029,12 +10007,12 @@ ArtMethod* ClassLinker::FindResolvedMethod(ObjPtr<mirror::Class> klass,
   }
   DCHECK(resolved == nullptr || resolved->GetDeclaringClassUnchecked() != nullptr);
   if (resolved != nullptr &&
-      // We pass AccessMethod::kNone instead of kLinking to not warn yet on the
+      // We pass AccessMethod::kCheck instead of kLinking to not warn yet on the
       // access, as we'll be looking if the method can be accessed through an
       // interface.
       hiddenapi::ShouldDenyAccessToMember(resolved,
                                           hiddenapi::AccessContext(class_loader, dex_cache),
-                                          hiddenapi::AccessMethod::kNone)) {
+                                          hiddenapi::AccessMethod::kCheck)) {
     // The resolved method that we have found cannot be accessed due to
     // hiddenapi (typically it is declared up the hierarchy and is not an SDK
     // method). Try to find an interface method from the implemented interfaces which is
@@ -10043,11 +10021,12 @@ ArtMethod* ClassLinker::FindResolvedMethod(ObjPtr<mirror::Class> klass,
     if (itf_method == nullptr) {
       // No interface method. Call ShouldDenyAccessToMember again but this time
       // with AccessMethod::kLinking to ensure that an appropriate warning is
-      // logged.
-      hiddenapi::ShouldDenyAccessToMember(resolved,
-                                          hiddenapi::AccessContext(class_loader, dex_cache),
-                                          hiddenapi::AccessMethod::kLinking);
-      resolved = nullptr;
+      // logged and the enforcement policy is applied.
+      if (hiddenapi::ShouldDenyAccessToMember(resolved,
+                                              hiddenapi::AccessContext(class_loader, dex_cache),
+                                              hiddenapi::AccessMethod::kLinking)) {
+        resolved = nullptr;
+      }
     } else {
       // We found an interface method that is accessible, continue with the resolved method.
     }
@@ -10080,10 +10059,10 @@ static bool CheckNoSuchMethod(ArtMethod* method,
                               ObjPtr<mirror::ClassLoader> class_loader)
       REQUIRES_SHARED(Locks::mutator_lock_) {
   DCHECK(dex_cache->GetClassLoader().Ptr() == class_loader.Ptr());
-  return method == nullptr ||
-         hiddenapi::ShouldDenyAccessToMember(method,
-                                             hiddenapi::AccessContext(class_loader, dex_cache),
-                                             hiddenapi::AccessMethod::kNone);  // no warnings
+  return method == nullptr || hiddenapi::ShouldDenyAccessToMember(
+                                  method,
+                                  hiddenapi::AccessContext(class_loader, dex_cache),
+                                  hiddenapi::AccessMethod::kCheckWithPolicy);  // no warnings
 }
 
 ArtMethod* ClassLinker::FindIncompatibleMethod(ObjPtr<mirror::Class> klass,
@@ -10182,19 +10161,16 @@ ArtField* ClassLinker::FindResolvedField(ObjPtr<mirror::Class> klass,
                                          uint32_t field_idx,
                                          bool is_static) {
   DCHECK(dex_cache->GetClassLoader() == class_loader);
-  ArtField* resolved = is_static ? klass->FindStaticField(dex_cache, field_idx)
-                                 : klass->FindInstanceField(dex_cache, field_idx);
-  if (resolved != nullptr &&
+  ArtField* resolved = klass->FindField(dex_cache, field_idx);
+  if (resolved == nullptr ||
+      is_static != resolved->IsStatic() ||
       hiddenapi::ShouldDenyAccessToMember(resolved,
                                           hiddenapi::AccessContext(class_loader, dex_cache),
                                           hiddenapi::AccessMethod::kLinking)) {
-    resolved = nullptr;
+    return nullptr;
   }
 
-  if (resolved != nullptr) {
-    dex_cache->SetResolvedField(field_idx, resolved);
-  }
-
+  dex_cache->SetResolvedField(field_idx, resolved);
   return resolved;
 }
 
@@ -10348,16 +10324,11 @@ ObjPtr<mirror::MethodHandle> ClassLinker::ResolveMethodHandleForField(
   ArtField* target_field =
       ResolveField(method_handle.field_or_method_idx_, referrer, is_static);
   if (LIKELY(target_field != nullptr)) {
+    DCHECK_EQ(is_static, target_field->IsStatic()) << target_field->PrettyField();
     ObjPtr<mirror::Class> target_class = target_field->GetDeclaringClass();
     ObjPtr<mirror::Class> referring_class = referrer->GetDeclaringClass();
     if (UNLIKELY(!referring_class->CanAccessMember(target_class, target_field->GetAccessFlags()))) {
       ThrowIllegalAccessErrorField(referring_class, target_field);
-      return nullptr;
-    }
-    // TODO(b/364876321): ResolveField might return instance field when is_static is true and
-    // vice versa.
-    if (UNLIKELY(is_static != target_field->IsStatic())) {
-      ThrowIncompatibleClassChangeErrorField(target_field, is_static, referrer);
       return nullptr;
     }
     if (UNLIKELY(is_put && target_field->IsFinal())) {

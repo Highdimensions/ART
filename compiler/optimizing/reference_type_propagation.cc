@@ -276,13 +276,8 @@ static void BoundTypeForClassCheck(HInstruction* check) {
     return;
   }
 
-  {
-    ScopedObjectAccess soa(Thread::Current());
-    ArtField* field = GetClassRoot<mirror::Object>()->GetInstanceField(0);
-    DCHECK_EQ(std::string(field->GetName()), "shadow$_klass_");
-    if (field_get->GetFieldInfo().GetField() != field) {
-      return;
-    }
+  if (field_get->GetFieldInfo().GetField() != WellKnownClasses::java_lang_Object_shadowKlass) {
+    return;
   }
 
   if (check->IsIf()) {

@@ -1332,17 +1332,19 @@ void HInstructionList::InsertInstructionAfter(HInstruction* instruction, HInstru
 }
 
 void HInstructionList::RemoveInstruction(HInstruction* instruction) {
-  if (instruction->previous_ != nullptr) {
-    instruction->previous_->next_ = instruction->next_;
-  }
-  if (instruction->next_ != nullptr) {
-    instruction->next_->previous_ = instruction->previous_;
-  }
+  DCHECK_EQ(instruction->previous_ == nullptr, instruction == first_instruction_);
+  DCHECK_EQ(instruction->next_ == nullptr, instruction == last_instruction_);
+
   if (instruction == first_instruction_) {
     first_instruction_ = instruction->next_;
+  } else {
+    instruction->previous_->next_ = instruction->next_;
   }
+
   if (instruction == last_instruction_) {
     last_instruction_ = instruction->previous_;
+  } else {
+    instruction->next_->previous_ = instruction->previous_;
   }
 }
 
@@ -1541,12 +1543,14 @@ void HVariableInputSizeInstruction::AddInput(HInstruction* input) {
 
 void HVariableInputSizeInstruction::InsertInputAt(size_t index, HInstruction* input) {
   inputs_.insert(inputs_.begin() + index, HUserRecord<HInstruction*>(input));
-  input->AddUseAt(this, index);
   // Update indexes in use nodes of inputs that have been pushed further back by the insert().
   for (size_t i = index + 1u, e = inputs_.size(); i < e; ++i) {
     DCHECK_EQ(inputs_[i].GetUseNode()->GetIndex(), i - 1u);
     inputs_[i].GetUseNode()->SetIndex(i);
   }
+  // Add the use after updating the indexes. If the `input` is already used by `this`,
+  // the fixup after use insertion can use those indexes.
+  input->AddUseAt(this, index);
 }
 
 void HVariableInputSizeInstruction::RemoveInputAt(size_t index) {

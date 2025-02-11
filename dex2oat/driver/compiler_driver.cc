@@ -1404,10 +1404,9 @@ class ClinitImageUpdate {
       } else if (can_include_in_image) {
         // Check whether the class is initialized and has a clinit or static fields.
         // Such classes must be kept too.
-        if (klass->IsInitialized()) {
+        if (klass->IsInitialized() && !klass->IsArrayClass()) {
           PointerSize pointer_size = Runtime::Current()->GetClassLinker()->GetImagePointerSize();
-          if (klass->FindClassInitializer(pointer_size) != nullptr ||
-              klass->NumStaticFields() != 0) {
+          if (klass->FindClassInitializer(pointer_size) != nullptr || klass->HasStaticFields()) {
             DCHECK(!Runtime::Current()->GetHeap()->ObjectIsInBootImageSpace(klass->GetDexCache()))
                 << klass->PrettyDescriptor();
             data_->image_classes_.push_back(data_->hs_.NewHandle(klass));
@@ -1814,7 +1813,8 @@ static void LoadAndUpdateStatus(const ClassAccessor& accessor,
     // a boot image class, or a class in a different dex file for multidex, and
     // we should not update the status in that case.
     if (&cls->GetDexFile() == &accessor.GetDexFile()) {
-      VLOG(compiler) << "Updating class status of " << accessor.GetDescriptor() << " to " << status;
+      VLOG(compiler) << "Updating class status of " << accessor.GetDescriptorView()
+                     << " to " << status;
       ObjectLock<mirror::Class> lock(self, cls);
       mirror::Class::SetStatus(cls, status, self);
     }
@@ -1881,7 +1881,7 @@ bool CompilerDriver::FastVerify(jobject jclass_loader,
           // If the class will be in the image, we can rely on the ArtMethods
           // telling that they need access checks.
           VLOG(compiler) << "Promoting "
-                         << std::string(accessor.GetDescriptor())
+                         << accessor.GetDescriptorView()
                          << " from needs access checks to verified given it is an image class";
           status = ClassStatus::kVerified;
         }
@@ -2275,8 +2275,9 @@ class InitializeClassVisitor : public CompilationVisitor {
         // cannot be initialized, no need to proceed.
         old_status = klass->GetStatus();
 
+        ClassAccessor accessor(klass->GetDexFile(), klass->GetDexClassDefIndex());
         bool too_many_encoded_fields = (!is_boot_image && !is_boot_image_extension) &&
-            klass->NumStaticFields() > kMaxEncodedFields;
+            accessor.NumStaticFields() > kMaxEncodedFields;
 
         bool have_profile = (compiler_options.GetProfileCompilationInfo() != nullptr) &&
             !compiler_options.GetProfileCompilationInfo()->IsEmpty();

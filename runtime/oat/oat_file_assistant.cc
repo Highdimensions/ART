@@ -51,7 +51,6 @@
 #include "oat.h"
 #include "oat_file_assistant_context.h"
 #include "runtime.h"
-#include "runtime_globals.h"
 #include "scoped_thread_state_change-inl.h"
 #include "vdex_file.h"
 #include "zlib.h"
@@ -209,8 +208,7 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
 
   // Check if the dex directory is writable.
   // This will be needed in most uses of OatFileAssistant and so it's OK to
-  // compute it eagerly. (the only use which will not make use of it is
-  // OatFileAssistant::GetStatusDump())
+  // compute it eagerly.
   size_t pos = dex_location_.rfind('/');
   if (pos == std::string::npos) {
     LOG(WARNING) << "Failed to determine dex file parent directory: " << dex_location_;
@@ -346,53 +344,6 @@ bool OatFileAssistant::IsUpToDate() { return GetBestInfo().Status() == kOatUpToD
 
 std::unique_ptr<OatFile> OatFileAssistant::GetBestOatFile() {
   return GetBestInfo().ReleaseFileForUse();
-}
-
-std::string OatFileAssistant::GetStatusDump() {
-  std::ostringstream status;
-  bool oat_file_exists = false;
-  bool odex_file_exists = false;
-  if (oat_.Status() != kOatCannotOpen) {
-    // If we can open the file, Filename should not return null.
-    CHECK(oat_.Filename() != nullptr);
-
-    oat_file_exists = true;
-    status << *oat_.Filename() << "[status=" << oat_.Status() << ", ";
-    const OatFile* file = oat_.GetFile();
-    if (file == nullptr) {
-      // If the file is null even though the status is not kOatCannotOpen, it
-      // means we must have a vdex file with no corresponding oat file. In
-      // this case we cannot determine the compilation filter. Indicate that
-      // we have only the vdex file instead.
-      status << "vdex-only";
-    } else {
-      status << "compilation_filter=" << CompilerFilter::NameOfFilter(file->GetCompilerFilter());
-    }
-  }
-
-  if (odex_.Status() != kOatCannotOpen) {
-    // If we can open the file, Filename should not return null.
-    CHECK(odex_.Filename() != nullptr);
-
-    odex_file_exists = true;
-    if (oat_file_exists) {
-      status << "] ";
-    }
-    status << *odex_.Filename() << "[status=" << odex_.Status() << ", ";
-    const OatFile* file = odex_.GetFile();
-    if (file == nullptr) {
-      status << "vdex-only";
-    } else {
-      status << "compilation_filter=" << CompilerFilter::NameOfFilter(file->GetCompilerFilter());
-    }
-  }
-
-  if (!oat_file_exists && !odex_file_exists) {
-    status << "invalid[";
-  }
-
-  status << "]";
-  return status.str();
 }
 
 std::vector<std::unique_ptr<const DexFile>> OatFileAssistant::LoadDexFiles(
@@ -1107,12 +1058,6 @@ const OatFile* OatFileAssistant::OatFileInfo::GetFile() {
       executable = LocationIsTrusted(filename_, /*trust_art_apex_data_files=*/true);
     }
     VLOG(oat) << "Loading " << filename_ << " with executable: " << executable;
-
-    if (gPageSize != kMinPageSize) {
-      LOG(WARNING) << "Loading odex files is only supported on devices with 4K page size";
-      return nullptr;
-    }
-
     if (use_fd_) {
       if (oat_fd_ >= 0 && vdex_fd_ >= 0) {
         ArrayRef<const std::string> dex_locations(&oat_file_assistant_->dex_location_,
@@ -1150,13 +1095,6 @@ bool OatFileAssistant::OatFileInfo::ShouldRecompileForFilter(CompilerFilter::Fil
                                                              const DexOptTrigger dexopt_trigger) {
   const OatFile* file = GetFile();
   DCHECK(file != nullptr);
-
-  if (CompilerFilter::IsBetter(target, CompilerFilter::kVerify) && gPageSize != kMinPageSize) {
-    // Prevent infinite recompilations during background dexopt on 16K page devices.
-    VLOG(oat) << "Adjusting target filter to 'verify' because loading odex files is only supported "
-                 "on devices with 4K page size";
-    target = CompilerFilter::kVerify;
-  }
 
   CompilerFilter::Filter current = file->GetCompilerFilter();
   if (dexopt_trigger.targetFilterIsBetter && CompilerFilter::IsBetter(target, current)) {

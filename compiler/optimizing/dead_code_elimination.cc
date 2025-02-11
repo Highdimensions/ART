@@ -488,7 +488,8 @@ void HDeadCodeElimination::MaybeAddPhi(HBasicBlock* block) {
 
     if (block_cond->GetLeft() != dominator_cond->GetLeft() ||
         block_cond->GetRight() != dominator_cond->GetRight() ||
-        block_cond->GetOppositeCondition() != dominator_cond->GetCondition()) {
+        block_cond->GetOppositeCondition() != dominator_cond->GetCondition() ||
+        block_cond->GetBias() != dominator_cond->GetBias()) {
       return;
     }
   }
@@ -526,10 +527,10 @@ void HDeadCodeElimination::MaybeAddPhi(HBasicBlock* block) {
       //         |
       //         8
       // `7` (which would be `block` in this example), and `6` will come from both the true path and
-      // the false path of `1`. We bumped into something similar in SelectGenerator. See
-      // HSelectGenerator::TryFixupDoubleDiamondPattern.
+      // the false path of `1`. We bumped into something similar in `HControlFlowSimplifier`. See
+      // `HControlFlowSimplifier::TryFixupDoubleDiamondPattern()`.
       // TODO(solanes): Figure out if we can fix up the graph into a double diamond in a generic way
-      // so that DeadCodeElimination and SelectGenerator can take advantage of it.
+      // so that `HDeadCodeElimination` and `HControlFlowSimplifier` can take advantage of it.
 
       if (!same_input) {
         // `1` and `7` having the opposite condition is a case we are missing. We could potentially

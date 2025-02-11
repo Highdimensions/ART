@@ -188,12 +188,18 @@ class HiddenApiTest : public CommonRuntimeTest {
   }
 
   bool ShouldDenyAccess(hiddenapi::ApiList list) REQUIRES_SHARED(Locks::mutator_lock_) {
-    // Choose parameters such that there are no side effects (AccessMethod::kNone)
+    // This is only used for log messages, so its state doesn't matter.
+    const hiddenapi::AccessContext placeholder_context(/* is_trusted= */ false);
+
+    // Choose parameters such that there are no side effects (AccessMethod::kCheck)
     // and that the member is not on the exemptions list (here we choose one which
     // is not even in boot class path).
     return ShouldDenyAccessToMemberImpl(/* member= */ class1_field1_,
                                         list,
-                                        /* access_method= */ hiddenapi::AccessMethod::kNone);
+                                        /* runtime_flags= */ 0,
+                                        /* caller_context= */ placeholder_context,
+                                        /* callee_context= */ placeholder_context,
+                                        hiddenapi::AccessMethod::kCheck);
   }
 
   void TestLocation(const std::string& location, hiddenapi::Domain expected_domain) {
@@ -651,14 +657,15 @@ TEST_F(HiddenApiTest, CheckMemberSignatureForProxyClass) {
 
   // Find the "interfaces" static field. This is generated for all proxies.
   ArtField* field = nullptr;
-  for (size_t i = 0; i < proxyClass->NumStaticFields(); ++i) {
-    ArtField* f = proxyClass->GetStaticField(i);
+  for (size_t i = 0; i < proxyClass->NumFields(); ++i) {
+    ArtField* f = proxyClass->GetField(i);
     if (strcmp("interfaces", f->GetName()) == 0) {
       field = f;
       break;
     }
   }
   ASSERT_TRUE(field != nullptr);
+  ASSERT_TRUE(field->IsStatic());
 
   // Test the signature. We expect the signature from the interface class.
   std::ostringstream ss_method;

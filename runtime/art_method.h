@@ -914,10 +914,11 @@ class EXPORT ArtMethod final {
            !IsProxyMethod();
   }
 
-  // We need to explicitly indicate whether the code item is obtained from the compact dex file,
-  // because in JVMTI, we obtain the code item from the standard dex file to update the method.
-  void SetCodeItem(const dex::CodeItem* code_item, bool is_compact_dex_code_item)
-      REQUIRES_SHARED(Locks::mutator_lock_);
+  void SetCodeItem(const dex::CodeItem* code_item)
+      REQUIRES_SHARED(Locks::mutator_lock_) {
+    DCHECK(HasCodeItem());
+    SetDataPtrSize(code_item, kRuntimePointerSize);
+  }
 
   // Is this a hand crafted method used for something like describing callee saves?
   bool IsCalleeSaveMethod() REQUIRES_SHARED(Locks::mutator_lock_);
@@ -1126,8 +1127,9 @@ class EXPORT ArtMethod final {
     // Non-abstract methods: The hotness we measure for this method. Not atomic,
     // as we allow missing increments: if the method is hot, we will see it eventually.
     uint16_t hotness_count_;
-    // Abstract methods: IMT index.
+    // Abstract interface methods: IMT index.
     uint16_t imt_index_;
+    // Abstract class (non-interface) methods: Unused (zero-initialized).
   };
 
   // Fake padding field gets inserted here.
