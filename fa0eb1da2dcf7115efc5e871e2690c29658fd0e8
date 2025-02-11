@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54a99b18_6c355abc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T12:39:47Z",
+      "side": 1,
+      "message": "As discussed, could we use memfd from a ziparchive mmap\u0027ed file?",
+      "revId": "fa0eb1da2dcf7115efc5e871e2690c29658fd0e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
