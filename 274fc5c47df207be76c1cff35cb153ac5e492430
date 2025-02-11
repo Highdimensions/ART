@@ -1,0 +1,135 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cdbbdfe_a1f30760",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T17:27:21Z",
+      "side": 1,
+      "message": "Line too long",
+      "revId": "274fc5c47df207be76c1cff35cb153ac5e492430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74b196eb_3d501872",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T17:27:21Z",
+      "side": 1,
+      "message": "Instead of creating a static variable, just allocate one when you use the closure? That\u0027s the pattern we\u0027ve been using for this.",
+      "range": {
+        "startLine": 202,
+        "startChar": 2,
+        "endLine": 202,
+        "endChar": 35
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1c82370c_58969bc8",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 193,
+                "startChar": 0,
+                "endLine": 194,
+                "endChar": 0
+              },
+              "replacement": "class LongRunningMethodsTraceStartCheckpoint final : public Closure {\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 202,
+                "startChar": 0,
+                "endLine": 203,
+                "endChar": 0
+              },
+              "replacement": "};\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 204,
+                "startChar": 0,
+                "endLine": 205,
+                "endChar": 0
+              },
+              "replacement": "class AllMethodsTraceStartCheckpoint final : public Closure {\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 212,
+                "startChar": 0,
+                "endLine": 213,
+                "endChar": 0
+              },
+              "replacement": "};\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 253,
+                "startChar": 0,
+                "endLine": 254,
+                "endChar": 0
+              },
+              "replacement": "        AllMethodsTraceStartCheckpoint all_methods_checkpoint;\n        runtime-\u003eGetThreadList()-\u003eRunCheckpoint(\u0026all_methods_checkpoint);\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 255,
+                "startChar": 0,
+                "endLine": 256,
+                "endChar": 0
+              },
+              "replacement": "        LongRunningMethodsTraceStartCheckpoint long_running_methods_checkpoint;\n        runtime-\u003eGetThreadList()-\u003eRunCheckpoint(\u0026long_running_methods_checkpoint);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "274fc5c47df207be76c1cff35cb153ac5e492430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "302662d9_2fcf6a18",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T17:27:21Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 212,
+        "startChar": 0,
+        "endLine": 212,
+        "endChar": 26
+      },
+      "revId": "274fc5c47df207be76c1cff35cb153ac5e492430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
