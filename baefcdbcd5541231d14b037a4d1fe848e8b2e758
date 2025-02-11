@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38640317_e7880ae2",
+        "filename": "runtime/oat/oat_file_assistant.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T17:18:41Z",
+      "side": 1,
+      "message": "Drop this?",
+      "range": {
+        "startLine": 445,
+        "startChar": 0,
+        "endLine": 445,
+        "endChar": 29
+      },
+      "revId": "baefcdbcd5541231d14b037a4d1fe848e8b2e758",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3c1dbfc_618fb6d5",
+        "filename": "runtime/oat/oat_file_assistant.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-11T17:18:41Z",
+      "side": 1,
+      "message": "Drop this?",
+      "range": {
+        "startLine": 471,
+        "startChar": 0,
+        "endLine": 471,
+        "endChar": 72
+      },
+      "revId": "baefcdbcd5541231d14b037a4d1fe848e8b2e758",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
