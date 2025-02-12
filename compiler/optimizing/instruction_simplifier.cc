@@ -1098,6 +1098,38 @@ static HInstruction* AllowInMinMax(IfCondition cmp,
   return nullptr;
 }
 
+namespace {
+
+bool HasSameCondition(HSelect* select, HSelect* other) {
+  return select->GetCondition() == other->GetCondition();
+}
+
+bool HasOppositeCondition(HSelect* select, HSelect* other) {
+  if (!select->GetCondition()->IsCondition() || !other->GetCondition()->IsCondition()) {
+    return false;
+  }
+
+  HCondition* condition = select->GetCondition()->AsCondition();
+  HCondition* other_condition = other->GetCondition()->AsCondition();
+  if (condition->GetCondition() != other_condition->GetOppositeCondition()) {
+    return false;
+  }
+
+  if (condition->GetLeft() != other_condition->GetLeft() ||
+      condition->GetRight() != other_condition->GetRight()) {
+    return false;
+  }
+
+  if (other_condition->GetBias() == ComparisonBias::kNoBias &&
+      condition->GetBias() == ComparisonBias::kNoBias) {
+    return true;
+  }
+
+  return condition->GetBias() != other_condition->GetBias();
+}
+
+}  // namespace
+
 void InstructionSimplifierVisitor::VisitSelect(HSelect* select) {
   HInstruction* replace_with = nullptr;
   HInstruction* condition = select->GetCondition();
@@ -1112,6 +1144,32 @@ void InstructionSimplifierVisitor::VisitSelect(HSelect* select) {
     select->ReplaceInput(true_value, 1);
     select->ReplaceInput(condition, 2);
     RecordSimplification();
+  }
+
+  if (true_value->IsSelect()) {
+    HSelect* true_select = true_value->AsSelect();
+    if (HasSameCondition(select, true_select)) {
+      true_value = true_select->GetTrueValue();
+      select->ReplaceInput(true_value, 1);
+      RecordSimplification();
+    } else if (HasOppositeCondition(select, true_select)) {
+      true_value = true_select->GetFalseValue();
+      select->ReplaceInput(true_value, 1);
+      RecordSimplification();
+    }
+  }
+
+  if (false_value->IsSelect()) {
+    HSelect* false_select = false_value->AsSelect();
+    if (HasSameCondition(select, false_select)) {
+      false_value = false_select->GetFalseValue();
+      select->ReplaceInput(false_value, 0);
+      RecordSimplification();
+    } else if (HasOppositeCondition(select, false_select)) {
+      false_value = false_select->GetTrueValue();
+      select->ReplaceInput(false_value, 0);
+      RecordSimplification();
+    }
   }
 
   if (true_value == false_value) {
