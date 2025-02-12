@@ -58,6 +58,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd796d36_e4fffa1f",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1466,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-12T20:17:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47c9120e_a720aa02",
+      "range": {
+        "startLine": 1466,
+        "startChar": 24,
+        "endLine": 1466,
+        "endChar": 32
+      },
+      "revId": "abf1861ace1012e058d6ce38e4a805176513698c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a862eb69_79303458",
@@ -71,6 +95,30 @@
       "writtenOn": "2025-02-12T18:52:58Z",
       "side": 1,
       "message": "Is there a reason to keep this in the \"if\"?",
+      "range": {
+        "startLine": 4918,
+        "startChar": 6,
+        "endLine": 4918,
+        "endChar": 49
+      },
+      "revId": "abf1861ace1012e058d6ce38e4a805176513698c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e30ca82_cba38a3c",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 4918,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-12T20:17:08Z",
+      "side": 1,
+      "message": "I guess it would be fine. I\u0027ll do that in some other CL.",
+      "parentUuid": "a862eb69_79303458",
       "range": {
         "startLine": 4918,
         "startChar": 6,
