@@ -33,6 +33,23 @@
       "message": "Thanks!",
       "revId": "05f353700c6ef8138e693b1b44e22a937aa9bc89",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "791ee2ff_f5d2bd92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-12T15:38:08Z",
+      "side": 1,
+      "message": "Sorry, just noticed a small bug with this patch which affects a much later simulator patch. Will have a fix for it shortly.",
+      "revId": "05f353700c6ef8138e693b1b44e22a937aa9bc89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
