@@ -52,6 +52,654 @@
       "parentUuid": "b5d24355_d2ddaff2",
       "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "951951cc_d6122af8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "The code flow here is non-obvious with the moving parts in update_engine and the postinstall script, so most comments are about helping string things together.",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6a24afb_b15a3a59",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "I suggest making these mutually exclusive, to avoid pondering what it\u0027d mean if a potentially different slot is specified together with `--start` in the second invocation.",
+      "range": {
+        "startLine": 699,
+        "startChar": 0,
+        "endLine": 704,
+        "endChar": 26
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "659026d3_7a1e03e7",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Doesn\u0027t this mean we\u0027ll go through update_engine for these synchronous run calls? It\u0027s not clear that update_engine would be in the appropriate state to expect a trigger call here. If it\u0027s safe then that\u0027s worth an explanation.",
+      "range": {
+        "startLine": 776,
+        "startChar": 57,
+        "endLine": 776,
+        "endChar": 88
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05a0e13d_0934b6da",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "```suggestion\n        // We assume we\u0027re being invoked from within UpdateEngine.triggerPostinstall\n        // in triggerUpdateEnginePostinstallAndWait, so a pre-reboot dexopt job is waiting.\n        CompletableFuture\u003cVoid\u003e future \u003d job.setUpdateEngineReady();\n```",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed61a224_03556c21",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Please add \"Read stdin and cancel on broken pipe, to detect if the caller (e.g. update_engine) has killed the postinstall script.\"",
+      "range": {
+        "startLine": 832,
+        "startChar": 10,
+        "endLine": 832,
+        "endChar": 11
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "753da7f5_9fcdf5c4",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+              "range": {
+                "startLine": 832,
+                "startChar": 0,
+                "endLine": 834,
+                "endChar": 0
+              },
+              "replacement": "        // Read stdin and cancel on broken pipe, to detect if the caller (e.g. update_engine) has\n        // killed the postinstall script. Put the read in a separate thread because there isn\u0027t an easy\n        // way in Java to wait for both the `Future` and the read.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96a5cc8d_ef021b3a",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 1101,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Please document the new option briefly.",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20375cc6_89dd8f51",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "\"if\", since it\u0027s not guaranteed to happen?",
+      "range": {
+        "startLine": 83,
+        "startChar": 67,
+        "endLine": 83,
+        "endChar": 71
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "19c60d2e_5859675f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+              "range": {
+                "startLine": 83,
+                "startChar": 0,
+                "endLine": 84,
+                "endChar": 0
+              },
+              "replacement": "    // It\u0027s also guaranteed that the monitor of `this` is notified if `mCancellationSignal` is\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "541594ae_9e76eac8",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "This is roughly the time window after `startLocked` has returned and before the `runAsync` lambda in `mRunningJob` has started executing? How does it happen, and why is it important?",
+      "range": {
+        "startLine": 83,
+        "startChar": 7,
+        "endLine": 84,
+        "endChar": 55
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1f82c8d_6e8c1b6f",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Please add some words explaining the semantics of this flag. It\u0027s not obvious to me in what sense it\u0027s \"ready\" here. (Looks like the AI figured it out, except it repeats itself.)",
+      "range": {
+        "startLine": 88,
+        "startChar": 39,
+        "endLine": 88,
+        "endChar": 59
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b1dadcbd_c2314a85",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+              "range": {
+                "startLine": 88,
+                "startChar": 0,
+                "endLine": 88,
+                "endChar": 0
+              },
+              "replacement": "    /**\n     * Whether update_engine has mapped snapshot devices. Only applicable to an OTA update.\n     *\n     * This flag is set to true when update_engine finishes mapping snapshot devices.\n     */\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6f890b7_1feccf4f",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "\"It may also be killed by update_engine, probably because it\u0027s preparing a new OTA, in which case we should definitely give up.\"",
+      "range": {
+        "startLine": 169,
+        "startChar": 41,
+        "endLine": 169,
+        "endChar": 42
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c44c3abf_00c6bce3",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Add `Utils.check(mIsUpdateEngineReady)`?",
+      "fixSuggestions": [
+        {
+          "fixId": "b3906600_869dec58",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+              "range": {
+                "startLine": 388,
+                "startChar": 0,
+                "endLine": 388,
+                "endChar": 0
+              },
+              "replacement": "                    Utils.check(mIsUpdateEngineReady);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "696d93f6_20da15fc",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "This does more than just wait. I suggest `triggerUpdateEnginePostinstallAndWait`.\n\nI think it\u0027d also be good to have some overview docs on the flow through update_engine and the postinstall script. The README.md file doesn\u0027t document the pre-reboot dexopt scenario at all, so it seems appropriate to extend it with that (and preferably not just this async flow, because there are now a number of different ways to run it and they all have impact on the logic here). That\u0027s fine to do in another CL, and then it\u0027d be good to have a pointer here so readers know they should look in the README for help.",
+      "range": {
+        "startLine": 422,
+        "startChar": 17,
+        "endLine": 422,
+        "endChar": 36
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "dd38f0fe_2ff0c208",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+              "range": {
+                "startLine": 387,
+                "startChar": 0,
+                "endLine": 388,
+                "endChar": 0
+              },
+              "replacement": "                    triggerUpdateEnginePostinstallAndWait();\n"
+            },
+            {
+              "path": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+              "range": {
+                "startLine": 422,
+                "startChar": 0,
+                "endLine": 423,
+                "endChar": 0
+              },
+              "replacement": "    private void triggerUpdateEnginePostinstallAndWait() throws UpdateEngineException {\n"
+            },
+            {
+              "path": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+              "range": {
+                "startLine": 471,
+                "startChar": 0,
+                "endLine": 472,
+                "endChar": 0
+              },
+              "replacement": "                // `triggerUpdateEnginePostinstallAndWait` return early.\n"
+            },
+            {
+              "path": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+              "range": {
+                "startLine": 500,
+                "startChar": 0,
+                "endLine": 501,
+                "endChar": 0
+              },
+              "replacement": "                // `triggerUpdateEnginePostinstallAndWait` return early.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0ad3b93_14daa30d",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "```suggestion\n            mInjector.getUpdateEngine().triggerPostinstall(\"system\" /* partition */);\n```",
+      "range": {
+        "startLine": 429,
+        "startChar": 59,
+        "endLine": 429,
+        "endChar": 67
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1eef16c1_f5a6ca36",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "You could unify the duplicated return conditions like so:\n\n```suggestion\n            while (true) {\n                if (mIsUpdateEngineReady || mCancellationSignal.isCanceled()) {\n                    return;\n                }\n                long remainingTime \u003d UPDATE_ENGINE_TIMEOUT_MS\n                                   - (System.currentTimeMillis() - startTime);\n                if (remainingTime \u003c\u003d 0) {\n                    break;\n                }\n                try {\n                    this.wait(remainingTime);\n                } catch (InterruptedException e) {\n                    AsLog.wtf(\"Interrupted\", e);\n                }\n            }\n```\n\nOr even throw the timeout exception directly in the block with `break;`.",
+      "range": {
+        "startLine": 435,
+        "startChar": 0,
+        "endLine": 450,
+        "endChar": 13
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c87a25ec_ddbd4207",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "```suggestion\n        // Legacy flag in Android V.\n```",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "488b4536_cac9a4c6",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Suggest `notifyUpdateEngineReady` to describe the function better.",
+      "range": {
+        "startLine": 592,
+        "startChar": 35,
+        "endLine": 592,
+        "endChar": 55
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2523c565_b2732c09",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+              "range": {
+                "startLine": 592,
+                "startChar": 0,
+                "endLine": 593,
+                "endChar": 0
+              },
+              "replacement": "    public CompletableFuture\u003cVoid\u003e notifyUpdateEngineReady() {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "482985d4_02b76b51",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Consider moving this method next to `waitForUpdateEngine`, since they\u0027re closely related.",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f31f0811_7feec7e0",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "```suggestion\n            // Notify triggerUpdateEnginePostinstallAndWait to stop waiting.\n            this.notifyAll();\n```",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b79be5b_086a60ca",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Unify this to a single helper method?",
+      "range": {
+        "startLine": 248,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 9
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24452b7f_225e4950",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Can this be unified with `testOnOtaStagedSyncCancelledByCommand` (with some limited parameterisation)?",
+      "range": {
+        "startLine": 311,
+        "startChar": 0,
+        "endLine": 338,
+        "endChar": 9
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72135118_601ff1e0",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Same here vs `testOnOtaStagedSyncCancelledByBrokenPipe`. I\u0027m thinking adding shared test implementations with a simple boolean argument for the flag would be straightforward enough to be a net win in all these tests.",
+      "range": {
+        "startLine": 354,
+        "startChar": 0,
+        "endLine": 375,
+        "endChar": 9
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "602cfc64_f228bea3",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Please fix this WARNING reported by Error Prone: [JUnit4TestNotRun] This looks like a test method but is not run; please add @Test and @Ignore, or, if this is a helper method, reduce its visibility.\n\nAnalyzer Description: Warnings generated by errorprone.\nOwner: farivar@google.com\n\n    [JUnit4TestNotRun] This looks like a test method but is not run; please add @Test and @Ignore, or, if this is a helper method, reduce its visibility.\n        public void testPrDexoptJobScheduleOta() throws Exception {\n                    ^\n        (see https://errorprone.info/bugpattern/JUnit4TestNotRun)\n      Did you mean \u0027@Test @EnableFlags({android.os.Flags.FLAG_UPDATE_ENGINE_API})\u0027 or \u0027@Test @Ignore @EnableFlags({android.os.Flags.FLAG_UPDATE_ENGINE_API})\u0027 or \u0027private void testPrDexoptJobScheduleOta() throws Exception {\u0027?\n\nUse `m RUN_ERROR_PRONE\u003dtrue MyModule` to reproduce locally.\n\nThis finding was found on https://android-build.googleplex.com/builds/build-details/P90027802/targets/errorprone-trunk_staging, but may also be present on other builds.\n\nThis is a different branch than your cl originated on (it was automerged), and thus might better reflect the state of the code in the git_main branch.",
+      "range": {
+        "startLine": 542,
+        "startChar": 0,
+        "endLine": 542,
+        "endChar": 63
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdd3ff05_13e81b65",
+        "filename": "libartservice/service/javatests/com/android/server/art/PreRebootDexoptJobTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Please fix this WARNING reported by Error Prone: [FutureReturnValueIgnored] Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.\n\nAnalyzer Description: Warnings generated by errorprone.\nOwner: farivar@google.com\n\n    [FutureReturnValueIgnored] Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.\n                        mPreRebootDexoptJob.setUpdateEngineReady();\n                                                                ^\n        (see https://errorprone.info/bugpattern/FutureReturnValueIgnored)\n      Did you mean \u0027var unused \u003d mPreRebootDexoptJob.setUpdateEngineReady();\u0027 or to remove this line?\n\nUse `m RUN_ERROR_PRONE\u003dtrue MyModule` to reproduce locally.\n\nThis finding was found on https://android-build.googleplex.com/builds/build-details/P90027802/targets/errorprone-trunk_staging, but may also be present on other builds.\n\nThis is a different branch than your cl originated on (it was automerged), and thus might better reflect the state of the code in the git_main branch.",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 63
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19451bc6_1f5800a3",
+        "filename": "libartservice/service/javatests/com/android/server/art/PreRebootDexoptJobTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 1,
+      "message": "Please add a test case to check that the update_engine trigger doesn\u0027t run for a Mainline update.",
+      "range": {
+        "startLine": 276,
+        "startChar": 16,
+        "endLine": 276,
+        "endChar": 44
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5026e8e8_6d0e98ad",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T23:11:52Z",
+      "side": 0,
+      "message": "This type is helpful. Can you please keep it?",
+      "range": {
+        "startLine": 365,
+        "startChar": 16,
+        "endLine": 365,
+        "endChar": 31
+      },
+      "revId": "fc034369e32af6ea92e82a04b3cfa99c5ca46fd4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
