@@ -17,19 +17,19 @@
 #ifndef ART_RUNTIME_INTERPRETER_INTERPRETER_SWITCH_IMPL_INL_H_
 #define ART_RUNTIME_INTERPRETER_INTERPRETER_SWITCH_IMPL_INL_H_
 
-#include "interpreter_switch_impl.h"
-
 #include "base/globals.h"
 #include "base/memory_tool.h"
 #include "base/pointer_size.h"
 #include "base/quasi_atomic.h"
+#include "com_android_art_flags.h"
 #include "common_throws.h"
 #include "dex/dex_file_types.h"
 #include "dex/dex_instruction_list.h"
 #include "experimental_flags.h"
 #include "handle_scope.h"
-#include "interpreter_common.h"
 #include "interpreter/shadow_frame.h"
+#include "interpreter_common.h"
+#include "interpreter_switch_impl.h"
 #include "jit/jit-inl.h"
 #include "jvalue-inl.h"
 #include "mirror/string-alloc-inl.h"
@@ -2087,7 +2087,8 @@ void ExecuteSwitchImplCpp(SwitchImplContext* ctx) {
       return;  // Return statement or debugger forced exit.
     }
     if (self->IsExceptionPending()) {
-      if (self->AreVirtualThreadFlagsEnabled(VirtualThreadFlag::kParking)) {
+      if (COM_ANDROID_ART_FLAGS_VIRTUAL_THREAD_IMPL_V1 &&
+          self->AreVirtualThreadFlagsEnabled(VirtualThreadFlag::kParking)) {
         DCHECK(self->GetException()->GetClass()->DescriptorEquals(
             "Ldalvik/system/VirtualThreadParkingError;"));
         return;

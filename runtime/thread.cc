@@ -679,7 +679,8 @@ void* Thread::CreateCallback(void* arg) {
         WellKnownClasses::java_lang_Thread_target->GetObject(receiver);
     ObjPtr<mirror::Class> v_context_class =
         WellKnownClasses::ToClass(WellKnownClasses::dalvik_system_VirtualThreadContext);
-    if (UNLIKELY(!runnable.IsNull() && runnable->InstanceOf(v_context_class))) {
+    if (kIsVirtualThreadEnabled &&
+        UNLIKELY(!runnable.IsNull() && runnable->InstanceOf(v_context_class))) {
       self->SetVirtualThreadFlags(VirtualThreadFlag::kIsVirtual, true);
       ObjPtr<mirror::Object> parked_states =
           WellKnownClasses::dalvik_system_VirtualThreadContext_parkedStates->GetObject(runnable);
