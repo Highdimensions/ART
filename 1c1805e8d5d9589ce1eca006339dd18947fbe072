@@ -16,6 +16,52 @@
       "message": "PTAL. Thanks!",
       "revId": "1c1805e8d5d9589ce1eca006339dd18947fbe072",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa42fa3e_5edce532",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-12T14:28:22Z",
+      "side": 1,
+      "message": "Don\u0027t you need a lock for this?",
+      "range": {
+        "startLine": 565,
+        "startChar": 0,
+        "endLine": 565,
+        "endChar": 66
+      },
+      "revId": "1c1805e8d5d9589ce1eca006339dd18947fbe072",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e45ca27_4b7d9e02",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-12T14:28:22Z",
+      "side": 1,
+      "message": "drop",
+      "range": {
+        "startLine": 110,
+        "startChar": 2,
+        "endLine": 110,
+        "endChar": 10
+      },
+      "revId": "1c1805e8d5d9589ce1eca006339dd18947fbe072",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
