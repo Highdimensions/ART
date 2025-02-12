@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86fa7cbf_c2b01d24",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1952023
+      },
+      "writtenOn": "2025-02-12T16:25:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6f12043b_0f99f501",
+      "revId": "ff293c3cfa12fe02533d080a0191ad6e8bf8aaab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7b1b6ca0_da6854c0",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-02-12T09:58:45Z",
       "side": 1,
       "message": "Did you see the right path after the change?\n\nAlso, could you please run some ART tests (perhaps through presubmit becuase it\u0027s easier) to verify that this change doesn\u0027t break things?",
+      "revId": "ff293c3cfa12fe02533d080a0191ad6e8bf8aaab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6a3b1aa_be4fc008",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1952023
+      },
+      "writtenOn": "2025-02-12T16:25:35Z",
+      "side": 1,
+      "message": "Yes. I saw the right path returned by VMDebug_getExecutableMethodFileOffsetsNative after the change.\n\nKicked off a presubmit run.",
+      "parentUuid": "7b1b6ca0_da6854c0",
       "revId": "ff293c3cfa12fe02533d080a0191ad6e8bf8aaab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
