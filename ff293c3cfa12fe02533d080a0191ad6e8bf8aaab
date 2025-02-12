@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f12043b_0f99f501",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-12T09:58:45Z",
+      "side": 1,
+      "message": "Please mention why this change is needed and what exactly is the effect of this change.",
+      "revId": "ff293c3cfa12fe02533d080a0191ad6e8bf8aaab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b1b6ca0_da6854c0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-12T09:58:45Z",
+      "side": 1,
+      "message": "Did you see the right path after the change?\n\nAlso, could you please run some ART tests (perhaps through presubmit becuase it\u0027s easier) to verify that this change doesn\u0027t break things?",
+      "revId": "ff293c3cfa12fe02533d080a0191ad6e8bf8aaab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
