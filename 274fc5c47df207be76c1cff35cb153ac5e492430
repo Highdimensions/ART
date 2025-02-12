@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "32f6b098_7fafe3f2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-12T11:19:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0cdbbdfe_a1f30760",
+      "revId": "274fc5c47df207be76c1cff35cb153ac5e492430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "74b196eb_3d501872",
@@ -109,6 +127,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e241772_21b58c33",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-12T11:19:30Z",
+      "side": 1,
+      "message": "Discussed offline. We can\u0027t use static because we aren\u0027t waiting for checkpoints to finish. It wil be difficult to see when it\u0027s safe to delete the closure. We used static for this kind of use case before, so leaving it as is for now.",
+      "parentUuid": "74b196eb_3d501872",
+      "range": {
+        "startLine": 202,
+        "startChar": 2,
+        "endLine": 202,
+        "endChar": 35
+      },
+      "revId": "274fc5c47df207be76c1cff35cb153ac5e492430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "302662d9_2fcf6a18",
@@ -122,6 +164,30 @@
       "writtenOn": "2025-02-11T17:27:21Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 212,
+        "startChar": 0,
+        "endLine": 212,
+        "endChar": 26
+      },
+      "revId": "274fc5c47df207be76c1cff35cb153ac5e492430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ef0e602_cde2f287",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-12T11:19:30Z",
+      "side": 1,
+      "message": "Same as above.",
+      "parentUuid": "302662d9_2fcf6a18",
       "range": {
         "startLine": 212,
         "startChar": 0,
