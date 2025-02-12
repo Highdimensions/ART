@@ -16,6 +16,24 @@
       "message": "The presubmit shows a regrssion on pinned files. This means this change broke PinnerService.\n\nTo fix it, change [this line](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/native/dalvik_system_DexFile.cc;l\u003d886-887;drc\u003dd6d5643407ceb14bf275c14a78f94048b1992af5) to\n```\noat_filename \u003d oat_file-\u003eGetLocation();\n```",
       "revId": "e18b55813a0d8bdf7f532292a85b1a0c56269096",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "adc263c8_39d4c038",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1952023
+      },
+      "writtenOn": "2025-02-12T19:51:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8517fe01_5ef27127",
+      "revId": "e18b55813a0d8bdf7f532292a85b1a0c56269096",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
