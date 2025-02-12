@@ -60,3 +60,10 @@ phony_rule {
         default: true,
     }),
 }
+
+phony_rule {
+    name: "build-art-host",
+    phony_deps: [
+        "art-script",
+    ],
+}
