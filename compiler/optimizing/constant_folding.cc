@@ -54,7 +54,13 @@ class HConstantFoldingVisitor final : public HGraphDelegateVisitor {
   void VisitInvoke(HInvoke* inst) override;
   void VisitTypeConversion(HTypeConversion* inst) override;
 
-  void PropagateValue(HBasicBlock* starting_block, HInstruction* variable, HConstant* constant);
+  // `constant` is a lambda that returns an HConstant* to avoid creating IntConstant instructions,
+  // if possible. In theory, we could still be creating a constant that `ReplaceUsesDominatedBy`
+  // doesn't use. In practice, we can eliminate most (95%+) of constants being created without
+  // impacting `ReplaceUsesDominatedBy`.
+  void PropagateValue(HBasicBlock* starting_block,
+                      HInstruction* variable,
+                      std::function<HConstant*()>&& constant);
 
   // Intrinsics foldings
   void FoldReverseIntrinsic(HInvoke* invoke);
@@ -218,7 +224,7 @@ void HConstantFoldingVisitor::VisitDivZeroCheck(HDivZeroCheck* inst) {
 
 void HConstantFoldingVisitor::PropagateValue(HBasicBlock* starting_block,
                                              HInstruction* variable,
-                                             HConstant* constant) {
+                                             std::function<HConstant*()>&& constant) {
   const bool recording_stats = stats_ != nullptr;
   size_t uses_before = 0;
   size_t uses_after = 0;
@@ -228,7 +234,7 @@ void HConstantFoldingVisitor::PropagateValue(HBasicBlock* starting_block,
 
   if (!variable->GetUses().HasExactlyOneElement()) {
     variable->ReplaceUsesDominatedBy(
-        starting_block->GetFirstInstruction(), constant, /* strictly_dominated= */ false);
+        starting_block->GetFirstInstruction(), constant(), /* strictly_dominated= */ false);
   }
 
   if (recording_stats) {
@@ -256,8 +262,10 @@ void HConstantFoldingVisitor::VisitIf(HIf* inst) {
   // } else {
   //   and here false
   // }
-  PropagateValue(inst->IfTrueSuccessor(), if_input, GetGraph()->GetIntConstant(1));
-  PropagateValue(inst->IfFalseSuccessor(), if_input, GetGraph()->GetIntConstant(0));
+  HGraph* graph = GetGraph();
+  PropagateValue(inst->IfTrueSuccessor(), if_input, [graph]() { return graph->GetIntConstant(1); });
+  PropagateValue(
+      inst->IfFalseSuccessor(), if_input, [graph]() { return graph->GetIntConstant(0); });
 
   // If the input is a condition, we can propagate the information of the condition itself.
   if (!if_input->IsCondition()) {
@@ -330,7 +338,7 @@ void HConstantFoldingVisitor::VisitIf(HIf* inst) {
   HBasicBlock* starting_block =
       condition->IsEqual() ? inst->IfTrueSuccessor() : inst->IfFalseSuccessor();
 
-  PropagateValue(starting_block, variable, constant);
+  PropagateValue(starting_block, variable, [constant]() { return constant; });
 
   // Special case for booleans since they have only two values so we know what to propagate in the
   // other branch. However, sometimes our boolean values are not compared to 0 or 1. In those cases
@@ -342,11 +350,14 @@ void HConstantFoldingVisitor::VisitIf(HIf* inst) {
         condition->IsEqual() ? inst->IfFalseSuccessor() : inst->IfTrueSuccessor();
     DCHECK_NE(other_starting_block, starting_block);
 
-    HConstant* other_constant = constant->AsIntConstant()->IsTrue() ?
-                                    GetGraph()->GetIntConstant(0) :
-                                    GetGraph()->GetIntConstant(1);
-    DCHECK_NE(other_constant, constant);
-    PropagateValue(other_starting_block, variable, other_constant);
+    if (constant->AsIntConstant()->IsTrue()) {
+      PropagateValue(
+          other_starting_block, variable, [graph]() { return graph->GetIntConstant(0); });
+    } else {
+      DCHECK(constant->AsIntConstant()->IsFalse());
+      PropagateValue(
+          other_starting_block, variable, [graph]() { return graph->GetIntConstant(1); });
+    }
   }
 }
 
