@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # Copyright (C) 2019 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +16,6 @@
 
 
 def run(ctx, args):
-  args.testlib += [args.testlib[0] + "_external"]
-
   # Make verification soft fail so that we can re-verify boot classpath
   # methods at runtime.
   #
