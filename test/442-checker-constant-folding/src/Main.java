@@ -1913,6 +1913,422 @@ public class Main {
     }
   }
 
+  // These comparisons are not done with boolean inputs and therefore, we need to wait until after
+  // GVN to eliminate the comparison in the `else` case.
+
+  /// CHECK-START: int Main.$noinline$testPropagateComparisonInt(int) constant_folding (before)
+  /// CHECK-DAG:     NotEqual
+  /// CHECK-DAG:     NotEqual
+  /// CHECK-DAG:     NotEqual
+
+  /// CHECK-START: int Main.$noinline$testPropagateComparisonInt(int) constant_folding (after)
+  /// CHECK:         NotEqual
+  /// CHECK:         NotEqual
+  /// CHECK-NOT:     NotEqual
+
+  /// CHECK-START: int Main.$noinline$testPropagateComparisonInt(int) dead_code_elimination$initial (before)
+  /// CHECK-DAG:     IntConstant 1
+  /// CHECK-DAG:     IntConstant 2
+  /// CHECK-DAG:     IntConstant 3
+  /// CHECK-DAG:     IntConstant 4
+
+  /// CHECK-START: int Main.$noinline$testPropagateComparisonInt(int) dead_code_elimination$initial (after)
+  /// CHECK-DAG:     IntConstant 1
+  /// CHECK-DAG:     IntConstant 3
+  /// CHECK-DAG:     IntConstant 4
+
+  /// CHECK-START: int Main.$noinline$testPropagateComparisonInt(int) dead_code_elimination$initial (after)
+  /// CHECK-NOT:     IntConstant 2
+
+  /// CHECK-START: int Main.$noinline$testPropagateComparisonInt(int) instruction_simplifier$after_gvn (before)
+  /// CHECK-DAG: <<Const1:i\d+>>  IntConstant 1
+  /// CHECK-DAG: <<Const3:i\d+>>  IntConstant 3
+  /// CHECK-DAG: <<Const4:i\d+>>  IntConstant 4
+  /// CHECK-DAG: <<Sel:i\d+>>     Select [<<Const3>>,<<Const4>>,<<Cond:z\d+>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Sel>>,<<Cond>>]
+
+  /// CHECK-START: int Main.$noinline$testPropagateComparisonInt(int) instruction_simplifier$after_gvn (after)
+  /// CHECK-DAG: <<Const1:i\d+>>  IntConstant 1
+  /// CHECK-DAG: <<Const3:i\d+>>  IntConstant 3
+  /// CHECK-DAG: <<Const4:i\d+>>  IntConstant 4
+  /// CHECK-DAG: <<Sel:i\d+>>     Select [<<Const3>>,<<Const4>>,<<Cond:z\d+>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Const4>>,<<Cond>>]
+
+  /// CHECK-START: int Main.$noinline$testPropagateComparisonInt(int) dead_code_elimination$after_gvn (before)
+  /// CHECK: Select
+  /// CHECK: Select
+
+  /// CHECK-START: int Main.$noinline$testPropagateComparisonInt(int) dead_code_elimination$after_gvn (after)
+  /// CHECK: Select
+  /// CHECK-NOT: Select
+
+  /// CHECK-START: int Main.$noinline$testPropagateComparisonInt(int) dead_code_elimination$after_gvn (after)
+  /// CHECK-NOT: IntConstant 3
+  private static int $noinline$testPropagateComparisonInt(int value) {
+      if (value == 42) {
+          return value == 42 ? 1 : 2;
+      } else {
+          return value == 42 ? 3 : 4;
+      }
+  }
+
+  /// CHECK-START: int Main.$noinline$testPropagateOppositeComparisonInt(int) constant_folding (before)
+  /// CHECK-DAG:     NotEqual
+  /// CHECK-DAG:     NotEqual
+
+  /// CHECK-START: int Main.$noinline$testPropagateOppositeComparisonInt(int) constant_folding (after)
+  /// CHECK:         NotEqual
+  /// CHECK-NOT:     NotEqual
+
+  /// CHECK-START: int Main.$noinline$testPropagateOppositeComparisonInt(int) dead_code_elimination$initial (before)
+  /// CHECK-DAG:     IntConstant 1
+  /// CHECK-DAG:     IntConstant 2
+  /// CHECK-DAG:     IntConstant 3
+  /// CHECK-DAG:     IntConstant 4
+
+  /// CHECK-START: int Main.$noinline$testPropagateOppositeComparisonInt(int) dead_code_elimination$initial (after)
+  /// CHECK-DAG:     IntConstant 1
+  /// CHECK-DAG:     IntConstant 3
+  /// CHECK-DAG:     IntConstant 4
+
+  /// CHECK-START: int Main.$noinline$testPropagateOppositeComparisonInt(int) dead_code_elimination$initial (after)
+  /// CHECK-NOT:     IntConstant 2
+
+  /// CHECK-START: int Main.$noinline$testPropagateOppositeComparisonInt(int) instruction_simplifier$after_gvn (before)
+  /// CHECK-DAG: <<Param:i\d+>>   ParameterValue
+  /// CHECK-DAG: <<Const1:i\d+>>  IntConstant 1
+  /// CHECK-DAG: <<Const3:i\d+>>  IntConstant 3
+  /// CHECK-DAG: <<Const4:i\d+>>  IntConstant 4
+  /// CHECK-DAG: <<Const42:i\d+>> IntConstant 42
+  /// CHECK-DAG: <<Eq:z\d+>>      Equal [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<NotEq:z\d+>>   NotEqual [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<Sel:i\d+>>     Select [<<Const3>>,<<Const4>>,<<Eq>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Sel>>,<<NotEq>>]
+
+  /// CHECK-START: int Main.$noinline$testPropagateOppositeComparisonInt(int) instruction_simplifier$after_gvn (after)
+  /// CHECK-DAG: <<Param:i\d+>>   ParameterValue
+  /// CHECK-DAG: <<Const1:i\d+>>  IntConstant 1
+  /// CHECK-DAG: <<Const3:i\d+>>  IntConstant 3
+  /// CHECK-DAG: <<Const4:i\d+>>  IntConstant 4
+  /// CHECK-DAG: <<Const42:i\d+>> IntConstant 42
+  /// CHECK-DAG: <<Eq:z\d+>>      Equal [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<NotEq:z\d+>>   NotEqual [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<Sel:i\d+>>     Select [<<Const3>>,<<Const4>>,<<Eq>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Const3>>,<<NotEq>>]
+
+  /// CHECK-START: int Main.$noinline$testPropagateOppositeComparisonInt(int) dead_code_elimination$after_gvn (before)
+  /// CHECK: Select
+  /// CHECK: Select
+
+  /// CHECK-START: int Main.$noinline$testPropagateOppositeComparisonInt(int) dead_code_elimination$after_gvn (after)
+  /// CHECK: Select
+  /// CHECK-NOT: Select
+
+  /// CHECK-START: int Main.$noinline$testPropagateOppositeComparisonInt(int) dead_code_elimination$after_gvn (after)
+  /// CHECK-NOT: IntConstant 4
+  private static int $noinline$testPropagateOppositeComparisonInt(int value) {
+      if (value == 42) {
+          return value == 42 ? 1 : 2;
+      } else {
+          return value != 42 ? 3 : 4;
+      }
+  }
+
+  /// CHECK-START: long Main.$noinline$testPropagateComparisonLong(long) constant_folding (before)
+  /// CHECK-DAG:     NotEqual
+  /// CHECK-DAG:     NotEqual
+  /// CHECK-DAG:     NotEqual
+
+  /// CHECK-START: long Main.$noinline$testPropagateComparisonLong(long) constant_folding (after)
+  /// CHECK:         NotEqual
+  /// CHECK:         NotEqual
+  /// CHECK-NOT:     NotEqual
+
+  /// CHECK-START: long Main.$noinline$testPropagateComparisonLong(long) dead_code_elimination$initial (before)
+  /// CHECK-DAG:     LongConstant 1
+  /// CHECK-DAG:     LongConstant 2
+  /// CHECK-DAG:     LongConstant 3
+  /// CHECK-DAG:     LongConstant 4
+
+  /// CHECK-START: long Main.$noinline$testPropagateComparisonLong(long) dead_code_elimination$initial (after)
+  /// CHECK-DAG:     LongConstant 1
+  /// CHECK-DAG:     LongConstant 3
+  /// CHECK-DAG:     LongConstant 4
+
+  /// CHECK-START: long Main.$noinline$testPropagateComparisonLong(long) dead_code_elimination$initial (after)
+  /// CHECK-NOT:     LongConstant 2
+
+  /// CHECK-START: long Main.$noinline$testPropagateComparisonLong(long) instruction_simplifier$after_gvn (before)
+  /// CHECK-DAG: <<Const1:j\d+>>  LongConstant 1
+  /// CHECK-DAG: <<Const3:j\d+>>  LongConstant 3
+  /// CHECK-DAG: <<Const4:j\d+>>  LongConstant 4
+  /// CHECK-DAG: <<Sel:j\d+>>     Select [<<Const3>>,<<Const4>>,<<Cond:z\d+>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Sel>>,<<Cond>>]
+
+  /// CHECK-START: long Main.$noinline$testPropagateComparisonLong(long) instruction_simplifier$after_gvn (after)
+  /// CHECK-DAG: <<Const1:j\d+>>  LongConstant 1
+  /// CHECK-DAG: <<Const3:j\d+>>  LongConstant 3
+  /// CHECK-DAG: <<Const4:j\d+>>  LongConstant 4
+  /// CHECK-DAG: <<Sel:j\d+>>     Select [<<Const3>>,<<Const4>>,<<Cond:z\d+>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Const4>>,<<Cond>>]
+
+  /// CHECK-START: long Main.$noinline$testPropagateComparisonLong(long) dead_code_elimination$after_gvn (before)
+  /// CHECK: Select
+  /// CHECK: Select
+
+  /// CHECK-START: long Main.$noinline$testPropagateComparisonLong(long) dead_code_elimination$after_gvn (after)
+  /// CHECK: Select
+  /// CHECK-NOT: Select
+
+  /// CHECK-START: long Main.$noinline$testPropagateComparisonLong(long) dead_code_elimination$after_gvn (after)
+  /// CHECK-NOT: LongConstant 3
+  private static long $noinline$testPropagateComparisonLong(long value) {
+      if (value == 42L) {
+          return value == 42L ? 1L : 2L;
+      } else {
+          return value == 42L ? 3L : 4L;
+      }
+  }
+
+  /// CHECK-START: long Main.$noinline$testPropagateOppositeComparisonLong(long) constant_folding (before)
+  /// CHECK-DAG:     NotEqual
+  /// CHECK-DAG:     NotEqual
+
+  /// CHECK-START: long Main.$noinline$testPropagateOppositeComparisonLong(long) constant_folding (after)
+  /// CHECK:         NotEqual
+  /// CHECK-NOT:     NotEqual
+
+  /// CHECK-START: long Main.$noinline$testPropagateOppositeComparisonLong(long) dead_code_elimination$initial (before)
+  /// CHECK-DAG:     LongConstant 1
+  /// CHECK-DAG:     LongConstant 2
+  /// CHECK-DAG:     LongConstant 3
+  /// CHECK-DAG:     LongConstant 4
+
+  /// CHECK-START: long Main.$noinline$testPropagateOppositeComparisonLong(long) dead_code_elimination$initial (after)
+  /// CHECK-DAG:     LongConstant 1
+  /// CHECK-DAG:     LongConstant 3
+  /// CHECK-DAG:     LongConstant 4
+
+  /// CHECK-START: long Main.$noinline$testPropagateOppositeComparisonLong(long) dead_code_elimination$initial (after)
+  /// CHECK-NOT:     LongConstant 2
+
+  /// CHECK-START: long Main.$noinline$testPropagateOppositeComparisonLong(long) instruction_simplifier$after_gvn (before)
+  /// CHECK-DAG: <<Param:j\d+>>   ParameterValue
+  /// CHECK-DAG: <<Const1:j\d+>>  LongConstant 1
+  /// CHECK-DAG: <<Const3:j\d+>>  LongConstant 3
+  /// CHECK-DAG: <<Const4:j\d+>>  LongConstant 4
+  /// CHECK-DAG: <<Const42:j\d+>> LongConstant 42
+  /// CHECK-DAG: <<Eq:z\d+>>      Equal [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<NotEq:z\d+>>   NotEqual [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<Sel:j\d+>>     Select [<<Const3>>,<<Const4>>,<<Eq>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Sel>>,<<NotEq>>]
+
+  /// CHECK-START: long Main.$noinline$testPropagateOppositeComparisonLong(long) instruction_simplifier$after_gvn (after)
+  /// CHECK-DAG: <<Param:j\d+>>   ParameterValue
+  /// CHECK-DAG: <<Const1:j\d+>>  LongConstant 1
+  /// CHECK-DAG: <<Const3:j\d+>>  LongConstant 3
+  /// CHECK-DAG: <<Const4:j\d+>>  LongConstant 4
+  /// CHECK-DAG: <<Const42:j\d+>> LongConstant 42
+  /// CHECK-DAG: <<Eq:z\d+>>      Equal [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<NotEq:z\d+>>   NotEqual [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<Sel:j\d+>>     Select [<<Const3>>,<<Const4>>,<<Eq>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Const3>>,<<NotEq>>]
+
+  /// CHECK-START: long Main.$noinline$testPropagateOppositeComparisonLong(long) dead_code_elimination$after_gvn (before)
+  /// CHECK: Select
+  /// CHECK: Select
+
+  /// CHECK-START: long Main.$noinline$testPropagateOppositeComparisonLong(long) dead_code_elimination$after_gvn (after)
+  /// CHECK: Select
+  /// CHECK-NOT: Select
+
+  /// CHECK-START: long Main.$noinline$testPropagateOppositeComparisonLong(long) dead_code_elimination$after_gvn (after)
+  /// CHECK-NOT: LongConstant 4
+  private static long $noinline$testPropagateOppositeComparisonLong(long value) {
+      if (value == 42L) {
+          return value == 42L ? 1L : 2L;
+      } else {
+          return value != 42L ? 3L : 4L;
+      }
+  }
+
+  // We don't perform the ConstantFolding VisitIf optimization on float/double and therefore we end
+  // up with three selects after control_flow_simplifier.
+
+  /// CHECK-START: float Main.$noinline$testPropagateComparisonFloat(float) instruction_simplifier$after_gvn (before)
+  /// CHECK-DAG: <<Const1:f\d+>>  FloatConstant 1
+  /// CHECK-DAG: <<Const2:f\d+>>  FloatConstant 2
+  /// CHECK-DAG: <<Const3:f\d+>>  FloatConstant 3
+  /// CHECK-DAG: <<Const4:f\d+>>  FloatConstant 4
+  /// CHECK-DAG: <<Sel1:f\d+>>    Select [<<Const3>>,<<Const4>>,<<Cond:z\d+>>]
+  /// CHECK-DAG: <<Sel2:f\d+>>    Select [<<Const1>>,<<Const2>>,<<Cond>>]
+  /// CHECK-DAG:                  Select [<<Sel2>>,<<Sel1>>,<<Cond>>]
+
+  /// CHECK-START: float Main.$noinline$testPropagateComparisonFloat(float) instruction_simplifier$after_gvn (after)
+  /// CHECK-DAG: <<Const1:f\d+>>  FloatConstant 1
+  /// CHECK-DAG: <<Const2:f\d+>>  FloatConstant 2
+  /// CHECK-DAG: <<Const3:f\d+>>  FloatConstant 3
+  /// CHECK-DAG: <<Const4:f\d+>>  FloatConstant 4
+  /// CHECK-DAG: <<Sel1:f\d+>>    Select [<<Const3>>,<<Const4>>,<<Cond:z\d+>>]
+  /// CHECK-DAG: <<Sel2:f\d+>>    Select [<<Const1>>,<<Const2>>,<<Cond>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Const4>>,<<Cond>>]
+
+  /// CHECK-START: float Main.$noinline$testPropagateComparisonFloat(float) dead_code_elimination$after_gvn (before)
+  /// CHECK: Select
+  /// CHECK: Select
+  /// CHECK: Select
+
+  /// CHECK-START: float Main.$noinline$testPropagateComparisonFloat(float) dead_code_elimination$after_gvn (after)
+  /// CHECK: Select
+  /// CHECK-NOT: Select
+
+  /// CHECK-START: float Main.$noinline$testPropagateComparisonFloat(float) dead_code_elimination$after_gvn (after)
+  /// CHECK-NOT: FloatConstant 2
+  /// CHECK-NOT: FloatConstant 3
+  private static float $noinline$testPropagateComparisonFloat(float value) {
+      if (value == 42F) {
+          return value == 42F ? 1F : 2F;
+      } else {
+          return value == 42F ? 3F : 4F;
+      }
+  }
+
+  // In the opposite case, since value == 42F and value != 42F have the same bias, we cannot delete
+  // one of the selects
+
+  /// CHECK-START: float Main.$noinline$testPropagateOppositeComparisonFloat(float) instruction_simplifier$after_gvn (before)
+  /// CHECK-DAG: <<Param:f\d+>>   ParameterValue
+  /// CHECK-DAG: <<Const1:f\d+>>  FloatConstant 1
+  /// CHECK-DAG: <<Const2:f\d+>>  FloatConstant 2
+  /// CHECK-DAG: <<Const3:f\d+>>  FloatConstant 3
+  /// CHECK-DAG: <<Const4:f\d+>>  FloatConstant 4
+  /// CHECK-DAG: <<Const42:f\d+>> FloatConstant 42
+  /// CHECK-DAG: <<Eq:z\d+>>      Equal [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<NotEq:z\d+>>   NotEqual [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<Sel1:f\d+>>    Select [<<Const3>>,<<Const4>>,<<Eq>>]
+  /// CHECK-DAG: <<Sel2:f\d+>>    Select [<<Const1>>,<<Const2>>,<<NotEq>>]
+  /// CHECK-DAG:                  Select [<<Sel2>>,<<Sel1>>,<<NotEq>>]
+
+  /// CHECK-START: float Main.$noinline$testPropagateOppositeComparisonFloat(float) instruction_simplifier$after_gvn (after)
+  /// CHECK-DAG: <<Param:f\d+>>   ParameterValue
+  /// CHECK-DAG: <<Const1:f\d+>>  FloatConstant 1
+  /// CHECK-DAG: <<Const2:f\d+>>  FloatConstant 2
+  /// CHECK-DAG: <<Const3:f\d+>>  FloatConstant 3
+  /// CHECK-DAG: <<Const4:f\d+>>  FloatConstant 4
+  /// CHECK-DAG: <<Const42:f\d+>> FloatConstant 42
+  /// CHECK-DAG: <<Eq:z\d+>>      Equal [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<NotEq:z\d+>>   NotEqual [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<Sel1:f\d+>>    Select [<<Const3>>,<<Const4>>,<<Eq>>]
+  /// CHECK-DAG: <<Sel2:f\d+>>    Select [<<Const1>>,<<Const2>>,<<NotEq>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Sel1>>,<<NotEq>>]
+
+  /// CHECK-START: float Main.$noinline$testPropagateOppositeComparisonFloat(float) dead_code_elimination$after_gvn (before)
+  /// CHECK: Select
+  /// CHECK: Select
+  /// CHECK: Select
+
+  /// CHECK-START: float Main.$noinline$testPropagateOppositeComparisonFloat(float) dead_code_elimination$after_gvn (after)
+  /// CHECK: Select
+  /// CHECK: Select
+  /// CHECK-NOT: Select
+
+  /// CHECK-START: float Main.$noinline$testPropagateOppositeComparisonFloat(float) dead_code_elimination$after_gvn (after)
+  /// CHECK-NOT: FloatConstant 2
+  private static float $noinline$testPropagateOppositeComparisonFloat(float value) {
+      if (value == 42F) {
+          return value == 42F ? 1F : 2F;
+      } else {
+          return value != 42F ? 3F : 4F;
+      }
+  }
+
+  /// CHECK-START: double Main.$noinline$testPropagateComparisonDouble(double) instruction_simplifier$after_gvn (before)
+  /// CHECK-DAG: <<Const1:d\d+>>  DoubleConstant 1
+  /// CHECK-DAG: <<Const2:d\d+>>  DoubleConstant 2
+  /// CHECK-DAG: <<Const3:d\d+>>  DoubleConstant 3
+  /// CHECK-DAG: <<Const4:d\d+>>  DoubleConstant 4
+  /// CHECK-DAG: <<Sel1:d\d+>>    Select [<<Const3>>,<<Const4>>,<<Cond:z\d+>>]
+  /// CHECK-DAG: <<Sel2:d\d+>>    Select [<<Const1>>,<<Const2>>,<<Cond>>]
+  /// CHECK-DAG:                  Select [<<Sel2>>,<<Sel1>>,<<Cond>>]
+
+  /// CHECK-START: double Main.$noinline$testPropagateComparisonDouble(double) instruction_simplifier$after_gvn (after)
+  /// CHECK-DAG: <<Const1:d\d+>>  DoubleConstant 1
+  /// CHECK-DAG: <<Const2:d\d+>>  DoubleConstant 2
+  /// CHECK-DAG: <<Const3:d\d+>>  DoubleConstant 3
+  /// CHECK-DAG: <<Const4:d\d+>>  DoubleConstant 4
+  /// CHECK-DAG: <<Sel1:d\d+>>    Select [<<Const3>>,<<Const4>>,<<Cond:z\d+>>]
+  /// CHECK-DAG: <<Sel2:d\d+>>    Select [<<Const1>>,<<Const2>>,<<Cond>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Const4>>,<<Cond>>]
+
+  /// CHECK-START: double Main.$noinline$testPropagateComparisonDouble(double) dead_code_elimination$after_gvn (before)
+  /// CHECK: Select
+  /// CHECK: Select
+  /// CHECK: Select
+
+  /// CHECK-START: double Main.$noinline$testPropagateComparisonDouble(double) dead_code_elimination$after_gvn (after)
+  /// CHECK: Select
+  /// CHECK-NOT: Select
+
+  /// CHECK-START: double Main.$noinline$testPropagateComparisonDouble(double) dead_code_elimination$after_gvn (after)
+  /// CHECK-NOT: DoubleConstant 2
+  /// CHECK-NOT: DoubleConstant 3
+  private static double $noinline$testPropagateComparisonDouble(double value) {
+      if (value == 42D) {
+          return value == 42D ? 1D : 2D;
+      } else {
+          return value == 42D ? 3D : 4D;
+      }
+  }
+
+  // In the opposite case, since value == 42D and value != 42D have the same bias, we cannot delete
+  // one of the selects
+
+  /// CHECK-START: double Main.$noinline$testPropagateOppositeComparisonDouble(double) instruction_simplifier$after_gvn (before)
+  /// CHECK-DAG: <<Param:d\d+>>   ParameterValue
+  /// CHECK-DAG: <<Const1:d\d+>>  DoubleConstant 1
+  /// CHECK-DAG: <<Const2:d\d+>>  DoubleConstant 2
+  /// CHECK-DAG: <<Const3:d\d+>>  DoubleConstant 3
+  /// CHECK-DAG: <<Const4:d\d+>>  DoubleConstant 4
+  /// CHECK-DAG: <<Const42:d\d+>> DoubleConstant 42
+  /// CHECK-DAG: <<Eq:z\d+>>      Equal [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<NotEq:z\d+>>   NotEqual [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<Sel1:d\d+>>    Select [<<Const3>>,<<Const4>>,<<Eq>>]
+  /// CHECK-DAG: <<Sel2:d\d+>>    Select [<<Const1>>,<<Const2>>,<<NotEq>>]
+  /// CHECK-DAG:                  Select [<<Sel2>>,<<Sel1>>,<<NotEq>>]
+
+  /// CHECK-START: double Main.$noinline$testPropagateOppositeComparisonDouble(double) instruction_simplifier$after_gvn (after)
+  /// CHECK-DAG: <<Param:d\d+>>   ParameterValue
+  /// CHECK-DAG: <<Const1:d\d+>>  DoubleConstant 1
+  /// CHECK-DAG: <<Const2:d\d+>>  DoubleConstant 2
+  /// CHECK-DAG: <<Const3:d\d+>>  DoubleConstant 3
+  /// CHECK-DAG: <<Const4:d\d+>>  DoubleConstant 4
+  /// CHECK-DAG: <<Const42:d\d+>> DoubleConstant 42
+  /// CHECK-DAG: <<Eq:z\d+>>      Equal [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<NotEq:z\d+>>   NotEqual [<<Param>>,<<Const42>>]
+  /// CHECK-DAG: <<Sel1:d\d+>>    Select [<<Const3>>,<<Const4>>,<<Eq>>]
+  /// CHECK-DAG: <<Sel2:d\d+>>    Select [<<Const1>>,<<Const2>>,<<NotEq>>]
+  /// CHECK-DAG:                  Select [<<Const1>>,<<Sel1>>,<<NotEq>>]
+
+  /// CHECK-START: double Main.$noinline$testPropagateOppositeComparisonDouble(double) dead_code_elimination$after_gvn (before)
+  /// CHECK: Select
+  /// CHECK: Select
+  /// CHECK: Select
+
+  /// CHECK-START: double Main.$noinline$testPropagateOppositeComparisonDouble(double) dead_code_elimination$after_gvn (after)
+  /// CHECK: Select
+  /// CHECK: Select
+  /// CHECK-NOT: Select
+
+  /// CHECK-START: double Main.$noinline$testPropagateOppositeComparisonDouble(double) dead_code_elimination$after_gvn (after)
+  /// CHECK-NOT: DoubleConstant 2
+  private static double $noinline$testPropagateOppositeComparisonDouble(double value) {
+      if (value == 42D) {
+          return value == 42D ? 1D : 2D;
+      } else {
+          return value != 42D ? 3D : 4D;
+      }
+  }
+
   public static void main(String[] args) throws Exception {
     assertIntEquals(-42, IntNegation());
     assertLongEquals(-42L, LongNegation());
@@ -2088,6 +2504,26 @@ public class Main {
     // Propagating parameters.
     assertIntEquals(1, $noinline$PropagatingParameterValue(true));
     assertIntEquals(4, $noinline$PropagatingParameterValue(false));
+
+    // Propagating comparisons.
+    assertIntEquals(4, $noinline$testPropagateComparisonInt(0));
+    assertIntEquals(1, $noinline$testPropagateComparisonInt(42));
+    assertLongEquals(4L, $noinline$testPropagateComparisonLong(0L));
+    assertLongEquals(1L, $noinline$testPropagateComparisonLong(42L));
+    assertFloatEquals(4F, $noinline$testPropagateComparisonFloat(0F));
+    assertFloatEquals(1F, $noinline$testPropagateComparisonFloat(42F));
+    assertDoubleEquals(4D, $noinline$testPropagateComparisonDouble(0D));
+    assertDoubleEquals(1D, $noinline$testPropagateComparisonDouble(42D));
+
+    // Propagating opposite comparisons.
+    assertIntEquals(3, $noinline$testPropagateOppositeComparisonInt(0));
+    assertIntEquals(1, $noinline$testPropagateOppositeComparisonInt(42));
+    assertLongEquals(3L, $noinline$testPropagateOppositeComparisonLong(0L));
+    assertLongEquals(1L, $noinline$testPropagateOppositeComparisonLong(42L));
+    assertFloatEquals(3F, $noinline$testPropagateOppositeComparisonFloat(0F));
+    assertFloatEquals(1F, $noinline$testPropagateOppositeComparisonFloat(42F));
+    assertDoubleEquals(3D, $noinline$testPropagateOppositeComparisonDouble(0D));
+    assertDoubleEquals(1D, $noinline$testPropagateOppositeComparisonDouble(42D));
   }
 
   Main() throws ClassNotFoundException {
