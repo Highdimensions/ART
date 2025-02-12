@@ -16,6 +16,77 @@
       "message": "Thanks!",
       "revId": "7c2cf386889506f24f97afdb682e04097ceabd4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69846c7a_72303bdb",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-12T15:47:13Z",
+      "side": 1,
+      "message": "Why not protecting the access to this file with a REQUIRES annotation?",
+      "range": {
+        "startLine": 573,
+        "startChar": 60,
+        "endLine": 573,
+        "endChar": 71
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1dd71d1e_0948ed91",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 81,
+                "startChar": 0,
+                "endLine": 82,
+                "endChar": 0
+              },
+              "replacement": "                            const std::unique_ptr\u003cFile\u003e\u0026 trace_file)\n    REQUIRES_SHARED(Locks::trace_lock_) {\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 395,
+                "startChar": 0,
+                "endLine": 396,
+                "endChar": 0
+              },
+              "replacement": "void TraceProfiler::Dump(std::unique_ptr\u003cFile\u003e\u0026\u0026 trace_file, std::ostringstream\u0026 os)\n    REQUIRES_SHARED(Locks::trace_lock_) {\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 559,
+                "startChar": 0,
+                "endLine": 560,
+                "endChar": 0
+              },
+              "replacement": "void TraceDumpCheckpoint::Run(Thread* thread) REQUIRES_SHARED(Locks::trace_lock_) {\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 581,
+                "startChar": 0,
+                "endLine": 582,
+                "endChar": 0
+              },
+              "replacement": "void TraceDumpCheckpoint::WaitForThreadsToRunThroughCheckpoint(size_t threads_running_checkpoint)\n    REQUIRES_SHARED(Locks::trace_lock_) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7c2cf386889506f24f97afdb682e04097ceabd4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
