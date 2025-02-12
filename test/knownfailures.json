@@ -1441,7 +1441,8 @@
         "description": ["Uses the low-ram flag which does not work with CMS"]
     },
     {
-        "tests": ["656-annotation-lookup-generic-jni",
+        "tests": ["150-loadlibrary",
+                  "656-annotation-lookup-generic-jni",
                   "900-hello-plugin"],
         "variant": "target",
         "bug": "b/186654484",
