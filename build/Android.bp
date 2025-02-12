@@ -372,3 +372,15 @@ java_library {
     sdk_version: "none",
     system_modules: "none",
 }
+
+genrule {
+    name: "cpplint-art-all",
+    tools: ["cpplint"],
+    srcs: [
+        "**/*.h",
+        "**/*.cc",
+        "**/*.cpp",
+    ],
+    out: ["cpplint_output.txt"],
+    cmd: "$(location cpplint) --quiet $(in) > $(out)",
+}
