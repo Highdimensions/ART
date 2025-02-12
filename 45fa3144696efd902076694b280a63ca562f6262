@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49217e74_c9f911a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-12T18:10:42Z",
+      "side": 1,
+      "message": "@solanes@google.com, PTAL that this CL is good for an image scanner run.",
+      "revId": "45fa3144696efd902076694b280a63ca562f6262",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
