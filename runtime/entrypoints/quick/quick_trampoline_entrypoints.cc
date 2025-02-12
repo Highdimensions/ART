@@ -794,7 +794,8 @@ extern "C" uint64_t artQuickToInterpreterBridge(ArtMethod* method, Thread* self,
         CREATE_SHADOW_FRAME(num_regs, method, /* dex_pc= */ 0);
     ShadowFrame* shadow_frame = shadow_frame_unique_ptr.get();
 
-    if (self->AreVirtualThreadFlagsEnabled(VirtualThreadFlag::kIsVirtual |
+    if (kIsVirtualThreadEnabled &&
+        self->AreVirtualThreadFlagsEnabled(VirtualThreadFlag::kIsVirtual |
                                            VirtualThreadFlag::kUnparking)) {
       interpreter::fillVirtualThreadFrame(self, shadow_frame);
     }

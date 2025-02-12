@@ -28,6 +28,7 @@
 #include "base/pointer_size.h"
 #include "class_linker.h"
 #include "class_root-inl.h"
+#include "com_android_art_flags.h"
 #include "debugger.h"
 #include "dex/dex_file_types.h"
 #include "entrypoints/runtime_asm_entrypoints.h"
@@ -1247,7 +1248,8 @@ static inline bool DoCallCommon(ArtMethod* called_method,
   ShadowFrameAllocaUniquePtr shadow_frame_unique_ptr =
       CREATE_SHADOW_FRAME(num_regs, called_method, /* dex pc */ 0);
   ShadowFrame* new_shadow_frame = shadow_frame_unique_ptr.get();
-  if (self->AreVirtualThreadFlagsEnabled(VirtualThreadFlag::kIsVirtual |
+  if (kIsVirtualThreadEnabled &&
+      self->AreVirtualThreadFlagsEnabled(VirtualThreadFlag::kIsVirtual |
                                          VirtualThreadFlag::kUnparking)) {
     fillVirtualThreadFrame(self, new_shadow_frame);
   }
