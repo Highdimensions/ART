@@ -16,6 +16,69 @@
       "message": "Hans/Nicolas,\n\nCan you please review the PS1-\u003ePS2. There were some non-gen cases I had missed in the original CL so LUCI failures occured. This one covers them.",
       "revId": "abf1861ace1012e058d6ce38e4a805176513698c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c911b83b_80ec474e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-12T18:52:58Z",
+      "side": 1,
+      "message": "A couple of nits:",
+      "revId": "abf1861ace1012e058d6ce38e4a805176513698c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47c9120e_a720aa02",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1466,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-12T18:52:58Z",
+      "side": 1,
+      "message": "unbinding?",
+      "range": {
+        "startLine": 1466,
+        "startChar": 24,
+        "endLine": 1466,
+        "endChar": 32
+      },
+      "revId": "abf1861ace1012e058d6ce38e4a805176513698c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a862eb69_79303458",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 4918,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-12T18:52:58Z",
+      "side": 1,
+      "message": "Is there a reason to keep this in the \"if\"?",
+      "range": {
+        "startLine": 4918,
+        "startChar": 6,
+        "endLine": 4918,
+        "endChar": 49
+      },
+      "revId": "abf1861ace1012e058d6ce38e4a805176513698c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
