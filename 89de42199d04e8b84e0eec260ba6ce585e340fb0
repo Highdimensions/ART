@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ad78909_157fe3ca",
+        "filename": "Android.mk",
+        "patchSetId": 9
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T13:42:56Z",
+      "side": 1,
+      "message": "Please put this near where it\u0027s used.",
+      "revId": "89de42199d04e8b84e0eec260ba6ce585e340fb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16c566a9_7e12bf3c",
+        "filename": "Android.mk",
+        "patchSetId": 9
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T13:42:56Z",
+      "side": 1,
+      "message": "Looks like you also need to add the dex files, the profile, etc. as dependencies.",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 287,
+        "endChar": 26
+      },
+      "revId": "89de42199d04e8b84e0eec260ba6ce585e340fb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83b7260b_d50da24d",
+        "filename": "Android.mk",
+        "patchSetId": 9
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T13:42:56Z",
+      "side": 1,
+      "message": "Does this have to be exactly 5 or you just want it to equal the number of elements in `TARGET_CORE_IMG_DEX_FILES`?",
+      "range": {
+        "startLine": 300,
+        "startChar": 19,
+        "endLine": 300,
+        "endChar": 20
+      },
+      "revId": "89de42199d04e8b84e0eec260ba6ce585e340fb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a70f995e_5a7f9d8e",
+        "filename": "Android.mk",
+        "patchSetId": 9
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T13:42:56Z",
+      "side": 1,
+      "message": "Use `$(foreach ...)` with [`int_range_list`](https://cs.android.com/android/platform/superproject/main/+/main:build/make/common/math.mk;l\u003d125;drc\u003d8907ad66d11986f50639c96e6ac16748a5be3187)?",
+      "range": {
+        "startLine": 301,
+        "startChar": 0,
+        "endLine": 310,
+        "endChar": 74
+      },
+      "revId": "89de42199d04e8b84e0eec260ba6ce585e340fb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

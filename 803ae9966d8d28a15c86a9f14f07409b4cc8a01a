@@ -46,6 +46,30 @@
       },
       "revId": "803ae9966d8d28a15c86a9f14f07409b4cc8a01a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c48c255b_27e634f4",
+        "filename": "test/generate-boot-image/generate-boot-image.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T13:42:56Z",
+      "side": 1,
+      "message": "SGTM.",
+      "parentUuid": "3127cda9_fca7bf18",
+      "range": {
+        "startLine": 136,
+        "startChar": 66,
+        "endLine": 136,
+        "endChar": 86
+      },
+      "revId": "803ae9966d8d28a15c86a9f14f07409b4cc8a01a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
