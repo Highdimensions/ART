@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "853357e8_6c48f2ca",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-13T13:42:39Z",
+      "side": 1,
+      "message": "To give some context around this change because I anticipate that there might be some comments:\n\nWe want to compile some Arm64 assembly files (e.g.: `quick_entrypoints_arm64.S`) as Arm64 (using `-march\u003darmv8`) during the target build (`buildbot-build.sh --target`) so that we can transform them into x86_64 format ELF files that can be linked into the x86_64 `libart.so`.\n\nThe problem is that `buildbot-build.sh --target` needs to build a host `dex2oat` which in turn requires a host `libart`. To build this host `libart` we need to have compiled and transformed `quick_entrypoints_arm64.S` which isn\u0027t possible unless `cc_object_quick_entrypoints_arm64.S` has `host_supported: true` which then causes clang to compile this file without `-march\u003darmv8`. We used to use this with `host_supported: false` which correctly compiled `quick_entrypoints_arm64.S` with `-march\u003darmv8` however sometime last year this changed to give a dependency error that the host module could not be found.\n\nTo get around this, the current implementation does the following:\n- We need to ensure that the `cc_object_*_entrypoints_arm64.S` modules are built *before* `jni_entrypoints_arm64_to_x86_64` to ensure that the files are available to `transform_arm64_to_x86_64.py`. This is currently done by calling make on the required modules before the main call to make.\n- `transform_arm64_to_x86_64.py` searches for the previously compiled `cc_object_*_entrypoints_arm64.S` and transforms those into x86_64.\n\nI am not an expert with the build system so I would welcome any suggestions to improve this!",
+      "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
