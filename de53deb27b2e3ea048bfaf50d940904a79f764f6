@@ -16,6 +16,23 @@
       "message": "Let\u0027s wait for another presubmit run.",
       "revId": "de53deb27b2e3ea048bfaf50d940904a79f764f6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc283497_a67df63d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T10:30:48Z",
+      "side": 1,
+      "message": "Looks good to go now.",
+      "revId": "de53deb27b2e3ea048bfaf50d940904a79f764f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
