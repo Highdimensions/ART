@@ -1,0 +1,115 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35087fec_45dfe106",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-13T15:10:13Z",
+      "side": 1,
+      "message": "Instead of passing a lambda, jsut pass the int constant that will be materialized in a HConstant?",
+      "range": {
+        "startLine": 63,
+        "startChar": 21,
+        "endLine": 63,
+        "endChar": 60
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "3780837c_54ab8829",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 57,
+                "startChar": 0,
+                "endLine": 61,
+                "endChar": 0
+              },
+              "replacement": "  // `constant` is an HConstant* to avoid creating IntConstant instructions, if possible. In theory,\n  // we could still be creating a constant that `ReplaceUsesDominatedBy` doesn\u0027t use. In practice,\n  // we can eliminate most (95%+) of constants being created without impacting `ReplaceUsesDominatedBy`.\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 63,
+                "startChar": 0,
+                "endLine": 64,
+                "endChar": 0
+              },
+              "replacement": "                      HConstant* constant);\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 227,
+                "startChar": 0,
+                "endLine": 228,
+                "endChar": 0
+              },
+              "replacement": "                                             HConstant* constant) {\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 237,
+                "startChar": 0,
+                "endLine": 238,
+                "endChar": 0
+              },
+              "replacement": "        starting_block-\u003eGetFirstInstruction(), constant, /* strictly_dominated\u003d */ false);\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 266,
+                "startChar": 0,
+                "endLine": 269,
+                "endChar": 0
+              },
+              "replacement": "  PropagateValue(inst-\u003eIfTrueSuccessor(), if_input, graph-\u003eGetIntConstant(1));\n  PropagateValue(inst-\u003eIfFalseSuccessor(), if_input, graph-\u003eGetIntConstant(0));\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 341,
+                "startChar": 0,
+                "endLine": 342,
+                "endChar": 0
+              },
+              "replacement": "  PropagateValue(starting_block, variable, constant);\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 354,
+                "startChar": 0,
+                "endLine": 356,
+                "endChar": 0
+              },
+              "replacement": "      PropagateValue(other_starting_block, variable, graph-\u003eGetIntConstant(0));\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 358,
+                "startChar": 0,
+                "endLine": 360,
+                "endChar": 0
+              },
+              "replacement": "      PropagateValue(other_starting_block, variable, graph-\u003eGetIntConstant(1));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "a4d6a0b16b35780a02eff815aaf1d72e17085dc4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
