@@ -1,0 +1,75 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00516c88_f2a44876",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-13T12:17:34Z",
+      "side": 1,
+      "message": "Ah didn\u0027t realize this will end up in `TraceData`. Can writing to the file happen concurrently to accessing eg `traced_methods_` ?",
+      "range": {
+        "startLine": 111,
+        "startChar": 1,
+        "endLine": 112,
+        "endChar": 49
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "4ba5c416_f5b80dcd",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 51,
+                "startChar": 0,
+                "endLine": 52,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 75,
+                "startChar": 0,
+                "endLine": 82,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 111,
+                "startChar": 0,
+                "endLine": 114,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 187,
+                "startChar": 0,
+                "endLine": 188,
+                "endChar": 0
+              },
+              "replacement": "  static void Dump(File* trace_file, std::ostringstream\u0026 os);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "afc846ae70c0c16604059ca34c201c883225dd68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
