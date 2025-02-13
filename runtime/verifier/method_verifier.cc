@@ -2817,7 +2817,9 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
     }
 
     case Instruction::RETURN_VOID:
-      if (!IsInstanceConstructor() || work_line_->CheckConstructorReturn(this)) {
+      if (IsInstanceConstructor() && UNLIKELY(!work_line_->CheckConstructorReturn(this))) {
+        return false;
+      } else {
         if (!GetMethodReturnType().IsConflict()) {
           Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "return-void not expected";
           return false;
@@ -2825,7 +2827,9 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
       }
       break;
     case Instruction::RETURN:
-      if (!IsInstanceConstructor() || work_line_->CheckConstructorReturn(this)) {
+      if (IsInstanceConstructor() && UNLIKELY(!work_line_->CheckConstructorReturn(this))) {
+        return false;
+      } else {
         /* check the method signature */
         const RegType& return_type = GetMethodReturnType();
         if (!return_type.IsCategory1Types()) {
@@ -2850,7 +2854,9 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
       }
       break;
     case Instruction::RETURN_WIDE:
-      if (!IsInstanceConstructor() || work_line_->CheckConstructorReturn(this)) {
+      if (IsInstanceConstructor() && UNLIKELY(!work_line_->CheckConstructorReturn(this))) {
+        return false;
+      } else {
         /* check the method signature */
         const RegType& return_type = GetMethodReturnType();
         if (!return_type.IsCategory2Types()) {
@@ -2867,7 +2873,9 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
       }
       break;
     case Instruction::RETURN_OBJECT:
-      if (!IsInstanceConstructor() || work_line_->CheckConstructorReturn(this)) {
+      if (IsInstanceConstructor() && UNLIKELY(!work_line_->CheckConstructorReturn(this))) {
+        return false;
+      } else {
         const RegType& return_type = GetMethodReturnType();
         if (!return_type.IsReferenceTypes()) {
           Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "return-object not expected";
@@ -3122,18 +3130,13 @@ bool MethodVerifier<kVerifierDebug>::CodeFlowVerifyInstruction(uint32_t* start_g
     }
     case Instruction::ARRAY_LENGTH: {
       const RegType& res_type = work_line_->GetRegisterType(this, inst->VRegB_12x(inst_data));
-      if (res_type.IsReferenceTypes()) {
-        if (!res_type.IsArrayTypes() && !res_type.IsZeroOrNull()) {
-          // ie not an array or null
-          Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "array-length on non-array " << res_type;
-          return false;
-        } else {
-          work_line_->SetRegisterType(inst->VRegA_12x(inst_data), kInteger);
-        }
-      } else {
+      if (!res_type.IsReferenceTypes() ||
+          ((!res_type.IsArrayTypes() && !res_type.IsZeroOrNull()))) {
+        // ie not an array or null
         Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "array-length on non-array " << res_type;
         return false;
       }
+      work_line_->SetRegisterType(inst->VRegA_12x(inst_data), kInteger);
       break;
     }
     case Instruction::NEW_INSTANCE: {
