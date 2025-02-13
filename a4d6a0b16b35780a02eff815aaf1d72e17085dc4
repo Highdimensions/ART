@@ -110,6 +110,30 @@
       ],
       "revId": "a4d6a0b16b35780a02eff815aaf1d72e17085dc4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2704b1b1_d0a6f314",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-13T15:29:24Z",
+      "side": 1,
+      "message": "In the line 341 case, it may not be an int constant. It could be a HLongConstant, HNullConstant, etc.",
+      "parentUuid": "35087fec_45dfe106",
+      "range": {
+        "startLine": 63,
+        "startChar": 21,
+        "endLine": 63,
+        "endChar": 60
+      },
+      "revId": "a4d6a0b16b35780a02eff815aaf1d72e17085dc4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
