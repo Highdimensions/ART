@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "db3199ee_be4c8be5",
+        "filename": "imgdiag/ati_download_artifacts.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1963262
+      },
+      "writtenOn": "2025-02-13T15:16:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ed33ff5_167c7f4d",
+      "revId": "0c94e30f02a687bbc1fd1abc1fac873acb371f99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7fe7df8c_89d4c756",
@@ -71,6 +89,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "87bc5c56_15d7b729",
+        "filename": "imgdiag/compare_imgdiag_runs.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1963262
+      },
+      "writtenOn": "2025-02-13T15:16:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fe7df8c_89d4c756",
+      "revId": "0c94e30f02a687bbc1fd1abc1fac873acb371f99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d0285041_d16295ca",
@@ -94,6 +130,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "96e2414e_8cc423be",
+        "filename": "imgdiag/dirty_image_objects.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1963262
+      },
+      "writtenOn": "2025-02-13T15:16:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0285041_d16295ca",
+      "range": {
+        "startLine": 100,
+        "startChar": 127,
+        "endLine": 101,
+        "endChar": 89
+      },
+      "revId": "0c94e30f02a687bbc1fd1abc1fac873acb371f99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd8f2bda_e4e97e05",
@@ -107,6 +167,30 @@
       "writtenOn": "2025-02-11T12:53:50Z",
       "side": 1,
       "message": "mention that these instructions are for an aosp build.",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 53
+      },
+      "revId": "0c94e30f02a687bbc1fd1abc1fac873acb371f99",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2405ac0a_6baa6040",
+        "filename": "imgdiag/dirty_image_objects.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1963262
+      },
+      "writtenOn": "2025-02-13T15:16:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd8f2bda_e4e97e05",
       "range": {
         "startLine": 115,
         "startChar": 0,
