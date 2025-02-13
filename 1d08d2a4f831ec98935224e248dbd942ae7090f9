@@ -94,6 +94,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "907ef1da_8d99bc94",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6a24afb_b15a3a59",
+      "range": {
+        "startLine": 699,
+        "startChar": 0,
+        "endLine": 704,
+        "endChar": 26
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "659026d3_7a1e03e7",
@@ -117,6 +141,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f93aabd2_409add44",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Yes, the idea is to go through update_engine in all OTA cases on Android 16+. It is appropriate to use update_engine because:\n\n- If there is a pending OTA, triggerPostinstall can be called at any time any number of times, as I dicussed with Kelvin.\n- If there is no pending OTA, then we shouldn\u0027t run Pre-reboot Dexopt anyway. We just call triggerPostinstall and fail.",
+      "parentUuid": "659026d3_7a1e03e7",
+      "range": {
+        "startLine": 776,
+        "startChar": 57,
+        "endLine": 776,
+        "endChar": 88
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "05a0e13d_0934b6da",
@@ -130,6 +178,24 @@
       "writtenOn": "2025-02-12T23:11:52Z",
       "side": 1,
       "message": "```suggestion\n        // We assume we\u0027re being invoked from within UpdateEngine.triggerPostinstall\n        // in triggerUpdateEnginePostinstallAndWait, so a pre-reboot dexopt job is waiting.\n        CompletableFuture\u003cVoid\u003e future \u003d job.setUpdateEngineReady();\n```",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0d8875e_3e5c1021",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05a0e13d_0934b6da",
       "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -175,6 +241,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8013b7f7_de709802",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed61a224_03556c21",
+      "range": {
+        "startLine": 832,
+        "startChar": 10,
+        "endLine": 832,
+        "endChar": 11
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "96a5cc8d_ef021b3a",
@@ -188,6 +278,24 @@
       "writtenOn": "2025-02-12T23:11:52Z",
       "side": 1,
       "message": "Please document the new option briefly.",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d224e051_416c0119",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 1101,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96a5cc8d_ef021b3a",
       "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -233,6 +341,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e37a249_b5bdd763",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "\"when\" is to emphasize the timing of the notification. Added \"if it happens\" at the end. Do it make sense to you now?",
+      "parentUuid": "20375cc6_89dd8f51",
+      "range": {
+        "startLine": 83,
+        "startChar": 67,
+        "endLine": 83,
+        "endChar": 71
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "541594ae_9e76eac8",
@@ -246,6 +378,30 @@
       "writtenOn": "2025-02-12T23:11:52Z",
       "side": 1,
       "message": "This is roughly the time window after `startLocked` has returned and before the `runAsync` lambda in `mRunningJob` has started executing? How does it happen, and why is it important?",
+      "range": {
+        "startLine": 83,
+        "startChar": 7,
+        "endLine": 84,
+        "endChar": 55
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bccee97_1783df58",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "No, this is typically when we are waiting during `triggerUpdateEnginePostinstallAndWait` and the job scheduler decides to cancel the job.",
+      "parentUuid": "541594ae_9e76eac8",
       "range": {
         "startLine": 83,
         "startChar": 7,
@@ -297,6 +453,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43f7a9ca_ec9d4f7c",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1f82c8d_6e8c1b6f",
+      "range": {
+        "startLine": 88,
+        "startChar": 39,
+        "endLine": 88,
+        "endChar": 59
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f6f890b7_1feccf4f",
@@ -310,6 +490,30 @@
       "writtenOn": "2025-02-12T23:11:52Z",
       "side": 1,
       "message": "\"It may also be killed by update_engine, probably because it\u0027s preparing a new OTA, in which case we should definitely give up.\"",
+      "range": {
+        "startLine": 169,
+        "startChar": 41,
+        "endLine": 169,
+        "endChar": 42
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "863296d6_a4f346f7",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6f890b7_1feccf4f",
       "range": {
         "startLine": 169,
         "startChar": 41,
@@ -351,6 +555,24 @@
           ]
         }
       ],
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78441ac2_826273ba",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c44c3abf_00c6bce3",
       "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -426,6 +648,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54280055_b167f973",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "My idea was that I wrote the tests in a way that they are self-explantory enough to show how typical flows look like.\n\nThe idea was from go/tott/708 :\n\n\u003e /.../ They are also easier to understand since they basically act as code samples that show all the ways that callers can interact with the code, so ideally even someone who\u0027s not familiar with the implementation should be able to read through the tests to understand the behavior of a class.\n\nFor example, [this test](https://android-review.git.corp.google.com/c/platform/art/+/3427501/12/libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java#246) shows a typical async flow: the postinstall script calls `on-ota-staged` the first time with the slot information, the job scheduler then kicks of the job at some point, and the postinstall script calls `on-ota-staged` the second time with `--start` to notify that update_engine has mapped the snapshot devices.\n\nI added a comment with a pointer to the tests. If you still think it\u0027s necessary to describe the flows in texts, I can add some texts to README.md.",
+      "parentUuid": "696d93f6_20da15fc",
+      "range": {
+        "startLine": 422,
+        "startChar": 17,
+        "endLine": 422,
+        "endChar": 36
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b0ad3b93_14daa30d",
@@ -439,6 +685,30 @@
       "writtenOn": "2025-02-12T23:11:52Z",
       "side": 1,
       "message": "```suggestion\n            mInjector.getUpdateEngine().triggerPostinstall(\"system\" /* partition */);\n```",
+      "range": {
+        "startLine": 429,
+        "startChar": 59,
+        "endLine": 429,
+        "endChar": 67
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e6fb96d_a85b51fb",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0ad3b93_14daa30d",
       "range": {
         "startLine": 429,
         "startChar": 59,
@@ -472,6 +742,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb939272_c62e9b74",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Thank you for the suggestion! Done.",
+      "parentUuid": "1eef16c1_f5a6ca36",
+      "range": {
+        "startLine": 435,
+        "startChar": 0,
+        "endLine": 450,
+        "endChar": 13
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c87a25ec_ddbd4207",
@@ -485,6 +779,24 @@
       "writtenOn": "2025-02-12T23:11:52Z",
       "side": 1,
       "message": "```suggestion\n        // Legacy flag in Android V.\n```",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "beddf951_91328424",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c87a25ec_ddbd4207",
       "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -547,6 +859,48 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e6c8d62_de3931a1",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "482985d4_02b76b51",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1429e2b_ad0db329",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "488b4536_cac9a4c6",
+      "range": {
+        "startLine": 592,
+        "startChar": 35,
+        "endLine": 592,
+        "endChar": 55
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f31f0811_7feec7e0",
@@ -564,6 +918,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "df1877a6_2e3e534a",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f31f0811_7feec7e0",
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0b79be5b_086a60ca",
@@ -577,6 +949,30 @@
       "writtenOn": "2025-02-12T23:11:52Z",
       "side": 1,
       "message": "Unify this to a single helper method?",
+      "range": {
+        "startLine": 248,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 9
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ee4fc70_bcb849bc",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "I\u0027d like to keep it for now as it\u0027s quite readable, though a bit verbose. At some point, I may want to unify this, but right now, the amount of repetition makes me on the fence.",
+      "parentUuid": "0b79be5b_086a60ca",
       "range": {
         "startLine": 248,
         "startChar": 0,
@@ -610,6 +1006,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e083c86f_6f27efb9",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "I think these two flows are quite different. In the sync flow, `pm art on-ota-staged --slot _b` in the blocking command, while in the async flow, `pm art on-ota-staged --slot _b` is non-blocking and `pm art on-ota-staged --start` is blocking. I\u0027d like to separate them to avoid \"tests too DRY\" (http://go/tott/643) and to make them better act as examples to show how the caller can interact with the shell command handler (http://go/tott/708).",
+      "parentUuid": "24452b7f_225e4950",
+      "range": {
+        "startLine": 311,
+        "startChar": 0,
+        "endLine": 338,
+        "endChar": 9
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "72135118_601ff1e0",
@@ -623,6 +1043,30 @@
       "writtenOn": "2025-02-12T23:11:52Z",
       "side": 1,
       "message": "Same here vs `testOnOtaStagedSyncCancelledByBrokenPipe`. I\u0027m thinking adding shared test implementations with a simple boolean argument for the flag would be straightforward enough to be a net win in all these tests.",
+      "range": {
+        "startLine": 354,
+        "startChar": 0,
+        "endLine": 375,
+        "endChar": 9
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "342bb018_d1c7f977",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Same here.",
+      "parentUuid": "72135118_601ff1e0",
       "range": {
         "startLine": 354,
         "startChar": 0,
@@ -656,6 +1100,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2ed2f96_6f4c5830",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "602cfc64_f228bea3",
+      "range": {
+        "startLine": 542,
+        "startChar": 0,
+        "endLine": 542,
+        "endChar": 63
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bdd3ff05_13e81b65",
@@ -679,6 +1147,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "16e06bf0_c91adfc7",
+        "filename": "libartservice/service/javatests/com/android/server/art/PreRebootDexoptJobTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bdd3ff05_13e81b65",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 63
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "19451bc6_1f5800a3",
@@ -692,6 +1184,30 @@
       "writtenOn": "2025-02-12T23:11:52Z",
       "side": 1,
       "message": "Please add a test case to check that the update_engine trigger doesn\u0027t run for a Mainline update.",
+      "range": {
+        "startLine": 276,
+        "startChar": 16,
+        "endLine": 276,
+        "endChar": 44
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdebe904_f7c251c7",
+        "filename": "libartservice/service/javatests/com/android/server/art/PreRebootDexoptJobTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19451bc6_1f5800a3",
       "range": {
         "startLine": 276,
         "startChar": 16,

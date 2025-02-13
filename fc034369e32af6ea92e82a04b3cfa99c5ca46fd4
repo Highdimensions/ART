@@ -22,6 +22,30 @@
       },
       "revId": "fc034369e32af6ea92e82a04b3cfa99c5ca46fd4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ecf1b27_76e78b77",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T18:12:30Z",
+      "side": 0,
+      "message": "Sure, I don\u0027t know why I dropped the type during rebasing.",
+      "parentUuid": "5026e8e8_6d0e98ad",
+      "range": {
+        "startLine": 365,
+        "startChar": 16,
+        "endLine": 365,
+        "endChar": 31
+      },
+      "revId": "fc034369e32af6ea92e82a04b3cfa99c5ca46fd4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
