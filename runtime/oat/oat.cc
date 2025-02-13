@@ -61,6 +61,12 @@ OatHeader* OatHeader::Create(InstructionSet instruction_set,
                                 base_oat_offset);
 }
 
+void OatHeader::Delete(OatHeader* header) {
+  if (header != nullptr) {
+    operator delete(header, header->GetHeaderSize());
+  }
+}
+
 OatHeader::OatHeader(InstructionSet instruction_set,
                      const InstructionSetFeatures* instruction_set_features,
                      uint32_t dex_file_count,
