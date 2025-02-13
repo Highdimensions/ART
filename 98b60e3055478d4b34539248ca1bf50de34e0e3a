@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa68e963_e805afa4",
+        "filename": "libartbase/base/unix_file/fd_file.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-13T17:26:41Z",
+      "side": 1,
+      "message": "Why do you need this? Can\u0027t you just check the result is negative from the existing `GetLength`?",
+      "range": {
+        "startLine": 420,
+        "startChar": 0,
+        "endLine": 420,
+        "endChar": 71
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "68879b21_4dfaa683",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartbase/base/unix_file/fd_file.cc",
+              "range": {
+                "startLine": 25,
+                "startChar": 0,
+                "endLine": 27,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "libartbase/base/unix_file/fd_file.cc",
+              "range": {
+                "startLine": 419,
+                "startChar": 0,
+                "endLine": 428,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "98b60e3055478d4b34539248ca1bf50de34e0e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "172d2b96_8616a231",
+        "filename": "tools/create_minidebuginfo/Android.bp",
+        "patchSetId": 13
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-13T17:26:41Z",
+      "side": 1,
+      "message": "Didn\u0027t we have that dependency before, given we use libziparchive to load dex files in APK?",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 45
+      },
+      "revId": "98b60e3055478d4b34539248ca1bf50de34e0e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
