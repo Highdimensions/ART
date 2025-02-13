@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f905c7e5_27049fc5",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-13T15:22:06Z",
+      "side": 1,
+      "message": "(Hmm, it appears we don\u0027t run this test in presubmit, because if we did then it ought to be red either before or after this. Need to look into that.)",
+      "range": {
+        "startLine": 180,
+        "startChar": 23,
+        "endLine": 180,
+        "endChar": 25
+      },
+      "revId": "8ad6d59f9243548a51603ca9b9e2ccbc194d410e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
