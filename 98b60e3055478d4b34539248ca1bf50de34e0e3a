@@ -52,6 +52,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bbae56e_df4f715b",
+        "filename": "libartbase/base/unix_file/fd_file.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T17:53:28Z",
+      "side": 1,
+      "message": "The existing `GetLength` is not great because clang allows me to assign its result to a `size_t` without complaining that I\u0027m dropping the sign. The new variant returns `std::optional\u003csize_t\u003e`, so it forces the user to think about the error case.",
+      "parentUuid": "aa68e963_e805afa4",
+      "range": {
+        "startLine": 420,
+        "startChar": 0,
+        "endLine": 420,
+        "endChar": 71
+      },
+      "revId": "98b60e3055478d4b34539248ca1bf50de34e0e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "172d2b96_8616a231",
@@ -65,6 +89,30 @@
       "writtenOn": "2025-02-13T17:26:41Z",
       "side": 1,
       "message": "Didn\u0027t we have that dependency before, given we use libziparchive to load dex files in APK?",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 45
+      },
+      "revId": "98b60e3055478d4b34539248ca1bf50de34e0e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b26488ca_7649bd5a",
+        "filename": "tools/create_minidebuginfo/Android.bp",
+        "patchSetId": 13
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T17:53:28Z",
+      "side": 1,
+      "message": "I think we only use libziparchive in libart to load dex files in APK. In this change, I\u0027m using libziparchive in libartbase (libartbase/base/os_linux.cc), so we now need to bring in these dependencies.",
+      "parentUuid": "172d2b96_8616a231",
       "range": {
         "startLine": 40,
         "startChar": 0,
