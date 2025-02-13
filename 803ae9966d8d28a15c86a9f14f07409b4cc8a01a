@@ -22,6 +22,30 @@
       },
       "revId": "803ae9966d8d28a15c86a9f14f07409b4cc8a01a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3127cda9_fca7bf18",
+        "filename": "test/generate-boot-image/generate-boot-image.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-13T13:04:16Z",
+      "side": 1,
+      "message": "Thanks, I\u0027ve added a flag to control this however I don\u0027t think it needs it\u0027s own value as it can just use the `--android_root` argument. Using the `--android_root` argument also allows us to reuse `dex_files` as that already performs the same call.",
+      "parentUuid": "11571d8e_d7f1856e",
+      "range": {
+        "startLine": 136,
+        "startChar": 66,
+        "endLine": 136,
+        "endChar": 86
+      },
+      "revId": "803ae9966d8d28a15c86a9f14f07409b4cc8a01a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
