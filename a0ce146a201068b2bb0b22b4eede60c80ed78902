@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bdc0c47_3a6144da",
+        "filename": "compiler/optimizing/nodes.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1743,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-13T10:34:49Z",
+      "side": 1,
+      "message": "These are really badly named. I\u0027d rename them\n\n    HInstructionIterator -\u003e HInstructionIteratorPrefetchNext\n    HInstructionIteratorHandleChanges -\u003e HInstructionIterator\n    HBackwardInstructionIterator -\u003e HBackwardInstructionIteratorPrefetchNext\n\nand we\u0027re missing the real `HBackwardInstructionIterator`. There\u0027s also some dead `HSTLInstructionIterator` code in `nodes.h` if you want to clean it up.\n\n(We could also rewrite this with the `IntrusiveForwardList\u003c\u003e` - once for normal and once for backwards iteration. But I guess I\u0027d prefer an actual `IntrusiveList\u003c\u003e` instead.)",
+      "range": {
+        "startLine": 1743,
+        "startChar": 7,
+        "endLine": 1743,
+        "endChar": 40
+      },
+      "revId": "a0ce146a201068b2bb0b22b4eede60c80ed78902",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
