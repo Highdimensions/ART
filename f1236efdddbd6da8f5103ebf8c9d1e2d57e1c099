@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "3ce5b169_17956a0b",
+        "filename": "libartbase/base/zip_archive.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T10:26:37Z",
+      "side": 1,
+      "message": "Thanks for the suggestion. The problem is that input parameters have to be put before output parameters (go/cstyle#Inputs_and_Outputs). In this particular case, `allow_entry_not_found` is an input, so it has to come before `error_msg`, making it impossible to have a default argument. I could add an overload to work around this, but then we would essentially end up with two functions anyway. Therefore, I\u0027d rather have two variants because it looks cleaner.",
+      "parentUuid": "e63de80e_fee74dd7",
+      "range": {
+        "startLine": 303,
+        "startChar": 31,
+        "endLine": 303,
+        "endChar": 57
+      },
+      "revId": "f1236efdddbd6da8f5103ebf8c9d1e2d57e1c099",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "5b01ede0_e6eef568",
         "filename": "libartbase/base/zip_archive.cc",
         "patchSetId": 7
@@ -37,6 +61,30 @@
       "writtenOn": "2025-02-12T23:47:26Z",
       "side": 1,
       "message": "(Sigh, it\u0027s tedious that libziparchive doesn\u0027t expose its error codes. We could almost just as well hardcode the error code itself instead, but only almost.)",
+      "range": {
+        "startLine": 313,
+        "startChar": 34,
+        "endLine": 313,
+        "endChar": 74
+      },
+      "revId": "f1236efdddbd6da8f5103ebf8c9d1e2d57e1c099",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df03b3b8_e3cb7175",
+        "filename": "libartbase/base/zip_archive.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-13T10:26:37Z",
+      "side": 1,
+      "message": "Yeah, this is unideal.",
+      "parentUuid": "5b01ede0_e6eef568",
       "range": {
         "startLine": 313,
         "startChar": 34,
