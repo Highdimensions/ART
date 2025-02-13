@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "853e7c1f_83819bbe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-13T10:10:57Z",
+      "side": 1,
+      "message": "Thanks Nicolas! I moved trace_file to trace_data and guard it by trace_data_lock_.",
+      "revId": "1e1c98f74004736a5d9920ab61c56449cd54d7ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
