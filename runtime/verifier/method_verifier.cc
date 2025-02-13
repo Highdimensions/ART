@@ -422,25 +422,18 @@ class MethodVerifierImpl : public ::art::verifier::MethodVerifier {
   // Perform static checks on an instruction referencing a constant method handle. All we do here
   // is ensure that the method index is in the valid range.
   bool CheckMethodHandleIndex(uint32_t idx) {
-    uint32_t limit = dex_file_->NumMethodHandles();
-    if (UNLIKELY(idx >= limit)) {
-      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "bad method handle index " << idx << " (max "
-                                        << limit << ")";
+    if (UNLIKELY(idx >= dex_file_->NumMethodHandles())) {
+      FailBadMethodHandleIndex(idx);
       return false;
     }
     return true;
   }
 
-  // Perform static checks on a "new-instance" instruction. Specifically, make sure the class
-  // reference isn't for an array class.
-  bool CheckNewInstance(dex::TypeIndex idx);
-
   // Perform static checks on a prototype indexing instruction. All we do here is ensure that the
   // prototype index is in the valid range.
   bool CheckPrototypeIndex(uint32_t idx) {
     if (UNLIKELY(idx >= dex_file_->GetHeader().proto_ids_size_)) {
-      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "bad prototype index " << idx << " (max "
-                                        << dex_file_->GetHeader().proto_ids_size_ << ")";
+      FailBadPrototypeIndex(idx);
       return false;
     }
     return true;
@@ -448,9 +441,8 @@ class MethodVerifierImpl : public ::art::verifier::MethodVerifier {
 
   /* Ensure that the string index is in the valid range. */
   bool CheckStringIndex(uint32_t idx) {
-    if (UNLIKELY(idx >= dex_file_->GetHeader().string_ids_size_)) {
-      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "bad string index " << idx << " (max "
-                                        << dex_file_->GetHeader().string_ids_size_ << ")";
+    if (UNLIKELY(idx >= dex_file_->NumStringIds())) {
+      FailBadStringIndex(idx);
       return false;
     }
     return true;
@@ -460,15 +452,21 @@ class MethodVerifierImpl : public ::art::verifier::MethodVerifier {
   // index is in the valid range.
   bool CheckTypeIndex(dex::TypeIndex idx) {
     if (UNLIKELY(idx.index_ >= dex_file_->GetHeader().type_ids_size_)) {
-      Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "bad type index " << idx.index_ << " (max "
-                                        << dex_file_->GetHeader().type_ids_size_ << ")";
+      FailBadTypeIndex(idx);
       return false;
     }
     return true;
   }
 
-  // Perform static checks on a "new-array" instruction. Specifically, make sure they aren't
-  // creating an array of arrays that causes the number of dimensions to exceed 255.
+  // Perform static checks on a "new-instance" instruction. Specifically, make sure the class
+  // reference isn't for an array class.
+  bool CheckNewInstance(dex::TypeIndex idx);
+
+  // Perform static checks on a `*new-array*` instruction. Specifically, make sure it
+  // references an array class with the number of dimensions not exceeding 255.
+  // For `filled-new-array*`, check for a valid component type; `J` and `D` is rejected
+  // in line with the specification and narrow primitive types are marked for interpreting.
+  template <bool kFilled>
   bool CheckNewArray(dex::TypeIndex idx);
 
   // Determine if the relative `offset` targets a valid dex pc.
@@ -729,6 +727,41 @@ class MethodVerifierImpl : public ::art::verifier::MethodVerifier {
   NO_INLINE void FailBadMethodIndex(uint32_t method_idx) {
     Fail(VERIFY_ERROR_BAD_CLASS_HARD)
         << "bad method index " << method_idx << " (max " << dex_file_->NumMethodIds() << ")";
+  }
+
+  NO_INLINE void FailBadMethodHandleIndex(uint32_t idx) {
+    Fail(VERIFY_ERROR_BAD_CLASS_HARD)
+        << "bad method handle index " << idx << " (max " << dex_file_->NumMethodHandles() << ")";
+  }
+
+  NO_INLINE void FailBadPrototypeIndex(uint32_t idx) {
+    Fail(VERIFY_ERROR_BAD_CLASS_HARD)
+        << "bad prototype index " << idx << " (max " << dex_file_->NumProtoIds() << ")";
+  }
+
+  NO_INLINE void FailBadStringIndex(uint32_t idx) {
+    Fail(VERIFY_ERROR_BAD_CLASS_HARD)
+        << "bad string index " << idx << " (max " << dex_file_->NumStringIds() << ")";
+  }
+
+  NO_INLINE void FailBadTypeIndex(dex::TypeIndex idx) {
+    Fail(VERIFY_ERROR_BAD_CLASS_HARD)
+        << "bad type index " << idx.index_ << " (max " << dex_file_->NumTypeIds() << ")";
+  }
+
+  NO_INLINE void FailBadNewArrayNotArray(const char* descriptor) {
+    Fail(VERIFY_ERROR_BAD_CLASS_HARD)
+        << "can't new-array class '" << descriptor << "' (not an array)";
+  }
+
+  NO_INLINE void FailBadNewArrayTooManyDimensions(const char* descriptor) {
+    Fail(VERIFY_ERROR_BAD_CLASS_HARD)
+        << "can't new-array class '" << descriptor << "' (exceeds limit)";
+  }
+
+  NO_INLINE void FailBadFilledNewArray(const char* descriptor) {
+    Fail(VERIFY_ERROR_BAD_CLASS_HARD)
+        << "can't fill-new-array class '" << descriptor << "' (wide component type)";
   }
 
   NO_INLINE void FailBranchOffsetZero(uint32_t dex_pc) {
@@ -1960,6 +1993,10 @@ inline bool MethodVerifierImpl::VerifyInstruction(uint32_t dex_pc,
     case Instruction::kVerifyRegBPrototype:
       result = result && CheckPrototypeIndex(inst->VRegB(kFormat, inst_data));
       break;
+    case Instruction::kVerifyRegBFilledNewArray:
+      result = result &&
+               CheckNewArray</*kFilled=*/ true>(dex::TypeIndex(inst->VRegB(kFormat, inst_data)));
+      break;
     case Instruction::kVerifyNothing:
       break;
   }
@@ -1973,7 +2010,7 @@ inline bool MethodVerifierImpl::VerifyInstruction(uint32_t dex_pc,
       result = result && CheckFieldIndex(inst, inst_data, inst->VRegC(kFormat));
       break;
     case Instruction::kVerifyRegCNewArray:
-      result = result && CheckNewArray(dex::TypeIndex(inst->VRegC(kFormat)));
+      result = result && CheckNewArray</*kFilled=*/ false>(dex::TypeIndex(inst->VRegC(kFormat)));
       break;
     case Instruction::kVerifyRegCType:
       result = result && CheckTypeIndex(dex::TypeIndex(inst->VRegC(kFormat)));
@@ -2041,9 +2078,7 @@ inline bool MethodVerifierImpl::VerifyInstruction(uint32_t dex_pc,
 }
 
 inline bool MethodVerifierImpl::CheckNewInstance(dex::TypeIndex idx) {
-  if (UNLIKELY(idx.index_ >= dex_file_->GetHeader().type_ids_size_)) {
-    Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "bad type index " << idx.index_ << " (max "
-                                      << dex_file_->GetHeader().type_ids_size_ << ")";
+  if (!CheckTypeIndex(idx)) {
     return false;
   }
   // We don't need the actual class, just a pointer to the class name.
@@ -2059,28 +2094,35 @@ inline bool MethodVerifierImpl::CheckNewInstance(dex::TypeIndex idx) {
   return true;
 }
 
-bool MethodVerifierImpl::CheckNewArray(dex::TypeIndex idx) {
-  if (UNLIKELY(idx.index_ >= dex_file_->GetHeader().type_ids_size_)) {
-    Fail(VERIFY_ERROR_BAD_CLASS_HARD) << "bad type index " << idx.index_ << " (max "
-                                      << dex_file_->GetHeader().type_ids_size_ << ")";
+template <bool kFilled>
+inline bool MethodVerifierImpl::CheckNewArray(dex::TypeIndex idx) {
+  if (!CheckTypeIndex(idx)) {
     return false;
   }
-  int bracket_count = 0;
   const char* descriptor = dex_file_->GetTypeDescriptor(idx);
   const char* cp = descriptor;
-  while (*cp++ == '[') {
-    bracket_count++;
+  while (*cp == '[') {
+    ++cp;
   }
-  if (UNLIKELY(bracket_count == 0)) {
+  size_t bracket_count = static_cast<size_t>(cp - descriptor);
+  if (UNLIKELY(bracket_count == 0u)) {
     /* The given class must be an array type. */
-    Fail(VERIFY_ERROR_BAD_CLASS_HARD)
-        << "can't new-array class '" << descriptor << "' (not an array)";
+    FailBadNewArrayNotArray(descriptor);
     return false;
-  } else if (UNLIKELY(bracket_count > 255)) {
+  } else if (UNLIKELY(bracket_count > 255u)) {
     /* It is illegal to create an array of more than 255 dimensions. */
-    Fail(VERIFY_ERROR_BAD_CLASS_HARD)
-        << "can't new-array class '" << descriptor << "' (exceeds limit)";
+    FailBadNewArrayTooManyDimensions(descriptor);
     return false;
+  }
+  if (kFilled && bracket_count == 1u && UNLIKELY(*cp != 'I' && *cp != 'L')) {
+    if (UNLIKELY(*cp == 'J') || UNLIKELY(*cp == 'D')) {
+      // Forbidden, see https://source.android.com/docs/core/runtime/dalvik-bytecode .
+      FailBadFilledNewArray(descriptor);
+      return false;
+    } else {
+      // Fall back to interpreter to throw `InternalError`. Compiler does not handle this case.
+      Fail(VERIFY_ERROR_INSTANTIATION);
+    }
   }
   return true;
 }
