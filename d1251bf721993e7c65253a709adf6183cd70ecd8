@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "82912107_50e0a59c",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1691,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T15:40:43Z",
+      "side": 1,
+      "message": "Sorry, I meant `ClassLinker::OpenAndInitImageDexFiles`, on line 1921.",
+      "parentUuid": "e40043af_8b2bc930",
+      "range": {
+        "startLine": 1686,
+        "startChar": 0,
+        "endLine": 1691,
+        "endChar": 3
+      },
+      "revId": "d1251bf721993e7c65253a709adf6183cd70ecd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f3b29ce5_5a2c0e60",
@@ -180,6 +204,30 @@
       "side": 1,
       "message": "Ah, so `location` here is the location on device? Can you clarify that?\n\nNote that dexpreopt could be considered cloud compile, so also explain why that\u0027s different.",
       "parentUuid": "845675a0_c4856288",
+      "range": {
+        "startLine": 794,
+        "startChar": 80,
+        "endLine": 795,
+        "endChar": 21
+      },
+      "revId": "d1251bf721993e7c65253a709adf6183cd70ecd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b03d378d_07a39ceb",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T15:40:43Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "eacb3a13_e2c078b0",
       "range": {
         "startLine": 794,
         "startChar": 80,
