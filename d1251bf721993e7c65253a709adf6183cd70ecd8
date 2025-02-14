@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e40043af_8b2bc930",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1691,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T09:38:08Z",
+      "side": 1,
+      "message": "Where is that change?",
+      "parentUuid": "460ad153_ddacd29c",
+      "range": {
+        "startLine": 1686,
+        "startChar": 0,
+        "endLine": 1691,
+        "endChar": 3
+      },
+      "revId": "d1251bf721993e7c65253a709adf6183cd70ecd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f3b29ce5_5a2c0e60",
         "filename": "runtime/class_linker.cc",
         "patchSetId": 5
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "This actually has nothing to do with loading from a zip file or not. During Cloud Compilation, we can\u0027t pass the full path through `--dex-location` to dex2oat. Instead, we can only pass a partial path (`--dex-location\u003dbase.apk`).",
       "parentUuid": "26adbf30_f4f6de0c",
+      "range": {
+        "startLine": 794,
+        "startChar": 80,
+        "endLine": 795,
+        "endChar": 21
+      },
+      "revId": "d1251bf721993e7c65253a709adf6183cd70ecd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eacb3a13_e2c078b0",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T09:38:08Z",
+      "side": 1,
+      "message": "Ah, so `location` here is the location on device? Can you clarify that?\n\nNote that dexpreopt could be considered cloud compile, so also explain why that\u0027s different.",
+      "parentUuid": "845675a0_c4856288",
       "range": {
         "startLine": 794,
         "startChar": 80,
