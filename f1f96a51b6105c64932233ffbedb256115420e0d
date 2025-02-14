@@ -22,6 +22,30 @@
       },
       "revId": "f1f96a51b6105c64932233ffbedb256115420e0d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce6a1bed_14faa3ca",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 1955,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T23:24:49Z",
+      "side": 1,
+      "message": "I thought about it, but there seems to be a lot of things going on between here and line 1689, so I\u0027m not sure if any of them needs the location in dex cache to be correct. I think it\u0027s safer to patch the dex cache at the very begining, which is here. If you have some insights on how and when the dex cache is used, please advise.",
+      "parentUuid": "42a476de_976cb423",
+      "range": {
+        "startLine": 1954,
+        "startChar": 0,
+        "endLine": 1955,
+        "endChar": 51
+      },
+      "revId": "f1f96a51b6105c64932233ffbedb256115420e0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
