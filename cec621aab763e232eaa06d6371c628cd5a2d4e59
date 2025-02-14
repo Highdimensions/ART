@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "13709cc8_8f325460",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-14T09:46:47Z",
+      "side": 1,
+      "message": "Should we use `std::variant\u003cHConstant*, bool\u003e` instead?\n\n    DCHECK(std::holds_alternative\u003cHConstant*\u003e(constant) ||\n           std::holds_alternative\u003cbool\u003e(constant));\n    HConstant* c \u003d std::holds_alternative\u003cHConstant*\u003e(constant)\n        ? std::get\u003cHConstant*\u003e(constant)\n        : graph_-\u003eGetIntConstant(std::get\u003cbool\u003e(constant) ? 1 : 0);\n\nYes, I mean `bool`. The `HIntConstant`s we\u0027re currently passing are really holding `bool`s.\n\n(Note that `PropagateValue()` is a non-static function, so it has access to `graph_`.)",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 24
+      },
+      "revId": "cec621aab763e232eaa06d6371c628cd5a2d4e59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "955a5960_57ef055f",
         "filename": "compiler/optimizing/constant_folding.cc",
         "patchSetId": 3
