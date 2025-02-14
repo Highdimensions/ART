@@ -64,6 +64,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6f686f2e_d1828c92",
+        "filename": "runtime/art_method.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-14T15:38:25Z",
+      "side": 1,
+      "message": "`HasCodeItem()` is used in different contexts. The `ClassLinker::LoadClass()` does not deal with runtime and proxy methods, so it needs only the access flags check (it doesn\u0027t even have an `ArtMethod` at that point), so I pulled it out to a separate function. I didn\u0027t want to call it `HasCodeItem()` because there is no runtime or proxy method check. If you can suggest a better name than `NeedsCodeItem()`, I want to hear it.\n\n(AI suggested edit is rubbish as usual.)",
+      "parentUuid": "710dc8cf_b6db353a",
+      "range": {
+        "startLine": 912,
+        "startChar": 14,
+        "endLine": 912,
+        "endChar": 27
+      },
+      "revId": "8eaf06d365f27e55799a91d9e65ff6bffec96115",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c815028c_47cfe898",
         "filename": "runtime/class_linker.cc",
         "patchSetId": 9
@@ -109,6 +133,30 @@
           ]
         }
       ],
+      "revId": "8eaf06d365f27e55799a91d9e65ff6bffec96115",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5eef8474_49f0e336",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 4366,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-14T15:38:25Z",
+      "side": 1,
+      "message": "This is essentially a question for Lokesh about how does CMC handle the `LinearAlloc` space. I didn\u0027t feel confident enough to pull it out of the Runnable state as I don\u0027t know if that could introduce any new races. The lack of annotation on `AllocArt{Field,Method}Array()` could be due to historical reasons and may not reflect actual requirements as those functions predate CMC.\n\n(AI suggested edit is rubbish as usual.)",
+      "parentUuid": "c815028c_47cfe898",
+      "range": {
+        "startLine": 4362,
+        "startChar": 0,
+        "endLine": 4366,
+        "endChar": 66
+      },
       "revId": "8eaf06d365f27e55799a91d9e65ff6bffec96115",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
