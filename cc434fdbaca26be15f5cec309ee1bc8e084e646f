@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "992200ce_259fad13",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-14T14:11:29Z",
+      "side": 1,
+      "message": "What I meant is that in the case of propagating the boolean constant, most cases are true for `variable-\u003eGetUses().HasExactlyOneElement()`. Haven\u0027t tested the other one.\n\nOne of the reasons for this is that before GVN the comparisons are not going to have deduplication. I tested a prototype of \"Aggressive\" constant folding that would only call into `PropagateValue` for booleans after GVN happened but didn\u0027t see that much improvement. Probably because we just do `variable-\u003eGetUses().HasExactlyOneElement()` and return.\n\n\u003e If yes, then we should probably do this check before loading the stats_ for the recording_stats check. (Additional optimization opportunity for this or another CL.)\n\nDoing that SGTM. Shouldn\u0027t see that much improvement in the common case (the one where stats_ is not null) but it doesn\u0027t hurt to add regardless. Will do in a follow-up",
+      "parentUuid": "3c612176_976d7a3c",
+      "range": {
+        "startLine": 231,
+        "startChar": 7,
+        "endLine": 231,
+        "endChar": 49
+      },
+      "revId": "cc434fdbaca26be15f5cec309ee1bc8e084e646f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8ebe7291_3fbb85ff",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-02-14T12:43:19Z",
       "side": 1,
       "message": "We\u0027re passing the first instruction of a block and `strictly_dominated \u003d false` which makes the\n\n    dominated \u003d\n          strictly_dominated ? dominator-\u003eStrictlyDominates(user) : dominator-\u003eDominates(user);\n\nfor block equality always true in the `HInstruction::ReplaceUsesDominatedBy()`. We could investigate if it makes sense to specialize that function and pass the block directly instead. (Optimization opportunity for another CL.)",
+      "range": {
+        "startLine": 235,
+        "startChar": 4,
+        "endLine": 237,
+        "endChar": 69
+      },
+      "revId": "cc434fdbaca26be15f5cec309ee1bc8e084e646f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc8ecf9c_0b0ee3d1",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-14T14:11:29Z",
+      "side": 1,
+      "message": "Nice catch! We can investigate to see if this is worth specializing. `FoundBefore` (inside `StrictlyDominates`) should break quite early but we might be able to skip some function calls.",
+      "parentUuid": "8ebe7291_3fbb85ff",
       "range": {
         "startLine": 235,
         "startChar": 4,
