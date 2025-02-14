@@ -40,6 +40,30 @@
       ],
       "revId": "1d98f61f7d9c9e636631c4edc8dedb6726e317bb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13148ab7_3e5faac3",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T15:42:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30113de3_10a977a0",
+      "range": {
+        "startLine": 179,
+        "startChar": 87,
+        "endLine": 179,
+        "endChar": 99
+      },
+      "revId": "1d98f61f7d9c9e636631c4edc8dedb6726e317bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
