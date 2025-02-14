@@ -16,6 +16,169 @@
       "message": "PTAL. Thanks!",
       "revId": "7b7dedaac842d8c590d56e13f056d448b2388ef2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01d6f53e_31347280",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T10:38:45Z",
+      "side": 1,
+      "message": "share this with line 537.",
+      "range": {
+        "startLine": 539,
+        "startChar": 0,
+        "endLine": 539,
+        "endChar": 89
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "296ff25c_51e4c414",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 523,
+                "startChar": 0,
+                "endLine": 525,
+                "endChar": 0
+              },
+              "replacement": "    uint64_t timestamp_action_encoding \u003d event \u0026 ~1;\n    uintptr_t method_ptr \u003d event;\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 527,
+                "startChar": 0,
+                "endLine": 528,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 529,
+                "startChar": 0,
+                "endLine": 531,
+                "endChar": 0
+              },
+              "replacement": "      // Method entry\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 532,
+                "startChar": 0,
+                "endLine": 541,
+                "endChar": 0
+              },
+              "replacement": "      int64_t method_diff \u003d method_ptr - prev_method_ptr;\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 546,
+                "startChar": 0,
+                "endLine": 546,
+                "endChar": 0
+              },
+              "replacement": "\n    int64_t timestamp_action_diff \u003d timestamp_action_encoding - prev_timestamp_action_encoding;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7b7dedaac842d8c590d56e13f056d448b2388ef2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e4bfe9f_6dfe3d46",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T10:38:45Z",
+      "side": 1,
+      "message": "what does this mean? Don\u0027t overflow buffers go to `overflow_buffers_` ?",
+      "range": {
+        "startLine": 106,
+        "startChar": 51,
+        "endLine": 106,
+        "endChar": 83
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0a5a8846_e9400f8b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 106,
+                "startChar": 0,
+                "endLine": 107,
+                "endChar": 0
+              },
+              "replacement": "  // This is used to hold the long running methods when there is a buffer overflow. When the\n  // curr_buffer_ becomes full, we store it in this list and allocate a new buffer.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7b7dedaac842d8c590d56e13f056d448b2388ef2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b9c92a4_402876b7",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T10:38:45Z",
+      "side": 1,
+      "message": "rephrase :)",
+      "range": {
+        "startLine": 228,
+        "startChar": 26,
+        "endLine": 228,
+        "endChar": 55
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1a00527b_9a5c4cf2",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 228,
+                "startChar": 0,
+                "endLine": 230,
+                "endChar": 0
+              },
+              "replacement": "  // Dumps all the events in the method_trace_entries and end_trace_entries into the buffer. Also\n  // records the ArtMethods from the events which is then used to record information about these\n  // methods.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7b7dedaac842d8c590d56e13f056d448b2388ef2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
