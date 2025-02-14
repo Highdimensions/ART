@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4eeb7284_7d0357c4",
+        "filename": "runtime/oat/oat.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T09:32:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "816932be_b3440523",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 53
+      },
+      "revId": "7b85e15acd7518ac368b3cb2c33ce205642e328c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "134dae1f_287b24e2",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-02-14T08:02:58Z",
       "side": 1,
       "message": "Style: Add space.",
+      "range": {
+        "startLine": 71,
+        "startChar": 31,
+        "endLine": 71,
+        "endChar": 32
+      },
+      "revId": "7b85e15acd7518ac368b3cb2c33ce205642e328c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27416ace_71f9443b",
+        "filename": "runtime/oat/oat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T09:32:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "134dae1f_287b24e2",
       "range": {
         "startLine": 71,
         "startChar": 31,
