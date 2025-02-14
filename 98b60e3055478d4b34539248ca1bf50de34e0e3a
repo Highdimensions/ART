@@ -126,6 +126,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5a547c11_136a6738",
+        "filename": "libartbase/base/unix_file/fd_file.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T16:33:42Z",
+      "side": 1,
+      "message": "Agree we should deprecate, but can you work with the current API for now, and then a later/concurrent CL would replace that API (instead of this CL introducing a new API and keeping the old one around).",
+      "parentUuid": "7b0ae501_d0ed139d",
+      "range": {
+        "startLine": 420,
+        "startChar": 0,
+        "endLine": 420,
+        "endChar": 71
+      },
+      "revId": "98b60e3055478d4b34539248ca1bf50de34e0e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "172d2b96_8616a231",
         "filename": "tools/create_minidebuginfo/Android.bp",
         "patchSetId": 13
