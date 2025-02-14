@@ -100,6 +100,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b0ae501_d0ed139d",
+        "filename": "libartbase/base/unix_file/fd_file.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T15:39:35Z",
+      "side": 1,
+      "message": "Yes, it\u0027s been the API, but it\u0027s a bad API that we should change. I just did a quick Code Search and find many wrong usages ([1](https://cs.android.com/android/platform/superproject/main/+/main:art/oatdump/oatdump.cc;l\u003d806;drc\u003da60b8c1f6f5539de4c8f464c1eaa11242ffb8729), [2](https://cs.android.com/android/platform/superproject/main/+/main:art/oatdump/oatdump.cc;l\u003d1962;drc\u003da60b8c1f6f5539de4c8f464c1eaa11242ffb8729), [3](https://cs.android.com/android/platform/superproject/main/+/main:art/odrefresh/odrefresh.cc;l\u003d194;drc\u003da60b8c1f6f5539de4c8f464c1eaa11242ffb8729), [4](https://cs.android.com/android/platform/superproject/main/+/main:art/compiler/utils/assembler_test_base.h;l\u003d215;drc\u003da60b8c1f6f5539de4c8f464c1eaa11242ffb8729), [5](https://cs.android.com/android/platform/superproject/main/+/main:art/dex2oat/linker/oat_writer.cc;l\u003d3421;drc\u003da60b8c1f6f5539de4c8f464c1eaa11242ffb8729), [6](https://cs.android.com/android/platform/superproject/main/+/main:art/libartbase/base/unix_file/fd_file.cc;l\u003d653;drc\u003da60b8c1f6f5539de4c8f464c1eaa11242ffb8729)). This makes me think we should deprecate that API and use the new one instead.\n\nI jsut added a comment to that API that it\u0027s deprecated. Ideally we should add [[deprecated]], but it would generate too many warnings, so I\u0027m not going to do that ATM.",
+      "parentUuid": "0bfea94a_40b85d40",
+      "range": {
+        "startLine": 420,
+        "startChar": 0,
+        "endLine": 420,
+        "endChar": 71
+      },
+      "revId": "98b60e3055478d4b34539248ca1bf50de34e0e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "172d2b96_8616a231",
