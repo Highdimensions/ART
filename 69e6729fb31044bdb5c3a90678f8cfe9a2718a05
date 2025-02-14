@@ -16,6 +16,126 @@
       "message": "PTAL. Thanks!",
       "revId": "69e6729fb31044bdb5c3a90678f8cfe9a2718a05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd8555e2_d5a4a60d",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T09:58:47Z",
+      "side": 1,
+      "message": "Move this logic out of the `TraceDumpCheckpoint`? Then you can still stack allocate `checkpoint`.",
+      "range": {
+        "startLine": 427,
+        "startChar": 0,
+        "endLine": 427,
+        "endChar": 81
+      },
+      "revId": "69e6729fb31044bdb5c3a90678f8cfe9a2718a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "856a497c_fa59e2ea",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T09:58:47Z",
+      "side": 1,
+      "message": "style nit: parameter order is inconsistent with `DumpThreadMethodInfo`. Make it consistent?",
+      "range": {
+        "startLine": 437,
+        "startChar": 26,
+        "endLine": 437,
+        "endChar": 46
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "d268a1d8_5b391463",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 437,
+                "startChar": 0,
+                "endLine": 438,
+                "endChar": 0
+              },
+              "replacement": "    trace_data_-\u003eDumpData(methods, threads, os);\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 627,
+                "startChar": 0,
+                "endLine": 630,
+                "endChar": 0
+              },
+              "replacement": "void TraceData::DumpData(std::unordered_set\u003cArtMethod*\u003e\u0026 methods,\n                         std::unordered_map\u003csize_t, std::string\u003e\u0026 threads,\n                         std::ostringstream\u0026 os) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "69e6729fb31044bdb5c3a90678f8cfe9a2718a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ceb5e0f0_6bff6b65",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T09:58:47Z",
+      "side": 1,
+      "message": "That\u0027s a very small method with two out parameters. Inline it in the caller?",
+      "range": {
+        "startLine": 627,
+        "startChar": 0,
+        "endLine": 636,
+        "endChar": 28
+      },
+      "revId": "69e6729fb31044bdb5c3a90678f8cfe9a2718a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e42f8ab_ebf97609",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T09:58:47Z",
+      "side": 1,
+      "message": "const",
+      "range": {
+        "startLine": 102,
+        "startChar": 30,
+        "endLine": 102,
+        "endChar": 31
+      },
+      "revId": "69e6729fb31044bdb5c3a90678f8cfe9a2718a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
