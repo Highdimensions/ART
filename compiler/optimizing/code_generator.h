@@ -226,6 +226,10 @@ class CodeGenerator : public DeletableArenaObject<kArenaAllocCodeGenerator> {
   virtual const Assembler& GetAssembler() const = 0;
   virtual size_t GetWordSize() const = 0;
 
+  virtual ArrayRef<const uint8_t> GetCfiData() {
+    return ArrayRef<const uint8_t>(*GetAssembler()->cfi().data());
+  }
+
   // Returns whether the target supports predicated SIMD instructions.
   virtual bool SupportsPredicatedSIMD() const { return false; }
 
@@ -248,6 +252,11 @@ class CodeGenerator : public DeletableArenaObject<kArenaAllocCodeGenerator> {
                                 size_t maximum_safepoint_spill_size,
                                 size_t number_of_out_slots,
                                 const ArenaVector<HBasicBlock*>& block_order);
+
+  // Required by the LLVM based codegen
+  void InitializeDefaultBlockOrder();
+  void TryRemoveSuspendCheckEntries();
+
   // Backends can override this as necessary. For most, no special alignment is required.
   virtual uint32_t GetPreferredSlotsAlignment() const { return 1; }
 
@@ -733,7 +742,7 @@ class CodeGenerator : public DeletableArenaObject<kArenaAllocCodeGenerator> {
   static QuickEntrypointEnum GetArrayAllocationEntrypoint(HNewArray* new_array);
   static ScaleFactor ScaleFactorForType(DataType::Type type);
 
-  ArrayRef<const uint8_t> GetCode() const {
+  virtual ArrayRef<const uint8_t> GetCode() const {
     return ArrayRef<const uint8_t>(GetAssembler().CodeBufferBaseAddress(),
                                    GetAssembler().CodeSize());
   }

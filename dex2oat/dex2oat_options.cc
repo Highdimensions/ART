@@ -298,7 +298,31 @@ static void AddTargetMappings(Builder& builder) {
                     "Note: the value 'runtime' has no effect if it is used on host.\n"
                     "Example: --instruction-set-features=div\n"
                     "Default: default")
-          .IntoKey(M::TargetInstructionSetFeatures);
+          .IntoKey(M::TargetInstructionSetFeatures)
+      .Define("--use-llvm")
+          .WithHelp("Use LLVM for arm64 code generation in the optimizing backend.")
+          .IntoKey(M::UseLLVM)
+      .Define("--llvm-opt-level=_")
+          .WithType<std::string>()
+          .WithHelp("Set optimization level of the LLVM backend.\n"
+                    "Same as the optimization levels used by clang.\n"
+                    "The supported levels are 0, 1, 2, 3, s, z.")
+          .WithMetavar("{0|1|2|3|s|z}")
+          .IntoKey(M::LLVMOptLevel)
+      .Define("--llvm-duplicate-opt-pipeline")
+          .WithHelp("Duplicate LLVM's optimization pipeline to also run after RewriteStatepointsForGC.")
+          .IntoKey(M::LLVMDuplicateOptPipeline)
+      .Define("--llvm-cpu-target=_")
+          .WithType<std::string>()
+          .WithHelp("The target CPU the LLVM based backend should optimize for.\n"
+                    "Eg: --llvm-cpu-target=cortex-a710")
+          .WithMetavar("<cpu>")
+          .IntoKey(M::LLVMCPUTarget)
+      .Define("--llvm-arg=_")
+          .WithType<std::vector<std::string>>().AppendValues()
+          .WithHelp("Extra flags passed to LLVM during compilation.")
+          .WithMetavar("<arg>[=<value>]")
+          .IntoKey(M::LLVMArgs);
   // clang-format on
 }
 

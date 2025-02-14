@@ -1,0 +1,13 @@
+diff --git a/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp b/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp
+index 6b8da4ea53..7abf674926 100644
+--- a/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp
++++ b/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp
+@@ -7132,7 +7132,7 @@ static bool ReduceLoopStrength(Loop *L, IVUsers &IU, ScalarEvolution &SE,
+ }
+ 
+ bool LoopStrengthReduce::runOnLoop(Loop *L, LPPassManager & /*LPM*/) {
+-  if (skipLoop(L))
++  if (skipLoop(L) || findOptionMDForLoop(L, "llvm.loop.lsr.disable"))
+     return false;
+ 
+   auto &IU = getAnalysis<IVUsersWrapperPass>().getIU();

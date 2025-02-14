@@ -53,7 +53,9 @@ struct ReferenceMap2Visitor : public CheckReferenceMapVisitor {
     if (m_name.compare("f") == 0) {
       CHECK_REGS_CONTAIN_REFS(0x06U, true, 8, 1);  // v8: this, v1: x
       CHECK_REGS_CONTAIN_REFS(0x0cU, true, 8, 3, 1);  // v8: this, v3: y, v1: x
-      CHECK_REGS_CONTAIN_REFS(0x10U, true, 8, 3, 1);  // v8: this, v3: y, v1: x
+      if (!GetCurrentOatQuickMethodHeader()->IsOptimized()) {
+        CHECK_REGS_CONTAIN_REFS(0x10U, true, 8, 3, 1);  // v8: this, v3: y, v1: x
+      }
       // v2 is added because of the instruction at DexPC 0024. Object merges with 0 is Object. See:
       //   0024: move-object v3, v2
       //   0025: goto 0013

@@ -16,6 +16,7 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.Reference;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -338,6 +339,7 @@ public class Main {
         System.out.println("Array counts assignable " + Arrays.toString(counts));
         int class_count = VMDebug.getLoadedClassCount();
         checkBiggerThanZero(class_count);
+        Reference.reachabilityFence(l);
     }
 
     static class ClassD {

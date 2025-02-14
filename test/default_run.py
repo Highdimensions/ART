@@ -453,6 +453,8 @@ def default_run(ctx, args, **kwargs):
   # If running on device, determine the ISA of the device.
   if not HOST and not USE_JVM:
     ISA = get_target_arch(args.is64)
+  elif HOST:
+    ISA = "arm64"
 
   if not USE_JVM:
     FLAGS += f" {ANDROID_FLAGS}"
@@ -787,7 +789,11 @@ def default_run(ctx, args, **kwargs):
 
     if USE_GDB_DEX2OAT:
       nonlocal GDB_DEX2OAT_EXTRA_ARGS
-      dex2oat_cmdline += f"gdb {GDB_DEX2OAT_EXTRA_ARGS} \
+      
+      GDB_DEX2OAT_DIR = os.getenv("GDB_DEX2OAT_DIR", None)
+      GDB_DEX2OAT_ARGS = f"{GDB_DEX2OAT_DIR}/gdb -data-directory {GDB_DEX2OAT_DIR}/data-directory" if GDB_DEX2OAT_DIR else "gdb"
+     
+      dex2oat_cmdline += f"{GDB_DEX2OAT_ARGS} {GDB_DEX2OAT_EXTRA_ARGS} \
                           -d '{ANDROID_BUILD_TOP}' --args "
 
     dex2oat_logger = ""
@@ -807,6 +813,11 @@ def default_run(ctx, args, **kwargs):
 
     if INSTRUCTION_SET_FEATURES != "":
       dex2oat_cmdline += f" --instruction-set-features={INSTRUCTION_SET_FEATURES}"
+
+    dex2oat_cmdline += " --use-llvm"
+    if HOST:
+      # Explicitly ask for CMC collector, so userfaultfd is used instead of read barriers.
+      dex2oat_cmdline += " --runtime-arg -Xgc:CMC"
 
     # Add in a timeout. This is important for testing the compilation/verification time of
     # pathological cases. We do not append a timeout when debugging dex2oat because we

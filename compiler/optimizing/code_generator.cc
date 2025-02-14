@@ -17,6 +17,7 @@
 #include "code_generator.h"
 #include "base/globals.h"
 #include "mirror/method_type.h"
+#include "linear_order.h"
 
 #ifdef ART_ENABLE_CODEGEN_arm
 #include "code_generator_arm_vixl.h"
@@ -24,6 +25,10 @@
 
 #ifdef ART_ENABLE_CODEGEN_arm64
 #include "code_generator_arm64.h"
+#endif
+
+#ifdef ART_ENABLE_CODEGEN_arm64_llvm
+#include "code_generator_arm64_llvm.h"
 #endif
 
 #ifdef ART_ENABLE_CODEGEN_riscv64
@@ -323,19 +328,24 @@ void CodeGenerator::Compile() {
   HGraphVisitor* instruction_visitor = GetInstructionVisitor();
   DCHECK_EQ(current_block_index_, 0u);
 
-  GetStackMapStream()->BeginMethod(HasEmptyFrame() ? 0 : frame_size_,
-                                   core_spill_mask_,
-                                   fpu_spill_mask_,
-                                   GetGraph()->GetNumberOfVRegs(),
-                                   GetGraph()->IsCompilingBaseline(),
-                                   GetGraph()->IsDebuggable(),
-                                   GetGraph()->HasShouldDeoptimizeFlag());
+  // Stack maps are created after code generation in the LLVM code generator.
+  if (!compiler_options_.UseLLVM()) {
+    GetStackMapStream()->BeginMethod(HasEmptyFrame() ? 0 : frame_size_,
+                                     core_spill_mask_,
+                                     fpu_spill_mask_,
+                                     GetGraph()->GetNumberOfVRegs(),
+                                     GetGraph()->IsCompilingBaseline(),
+                                     GetGraph()->IsDebuggable(),
+                                     GetGraph()->HasShouldDeoptimizeFlag());
 
-  size_t frame_start = GetAssembler()->CodeSize();
-  GenerateFrameEntry();
-  DCHECK_EQ(GetAssembler()->cfi().GetCurrentCFAOffset(), static_cast<int>(frame_size_));
-  if (disasm_info_ != nullptr) {
-    disasm_info_->SetFrameEntryInterval(frame_start, GetAssembler()->CodeSize());
+    size_t frame_start = GetAssembler()->CodeSize();
+    GenerateFrameEntry();
+    DCHECK_EQ(GetAssembler()->cfi().GetCurrentCFAOffset(), static_cast<int>(frame_size_));
+    if (disasm_info_ != nullptr) {
+      disasm_info_->SetFrameEntryInterval(frame_start, GetAssembler()->CodeSize());
+    }
+  } else {
+    GenerateFrameEntry();
   }
 
   for (size_t e = block_order_->size(); current_block_index_ < e; ++current_block_index_) {
@@ -343,7 +353,8 @@ void CodeGenerator::Compile() {
     // Don't generate code for an empty block. Its predecessors will branch to its successor
     // directly. Also, the label of that block will not be emitted, so this helps catch
     // errors where we reference that label.
-    if (block->IsSingleJump()) continue;
+    // NOTE: These blocks are needed for LLVM in order to correctly generate phi nodes.
+    if (!compiler_options_.UseLLVM() && block->IsSingleJump()) continue;
     Bind(block);
     // This ensures that we have correct native line mapping for all native instructions.
     // It is necessary to make stepping over a statement work. Otherwise, any initial
@@ -363,9 +374,14 @@ void CodeGenerator::Compile() {
         // so the runtime's stackmap is not sufficient since it is at PC after the call.
         MaybeRecordNativeDebugInfo(current, block->GetDexPc());
       }
-      DisassemblyScope disassembly_scope(current, *this);
-      DCHECK(CheckTypeConsistency(current));
-      current->Accept(instruction_visitor);
+
+      if (compiler_options_.UseLLVM()) {
+        current->Accept(instruction_visitor);
+      } else {
+        DisassemblyScope disassembly_scope(current, *this);
+        DCHECK(CheckTypeConsistency(current));
+        current->Accept(instruction_visitor);
+      }
     }
   }
 
@@ -373,18 +389,23 @@ void CodeGenerator::Compile() {
 
   // Emit catch stack maps at the end of the stack map stream as expected by the
   // runtime exception handler.
-  if (graph_->HasTryCatch()) {
+  if (!compiler_options_.UseLLVM() && graph_->HasTryCatch()) {
     RecordCatchBlockInfo();
   }
 
   // Finalize instructions in the assembler.
   Finalize();
 
-  GetStackMapStream()->EndMethod(GetAssembler()->CodeSize());
+  if (!compiler_options_.UseLLVM()) {
+    GetStackMapStream()->EndMethod(GetAssembler()->CodeSize());
+  }
 }
 
 void CodeGenerator::Finalize() {
-  GetAssembler()->FinalizeCode();
+  // LLVM doesn't have an assembler.
+  if (Assembler* assembler = GetAssembler()) {
+    assembler->FinalizeCode();
+  }
 }
 
 void CodeGenerator::EmitLinkerPatches(
@@ -428,6 +449,33 @@ void CodeGenerator::InitializeCodeGeneration(size_t number_of_spill_slots,
         + (GetGraph()->HasShouldDeoptimizeFlag() ? kShouldDeoptimizeFlagSize : 0)
         + FrameEntrySpillSize(),
         kStackAlignment));
+  }
+}
+
+void CodeGenerator::InitializeDefaultBlockOrder() {
+  HGraph *graph = GetGraph();
+  // This is done during the SSA liveness analysis pass usually, but we skip that when using LLVM.
+  graph->LinearizeGraph();
+  block_order_ = &graph->GetLinearOrder();
+  DCHECK(!block_order_->empty());
+  DCHECK((*block_order_)[0] == graph->GetEntryBlock());
+}
+
+void CodeGenerator::TryRemoveSuspendCheckEntries() {
+
+  const auto try_remove_suspendcheck = [this](HInstruction* instruction) {
+    if (instruction->IsSuspendCheckEntry() && !NeedsSuspendCheckEntry()) {
+        instruction->GetBlock()->RemoveInstruction(instruction);
+      }
+  };
+
+  for (HBasicBlock* block : GetGraph()->GetLinearPostOrder()) {
+    for (HBackwardInstructionIterator it(block->GetInstructions()); !it.Done(); it.Advance()) {
+      try_remove_suspendcheck(it.Current());
+    }
+    for (HInstructionIterator it(block->GetPhis()); !it.Done(); it.Advance()) {
+      try_remove_suspendcheck(it.Current());
+    }
   }
 }
 
@@ -951,8 +999,13 @@ std::unique_ptr<CodeGenerator> CodeGenerator::Create(HGraph* graph,
 #endif
 #ifdef ART_ENABLE_CODEGEN_arm64
     case InstructionSet::kArm64: {
-      return std::unique_ptr<CodeGenerator>(
-          new (allocator) arm64::CodeGeneratorARM64(graph, compiler_options, stats));
+      if (compiler_options.UseLLVM()) {
+        return std::unique_ptr<CodeGenerator>(
+            new (allocator) arm64_llvm::CodeGeneratorARM64LLVM(graph, compiler_options, stats));
+      } else {
+        return std::unique_ptr<CodeGenerator>(
+            new (allocator) arm64::CodeGeneratorARM64(graph, compiler_options, stats));
+      }
     }
 #endif
 #ifdef ART_ENABLE_CODEGEN_riscv64

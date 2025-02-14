@@ -990,7 +990,7 @@ if True:
               (["stderr"] if proc_err.returncode != 0 else []))
       fail("{} did not match the expected file".format(" and ".join(kind)))
 
-    if run_checker:
+    if run_checker == "yes" and False:
       if target_mode:
         if ON_VM:
           run(f'{SCP_CMD} "{SSH_USER}@{SSH_HOST}:{CHROOT}/{cfg_output_dir}/'

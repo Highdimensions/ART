@@ -1,0 +1,20 @@
+diff --git a/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp b/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp
+index dce039b2d3..37a17763f5 100644
+--- a/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp
++++ b/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp
+@@ -585,6 +585,15 @@ static Value *findBaseDefiningValue(Value *I, DefiningValueMapTy &Cache,
+     return I;
+   }
+ 
++  if (auto *RMWI = dyn_cast<AtomicRMWInst>(I);
++      RMWI && RMWI->getOperation() == AtomicRMWInst::Xchg) {
++    // A RMW Xchg is an atomic load and store, so we treat the loaded value as a
++    // base pointer.
++    Cache[I] = I;
++    setKnownBase(I, /* IsKnownBase */ true, KnownBases);
++    return I;
++  }
++
+   assert(!isa<AtomicRMWInst>(I) && "Xchg handled above, all others are "
+                                    "binary ops which don't apply to pointers");
+ 

@@ -18,6 +18,9 @@
 #define ART_LIBARTBASE_BASE_MEMORY_TOOL_H_
 
 #include <stddef.h>
+#if __has_feature(address_sanitizer)
+# include <sanitizer/asan_interface.h>
+#endif
 
 namespace art {
 
@@ -27,7 +30,6 @@ namespace art {
 
 #if __has_feature(address_sanitizer)
 
-# include <sanitizer/asan_interface.h>
 # define ADDRESS_SANITIZER
 
 # ifdef ART_ENABLE_ADDRESS_SANITIZER

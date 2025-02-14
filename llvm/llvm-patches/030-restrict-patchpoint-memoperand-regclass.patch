@@ -1,0 +1,93 @@
+diff --git a/llvm/include/llvm/CodeGen/SelectionDAGNodes.h b/llvm/include/llvm/CodeGen/SelectionDAGNodes.h
+index b4d56cb3e2..8d6f750051 100644
+--- a/llvm/include/llvm/CodeGen/SelectionDAGNodes.h
++++ b/llvm/include/llvm/CodeGen/SelectionDAGNodes.h
+@@ -402,6 +402,7 @@ private:
+ 
+   bool ZeroExt : 1;
+   bool SignExt : 1;
++  bool PatchpointMemoryOperand : 1;
+ 
+ public:
+   /// Default constructor turns off all optimization flags.
+@@ -410,7 +411,8 @@ public:
+         Disjoint(false), NonNeg(false), NoNaNs(false), NoInfs(false),
+         NoSignedZeros(false), AllowReciprocal(false), AllowContract(false),
+         ApproximateFuncs(false), AllowReassociation(false), NoFPExcept(false),
+-        Unpredictable(false), ZeroExt(false), SignExt(false) {}
++        Unpredictable(false), ZeroExt(false), SignExt(false),
++        PatchpointMemoryOperand(false) {}
+ 
+   /// Propagate the fast-math-flags from an IR FPMathOperator.
+   void copyFMF(const FPMathOperator &FPMO) {
+@@ -440,6 +442,7 @@ public:
+   void setUnpredictable(bool b) { Unpredictable = b; }
+   void setZeroExt(bool b) { ZeroExt = b; }
+   void setSignExt(bool b) { SignExt = b; }
++  void setPatchpointMemoryOperand(bool b) { PatchpointMemoryOperand = b; }
+ 
+   // These are accessors for each flag.
+   bool hasNoUnsignedWrap() const { return NoUnsignedWrap; }
+@@ -458,6 +461,7 @@ public:
+   bool hasUnpredictable() const { return Unpredictable; }
+   bool hasZeroExt() const { return ZeroExt; }
+   bool hasSignExt() const { return SignExt; }
++  bool hasPatchpointMemoryOperand() const { return PatchpointMemoryOperand; }
+ 
+   /// Clear any flags in this flag set that aren't also set in Flags. All
+   /// flags will be cleared if Flags are undefined.
+@@ -478,6 +482,7 @@ public:
+     Unpredictable &= Flags.Unpredictable;
+     ZeroExt &= Flags.ZeroExt;
+     SignExt &= Flags.SignExt;
++    PatchpointMemoryOperand &= Flags.PatchpointMemoryOperand;
+   }
+ };
+ 
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+index 50e04f9786..dd00328434 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+@@ -10152,8 +10152,15 @@ void SelectionDAGBuilder::visitPatchpoint(const CallBase &CB,
+   // place these in any free register.
+   if (IsAnyRegCC) {
+     unsigned ArgStart = IsARTAnyRegCC ? NumMetaOpers + 1 : NumMetaOpers;
+-    for (unsigned i = ArgStart, e = NumMetaOpers + NumArgs; i != e; ++i)
+-      Ops.push_back(getValue(CB.getArgOperand(i)));
++    for (unsigned i = ArgStart, e = NumMetaOpers + NumArgs; i != e; ++i) {
++      SDValue Op = getValue(CB.getArgOperand(i));
++      if (CB.getAttributes().hasParamAttr(i, "memoperand")) {
++        SDNodeFlags Flags = Op->getFlags();
++        Flags.setPatchpointMemoryOperand(true);
++        Op->setFlags(Flags);
++      }
++      Ops.push_back(Op);
++    }
+   } else {
+     // Push the arguments from the call instruction.
+     SDNode::op_iterator e = HasGlue ? Call->op_end() - 2 : Call->op_end() - 1;
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp
+index 359d738d2c..ace0d56f67 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp
+@@ -2453,8 +2453,18 @@ void SelectionDAGISel::Select_PATCHPOINT(SDNode *N) {
+   Ops.push_back(*It++);
+ 
+   // Push the args for the call.
+-  for (uint64_t I = NumArgs->getAsZExtVal(); I != 0; I--)
+-    Ops.push_back(*It++);
++  for (uint64_t I = NumArgs->getAsZExtVal(); I != 0; I--) {
++    SDValue Op = *It++;
++    if (Op->getFlags().hasPatchpointMemoryOperand()) {
++      const TargetRegisterInfo *TRI = MF->getSubtarget().getRegisterInfo();
++      const TargetRegisterClass *TRC = TRI->getPointerRegClass(*MF);
++      SDValue RC = CurDAG->getTargetConstant(TRC->getID(), DL, MVT::i64);
++      Op = SDValue(CurDAG->getMachineNode(TargetOpcode::COPY_TO_REGCLASS, DL,
++                                          Op.getValueType(), Op, RC),
++                   0);
++    }
++    Ops.push_back(Op);
++  }
+ 
+   // Now push the live variables.
+   for (; It != N->op_end(); It++)

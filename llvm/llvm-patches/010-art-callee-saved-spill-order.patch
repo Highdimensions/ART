@@ -1,0 +1,51 @@
+diff --git a/llvm/lib/Target/AArch64/AArch64FrameLowering.cpp b/llvm/lib/Target/AArch64/AArch64FrameLowering.cpp
+index cd21888a5f..a8024df2bd 100644
+--- a/llvm/lib/Target/AArch64/AArch64FrameLowering.cpp
++++ b/llvm/lib/Target/AArch64/AArch64FrameLowering.cpp
+@@ -2788,6 +2788,7 @@ static void computeCalleeSaveRegisterPairs(
+ 
+   bool IsWindows = isTargetWindows(MF);
+   bool NeedsWinCFI = needsWinCFI(MF);
++  bool IsART = MF.getFunction().getCallingConv() == CallingConv::ARTInvokeDex;
+   AArch64FunctionInfo *AFI = MF.getInfo<AArch64FunctionInfo>();
+   MachineFrameInfo &MFI = MF.getFrameInfo();
+   CallingConv::ID CC = MF.getFunction().getCallingConv();
+@@ -2917,7 +2918,7 @@ static void computeCalleeSaveRegisterPairs(
+ 
+     // Round up size of non-pair to pair size if we need to pad the
+     // callee-save area to ensure 16-byte alignment.
+-    if (NeedGapToAlignStack && !NeedsWinCFI &&
++    if (NeedGapToAlignStack && !NeedsWinCFI && !IsART &&
+         !RPI.isScalable() && RPI.Type != RegPairInfo::FPR128 &&
+         !RPI.isPaired() && ByteOffset % 16 != 0) {
+       ByteOffset += 8 * StackFillDir;
+@@ -3449,6 +3450,29 @@ bool AArch64FrameLowering::assignCalleeSavedSpillSlots(
+   if (CSI.empty())
+     return true; // Early exit if no callee saved registers are modified!
+ 
++  // Ensure that registers are spilled in high to low order when going
++  // top down on the stack.
++  if (MF.getFunction().getCallingConv() == CallingConv::ARTInvokeDex) {
++    // Find the first non-GPR register with binary search.
++    auto GPREnd = std::lower_bound(
++        CSI.begin(), CSI.end(), 0, [](const CalleeSavedInfo &Info, int) {
++          Register Reg = Info.getReg();
++          return Reg == AArch64::LR || Reg == AArch64::FP ||
++                 (Reg >= AArch64::X0 && Reg <= AArch64::X28);
++        });
++    // Reverse the order of saved GPRs
++    std::reverse(CSI.begin(), GPREnd);
++    // Reverse the order of saved FPRs
++    std::reverse(GPREnd, CSI.end());
++    // LLVM orders registers as X19-X28, LR, FP, but ART requires them to be in
++    // ascending order in terms of the register number, so we need to swap them
++    // manually.
++    if (CSI.size() >= 2 && CSI[0].getReg() == AArch64::FP &&
++        CSI[1].getReg() == AArch64::LR) {
++      std::swap(CSI[0], CSI[1]);
++    }
++  }
++
+   // Now that we know which registers need to be saved and restored, allocate
+   // stack slots for them.
+   MachineFrameInfo &MFI = MF.getFrameInfo();

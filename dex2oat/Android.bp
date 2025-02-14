@@ -542,6 +542,7 @@ art_cc_test {
         "libart-dex2oat",
         "libart-dex2oat-gtest",
         "libvixl",
+        "libart-dexlayout",
     ],
     test_config: "art_standalone_dex2oat_tests.xml",
 }

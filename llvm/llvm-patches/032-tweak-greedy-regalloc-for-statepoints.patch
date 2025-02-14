@@ -1,0 +1,98 @@
+diff --git a/llvm/lib/CodeGen/RegAllocGreedy.cpp b/llvm/lib/CodeGen/RegAllocGreedy.cpp
+index a208bf89fa..40ca339829 100644
+--- a/llvm/lib/CodeGen/RegAllocGreedy.cpp
++++ b/llvm/lib/CodeGen/RegAllocGreedy.cpp
+@@ -613,9 +613,11 @@ bool RAGreedy::addSplitConstraints(InterferenceCache::Cursor Intf,
+ 
+     BC.Number = BI.MBB->getNumber();
+     Intf.moveToBlock(BC.Number);
+-    BC.Entry = BI.LiveIn ? SpillPlacement::PrefReg : SpillPlacement::DontCare;
++    BC.Entry = BI.LiveIn && !BI.IsFirstDefStatepoint ? SpillPlacement::PrefReg
++                                                     : SpillPlacement::DontCare;
+     BC.Exit = (BI.LiveOut &&
+-               !LIS->getInstructionFromIndex(BI.LastInstr)->isImplicitDef())
++               !LIS->getInstructionFromIndex(BI.LastInstr)->isImplicitDef() &&
++               !BI.IsLastDefStatepoint)
+                   ? SpillPlacement::PrefReg
+                   : SpillPlacement::DontCare;
+     BC.ChangesValue = BI.FirstDef.isValid();
+@@ -857,7 +859,7 @@ BlockFrequency RAGreedy::calcSpillCost() {
+     Cost += SpillPlacer->getBlockFrequency(Number);
+ 
+     // Unless the value is redefined in the block.
+-    if (BI.LiveIn && BI.LiveOut && BI.FirstDef)
++    if (BI.LiveIn && BI.LiveOut && BI.FirstDef && !BI.OnlyStatepointDefs)
+       Cost += SpillPlacer->getBlockFrequency(Number);
+   }
+   return Cost;
+@@ -882,9 +884,11 @@ BlockFrequency RAGreedy::calcGlobalSplitCost(GlobalSplitCandidate &Cand,
+     Cand.Intf.moveToBlock(BC.Number);
+ 
+     if (BI.LiveIn)
+-      Ins += RegIn != (BC.Entry == SpillPlacement::PrefReg);
++      Ins += (BC.Entry != SpillPlacement::DontCare &&
++              RegIn != (BC.Entry == SpillPlacement::PrefReg));
+     if (BI.LiveOut)
+-      Ins += RegOut != (BC.Exit == SpillPlacement::PrefReg);
++      Ins += (BC.Exit != SpillPlacement::DontCare &&
++              RegOut != (BC.Exit == SpillPlacement::PrefReg));
+     while (Ins--)
+       GlobalCost += SpillPlacer->getBlockFrequency(BC.Number);
+   }
+diff --git a/llvm/lib/CodeGen/SplitKit.cpp b/llvm/lib/CodeGen/SplitKit.cpp
+index d6c0a78246..8051806a18 100644
+--- a/llvm/lib/CodeGen/SplitKit.cpp
++++ b/llvm/lib/CodeGen/SplitKit.cpp
+@@ -50,6 +50,10 @@ static cl::opt<bool>
+                           cl::desc("Enable loop iv regalloc heuristic"),
+                           cl::init(true));
+ 
++static cl::opt<bool>
++    RegAllocConsiderStatepointDefs("regalloc-consider-statepoint-defs",
++                                 cl::init(false), cl::Hidden);
++
+ STATISTIC(NumFinished, "Number of splits finished");
+ STATISTIC(NumSimple,   "Number of splits that were simple");
+ STATISTIC(NumCopies,   "Number of copies inserted for splitting");
+@@ -230,11 +234,25 @@ void SplitAnalysis::calcLiveBlockInfo() {
+       // happen.
+       assert(LVI->end >= Stop && "range ends mid block with no uses");
+     } else {
++      auto IsStatepointDef = [this](SlotIndex SI) {
++        if (!RegAllocConsiderStatepointDefs) {
++          return false;
++        }
++        MachineInstr *MI = LIS.getInstructionFromIndex(SI);
++        return MI && MI->getOpcode() == TargetOpcode::STATEPOINT;
++      };
++
+       // This block has uses. Find the first and last uses in the block.
+       BI.FirstInstr = *UseI;
+       assert(BI.FirstInstr >= Start);
+-      do ++UseI;
+-      while (UseI != UseE && *UseI < Stop);
++      BI.IsFirstDefStatepoint = IsStatepointDef(*UseI);
++      BI.OnlyStatepointDefs = true;
++      do {
++        bool StatepointDef = IsStatepointDef(*UseI);
++        BI.OnlyStatepointDefs &= StatepointDef;
++        BI.IsLastDefStatepoint = StatepointDef;
++        ++UseI;
++      } while (UseI != UseE && *UseI < Stop);
+       BI.LastInstr = UseI[-1];
+       assert(BI.LastInstr < Stop);
+ 
+diff --git a/llvm/lib/CodeGen/SplitKit.h b/llvm/lib/CodeGen/SplitKit.h
+index cc277ecc0e..82d322e194 100644
+--- a/llvm/lib/CodeGen/SplitKit.h
++++ b/llvm/lib/CodeGen/SplitKit.h
+@@ -125,6 +125,9 @@ public:
+     SlotIndex FirstDef;   ///< First non-phi valno->def, or SlotIndex().
+     bool LiveIn;          ///< Current reg is live in.
+     bool LiveOut;         ///< Current reg is live out.
++    bool IsFirstDefStatepoint;
++    bool IsLastDefStatepoint;
++    bool OnlyStatepointDefs;
+ 
+     /// isOneInstr - Returns true when this BlockInfo describes a single
+     /// instruction.
