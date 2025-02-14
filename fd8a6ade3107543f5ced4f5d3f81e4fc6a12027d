@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb8b65ec_4b1282bd",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagedInstallFileHelper.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T17:36:34Z",
+      "side": 1,
+      "message": "Nit: These annotations seem a bit superfluous on final fields that are initialised with obviously non-null expressions right away. Do they actually help with anything?",
+      "range": {
+        "startLine": 43,
+        "startChar": 25,
+        "endLine": 43,
+        "endChar": 33
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "5ab0ba32_6ea5682f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/java/com/android/server/art/ArtManagedInstallFileHelper.java",
+              "range": {
+                "startLine": 43,
+                "startChar": 0,
+                "endLine": 44,
+                "endChar": 0
+              },
+              "replacement": "    private static final List\u003cString\u003e FILE_TYPES \u003d\n"
+            },
+            {
+              "path": "libartservice/service/java/com/android/server/art/ArtManagedInstallFileHelper.java",
+              "range": {
+                "startLine": 46,
+                "startChar": 0,
+                "endLine": 47,
+                "endChar": 0
+              },
+              "replacement": "    private static final List\u003cString\u003e SDM_SUFFIXES \u003d\n"
+            }
+          ]
+        }
+      ],
+      "revId": "fd8a6ade3107543f5ced4f5d3f81e4fc6a12027d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
