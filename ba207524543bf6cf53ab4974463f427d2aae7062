@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b16bd0ef_4bdcf59b",
+        "filename": "runtime/monitor.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Deferred to a separate CL.",
+      "parentUuid": "0755866f_d29c6aee",
+      "range": {
+        "startLine": 1172,
+        "startChar": 34,
+        "endLine": 1172,
+        "endChar": 35
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2daae886_56163178",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-02-01T01:13:31Z",
       "side": 1,
       "message": "Is the intention that this is larger than kExtraSpinIters + runtime-\u003eGetMaxSpinsBeforeThinLockInflation()?",
+      "range": {
+        "startLine": 1181,
+        "startChar": 34,
+        "endLine": 1181,
+        "endChar": 38
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a442134c_6da68e73",
+        "filename": "runtime/monitor.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 1181,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Ditto.",
+      "parentUuid": "2daae886_56163178",
       "range": {
         "startLine": 1181,
         "startChar": 34,
@@ -88,6 +136,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5b940b4_c7881542",
+        "filename": "runtime/native/dalvik_system_VMRuntime.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba0884dc_e86b7982",
+      "range": {
+        "startLine": 428,
+        "startChar": 6,
+        "endLine": 428,
+        "endChar": 8
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e9424b8_a0dc3da2",
@@ -111,6 +183,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "094e4bd1_67f3e693",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e9424b8_a0dc3da2",
+      "range": {
+        "startLine": 11,
+        "startChar": 29,
+        "endLine": 11,
+        "endChar": 42
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2e13def_2f00b600",
@@ -124,6 +220,30 @@
       "writtenOn": "2025-02-01T01:13:31Z",
       "side": 1,
       "message": "I think it would be helpful to say range is 1 to 99.",
+      "range": {
+        "startLine": 20,
+        "startChar": 20,
+        "endLine": 20,
+        "endChar": 21
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42869c16_1201b254",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "As far as I can tell, this is largely irrelevant here, so I\u0027m inclined to omit it. Very few places should care about these. For most of us these should be slightly different flavors of \"infinite priority, blocks everything else, very dangerous\".",
+      "parentUuid": "b2e13def_2f00b600",
       "range": {
         "startLine": 20,
         "startChar": 20,
@@ -208,6 +328,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "84fe82ec_b33a2616",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40be1061_e79b400b",
+      "range": {
+        "startLine": 81,
+        "startChar": 85,
+        "endLine": 81,
+        "endChar": 86
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "10a6fd6b_579923da",
@@ -221,6 +365,30 @@
       "writtenOn": "2025-02-14T18:23:32Z",
       "side": 1,
       "message": "Nit: You\u0027ve changed to \"java-priority\" in some other places. Here too?",
+      "range": {
+        "startLine": 99,
+        "startChar": 90,
+        "endLine": 100,
+        "endChar": 11
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1661d6cd_8968616e",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Actually it\u0027s niceness that\u0027s cached, though that probably doesn\u0027t really matter here. Changed it to the more neutral \"value\".",
+      "parentUuid": "10a6fd6b_579923da",
       "range": {
         "startLine": 99,
         "startChar": 90,
@@ -272,6 +440,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbecd11b_adb6fe51",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eec3a68c_d0cd97b3",
+      "range": {
+        "startLine": 108,
+        "startChar": 8,
+        "endLine": 108,
+        "endChar": 9
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3f2e25de_7a4d0c7b",
@@ -309,6 +501,30 @@
           ]
         }
       ],
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c52cfb10_e37f9df9",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f2e25de_7a4d0c7b",
+      "range": {
+        "startLine": 113,
+        "startChar": 3,
+        "endLine": 113,
+        "endChar": 11
+      },
       "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -378,6 +594,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6bd12a0_ed64027d",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "deb20b31_0bd220f8",
+      "range": {
+        "startLine": 119,
+        "startChar": 64,
+        "endLine": 119,
+        "endChar": 73
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "807819bb_d64c0aa5",
@@ -391,6 +631,30 @@
       "writtenOn": "2025-02-14T18:23:32Z",
       "side": 1,
       "message": "Both \"cached niceness\" and \"cached Java priority\" is used in this pseudocode, which may create uncertainty if they refer to two different caches. To keep things clear, consider something like `map_to_niceness(\u003ccached java-priority\u003e)` here.",
+      "range": {
+        "startLine": 127,
+        "startChar": 52,
+        "endLine": 127,
+        "endChar": 67
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7051d185_95e0c464",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "We actually now need to cache niceness. Attempted to make this less confusing.",
+      "parentUuid": "807819bb_d64c0aa5",
       "range": {
         "startLine": 127,
         "startChar": 52,
@@ -442,6 +706,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bf9bc38_b46cc98b",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Actual fix is more involved. Did that.",
+      "parentUuid": "648516b6_d5ed6a3a",
+      "range": {
+        "startLine": 136,
+        "startChar": 32,
+        "endLine": 136,
+        "endChar": 45
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e402a62_42f065bc",
@@ -483,6 +771,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "56e02c31_852e40a2",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e402a62_42f065bc",
+      "range": {
+        "startLine": 161,
+        "startChar": 7,
+        "endLine": 161,
+        "endChar": 15
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "16ee606b_4607f178",
@@ -496,6 +808,30 @@
       "writtenOn": "2025-02-01T01:13:31Z",
       "side": 1,
       "message": "inheritance",
+      "range": {
+        "startLine": 181,
+        "startChar": 22,
+        "endLine": 181,
+        "endChar": 33
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb63d4da_621c89cb",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16ee606b_4607f178",
       "range": {
         "startLine": 181,
         "startChar": 22,

@@ -124,6 +124,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f30aede_5789fccc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Agreed there\u0027s some risk. But this all seems relatively small compared to GC changes or the like.",
+      "parentUuid": "6afa3e54_c8d6fe32",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "35760fca_7188ca45",
@@ -388,6 +406,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7fe27f70_44b3f0ba",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "You\u0027re right. We want to skip the priority resetting, too, but this was neither here nor there. Fixed it as you thought.",
+      "parentUuid": "77ec34d2_6fa548e9",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44399c55_45cd0c8b",
@@ -449,6 +485,30 @@
       "side": 1,
       "message": "Thanks for the clarification, but if the \u003chigh priority stuff\u003e doesn\u0027t alter priority, then `setPriority` is called from another thread? That could be worth spelling out, lest readers may think they see a contradiction.",
       "parentUuid": "027f1ae7_97c76ecc",
+      "range": {
+        "startLine": 101,
+        "startChar": 47,
+        "endLine": 102,
+        "endChar": 22
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ce96e88_5562f030",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ddd15661_73c95dec",
       "range": {
         "startLine": 101,
         "startChar": 47,

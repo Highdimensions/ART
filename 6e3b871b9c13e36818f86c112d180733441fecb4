@@ -208,6 +208,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc1571b0_f97d7d56",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:56:36Z",
+      "side": 1,
+      "message": "Answering this in the negative for now, pending more details. We can always add text later.",
+      "parentUuid": "2674a39b_336ca338",
+      "revId": "6e3b871b9c13e36818f86c112d180733441fecb4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d9232b1f_62fe8973",
