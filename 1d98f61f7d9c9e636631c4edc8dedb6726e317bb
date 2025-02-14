@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30113de3_10a977a0",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T09:40:49Z",
+      "side": 1,
+      "message": "required by the odex? Note that an odex is optional, so expand the comment to say that we want to load both?\n\nIf it\u0027s not aligned, is it worth it to load still? Maybe comment that we do not want to bother with such cases as we don\u0027t expect our tools to generate unaligned vdex files?",
+      "range": {
+        "startLine": 179,
+        "startChar": 87,
+        "endLine": 179,
+        "endChar": 99
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "dfb1cefb_746e4264",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/vdex_file.cc",
+              "range": {
+                "startLine": 179,
+                "startChar": 0,
+                "endLine": 180,
+                "endChar": 0
+              },
+              "replacement": "  // The vdex in dm must be uncompressed and page-aligned, to be loaded at the address required by the odex.\n  // If the vdex is not page-aligned, we will not load it.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1d98f61f7d9c9e636631c4edc8dedb6726e317bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
