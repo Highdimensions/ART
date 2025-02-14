@@ -16,6 +16,24 @@
       "message": "`art-asan` target still fails with this CL: https://android-build.corp.google.com/abtd/run/L55700030009488035/\n\n```\n\u003d\u003d735987\u003d\u003dERROR: AddressSanitizer: new-delete-type-mismatch on 0x7c5c0d4eff80 in thread T3 (HeapTaskDaemon):\n  object passed to delete has wrong type:\n  size of the allocated type:   621 bytes;\n  size of the deallocated type: 72 bytes.\n    #0 0x55b7905f0be2  (/mnt/disks/build-disk/src/googleplex-android/master-art-host/out/host/linux-x86/bin/dalvikvm64+0x144be2)\n    #1 0x7afc0a924598  (/mnt/disks/build-disk/src/googleplex-android/master-art-host/out/host/linux-x86/lib64/libartd.so+0x3016598)\n    #2 0x7afc0a920b86  (/mnt/disks/build-disk/src/googleplex-android/master-art-host/out/host/linux-x86/lib64/libartd.so+0x3012b86)\n...\n```",
       "revId": "74072380fe75b9ee7ab90aaa64080af015769cbe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bb17e60_45dc10e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T10:39:45Z",
+      "side": 1,
+      "message": "Thanks Dmitrii. Fix here: aosp/3494817",
+      "parentUuid": "87803df8_87b4a23c",
+      "revId": "74072380fe75b9ee7ab90aaa64080af015769cbe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
