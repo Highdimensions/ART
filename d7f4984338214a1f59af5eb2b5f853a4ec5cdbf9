@@ -93,6 +93,30 @@
       },
       "revId": "d7f4984338214a1f59af5eb2b5f853a4ec5cdbf9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b894e14b_740a392d",
+        "filename": "runtime/mirror/array-inl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-02-14T16:22:14Z",
+      "side": 1,
+      "message": "I mean that the way comment is worded implies that change targets arm64, but it does the same thing on all the platforms.",
+      "parentUuid": "73202f8d_e948e741",
+      "range": {
+        "startLine": 219,
+        "startChar": 56,
+        "endLine": 219,
+        "endChar": 63
+      },
+      "revId": "d7f4984338214a1f59af5eb2b5f853a4ec5cdbf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
