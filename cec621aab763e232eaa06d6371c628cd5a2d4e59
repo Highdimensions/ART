@@ -171,6 +171,30 @@
       },
       "revId": "cec621aab763e232eaa06d6371c628cd5a2d4e59",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74e4d1ce_413a0a61",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T10:57:44Z",
+      "side": 1,
+      "message": "lgtm",
+      "parentUuid": "4f17cc8a_1a78e79c",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 4
+      },
+      "revId": "cec621aab763e232eaa06d6371c628cd5a2d4e59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
