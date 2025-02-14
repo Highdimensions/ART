@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97051cb9_4ef45e56",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 1098,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T22:53:51Z",
+      "side": 1,
+      "message": "Good catch!",
+      "parentUuid": "d6f526e4_76b6f152",
+      "range": {
+        "startLine": 1098,
+        "startChar": 36,
+        "endLine": 1098,
+        "endChar": 47
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0b56c2c0_97ee24ad",
@@ -37,6 +61,54 @@
       "writtenOn": "2025-02-14T15:04:24Z",
       "side": 1,
       "message": "This covers quite a bit of what I\u0027d like to see in the README.md file. I think it\u0027s a bit more discoverable there, and I think we can just dispense with it here to avoid duplication and get slightly less strings in the jar (afterall, it starts to go more into how the command is used than what it does).",
+      "range": {
+        "startLine": 1101,
+        "startChar": 0,
+        "endLine": 1112,
+        "endChar": 73
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01084817_6dc9c660",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T22:53:51Z",
+      "side": 1,
+      "message": "OK, added README.internal.md. I\u0027d like to keep it separate from README.md because the contents look like implementation details that users don\u0027t usually need to know. README.md is reference by a public doc https://source.android.com/docs/core/runtime/configure/art-service",
+      "parentUuid": "0b56c2c0_97ee24ad",
+      "range": {
+        "startLine": 1101,
+        "startChar": 0,
+        "endLine": 1112,
+        "endChar": 73
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e0d4933_60799c69",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T22:53:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b56c2c0_97ee24ad",
       "range": {
         "startLine": 1101,
         "startChar": 0,
@@ -70,6 +142,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3c3d16a_db0c17dc",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T22:53:51Z",
+      "side": 1,
+      "message": "We talked about this in https://android-review.git.corp.google.com/c/platform/art/+/3460186/comment/5edf7758_ff3f148d/. I added a comment to `BackgroundDexoptJobService`.",
+      "parentUuid": "9c12a671_46d2afb9",
+      "range": {
+        "startLine": 68,
+        "startChar": 43,
+        "endLine": 68,
+        "endChar": 65
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "264bb932_d10d0f31",
@@ -83,6 +179,30 @@
       "writtenOn": "2025-02-14T15:04:24Z",
       "side": 1,
       "message": "Ah, this requires the synchronization monitor. That\u0027s unfortunate, but I think this check is valuable enough from a readability perspective, especially given that `triggerUpdateEnginePostinstallAndWait` has a nontrivial return flow.\n\nGood to see the `mCancellationSignal.isCanceled()` condition as well. I suggest returning if that is true before doing this check. Then the reader doesn\u0027t have to wonder what `run` might do for an already cancelled job.\n\nThat leads to the question whether we want to report stats if the job is cancelled this early. I don\u0027t think that\u0027s a given - we could view it as that update_engine changed its mind and didn\u0027t want us to do anything after all, and we also haven\u0027t spent any noticeable effort so far, so it seems fair to act as if it never happened.",
+      "range": {
+        "startLine": 396,
+        "startChar": 0,
+        "endLine": 396,
+        "endChar": 90
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68d1fd2e_76a5ac16",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T22:53:51Z",
+      "side": 1,
+      "message": "Alright, added an early return. I\u0027m not a fan of inessential code because people may thought it must be there and be hesitant when they want to change it, just like how we hesitanted many times when we were porting the legacy code and saw code that didn\u0027t look essential. However, saving people time on tracing into a function may be a good reason for it. I added a comment to mitigate my concern.\n\nI do think the stats reporting is necessary. At this point, `mCancellationSignal` is likely fired by the job scheduler through `onStopJob` -\u003e `onStopJobImpl` -\u003e `cancelGivenLocked`, not by update_engine (because we were just notified by update_engine a blink ago). In this case, we do want to know why the job scheduler changed its mind so quickly.",
+      "parentUuid": "264bb932_d10d0f31",
       "range": {
         "startLine": 396,
         "startChar": 0,

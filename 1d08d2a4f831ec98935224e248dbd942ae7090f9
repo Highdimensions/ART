@@ -189,6 +189,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2705706_fceb7b7e",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T22:53:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "080cf27e_94cc2faa",
+      "range": {
+        "startLine": 776,
+        "startChar": 57,
+        "endLine": 776,
+        "endChar": 88
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "05a0e13d_0934b6da",
@@ -450,6 +474,30 @@
       "side": 1,
       "message": "Aha, so it\u0027s the notify call in `cancelGivenLocked` it refers to. Some thoughts:\n\n- The notification isn\u0027t restricted to before `PreRebootDriver.run` is called, what I can see. Isn\u0027t it more accurate to say that it\u0027s notified when cancelled through `cancelGivenLocked` or `cancelAnyLocked`, and notably _not_ through the `mCancellationSignal` object itself?\n\n- I don\u0027t understand the \"This is not strictly necessary\" comments in the cancel methods. If they weren\u0027t there, then triggerUpdateEnginePostinstallAndWait would fail with a timeout exception, wouldn\u0027t it?",
       "parentUuid": "5bccee97_1783df58",
+      "range": {
+        "startLine": 83,
+        "startChar": 7,
+        "endLine": 84,
+        "endChar": 55
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a49b697_e0fe949c",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T22:53:51Z",
+      "side": 1,
+      "message": "\u003e - The notification isn\u0027t restricted to before `PreRebootDriver.run` is called, what I can see. Isn\u0027t it more accurate to say that it\u0027s notified when cancelled through `cancelGivenLocked` or `cancelAnyLocked`, and notably not through the `mCancellationSignal` object itself?\n\nAlright, looks like there was still some unclarity. I rephrased this statement. What I\u0027m trying to state is an invariant, regarding what will happen if `mCancellationSignal` is fired before `PreRebootDriver.run` is called. I need this invariant to make sure `triggerUpdateEnginePostinstallAndWait` returns immediately when the job is cancelled. If someone adds something else that can possibly fire `mCancellationSignal` before `PreRebootDriver.run` is called, then they should notify the monitor as well, to keep the invariant held. `PreRebootDriver.run` being called is a turning point because no one other than this class has access to the `mCancellationSignal` object itself before then.\n\n\u003e I don\u0027t understand the \"This is not strictly necessary\" comments in the cancel methods. If they weren\u0027t there, then triggerUpdateEnginePostinstallAndWait would fail with a timeout exception, wouldn\u0027t it?\n\nIf they weren\u0027t there, `triggerUpdateEnginePostinstallAndWait` would still return, though after an unnecessary wait. I don\u0027t think there would be a timeout exception.",
+      "parentUuid": "8d11f5dc_26bac7fd",
       "range": {
         "startLine": 83,
         "startChar": 7,
@@ -758,6 +806,30 @@
       "side": 1,
       "message": "Documenting through tests is nice in theory, but the drawback is readability - they\u0027d have to be _really_ short and sweet to compete with human readable docs. Having to parse through 200+ lines of separate test cases to piece together this code flow is vastly worse than reading through the steps you wrote in the design doc. So yes, I still think it\u0027s necessary (or at least really really useful).\n\nAlso, docs help convey the overall picture to be able to determine if the tests themselves are correct or not.",
       "parentUuid": "54280055_b167f973",
+      "range": {
+        "startLine": 422,
+        "startChar": 17,
+        "endLine": 422,
+        "endChar": 36
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cc1f7d0_90a55871",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T22:53:51Z",
+      "side": 1,
+      "message": "Added README.internal.md.",
+      "parentUuid": "9cf9ff51_480d4152",
       "range": {
         "startLine": 422,
         "startChar": 17,
