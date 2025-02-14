@@ -1,0 +1,19 @@
+diff --git a/llvm/lib/TargetParser/Host.cpp b/llvm/lib/TargetParser/Host.cpp
+index 848b531dd8..993fdad5c5 100644
+--- a/llvm/lib/TargetParser/Host.cpp
++++ b/llvm/lib/TargetParser/Host.cpp
+@@ -170,11 +170,11 @@ StringRef sys::detail::getHostCPUNameForARM(StringRef ProcCpuinfoContent) {
+   StringRef Hardware;
+   StringRef Part;
+   for (unsigned I = 0, E = Lines.size(); I != E; ++I) {
+-    if (Lines[I].starts_with("CPU implementer"))
++    if (Implementer.empty() && Lines[I].starts_with("CPU implementer"))
+       Implementer = Lines[I].substr(15).ltrim("\t :");
+-    if (Lines[I].starts_with("Hardware"))
++    if (Hardware.empty() && Lines[I].starts_with("Hardware"))
+       Hardware = Lines[I].substr(8).ltrim("\t :");
+-    if (Lines[I].starts_with("CPU part"))
++    if (Part.empty() && Lines[I].starts_with("CPU part"))
+       Part = Lines[I].substr(8).ltrim("\t :");
+   }
+ 

@@ -64,6 +64,7 @@ art_cc_defaults {
             // VIXL assembly support for ARM64 targets.
             static_libs: [
                 "libvixl",
+                "libLLVM_ART",
             ],
         },
     },
@@ -107,6 +108,7 @@ art_cc_defaults {
             // VIXL assembly support for ARM64 targets.
             static_libs: [
                 "libvixld",
+                "libLLVM_ART",
             ],
         },
     },
@@ -293,6 +295,17 @@ cc_defaults {
     ],
 }
 
+art_cc_defaults {
+    name: "libart-compiler_static_llvm_defaults",
+    codegen: {
+        arm64: {
+            static: {
+                whole_static_libs: ["libLLVM_ART"],
+            },
+        },
+    },
+}
+
 gensrcs {
     name: "art_compiler_operator_srcs",
     cmd: "$(location generate_operator_out) art/compiler $(in) > $(out)",
@@ -343,6 +356,7 @@ cc_defaults {
     name: "libart-compiler_static_defaults",
     defaults: [
         "libart-compiler_static_base_defaults",
+        "libart-compiler_static_llvm_defaults",
         "libart-disassembler_static_defaults",
         "libartbase_static_defaults",
         "libdexfile_static_defaults",
@@ -357,6 +371,7 @@ cc_defaults {
     name: "libart-compiler-for-test_static_defaults",
     defaults: [
         "libart-compiler_static_base_defaults",
+        "libart-compiler_static_llvm_defaults",
         "libart-disassembler_static_defaults",
         "libartbase_static_defaults",
         "libdexfile_static_defaults",
@@ -381,6 +396,24 @@ cc_defaults {
     name: "libartd-compiler_static_defaults",
     defaults: [
         "libart-compiler_static_base_defaults",
+        "libart-compiler_static_llvm_defaults",
+        "libartbased_static_defaults",
+        "libartd-disassembler_static_defaults",
+        "libdexfiled_static_defaults",
+        "libprofiled_static_defaults",
+    ],
+    whole_static_libs: ["libartd-compiler"],
+}
+
+// libartd-compiler_static_defaults for gtests.
+// Uses libartd-for-test_static_defaults instead of libart_static_defaults.
+// Note that `libartd-compiler-for-test` is not required here, because `libartd-compiler`
+// doesn't use LTO.
+cc_defaults {
+    name: "libartd-compiler-for-test_static_defaults",
+    defaults: [
+        "libart-compiler_static_base_defaults",
+        "libart-compiler_static_llvm_defaults",
         "libartbased_static_defaults",
         "libartd-disassembler_static_defaults",
         "libdexfiled_static_defaults",

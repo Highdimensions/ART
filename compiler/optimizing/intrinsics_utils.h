@@ -46,7 +46,9 @@ template <typename TDexCallingConvention,
           typename TAssembler = Assembler>
 class IntrinsicSlowPath : public TSlowPathCode {
  public:
-  explicit IntrinsicSlowPath(HInvoke* invoke) : TSlowPathCode(invoke), invoke_(invoke) { }
+   template <typename ...Args>
+  explicit IntrinsicSlowPath(HInvoke* invoke, Args&&... args)
+    : TSlowPathCode(invoke, std::forward<Args>(args)...), invoke_(invoke) { }
 
   Location MoveArguments(CodeGenerator* codegen) {
     TDexCallingConvention calling_convention_visitor;

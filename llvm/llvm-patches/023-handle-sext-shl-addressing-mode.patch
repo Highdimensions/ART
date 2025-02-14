@@ -1,0 +1,37 @@
+diff --git a/llvm/lib/Target/AArch64/AArch64ISelDAGToDAG.cpp b/llvm/lib/Target/AArch64/AArch64ISelDAGToDAG.cpp
+index 163ed520a8..f0ed1ab3ee 100644
+--- a/llvm/lib/Target/AArch64/AArch64ISelDAGToDAG.cpp
++++ b/llvm/lib/Target/AArch64/AArch64ISelDAGToDAG.cpp
+@@ -1233,6 +1233,32 @@ bool AArch64DAGToDAGISel::SelectAddrModeWRO(SDValue N, unsigned Size,
+   // Remember if it is worth folding N when it produces extended register.
+   bool IsExtendedRegisterWorthFolding = isWorthFoldingAddr(N);
+ 
++  if (IsExtendedRegisterWorthFolding &&
++      (RHS.getOpcode() == ISD::SIGN_EXTEND ||
++       RHS.getOpcode() == ISD::SIGN_EXTEND_INREG) &&
++      RHS.getOperand(0).getValueType() == MVT::i32 &&
++      RHS.getOperand(0)->getOpcode() == ISD::SHL &&
++      RHS.getOperand(0)->getFlags().hasNoSignedWrap() &&
++      SelectExtendedSHL(RHS.getOperand(0), Size, false, Offset, SignExtend)) {
++    Base = LHS;
++    DoShift = CurDAG->getTargetConstant(true, dl, MVT::i32);
++    SignExtend = CurDAG->getTargetConstant(true, dl, MVT::i32);
++    return true;
++  }
++
++  if (IsExtendedRegisterWorthFolding &&
++      (LHS.getOpcode() == ISD::SIGN_EXTEND ||
++       LHS.getOpcode() == ISD::SIGN_EXTEND_INREG) &&
++      LHS.getOperand(0).getValueType() == MVT::i32 &&
++      LHS.getOperand(0)->getOpcode() == ISD::SHL &&
++      LHS.getOperand(0)->getFlags().hasNoSignedWrap() &&
++      SelectExtendedSHL(LHS.getOperand(0), Size, false, Offset, SignExtend)) {
++    Base = RHS;
++    DoShift = CurDAG->getTargetConstant(true, dl, MVT::i32);
++    SignExtend = CurDAG->getTargetConstant(true, dl, MVT::i32);
++    return true;
++  }
++
+   // Try to match a shifted extend on the RHS.
+   if (IsExtendedRegisterWorthFolding && RHS.getOpcode() == ISD::SHL &&
+       SelectExtendedSHL(RHS, Size, true, Offset, SignExtend)) {

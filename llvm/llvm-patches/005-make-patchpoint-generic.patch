@@ -1,0 +1,617 @@
+diff --git a/llvm/include/llvm/IR/Intrinsics.td b/llvm/include/llvm/IR/Intrinsics.td
+index 3c19c7b063..55184e2f77 100644
+--- a/llvm/include/llvm/IR/Intrinsics.td
++++ b/llvm/include/llvm/IR/Intrinsics.td
+@@ -1579,11 +1579,11 @@ def int_experimental_patchpoint_void : Intrinsic<[],
+                                                   llvm_ptr_ty, llvm_i32_ty,
+                                                   llvm_vararg_ty],
+                                                   [Throws]>;
+-def int_experimental_patchpoint_i64 : Intrinsic<[llvm_i64_ty],
+-                                                [llvm_i64_ty, llvm_i32_ty,
+-                                                 llvm_ptr_ty, llvm_i32_ty,
+-                                                 llvm_vararg_ty],
+-                                                 [Throws]>;
++def int_experimental_patchpoint : Intrinsic<[llvm_any_ty],
++                                            [llvm_i64_ty, llvm_i32_ty,
++                                             llvm_ptr_ty, llvm_i32_ty,
++                                             llvm_vararg_ty],
++                                            [Throws]>;
+ 
+ 
+ //===------------------------ Garbage Collection Intrinsics ---------------===//
+diff --git a/llvm/lib/CodeGen/SelectionDAG/FastISel.cpp b/llvm/lib/CodeGen/SelectionDAG/FastISel.cpp
+index d213ea89de..12ce98fd46 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/FastISel.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/FastISel.cpp
+@@ -752,17 +752,25 @@ FastISel::CallLoweringInfo &FastISel::CallLoweringInfo::setCallee(
+ }
+ 
+ bool FastISel::selectPatchpoint(const CallInst *I) {
+-  // void|i64 @llvm.experimental.patchpoint.void|i64(i64 <id>,
+-  //                                                 i32 <numBytes>,
+-  //                                                 i8* <target>,
+-  //                                                 i32 <numArgs>,
+-  //                                                 [Args...],
+-  //                                                 [live variables...])
++  // <ty> @llvm.experimental.patchpoint.<ty>(i64 <id>,
++  //                                         i32 <numBytes>,
++  //                                         i8* <target>,
++  //                                         i32 <numArgs>,
++  //                                         [Args...],
++  //                                         [live variables...])
+   CallingConv::ID CC = I->getCallingConv();
+   bool IsAnyRegCC = CC == CallingConv::AnyReg;
+   bool HasDef = !I->getType()->isVoidTy();
+   Value *Callee = I->getOperand(PatchPointOpers::TargetPos)->stripPointerCasts();
+ 
++  // Check if we can lower the return type when using anyregcc.
++  MVT ValueType;
++  if (IsAnyRegCC && HasDef) {
++    ValueType = TLI.getSimpleValueType(DL, I->getType(), /*AllowUnknown=*/true);
++    if (ValueType == MVT::Other)
++      return false;
++  }
++
+   // Get the real number of arguments participating in the call <numArgs>
+   assert(isa<ConstantInt>(I->getOperand(PatchPointOpers::NArgPos)) &&
+          "Expected a constant integer.");
+@@ -790,7 +798,8 @@ bool FastISel::selectPatchpoint(const CallInst *I) {
+   // Add an explicit result reg if we use the anyreg calling convention.
+   if (IsAnyRegCC && HasDef) {
+     assert(CLI.NumResultRegs == 0 && "Unexpected result register.");
+-    CLI.ResultReg = createResultReg(TLI.getRegClassFor(MVT::i64));
++    assert(ValueType.isValid());
++    CLI.ResultReg = createResultReg(TLI.getRegClassFor(ValueType));
+     CLI.NumResultRegs = 1;
+     Ops.push_back(MachineOperand::CreateReg(CLI.ResultReg, /*isDef=*/true));
+   }
+@@ -1441,7 +1450,7 @@ bool FastISel::selectIntrinsicCall(const IntrinsicInst *II) {
+   case Intrinsic::experimental_stackmap:
+     return selectStackmap(II);
+   case Intrinsic::experimental_patchpoint_void:
+-  case Intrinsic::experimental_patchpoint_i64:
++  case Intrinsic::experimental_patchpoint:
+     return selectPatchpoint(II);
+ 
+   case Intrinsic::xray_customevent:
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+index 7406a8ac16..7ef5887877 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+@@ -3161,7 +3161,7 @@ void SelectionDAGBuilder::visitInvoke(const InvokeInst &I) {
+           EHPadMBB->setMachineBlockAddressTaken();
+       break;
+     case Intrinsic::experimental_patchpoint_void:
+-    case Intrinsic::experimental_patchpoint_i64:
++    case Intrinsic::experimental_patchpoint:
+       visitPatchpoint(I, EHPadBB);
+       break;
+     case Intrinsic::experimental_gc_statepoint:
+@@ -7239,7 +7239,7 @@ void SelectionDAGBuilder::visitIntrinsicCall(const CallInst &I,
+     visitStackmap(I);
+     return;
+   case Intrinsic::experimental_patchpoint_void:
+-  case Intrinsic::experimental_patchpoint_i64:
++  case Intrinsic::experimental_patchpoint:
+     visitPatchpoint(I);
+     return;
+   case Intrinsic::experimental_gc_statepoint:
+@@ -10035,12 +10035,12 @@ void SelectionDAGBuilder::visitStackmap(const CallInst &CI) {
+ /// Lower llvm.experimental.patchpoint directly to its target opcode.
+ void SelectionDAGBuilder::visitPatchpoint(const CallBase &CB,
+                                           const BasicBlock *EHPadBB) {
+-  // void|i64 @llvm.experimental.patchpoint.void|i64(i64 <id>,
+-  //                                                 i32 <numBytes>,
+-  //                                                 i8* <target>,
+-  //                                                 i32 <numArgs>,
+-  //                                                 [Args...],
+-  //                                                 [live variables...])
++  // <ty> @llvm.experimental.patchpoint.<ty>(i64 <id>,
++  //                                         i32 <numBytes>,
++  //                                         i8* <target>,
++  //                                         i32 <numArgs>,
++  //                                         [Args...],
++  //                                         [live variables...])
+ 
+   CallingConv::ID CC = CB.getCallingConv();
+   bool IsAnyRegCC = CC == CallingConv::AnyReg;
+diff --git a/llvm/lib/IR/Verifier.cpp b/llvm/lib/IR/Verifier.cpp
+index 91cf91fbc7..f7f92b2431 100644
+--- a/llvm/lib/IR/Verifier.cpp
++++ b/llvm/lib/IR/Verifier.cpp
+@@ -4949,7 +4949,7 @@ void Verifier::visitInstruction(Instruction &I) {
+                 F->getIntrinsicID() == Intrinsic::coro_destroy ||
+                 F->getIntrinsicID() ==
+                     Intrinsic::experimental_patchpoint_void ||
+-                F->getIntrinsicID() == Intrinsic::experimental_patchpoint_i64 ||
++                F->getIntrinsicID() == Intrinsic::experimental_patchpoint ||
+                 F->getIntrinsicID() == Intrinsic::experimental_gc_statepoint ||
+                 F->getIntrinsicID() == Intrinsic::wasm_rethrow ||
+                 IsAttachedCallOperand(F, CBI, i),
+@@ -5569,6 +5569,13 @@ void Verifier::visitIntrinsicCall(Intrinsic::ID ID, CallBase &Call) {
+     }
+     break;
+   }
++  case Intrinsic::experimental_patchpoint: {
++    if (Call.getCallingConv() == CallingConv::AnyReg) {
++      Check(Call.getType()->isSingleValueType(),
++            "patchpoint: invalid return type used with anyregcc", Call);
++    }
++    break;
++  }
+   case Intrinsic::eh_exceptioncode:
+   case Intrinsic::eh_exceptionpointer: {
+     Check(isa<CatchPadInst>(Call.getArgOperand(0)),
+diff --git a/llvm/lib/Target/AArch64/AArch64TargetTransformInfo.cpp b/llvm/lib/Target/AArch64/AArch64TargetTransformInfo.cpp
+index 992b11da7e..e035f54e6e 100644
+--- a/llvm/lib/Target/AArch64/AArch64TargetTransformInfo.cpp
++++ b/llvm/lib/Target/AArch64/AArch64TargetTransformInfo.cpp
+@@ -479,7 +479,7 @@ AArch64TTIImpl::getIntImmCostIntrin(Intrinsic::ID IID, unsigned Idx,
+       return TTI::TCC_Free;
+     break;
+   case Intrinsic::experimental_patchpoint_void:
+-  case Intrinsic::experimental_patchpoint_i64:
++  case Intrinsic::experimental_patchpoint:
+     if ((Idx < 4) || (Imm.getBitWidth() <= 64 && isInt<64>(Imm.getSExtValue())))
+       return TTI::TCC_Free;
+     break;
+diff --git a/llvm/lib/Target/PowerPC/PPCTargetTransformInfo.cpp b/llvm/lib/Target/PowerPC/PPCTargetTransformInfo.cpp
+index 958353f2b4..365d0792ae 100644
+--- a/llvm/lib/Target/PowerPC/PPCTargetTransformInfo.cpp
++++ b/llvm/lib/Target/PowerPC/PPCTargetTransformInfo.cpp
+@@ -219,7 +219,7 @@ InstructionCost PPCTTIImpl::getIntImmCostIntrin(Intrinsic::ID IID, unsigned Idx,
+       return TTI::TCC_Free;
+     break;
+   case Intrinsic::experimental_patchpoint_void:
+-  case Intrinsic::experimental_patchpoint_i64:
++  case Intrinsic::experimental_patchpoint:
+     if ((Idx < 4) || (Imm.getBitWidth() <= 64 && isInt<64>(Imm.getSExtValue())))
+       return TTI::TCC_Free;
+     break;
+diff --git a/llvm/lib/Target/SystemZ/SystemZTargetTransformInfo.cpp b/llvm/lib/Target/SystemZ/SystemZTargetTransformInfo.cpp
+index 9370fb51a9..80732cb094 100644
+--- a/llvm/lib/Target/SystemZ/SystemZTargetTransformInfo.cpp
++++ b/llvm/lib/Target/SystemZ/SystemZTargetTransformInfo.cpp
+@@ -263,7 +263,7 @@ SystemZTTIImpl::getIntImmCostIntrin(Intrinsic::ID IID, unsigned Idx,
+       return TTI::TCC_Free;
+     break;
+   case Intrinsic::experimental_patchpoint_void:
+-  case Intrinsic::experimental_patchpoint_i64:
++  case Intrinsic::experimental_patchpoint:
+     if ((Idx < 4) || (Imm.getBitWidth() <= 64 && isInt<64>(Imm.getSExtValue())))
+       return TTI::TCC_Free;
+     break;
+diff --git a/llvm/lib/Target/X86/X86TargetTransformInfo.cpp b/llvm/lib/Target/X86/X86TargetTransformInfo.cpp
+index be774a89ec..5c5e55226c 100644
+--- a/llvm/lib/Target/X86/X86TargetTransformInfo.cpp
++++ b/llvm/lib/Target/X86/X86TargetTransformInfo.cpp
+@@ -5644,7 +5644,7 @@ InstructionCost X86TTIImpl::getIntImmCostIntrin(Intrinsic::ID IID, unsigned Idx,
+       return TTI::TCC_Free;
+     break;
+   case Intrinsic::experimental_patchpoint_void:
+-  case Intrinsic::experimental_patchpoint_i64:
++  case Intrinsic::experimental_patchpoint:
+     if ((Idx < 4) || (Imm.getBitWidth() <= 64 && Imm.isSignedIntN(64)))
+       return TTI::TCC_Free;
+     break;
+diff --git a/llvm/lib/Transforms/Scalar/PlaceSafepoints.cpp b/llvm/lib/Transforms/Scalar/PlaceSafepoints.cpp
+index 0266eb1a9f..1653903abc 100644
+--- a/llvm/lib/Transforms/Scalar/PlaceSafepoints.cpp
++++ b/llvm/lib/Transforms/Scalar/PlaceSafepoints.cpp
+@@ -517,7 +517,7 @@ static bool doesNotRequireEntrySafepointBefore(CallBase *Call) {
+     switch (II->getIntrinsicID()) {
+     case Intrinsic::experimental_gc_statepoint:
+     case Intrinsic::experimental_patchpoint_void:
+-    case Intrinsic::experimental_patchpoint_i64:
++    case Intrinsic::experimental_patchpoint:
+       // The can wrap an actual call which may grow the stack by an unbounded
+       // amount or run forever.
+       return false;
+diff --git a/llvm/test/CodeGen/AArch64/arm64-anyregcc.ll b/llvm/test/CodeGen/AArch64/arm64-anyregcc.ll
+index 225d4c602f..cb65867184 100644
+--- a/llvm/test/CodeGen/AArch64/arm64-anyregcc.ll
++++ b/llvm/test/CodeGen/AArch64/arm64-anyregcc.ll
+@@ -1,6 +1,6 @@
+ ; RUN: llc < %s -debug-entry-values -mtriple=arm64-apple-darwin | FileCheck %s
+ 
+-; Stackmap Header: no constants - 6 callsites
++; Stackmap Header: no constants - 18 callsites
+ ; CHECK-LABEL: .section	__LLVM_STACKMAPS,__llvm_stackmaps
+ ; CHECK-NEXT:  __LLVM_StackMaps:
+ ; Header
+@@ -8,11 +8,11 @@
+ ; CHECK-NEXT:   .byte 0
+ ; CHECK-NEXT:   .short 0
+ ; Num Functions
+-; CHECK-NEXT:   .long 8
++; CHECK-NEXT:   .long 18
+ ; Num LargeConstants
+ ; CHECK-NEXT:   .long 0
+ ; Num Callsites
+-; CHECK-NEXT:   .long 8
++; CHECK-NEXT:   .long 18
+ 
+ ; Functions and stack size
+ ; CHECK-NEXT:   .quad _test
+@@ -39,6 +39,36 @@
+ ; CHECK-NEXT:   .quad _patchpoint_spillargs
+ ; CHECK-NEXT:   .quad 128
+ ; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_i32
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_i64
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_p0
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_f16
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_f32
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_f64
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_v16i8
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_v4i32
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_v4f32
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_v2f64
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
+ 
+ 
+ ; test
+@@ -457,5 +487,194 @@ entry:
+   ret i64 %result
+ }
+ 
++; generic_test_i32
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_i32
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 4
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define i32 @generic_test_i32() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc i32 (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.i32(i64 14, i32 20, ptr null, i32 0)
++  ret i32 %ret
++}
++
++; generic_test_i64
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_i64
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 8
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define i64 @generic_test_i64() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc i64 (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.i64(i64 14, i32 20, ptr null, i32 0)
++  ret i64 %ret
++}
++
++; generic_test_p0
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_p0
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 8
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define ptr @generic_test_p0() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc ptr (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.p0(i64 14, i32 20, ptr null, i32 0)
++  ret ptr %ret
++}
++
++; generic_test_f16
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_f16
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 2
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define half @generic_test_f16() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc half (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.f16(i64 14, i32 20, ptr null, i32 0)
++  ret half %ret
++}
++
++; generic_test_f32
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_f32
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 4
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define float @generic_test_f32() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc float (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.f32(i64 14, i32 20, ptr null, i32 0)
++  ret float %ret
++}
++
++; generic_test_f64
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_f64
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 8
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define double @generic_test_f64() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc double (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.f64(i64 14, i32 20, ptr null, i32 0)
++  ret double %ret
++}
++
++; generic_test_v16i8
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_v16i8
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 16
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define <16 x i8> @generic_test_v16i8() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc <16 x i8> (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.v16i8(i64 14, i32 20, ptr null, i32 0)
++  ret <16 x i8> %ret
++}
++
++; generic_test_v4i32
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_v4i32
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 16
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define <4 x i32> @generic_test_v4i32() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc <4 x i32> (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.v4i32(i64 14, i32 20, ptr null, i32 0)
++  ret <4 x i32> %ret
++}
++
++; generic_test_v4f32
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_v4f32
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 16
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define <4 x float> @generic_test_v4f32() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc <4 x float> (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.v4f32(i64 14, i32 20, ptr null, i32 0)
++  ret <4 x float> %ret
++}
++
++; generic_test_v2f64
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_v2f64
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 16
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define <2 x double> @generic_test_v2f64() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc <2 x double> (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.v2f64(i64 14, i32 20, ptr null, i32 0)
++  ret <2 x double> %ret
++}
++
+ declare void @llvm.experimental.patchpoint.void(i64, i32, ptr, i32, ...)
++declare i32 @llvm.experimental.patchpoint.i32(i64, i32, ptr, i32, ...)
+ declare i64 @llvm.experimental.patchpoint.i64(i64, i32, ptr, i32, ...)
++declare ptr @llvm.experimental.patchpoint.p0(i64, i32, ptr, i32, ...)
++declare half @llvm.experimental.patchpoint.f16(i64, i32, ptr, i32, ...)
++declare float @llvm.experimental.patchpoint.f32(i64, i32, ptr, i32, ...)
++declare double @llvm.experimental.patchpoint.f64(i64, i32, ptr, i32, ...)
++declare <16 x i8> @llvm.experimental.patchpoint.v16i8(i64, i32, ptr, i32, ...)
++declare <4 x i32> @llvm.experimental.patchpoint.v4i32(i64, i32, ptr, i32, ...)
++declare <4 x float> @llvm.experimental.patchpoint.v4f32(i64, i32, ptr, i32, ...)
++declare <2 x double> @llvm.experimental.patchpoint.v2f64(i64, i32, ptr, i32, ...)
+diff --git a/llvm/test/CodeGen/AArch64/arm64-patchpoint.ll b/llvm/test/CodeGen/AArch64/arm64-patchpoint.ll
+index c58f4b1029..f948d78723 100644
+--- a/llvm/test/CodeGen/AArch64/arm64-patchpoint.ll
++++ b/llvm/test/CodeGen/AArch64/arm64-patchpoint.ll
+@@ -79,6 +79,145 @@ entry:
+   ret void
+ }
+ 
++; Test register allocation for an i32 result value of patchpoint.
++define i32 @generic_patchpoint_i32() {
++entry:
++; CHECK-LABEL: generic_patchpoint_i32:
++; CHECK:      Ltmp
++; CHECK-NEXT: nop
++; The return value is already in w0.
++; CHECK-NEXT: ldp
++; CHECK-NEXT: ret
++  %result = tail call i32 (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.i32(i64 5, i32 4, ptr null, i32 0)
++  ret i32 %result
++}
++
++; Test register allocation for an i64 result value of patchpoint.
++define i64 @generic_patchpoint_i64() {
++entry:
++; CHECK-LABEL: generic_patchpoint_i64:
++; CHECK:      Ltmp
++; CHECK-NEXT: nop
++; The return value is already in x0.
++; CHECK-NEXT: ldp
++; CHECK-NEXT: ret
++  %result = tail call i64 (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.i64(i64 5, i32 4, ptr null, i32 0)
++  ret i64 %result
++}
++
++; Test register allocation for a ptr result value of patchpoint.
++define ptr @generic_patchpoint_p0() {
++entry:
++; CHECK-LABEL: generic_patchpoint_p0:
++; CHECK:      Ltmp
++; CHECK-NEXT: nop
++; The return value is already in x0.
++; CHECK-NEXT: ldp
++; CHECK-NEXT: ret
++  %result = tail call ptr (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.p0(i64 5, i32 4, ptr null, i32 0)
++  ret ptr %result
++}
++
++; Test register allocation for a half result value of patchpoint.
++define half @generic_patchpoint_f16() {
++entry:
++; CHECK-LABEL: generic_patchpoint_f16:
++; CHECK:      Ltmp
++; CHECK-NEXT: nop
++; The return value is already in h0.
++; CHECK-NEXT: ldp
++; CHECK-NEXT: ret
++  %result = tail call half (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.f16(i64 5, i32 4, ptr null, i32 0)
++  ret half %result
++}
++
++; Test register allocation for a float result value of patchpoint.
++define float @generic_patchpoint_f32() {
++entry:
++; CHECK-LABEL: generic_patchpoint_f32:
++; CHECK:      Ltmp
++; CHECK-NEXT: nop
++; The return value is already in s0.
++; CHECK-NEXT: ldp
++; CHECK-NEXT: ret
++  %result = tail call float (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.f32(i64 5, i32 4, ptr null, i32 0)
++  ret float %result
++}
++
++; Test register allocation for a double result value of patchpoint.
++define double @generic_patchpoint_f64() {
++entry:
++; CHECK-LABEL: generic_patchpoint_f64:
++; CHECK:      Ltmp
++; CHECK-NEXT: nop
++; The return value is already in d0.
++; CHECK-NEXT: ldp
++; CHECK-NEXT: ret
++  %result = tail call double (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.f64(i64 5, i32 4, ptr null, i32 0)
++  ret double %result
++}
++
++; Test register allocation for a <16 x i8> result value of patchpoint.
++define <16 x i8> @generic_patchpoint_v16i8() {
++entry:
++; CHECK-LABEL: generic_patchpoint_v16i8:
++; CHECK:      Ltmp
++; CHECK-NEXT: nop
++; The return value is already in v0.16b.
++; CHECK-NEXT: ldp
++; CHECK-NEXT: ret
++  %result = tail call <16 x i8> (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.v16i8(i64 5, i32 4, ptr null, i32 0)
++  ret <16 x i8> %result
++}
++
++; Test register allocation for a <4 x i32> result value of patchpoint.
++define <4 x i32> @generic_patchpoint_v4i32() {
++entry:
++; CHECK-LABEL: generic_patchpoint_v4i32:
++; CHECK:      Ltmp
++; CHECK-NEXT: nop
++; The return value is already in v0.4s.
++; CHECK-NEXT: ldp
++; CHECK-NEXT: ret
++  %result = tail call <4 x i32> (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.v4i32(i64 5, i32 4, ptr null, i32 0)
++  ret <4 x i32> %result
++}
++
++; Test register allocation for a <4 x float> result value of patchpoint.
++define <4 x float> @generic_patchpoint_v4f32() {
++entry:
++; CHECK-LABEL: generic_patchpoint_v4f32:
++; CHECK:      Ltmp
++; CHECK-NEXT: nop
++; The return value is already in v0.4s.
++; CHECK-NEXT: ldp
++; CHECK-NEXT: ret
++  %result = tail call <4 x float> (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.v4f32(i64 5, i32 4, ptr null, i32 0)
++  ret <4 x float> %result
++}
++
++; Test register allocation for a <2 x double> result value of patchpoint.
++define <2 x double> @generic_patchpoint_v2f64() {
++entry:
++; CHECK-LABEL: generic_patchpoint_v2f64:
++; CHECK:      Ltmp
++; CHECK-NEXT: nop
++; The return value is already in v0.2d.
++; CHECK-NEXT: ldp
++; CHECK-NEXT: ret
++  %result = tail call <2 x double> (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.v2f64(i64 5, i32 4, ptr null, i32 0)
++  ret <2 x double> %result
++}
++
+ declare void @llvm.experimental.stackmap(i64, i32, ...)
+ declare void @llvm.experimental.patchpoint.void(i64, i32, ptr, i32, ...)
++declare i32 @llvm.experimental.patchpoint.i32(i64, i32, ptr, i32, ...)
+ declare i64 @llvm.experimental.patchpoint.i64(i64, i32, ptr, i32, ...)
++declare ptr @llvm.experimental.patchpoint.p0(i64, i32, ptr, i32, ...)
++declare half @llvm.experimental.patchpoint.f16(i64, i32, ptr, i32, ...)
++declare float @llvm.experimental.patchpoint.f32(i64, i32, ptr, i32, ...)
++declare double @llvm.experimental.patchpoint.f64(i64, i32, ptr, i32, ...)
++declare <16 x i8> @llvm.experimental.patchpoint.v16i8(i64, i32, ptr, i32, ...)
++declare <4 x i32> @llvm.experimental.patchpoint.v4i32(i64, i32, ptr, i32, ...)
++declare <4 x float> @llvm.experimental.patchpoint.v4f32(i64, i32, ptr, i32, ...)
++declare <2 x double> @llvm.experimental.patchpoint.v2f64(i64, i32, ptr, i32, ...)

@@ -1,0 +1,13 @@
+diff --git a/llvm/lib/Analysis/ScalarEvolution.cpp b/llvm/lib/Analysis/ScalarEvolution.cpp
+index 4b2db80bc1..37ddd9cd70 100644
+--- a/llvm/lib/Analysis/ScalarEvolution.cpp
++++ b/llvm/lib/Analysis/ScalarEvolution.cpp
+@@ -2929,7 +2929,7 @@ const SCEV *ScalarEvolution::getAddExpr(SmallVectorImpl<const SCEV *> &Ops,
+           Ops[i] = NewRec;
+           break;
+         }
+-      return getAddExpr(Ops, SCEV::FlagAnyWrap, Depth + 1);
++      return getAddExpr(Ops, OrigFlags, Depth + 1);
+     }
+ 
+     // Okay, if there weren't any loop invariants to be folded, check to see if

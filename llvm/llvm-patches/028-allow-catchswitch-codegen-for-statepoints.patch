@@ -1,0 +1,316 @@
+diff --git a/llvm/include/llvm/CodeGen/MachineBasicBlock.h b/llvm/include/llvm/CodeGen/MachineBasicBlock.h
+index dc2035fa59..875d526793 100644
+--- a/llvm/include/llvm/CodeGen/MachineBasicBlock.h
++++ b/llvm/include/llvm/CodeGen/MachineBasicBlock.h
+@@ -175,6 +175,8 @@ private:
+   /// whether the flow just falls-through to it.
+   bool LabelMustBeEmitted = false;
+ 
++  bool IsCatchpadEntry = false;
++
+   /// Indicate that this basic block is the entry block of an EH scope, i.e.,
+   /// the block that used to have a catchpad or cleanuppad instruction in the
+   /// LLVM IR.
+@@ -610,6 +612,9 @@ public:
+   /// Returns true if this is the entry block of the function.
+   bool isEntryBlock() const;
+ 
++  bool isCatchpadEntry() const { return IsCatchpadEntry; }
++  void setIsCatchpadEntry(bool V = true) { IsCatchpadEntry = V; }
++
+   /// Returns true if this is the entry block of an EH scope, i.e., the block
+   /// that used to have a catchpad or cleanuppad instruction in the LLVM IR.
+   bool isEHScopeEntry() const { return IsEHScopeEntry; }
+diff --git a/llvm/include/llvm/IR/EHPersonalities.h b/llvm/include/llvm/IR/EHPersonalities.h
+index bd768440bf..b16e4c0fb6 100644
+--- a/llvm/include/llvm/IR/EHPersonalities.h
++++ b/llvm/include/llvm/IR/EHPersonalities.h
+@@ -32,7 +32,8 @@ enum class EHPersonality {
+   CoreCLR,
+   Rust,
+   Wasm_CXX,
+-  XL_CXX
++  XL_CXX,
++  ART,
+ };
+ 
+ /// See if the given exception handling personality function is one
+@@ -52,6 +53,7 @@ inline bool isAsynchronousEHPersonality(EHPersonality Pers) {
+   switch (Pers) {
+   case EHPersonality::MSVC_X86SEH:
+   case EHPersonality::MSVC_TableSEH:
++  case EHPersonality::ART:
+     return true;
+   default:
+     return false;
+@@ -83,6 +85,7 @@ inline bool isScopedEHPersonality(EHPersonality Pers) {
+   case EHPersonality::MSVC_TableSEH:
+   case EHPersonality::CoreCLR:
+   case EHPersonality::Wasm_CXX:
++  case EHPersonality::ART:
+     return true;
+   default:
+     return false;
+diff --git a/llvm/include/llvm/IR/Statepoint.h b/llvm/include/llvm/IR/Statepoint.h
+index 21c4a3eaa5..c43ff6feb2 100644
+--- a/llvm/include/llvm/IR/Statepoint.h
++++ b/llvm/include/llvm/IR/Statepoint.h
+@@ -218,7 +218,10 @@ std::vector<const GCRelocateInst *> GCStatepointInst::getGCRelocates() const {
+     return Result;
+ 
+   // We need to scan thorough exceptional relocations if it is invoke statepoint
+-  LandingPadInst *LandingPad = StatepointInvoke->getLandingPadInst();
++  auto *LandingPad = dyn_cast<LandingPadInst>(
++      StatepointInvoke->getUnwindDest()->getFirstNonPHI());
++  if (!LandingPad)
++    return Result;
+ 
+   // Search for gc relocates that are attached to this landingpad.
+   for (const User *LandingPadUser : LandingPad->users()) {
+diff --git a/llvm/lib/CodeGen/FixupStatepointCallerSaved.cpp b/llvm/lib/CodeGen/FixupStatepointCallerSaved.cpp
+index 4d668c53f7..fb13899fc3 100644
+--- a/llvm/lib/CodeGen/FixupStatepointCallerSaved.cpp
++++ b/llvm/lib/CodeGen/FixupStatepointCallerSaved.cpp
+@@ -352,7 +352,9 @@ public:
+     if (!Last)
+       return;
+ 
+-    auto IsEHPad = [](MachineBasicBlock *B) { return B->isEHPad(); };
++    auto IsEHPad = [](MachineBasicBlock *B) {
++      return B->isEHPad() && !B->isCatchpadEntry();
++    };
+ 
+     assert(llvm::count_if(MBB->successors(), IsEHPad) < 2 && "multiple EHPads");
+ 
+diff --git a/llvm/lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp b/llvm/lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp
+index 5926a60581..031a7da4dd 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp
+@@ -240,9 +240,9 @@ void FunctionLoweringInfo::set(const Function &fn, MachineFunction &mf,
+       // FIXME: SEH catchpads do not create EH scope/funclets, so we could avoid
+       // setting this in such cases in order to improve frame layout.
+       if (!isa<LandingPadInst>(PadInst)) {
+-        MF->setHasEHScopes(true);
+-        MF->setHasEHFunclets(true);
+-        MF->getFrameInfo().setHasOpaqueSPAdjustment(true);
++        MF->setHasEHScopes(isScopedEHPersonality(Personality));
++        MF->setHasEHFunclets(isFuncletEHPersonality(Personality));
++        MF->getFrameInfo().setHasOpaqueSPAdjustment(Personality != EHPersonality::ART);
+       }
+       if (isa<CatchSwitchInst>(PadInst)) {
+         assert(&*BB.begin() == PadInst &&
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+index c36b80be46..fd06bd1b1e 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+@@ -1926,6 +1926,7 @@ void SelectionDAGBuilder::visitCatchPad(const CatchPadInst &I) {
+   bool IsCoreCLR = Pers == EHPersonality::CoreCLR;
+   bool IsSEH = isAsynchronousEHPersonality(Pers);
+   MachineBasicBlock *CatchPadMBB = FuncInfo.MBB;
++  CatchPadMBB->setIsCatchpadEntry();
+   if (!IsSEH)
+     CatchPadMBB->setIsEHScopeEntry();
+   // In MSVC C++ and CoreCLR, catchblocks are funclets and need prologues.
+diff --git a/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp b/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp
+index cf32350036..b53826c955 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp
+@@ -546,12 +546,14 @@ lowerStatepointMetaArgs(SmallVectorImpl<SDValue> &Ops,
+   if (!UseRegistersForGCPointersInLandingPad)
+     if (const auto *StInvoke =
+             dyn_cast_or_null<InvokeInst>(SI.StatepointInstr)) {
+-      LandingPadInst *LPI = StInvoke->getLandingPadInst();
+-      for (const auto *Relocate : SI.GCRelocates)
+-        if (Relocate->getOperand(0) == LPI) {
+-          LPadPointers.insert(Builder.getValue(Relocate->getBasePtr()));
+-          LPadPointers.insert(Builder.getValue(Relocate->getDerivedPtr()));
+-        }
++      if (auto *LPI = dyn_cast<LandingPadInst>(
++              StInvoke->getUnwindDest()->getFirstNonPHI())) {
++        for (const auto *Relocate : SI.GCRelocates)
++          if (Relocate->getOperand(0) == LPI) {
++            LPadPointers.insert(Builder.getValue(Relocate->getBasePtr()));
++            LPadPointers.insert(Builder.getValue(Relocate->getDerivedPtr()));
++          }
++      }
+     }
+ 
+   LLVM_DEBUG(dbgs() << "Deciding how to lower GC Pointers:\n");
+diff --git a/llvm/lib/CodeGen/TailDuplicator.cpp b/llvm/lib/CodeGen/TailDuplicator.cpp
+index 5ed67bd0a1..4c430e6dfa 100644
+--- a/llvm/lib/CodeGen/TailDuplicator.cpp
++++ b/llvm/lib/CodeGen/TailDuplicator.cpp
+@@ -797,6 +797,9 @@ bool TailDuplicator::canTailDuplicate(MachineBasicBlock *TailBB,
+   if (PredBB->succ_size() > 1)
+     return false;
+ 
++  if (PredBB->isCatchpadEntry())
++    return false;
++
+   MachineBasicBlock *PredTBB = nullptr, *PredFBB = nullptr;
+   SmallVector<MachineOperand, 4> PredCond;
+   if (TII->analyzeBranch(*PredBB, PredTBB, PredFBB, PredCond))
+diff --git a/llvm/lib/CodeGen/TargetPassConfig.cpp b/llvm/lib/CodeGen/TargetPassConfig.cpp
+index 599ca48189..6f13653ee5 100644
+--- a/llvm/lib/CodeGen/TargetPassConfig.cpp
++++ b/llvm/lib/CodeGen/TargetPassConfig.cpp
+@@ -205,6 +205,9 @@ static cl::opt<bool> MISchedPostRA(
+ static cl::opt<bool> EarlyLiveIntervals("early-live-intervals", cl::Hidden,
+     cl::desc("Run live interval analysis earlier in the pipeline"));
+ 
++static cl::opt<bool> AddWinEHPreparePass("add-win-eh-prepare-pass", cl::Hidden,
++                                         cl::init(false));
++
+ /// Option names for limiting the codegen pipeline.
+ /// Those are used in error reporting and we didn't want
+ /// to duplicate their names all over the place.
+@@ -904,6 +907,9 @@ void TargetPassConfig::addPassesToHandleExceptions() {
+   case ExceptionHandling::ARM:
+   case ExceptionHandling::AIX:
+   case ExceptionHandling::ZOS:
++    if (AddWinEHPreparePass) {
++      addPass(createWinEHPass(true));
++    }
+     addPass(createDwarfEHPass(getOptLevel()));
+     break;
+   case ExceptionHandling::WinEH:
+diff --git a/llvm/lib/IR/EHPersonalities.cpp b/llvm/lib/IR/EHPersonalities.cpp
+index fb5e2d5c51..6842a93930 100644
+--- a/llvm/lib/IR/EHPersonalities.cpp
++++ b/llvm/lib/IR/EHPersonalities.cpp
+@@ -42,6 +42,7 @@ EHPersonality llvm::classifyEHPersonality(const Value *Pers) {
+       .Case("rust_eh_personality", EHPersonality::Rust)
+       .Case("__gxx_wasm_personality_v0", EHPersonality::Wasm_CXX)
+       .Case("__xlcxx_personality_v1", EHPersonality::XL_CXX)
++      .Case("__art_personality", EHPersonality::ART)
+       .Default(EHPersonality::Unknown);
+ }
+ 
+@@ -73,6 +74,8 @@ StringRef llvm::getEHPersonalityName(EHPersonality Pers) {
+     return "__gxx_wasm_personality_v0";
+   case EHPersonality::XL_CXX:
+     return "__xlcxx_personality_v1";
++  case EHPersonality::ART:
++    return "__art_personality";
+   case EHPersonality::Unknown:
+     llvm_unreachable("Unknown EHPersonality!");
+   }
+diff --git a/llvm/lib/Transforms/InstCombine/InstructionCombining.cpp b/llvm/lib/Transforms/InstCombine/InstructionCombining.cpp
+index 6f0cf9d9c8..da25e8ed43 100644
+--- a/llvm/lib/Transforms/InstCombine/InstructionCombining.cpp
++++ b/llvm/lib/Transforms/InstCombine/InstructionCombining.cpp
+@@ -3613,6 +3613,8 @@ static bool isCatchAll(EHPersonality Personality, Constant *TypeInfo) {
+   case EHPersonality::Wasm_CXX:
+   case EHPersonality::XL_CXX:
+     return TypeInfo->isNullValue();
++  case EHPersonality::ART:
++    return false;
+   }
+   llvm_unreachable("invalid enum");
+ }
+diff --git a/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp b/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp
+index b4387c0189..b170c0c5e3 100644
+--- a/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp
++++ b/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp
+@@ -1927,18 +1927,20 @@ makeStatepointExplicitImpl(CallBase *Call, /* to replace */
+ 
+     // Generate gc relocates in exceptional path
+     BasicBlock *UnwindBlock = II->getUnwindDest();
+-    assert(!isa<PHINode>(UnwindBlock->begin()) &&
+-           UnwindBlock->getUniquePredecessor() &&
+-           "can't safely insert in this block!");
++    if (UnwindBlock->isLandingPad()) {
++      assert(!isa<PHINode>(UnwindBlock->begin()) &&
++             UnwindBlock->getUniquePredecessor() &&
++             "can't safely insert in this block!");
+ 
+-    Builder.SetInsertPoint(UnwindBlock, UnwindBlock->getFirstInsertionPt());
+-    Builder.SetCurrentDebugLocation(II->getDebugLoc());
++      Builder.SetInsertPoint(UnwindBlock, UnwindBlock->getFirstInsertionPt());
++      Builder.SetCurrentDebugLocation(II->getDebugLoc());
+ 
+-    // Attach exceptional gc relocates to the landingpad.
+-    Instruction *ExceptionalToken = UnwindBlock->getLandingPadInst();
+-    Result.UnwindToken = ExceptionalToken;
++      // Attach exceptional gc relocates to the landingpad.
++      Instruction *ExceptionalToken = UnwindBlock->getLandingPadInst();
++      Result.UnwindToken = ExceptionalToken;
+ 
+-    CreateGCRelocates(LiveVariables, BasePtrs, ExceptionalToken, Builder, GC);
++      CreateGCRelocates(LiveVariables, BasePtrs, ExceptionalToken, Builder, GC);
++    }
+ 
+     // Generate gc relocates and returns for normal block
+     BasicBlock *NormalDest = II->getNormalDest();
+@@ -2135,7 +2137,7 @@ static void relocationViaAlloca(
+ 
+     // In case if it was invoke statepoint
+     // we will insert stores for exceptional path gc relocates.
+-    if (isa<InvokeInst>(Statepoint)) {
++    if (isa<InvokeInst>(Statepoint) && Info.UnwindToken != nullptr) {
+       insertRelocationStores(Info.UnwindToken->users(), AllocaMap,
+                              VisitedLiveValues);
+     }
+@@ -2178,7 +2180,9 @@ static void relocationViaAlloca(
+       // gc.results and gc.relocates, but that's fine.
+       if (auto II = dyn_cast<InvokeInst>(Statepoint)) {
+         InsertClobbersAt(&*II->getNormalDest()->getFirstInsertionPt());
+-        InsertClobbersAt(&*II->getUnwindDest()->getFirstInsertionPt());
++        if (II->getUnwindDest()->isLandingPad()) {
++          InsertClobbersAt(&*II->getUnwindDest()->getFirstInsertionPt());
++        }
+       } else {
+         InsertClobbersAt(cast<Instruction>(Statepoint)->getNextNode());
+       }
+@@ -2299,8 +2303,10 @@ static void insertUseHolderAfter(CallBase *Call, const ArrayRef<Value *> Values,
+   auto *II = cast<InvokeInst>(Call);
+   Holders.push_back(CallInst::Create(
+       Func, Values, "", &*II->getNormalDest()->getFirstInsertionPt()));
+-  Holders.push_back(CallInst::Create(
+-      Func, Values, "", &*II->getUnwindDest()->getFirstInsertionPt()));
++  if (II->getUnwindDest()->isLandingPad()) {
++    Holders.push_back(CallInst::Create(
++        Func, Values, "", &*II->getUnwindDest()->getFirstInsertionPt()));
++  }
+ }
+ 
+ static void findLiveReferences(
+@@ -2635,18 +2641,19 @@ static void rematerializeLiveValues(CallBase *Call,
+ 
+       Instruction *NormalInsertBefore =
+           &*Invoke->getNormalDest()->getFirstInsertionPt();
+-      Instruction *UnwindInsertBefore =
+-          &*Invoke->getUnwindDest()->getFirstInsertionPt();
+-
+       Instruction *NormalRematerializedValue =
+           rematerializeChain(Record.ChainToBase, NormalInsertBefore,
+                              Record.RootOfChain, PointerToBase[LiveValue]);
+-      Instruction *UnwindRematerializedValue =
+-          rematerializeChain(Record.ChainToBase, UnwindInsertBefore,
+-                             Record.RootOfChain, PointerToBase[LiveValue]);
+-
+       Info.RematerializedValues[NormalRematerializedValue] = LiveValue;
+-      Info.RematerializedValues[UnwindRematerializedValue] = LiveValue;
++
++      if (Invoke->getUnwindDest()->isLandingPad()) {
++        Instruction *UnwindInsertBefore =
++            &*Invoke->getUnwindDest()->getFirstInsertionPt();
++        Instruction *UnwindRematerializedValue =
++            rematerializeChain(Record.ChainToBase, UnwindInsertBefore,
++                               Record.RootOfChain, PointerToBase[LiveValue]);
++        Info.RematerializedValues[UnwindRematerializedValue] = LiveValue;
++      }
+     }
+   }
+ 
+@@ -2730,7 +2737,9 @@ static bool insertParsePoints(Function &F, DominatorTree &DT,
+     if (!II)
+       continue;
+     normalizeForInvokeSafepoint(II->getNormalDest(), II->getParent(), DT);
+-    normalizeForInvokeSafepoint(II->getUnwindDest(), II->getParent(), DT);
++    if (II->getUnwindDest()->isLandingPad()) {
++      normalizeForInvokeSafepoint(II->getUnwindDest(), II->getParent(), DT);
++    }
+   }
+ 
+   // A list of dummy calls added to the IR to keep various values obviously

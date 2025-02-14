@@ -403,6 +403,8 @@ class HGraph : public ArenaObject<kArenaAllocGraph> {
     return number_of_vregs_ - number_of_in_vregs_;
   }
 
+  void LinearizeGraph();
+
   const ArenaVector<HBasicBlock*>& GetReversePostOrder() const {
     return reverse_post_order_;
   }
@@ -7365,6 +7367,8 @@ class HStringBuilderAppend final : public HVariableInputSizeInstruction {
 
   // Return the number of outgoing vregs.
   uint32_t GetNumberOfOutVRegs() const { return number_of_out_vregs_; }
+
+  void SetNumberOfOutVRegs(uint32_t new_value) { number_of_out_vregs_ = new_value; }
 
   size_t FormatIndex() const {
     return GetNumberOfArguments();

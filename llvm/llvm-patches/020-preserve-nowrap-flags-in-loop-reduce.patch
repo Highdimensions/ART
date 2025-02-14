@@ -1,0 +1,605 @@
+diff --git a/llvm/include/llvm/Transforms/Utils/ScalarEvolutionExpander.h b/llvm/include/llvm/Transforms/Utils/ScalarEvolutionExpander.h
+index 92dbe268c8..ac8a21b8d0 100644
+--- a/llvm/include/llvm/Transforms/Utils/ScalarEvolutionExpander.h
++++ b/llvm/include/llvm/Transforms/Utils/ScalarEvolutionExpander.h
+@@ -424,7 +424,7 @@ private:
+ 
+   /// Expand a SCEVAddExpr with a pointer type into a GEP instead of using
+   /// ptrtoint+arithmetic+inttoptr.
+-  Value *expandAddToGEP(const SCEV *Op, Value *V);
++  Value *expandAddToGEP(const SCEV *Op, Value *V, bool InBounds = false);
+ 
+   /// Find a previous Value in ExprValueMap for expand.
+   /// DropPoisonGeneratingInsts is populated with instructions for which
+diff --git a/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp b/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp
+index 86b82060d4..0f01d865d2 100644
+--- a/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp
++++ b/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp
+@@ -365,6 +365,12 @@ struct Formula {
+   /// The scale of any complex addressing.
+   int64_t Scale = 0;
+ 
++  /// Flags indicating whether Scale*ScaledReg can overflow.
++  SCEV::NoWrapFlags ScaleWrapFlags = SCEV::FlagAnyWrap;
++
++  /// Flags indicating whether the whole Formula can overflow.
++  SCEV::NoWrapFlags WrapFlags = SCEV::FlagAnyWrap;
++
+   /// The list of "base" registers for this use. When this is non-empty. The
+   /// canonical representation of a formula is
+   /// 1. BaseRegs.size > 1 implies ScaledReg != NULL and
+@@ -417,6 +423,13 @@ struct Formula {
+ 
+ } // end anonymous namespace
+ 
++static SCEV::NoWrapFlags GetNoWrapFlags(const SCEV *S) {
++  if (auto *NAryExpr = dyn_cast<SCEVNAryExpr>(S)) {
++    return NAryExpr->getNoWrapFlags();
++  }
++  return SCEV::FlagAnyWrap;
++}
++
+ /// Recursion helper for initialMatch.
+ static void DoInitialMatch(const SCEV *S, Loop *L,
+                            SmallVectorImpl<const SCEV *> &Good,
+@@ -488,6 +501,7 @@ void Formula::initialMatch(const SCEV *S, Loop *L, ScalarEvolution &SE) {
+       BaseRegs.push_back(Sum);
+     HasBaseReg = true;
+   }
++  WrapFlags = ScalarEvolution::maskFlags(GetNoWrapFlags(S), SCEV::FlagNSW | SCEV::FlagNUW);
+   canonicalize(*L);
+ }
+ 
+@@ -537,6 +551,7 @@ void Formula::canonicalize(const Loop &L) {
+     assert(Scale == 1 && "Expected 1*reg => reg");
+     BaseRegs.push_back(ScaledReg);
+     Scale = 0;
++    ScaleWrapFlags = SCEV::FlagAnyWrap;
+     ScaledReg = nullptr;
+     return;
+   }
+@@ -545,6 +560,8 @@ void Formula::canonicalize(const Loop &L) {
+   if (!ScaledReg) {
+     ScaledReg = BaseRegs.pop_back_val();
+     Scale = 1;
++    // Multiplying by 1 cannot wrap in any case.
++    ScaleWrapFlags = (SCEV::NoWrapFlags)(SCEV::FlagNSW | SCEV::FlagNUW);
+   }
+ 
+   // If ScaledReg is an invariant with respect to L, find the reg from
+@@ -568,6 +585,7 @@ bool Formula::unscale() {
+   if (Scale != 1)
+     return false;
+   Scale = 0;
++  ScaleWrapFlags = SCEV::FlagAnyWrap;
+   BaseRegs.push_back(ScaledReg);
+   ScaledReg = nullptr;
+   return true;
+@@ -601,6 +619,8 @@ void Formula::deleteBaseReg(const SCEV *&S) {
+   if (&S != &BaseRegs.back())
+     std::swap(S, BaseRegs.back());
+   BaseRegs.pop_back();
++  if (BaseRegs.empty())
++    WrapFlags = SCEV::FlagAnyWrap;
+ }
+ 
+ /// Test if this formula references the given register.
+@@ -624,6 +644,7 @@ bool Formula::hasRegsUsedByUsesOtherThan(size_t LUIdx,
+ #if !defined(NDEBUG) || defined(LLVM_ENABLE_DUMP)
+ void Formula::print(raw_ostream &OS) const {
+   bool First = true;
++  if (WrapFlags != SCEV::FlagAnyWrap) OS << '(';
+   if (BaseGV) {
+     if (!First) OS << " + "; else First = false;
+     BaseGV->printAsOperand(OS, /*PrintType=*/false);
+@@ -645,17 +666,25 @@ void Formula::print(raw_ostream &OS) const {
+   }
+   if (Scale != 0) {
+     if (!First) OS << " + "; else First = false;
+-    OS << Scale << "*reg(";
++    if (ScaleWrapFlags != SCEV::FlagAnyWrap) OS << '(';
++    OS << Scale << '*';
++    OS << "reg(";
+     if (ScaledReg)
+       OS << *ScaledReg;
+     else
+       OS << "<unknown>";
+     OS << ')';
++    if (ScaleWrapFlags != SCEV::FlagAnyWrap) OS << ')';
++    if (ScaleWrapFlags & SCEV::FlagNUW) OS << "<nuw>";
++    if (ScaleWrapFlags & SCEV::FlagNSW) OS << "<nsw>";
+   }
+   if (UnfoldedOffset != 0) {
+     if (!First) OS << " + ";
+     OS << "imm(" << UnfoldedOffset << ')';
+   }
++  if (WrapFlags != SCEV::FlagAnyWrap) OS << ')';
++  if (WrapFlags & SCEV::FlagNUW) OS << "<nuw>";
++  if (WrapFlags & SCEV::FlagNSW) OS << "<nsw>";
+ }
+ 
+ LLVM_DUMP_METHOD void Formula::dump() const {
+@@ -2679,6 +2708,8 @@ LSRInstance::FindUseWithSimilarFormula(const Formula &OrigF,
+             F.ScaledReg == OrigF.ScaledReg &&
+             F.BaseGV == OrigF.BaseGV &&
+             F.Scale == OrigF.Scale &&
++            F.ScaleWrapFlags == OrigF.ScaleWrapFlags &&
++            F.WrapFlags == OrigF.WrapFlags &&
+             F.UnfoldedOffset == OrigF.UnfoldedOffset) {
+           if (F.BaseOffset == 0)
+             return &LU;
+@@ -3735,9 +3766,10 @@ void LSRInstance::GenerateReassociationsImpl(LSRUse &LU, unsigned LUIdx,
+                                 InnerSumSC->getValue()->getZExtValue())) {
+       F.UnfoldedOffset =
+           (uint64_t)F.UnfoldedOffset + InnerSumSC->getValue()->getZExtValue();
+-      if (IsScaledReg)
++      if (IsScaledReg) {
+         F.ScaledReg = nullptr;
+-      else
++        F.ScaleWrapFlags = SCEV::FlagAnyWrap;
++      } else
+         F.BaseRegs.erase(F.BaseRegs.begin() + Idx);
+     } else if (IsScaledReg)
+       F.ScaledReg = InnerSum;
+@@ -3897,13 +3929,20 @@ void LSRInstance::GenerateConstantOffsetsImpl(
+       if (NewG->isZero()) {
+         if (IsScaledReg) {
+           F.Scale = 0;
++          F.ScaleWrapFlags = SCEV::FlagAnyWrap;
+           F.ScaledReg = nullptr;
+         } else
+           F.deleteBaseReg(F.BaseRegs[Idx]);
+         F.canonicalize(*L);
+-      } else if (IsScaledReg)
++      } else if (IsScaledReg) {
+         F.ScaledReg = NewG;
+-      else
++        // TODO: Can we do better?
++        F.ScaleWrapFlags =
++            F.Scale == 1
++                ? ScalarEvolution::maskFlags(GetNoWrapFlags(NewG),
++                                             SCEV::FlagNSW | SCEV::FlagNUW)
++                : SCEV::FlagAnyWrap;
++      } else
+         F.BaseRegs[Idx] = NewG;
+ 
+       (void)InsertFormula(LU, LUIdx, F);
+@@ -4046,6 +4085,9 @@ void LSRInstance::GenerateICmpZeroScales(LSRUse &LU, unsigned LUIdx,
+     // Check that multiplying with the scaled register doesn't overflow.
+     if (F.ScaledReg) {
+       F.ScaledReg = SE.getMulExpr(F.ScaledReg, FactorS);
++      if (F.Scale != 1) {
++        F.ScaleWrapFlags = SCEV::FlagAnyWrap;
++      }
+       if (getExactSDiv(F.ScaledReg, FactorS, SE) != Base.ScaledReg)
+         continue;
+     }
+@@ -4063,6 +4105,8 @@ void LSRInstance::GenerateICmpZeroScales(LSRUse &LU, unsigned LUIdx,
+           !ConstantInt::isValueValidForType(IntTy, F.UnfoldedOffset))
+         continue;
+     }
++    // We discard wrap flags if we multiplied the whole expression by a factor.
++    F.WrapFlags = SCEV::FlagAnyWrap;
+ 
+     // If we make it here and it's legal, add it.
+     (void)InsertFormula(LU, LUIdx, F);
+@@ -4120,6 +4164,9 @@ void LSRInstance::GenerateScales(LSRUse &LU, unsigned LUIdx, Formula Base) {
+             // TODO: This could be optimized to avoid all the copying.
+             Formula F = Base;
+             F.ScaledReg = Quotient;
++            assert(Base.ScaledReg == nullptr && "Expected Base to not have a scaled register");
++            F.ScaleWrapFlags = ScalarEvolution::maskFlags(
++                AR->getNoWrapFlags(), SCEV::FlagNSW | SCEV::FlagNUW);
+             F.deleteBaseReg(F.BaseRegs[i]);
+             // The canonical representation of 1*reg is reg, which is already in
+             // Base. In that case, do not try to insert the formula, it will be
+@@ -4198,6 +4245,11 @@ void LSRInstance::GenerateTruncates(LSRUse &LU, unsigned LUIdx, Formula Base) {
+         if (!NewScaledReg || NewScaledReg->isZero())
+           continue;
+         F.ScaledReg = NewScaledReg;
++        // Clear nowrap flags if we truncated the value.
++        if (F.ScaledReg->getType()->getPrimitiveSizeInBits() > SrcTy->getPrimitiveSizeInBits()) {
++          F.ScaleWrapFlags = SCEV::FlagAnyWrap;
++          F.WrapFlags = SCEV::FlagAnyWrap;
++        }
+       }
+       bool HasZeroBaseReg = false;
+       for (const SCEV *&BaseReg : F.BaseRegs) {
+@@ -4207,6 +4259,10 @@ void LSRInstance::GenerateTruncates(LSRUse &LU, unsigned LUIdx, Formula Base) {
+           HasZeroBaseReg = true;
+           break;
+         }
++        // Clear nowrap flags if we truncated the value.
++        if (BaseReg->getType()->getPrimitiveSizeInBits() > SrcTy->getPrimitiveSizeInBits()) {
++          F.WrapFlags = SCEV::FlagAnyWrap;
++        }
+         BaseReg = NewBaseReg;
+       }
+       if (HasZeroBaseReg)
+@@ -4368,6 +4424,7 @@ void LSRInstance::GenerateCrossUseConstantOffsets() {
+                         NewF))
+           continue;
+         NewF.ScaledReg = SE.getAddExpr(NegImmS, NewF.ScaledReg);
++        NewF.ScaleWrapFlags = SCEV::FlagAnyWrap;
+ 
+         // If the new scale is a constant in a register, and adding the constant
+         // value to the immediate would produce a value closer to zero than the
+@@ -4400,6 +4457,8 @@ void LSRInstance::GenerateCrossUseConstantOffsets() {
+             NewF.UnfoldedOffset = (uint64_t)NewF.UnfoldedOffset + Imm;
+           }
+           NewF.BaseRegs[N] = SE.getAddExpr(NegImmS, BaseReg);
++          // Discard wrap flags. TODO: We shouldn't have to always discard them.
++          NewF.WrapFlags = SCEV::NoWrapFlags::FlagAnyWrap;
+ 
+           // If the new formula has a constant in a register, and adding the
+           // constant value to the immediate would produce a value closer to
+@@ -5454,14 +5513,15 @@ Value *LSRInstance::Expand(const LSRUse &LU, const LSRFixup &LF,
+       // Unless the addressing mode will not be folded.
+       if (!Ops.empty() && LU.Kind == LSRUse::Address &&
+           isAMCompletelyFolded(TTI, LU, F)) {
+-        Value *FullV = Rewriter.expandCodeFor(SE.getAddExpr(Ops), nullptr);
++        Value *FullV = Rewriter.expandCodeFor(SE.getAddExpr(Ops, F.WrapFlags), nullptr);
+         Ops.clear();
+         Ops.push_back(SE.getUnknown(FullV));
+       }
+       ScaledS = SE.getUnknown(Rewriter.expandCodeFor(ScaledS, nullptr));
+-      if (F.Scale != 1)
+-        ScaledS =
+-            SE.getMulExpr(ScaledS, SE.getConstant(ScaledS->getType(), F.Scale));
++      if (F.Scale != 1) {
++        ScaledS = SE.getMulExpr(
++            ScaledS, SE.getConstant(ScaledS->getType(), F.Scale), F.ScaleWrapFlags);
++      }
+       Ops.push_back(ScaledS);
+     }
+   }
+@@ -5470,7 +5530,7 @@ Value *LSRInstance::Expand(const LSRUse &LU, const LSRFixup &LF,
+   if (F.BaseGV) {
+     // Flush the operand list to suppress SCEVExpander hoisting.
+     if (!Ops.empty()) {
+-      Value *FullV = Rewriter.expandCodeFor(SE.getAddExpr(Ops), IntTy);
++      Value *FullV = Rewriter.expandCodeFor(SE.getAddExpr(Ops, F.WrapFlags), IntTy);
+       Ops.clear();
+       Ops.push_back(SE.getUnknown(FullV));
+     }
+@@ -5480,7 +5540,7 @@ Value *LSRInstance::Expand(const LSRUse &LU, const LSRFixup &LF,
+   // Flush the operand list to suppress SCEVExpander hoisting of both folded and
+   // unfolded offsets. LSR assumes they both live next to their uses.
+   if (!Ops.empty()) {
+-    Value *FullV = Rewriter.expandCodeFor(SE.getAddExpr(Ops), Ty);
++    Value *FullV = Rewriter.expandCodeFor(SE.getAddExpr(Ops, F.WrapFlags), Ty);
+     Ops.clear();
+     Ops.push_back(SE.getUnknown(FullV));
+   }
+@@ -5515,7 +5575,7 @@ Value *LSRInstance::Expand(const LSRUse &LU, const LSRFixup &LF,
+   // Emit instructions summing all the operands.
+   const SCEV *FullS = Ops.empty() ?
+                       SE.getConstant(IntTy, 0) :
+-                      SE.getAddExpr(Ops);
++                      SE.getAddExpr(Ops, F.WrapFlags);
+   Value *FullV = Rewriter.expandCodeFor(FullS, Ty);
+ 
+   // We're done expanding now, so reset the rewriter.
+diff --git a/llvm/lib/Transforms/Utils/ScalarEvolutionExpander.cpp b/llvm/lib/Transforms/Utils/ScalarEvolutionExpander.cpp
+index a3951fdf8a..06b2f3e801 100644
+--- a/llvm/lib/Transforms/Utils/ScalarEvolutionExpander.cpp
++++ b/llvm/lib/Transforms/Utils/ScalarEvolutionExpander.cpp
+@@ -308,7 +308,7 @@ Value *SCEVExpander::InsertBinop(Instruction::BinaryOps Opcode,
+ /// loop-invariant portions of expressions, after considering what
+ /// can be folded using target addressing modes.
+ ///
+-Value *SCEVExpander::expandAddToGEP(const SCEV *Offset, Value *V) {
++Value *SCEVExpander::expandAddToGEP(const SCEV *Offset, Value *V, bool InBounds) {
+   assert(!isa<Instruction>(V) ||
+          SE.DT.dominates(cast<Instruction>(V), &*Builder.GetInsertPoint()));
+ 
+@@ -317,7 +317,7 @@ Value *SCEVExpander::expandAddToGEP(const SCEV *Offset, Value *V) {
+   // Fold a GEP with constant operands.
+   if (Constant *CLHS = dyn_cast<Constant>(V))
+     if (Constant *CRHS = dyn_cast<Constant>(Idx))
+-      return Builder.CreatePtrAdd(CLHS, CRHS);
++      return Builder.CreatePtrAdd(CLHS, CRHS, "", InBounds);
+ 
+   // Do a quick scan to see if we have this GEP nearby.  If so, reuse it.
+   unsigned ScanLimit = 6;
+@@ -354,7 +354,7 @@ Value *SCEVExpander::expandAddToGEP(const SCEV *Offset, Value *V) {
+   }
+ 
+   // Emit a GEP.
+-  return Builder.CreatePtrAdd(V, Idx, "scevgep");
++  return Builder.CreatePtrAdd(V, Idx, "scevgep", InBounds);
+ }
+ 
+ /// PickMostRelevantLoop - Given two loops pick the one that's most relevant for
+@@ -491,7 +491,7 @@ Value *SCEVExpander::visitAddExpr(const SCEVAddExpr *S) {
+             X = SE.getSCEV(U->getValue());
+         NewOps.push_back(X);
+       }
+-      Sum = expandAddToGEP(SE.getAddExpr(NewOps), Sum);
++      Sum = expandAddToGEP(SE.getAddExpr(NewOps), Sum, S->hasNoUnsignedWrap());
+     } else if (Op->isNonConstantNegative()) {
+       // Instead of doing a negate and add, just do a subtract.
+       Value *W = expand(SE.getNegativeSCEV(Op));
+@@ -1185,7 +1185,7 @@ Value *SCEVExpander::visitAddRecExpr(const SCEVAddRecExpr *S) {
+   if (!S->getStart()->isZero()) {
+     if (isa<PointerType>(S->getType())) {
+       Value *StartV = expand(SE.getPointerBase(S));
+-      return expandAddToGEP(SE.removePointerBase(S), StartV);
++      return expandAddToGEP(SE.removePointerBase(S), StartV, S->hasNoUnsignedWrap());
+     }
+ 
+     SmallVector<const SCEV *, 4> NewOps(S->operands());
+diff --git a/llvm/test/Analysis/ScalarEvolution/scev-expander-reuse-gep.ll b/llvm/test/Analysis/ScalarEvolution/scev-expander-reuse-gep.ll
+index 32d6a95819..95c3cc1f8f 100644
+--- a/llvm/test/Analysis/ScalarEvolution/scev-expander-reuse-gep.ll
++++ b/llvm/test/Analysis/ScalarEvolution/scev-expander-reuse-gep.ll
+@@ -3,7 +3,7 @@
+ ; RUN: opt -mtriple=i386-apple-macosx10.12.0 < %s -loop-reduce -S | FileCheck %s
+ 
+ ; CHECK: %ptr4.ptr1 = select i1 %cmp.i, ptr %ptr4, ptr %ptr1
+-; CHECK-NEXT: %scevgep = getelementptr i8, ptr %ptr4.ptr1, i32 1
++; CHECK-NEXT: %scevgep = getelementptr inbounds i8, ptr %ptr4.ptr1, i32 1
+ ; CHECK-NEXT: br label %while.cond.i
+ 
+ target datalayout = "e-m:o-p:32:32-f64:32:64-f80:128-n8:16:32-S128"
+diff --git a/llvm/test/Transforms/LoopIdiom/basic-address-space.ll b/llvm/test/Transforms/LoopIdiom/basic-address-space.ll
+index de55a46a16..e9f7ce90e6 100644
+--- a/llvm/test/Transforms/LoopIdiom/basic-address-space.ll
++++ b/llvm/test/Transforms/LoopIdiom/basic-address-space.ll
+@@ -13,7 +13,7 @@ define void @test10(ptr addrspace(2) %X) nounwind ssp {
+ ; CHECK:       bb.nph:
+ ; CHECK-NEXT:    [[I_04:%.*]] = phi i16 [ 0, [[ENTRY:%.*]] ], [ [[INC12:%.*]], [[FOR_INC10:%.*]] ]
+ ; CHECK-NEXT:    [[TMP0:%.*]] = mul nuw nsw i16 [[I_04]], 100
+-; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr addrspace(2) [[X]], i16 [[TMP0]]
++; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr addrspace(2) [[X]], i16 [[TMP0]]
+ ; CHECK-NEXT:    br label [[FOR_BODY5:%.*]]
+ ; CHECK:       for.body5:
+ ; CHECK-NEXT:    [[J_02:%.*]] = phi i16 [ 0, [[BB_NPH]] ], [ [[INC:%.*]], [[FOR_BODY5]] ]
+diff --git a/llvm/test/Transforms/LoopIdiom/basic.ll b/llvm/test/Transforms/LoopIdiom/basic.ll
+index 87247aa76c..5f1b760a24 100644
+--- a/llvm/test/Transforms/LoopIdiom/basic.ll
++++ b/llvm/test/Transforms/LoopIdiom/basic.ll
+@@ -481,7 +481,7 @@ define void @test10(ptr %X) nounwind ssp {
+ ; CHECK-NEXT:    [[INDVAR:%.*]] = phi i64 [ [[INDVAR_NEXT:%.*]], [[FOR_INC10:%.*]] ], [ 0, [[ENTRY:%.*]] ]
+ ; CHECK-NEXT:    [[I_04:%.*]] = phi i32 [ 0, [[ENTRY]] ], [ [[INC12:%.*]], [[FOR_INC10]] ]
+ ; CHECK-NEXT:    [[TMP0:%.*]] = mul nuw nsw i64 [[INDVAR]], 100
+-; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[X]], i64 [[TMP0]]
++; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr [[X]], i64 [[TMP0]]
+ ; CHECK-NEXT:    br label [[FOR_BODY5:%.*]]
+ ; CHECK:       for.body5:
+ ; CHECK-NEXT:    [[J_02:%.*]] = phi i32 [ 0, [[BB_NPH]] ], [ [[INC:%.*]], [[FOR_BODY5]] ]
+@@ -682,7 +682,7 @@ define void @PR14241(ptr %s, i64 %size) {
+ ; CHECK-NEXT:  entry:
+ ; CHECK-NEXT:    [[END_IDX:%.*]] = add i64 [[SIZE:%.*]], -1
+ ; CHECK-NEXT:    [[END_PTR:%.*]] = getelementptr inbounds i32, ptr [[S:%.*]], i64 [[END_IDX]]
+-; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[S]], i64 4
++; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr [[S]], i64 4
+ ; CHECK-NEXT:    [[TMP0:%.*]] = shl i64 [[SIZE]], 2
+ ; CHECK-NEXT:    [[TMP1:%.*]] = add i64 [[TMP0]], -8
+ ; CHECK-NEXT:    [[TMP2:%.*]] = lshr i64 [[TMP1]], 2
+diff --git a/llvm/test/Transforms/LoopIdiom/memset-pr52104.ll b/llvm/test/Transforms/LoopIdiom/memset-pr52104.ll
+index 0c7d1ec59b..385bd7945f 100644
+--- a/llvm/test/Transforms/LoopIdiom/memset-pr52104.ll
++++ b/llvm/test/Transforms/LoopIdiom/memset-pr52104.ll
+@@ -6,7 +6,7 @@ define void @f(ptr nocapture nonnull align 4 dereferenceable(20) %0, i32 %1) loc
+ ; CHECK-NEXT:    [[TMP3:%.*]] = trunc i32 [[TMP1:%.*]] to i2
+ ; CHECK-NEXT:    [[TMP4:%.*]] = zext i2 [[TMP3]] to i64
+ ; CHECK-NEXT:    [[TMP5:%.*]] = shl nuw nsw i64 [[TMP4]], 2
+-; CHECK-NEXT:    [[UGLYGEP:%.*]] = getelementptr i8, ptr [[TMP0:%.*]], i64 [[TMP5]]
++; CHECK-NEXT:    [[UGLYGEP:%.*]] = getelementptr inbounds i8, ptr [[TMP0:%.*]], i64 [[TMP5]]
+ ; CHECK-NEXT:    [[TMP6:%.*]] = sub i2 -1, [[TMP3]]
+ ; CHECK-NEXT:    [[TMP7:%.*]] = zext i2 [[TMP6]] to i64
+ ; CHECK-NEXT:    [[TMP8:%.*]] = shl nuw nsw i64 [[TMP7]], 2
+diff --git a/llvm/test/Transforms/LoopStrengthReduce/AArch64/lsr-reuse.ll b/llvm/test/Transforms/LoopStrengthReduce/AArch64/lsr-reuse.ll
+index 323e242620..25e9c01578 100644
+--- a/llvm/test/Transforms/LoopStrengthReduce/AArch64/lsr-reuse.ll
++++ b/llvm/test/Transforms/LoopStrengthReduce/AArch64/lsr-reuse.ll
+@@ -10,7 +10,7 @@ entry:
+ 
+ while.cond:
+ ; CHECK-LABEL: while.cond:
+-; CHECK: add i64 %lsr.iv, 1
++; CHECK: add nsw i64 %lsr.iv, 1
+ ; CHECK-NOT: add i64 %lsr.iv, 1
+ ; CHECK-LABEL: land.rhs:
+   %indvars.iv28 = phi i64 [ %indvars.iv.next29, %land.rhs ], [ 50, %entry ]
+diff --git a/llvm/test/Transforms/LoopStrengthReduce/post-inc-icmpzero.ll b/llvm/test/Transforms/LoopStrengthReduce/post-inc-icmpzero.ll
+index f73f92246f..12059853af 100644
+--- a/llvm/test/Transforms/LoopStrengthReduce/post-inc-icmpzero.ll
++++ b/llvm/test/Transforms/LoopStrengthReduce/post-inc-icmpzero.ll
+@@ -18,7 +18,7 @@ define void @_Z15IntegerToStringjjR7Vector2(i32 %i, i32 %radix, ptr nocapture %r
+ ; CHECK-NEXT:    [[ADD_PTR:%.*]] = getelementptr [33 x i16], ptr [[BUFFER]], i64 0, i64 33
+ ; CHECK-NEXT:    [[SUB_PTR_LHS_CAST:%.*]] = ptrtoint ptr [[ADD_PTR]] to i64
+ ; CHECK-NEXT:    [[SUB_PTR_RHS_CAST:%.*]] = ptrtoint ptr [[ADD_PTR]] to i64
+-; CHECK-NEXT:    [[SCEVGEP3:%.*]] = getelementptr i8, ptr [[BUFFER]], i64 64
++; CHECK-NEXT:    [[SCEVGEP3:%.*]] = getelementptr inbounds i8, ptr [[BUFFER]], i64 64
+ ; CHECK-NEXT:    br label [[DO_BODY:%.*]]
+ ; CHECK:       do.body:
+ ; CHECK-NEXT:    [[LSR_IV10:%.*]] = phi i64 [ [[LSR_IV_NEXT11:%.*]], [[DO_BODY]] ], [ -1, [[ENTRY:%.*]] ]
+diff --git a/llvm/test/Transforms/LoopStrengthReduce/pr27056.ll b/llvm/test/Transforms/LoopStrengthReduce/pr27056.ll
+index 5f082dae7c..9a68866e01 100644
+--- a/llvm/test/Transforms/LoopStrengthReduce/pr27056.ll
++++ b/llvm/test/Transforms/LoopStrengthReduce/pr27056.ll
+@@ -29,7 +29,7 @@ define void @b_copy_ctor() personality ptr @__CxxFrameHandler3 {
+ ; CHECK-NEXT:    [[TMP3:%.*]] = catchpad within [[TMP2]] [ptr null, i32 64, ptr null]
+ ; CHECK-NEXT:    [[CMP16:%.*]] = icmp eq ptr [[LSR_IV2]], null
+ ; CHECK-NEXT:    [[TMP4:%.*]] = mul i64 [[LSR_IV]], -1
+-; CHECK-NEXT:    [[UGLYGEP:%.*]] = getelementptr i8, ptr [[TMP0]], i64 [[TMP4]]
++; CHECK-NEXT:    [[UGLYGEP:%.*]] = getelementptr inbounds i8, ptr [[TMP0]], i64 [[TMP4]]
+ ; CHECK-NEXT:    br i1 [[CMP16]], label [[FOR_END:%.*]], label [[FOR_BODY_PREHEADER:%.*]]
+ ; CHECK:       for.body.preheader:
+ ; CHECK-NEXT:    br label [[FOR_BODY:%.*]]
+diff --git a/llvm/test/Transforms/LoopStrengthReduce/uglygep-address-space.ll b/llvm/test/Transforms/LoopStrengthReduce/uglygep-address-space.ll
+index 1fd840ae2c..93095471d3 100644
+--- a/llvm/test/Transforms/LoopStrengthReduce/uglygep-address-space.ll
++++ b/llvm/test/Transforms/LoopStrengthReduce/uglygep-address-space.ll
+@@ -29,8 +29,8 @@ define void @Z4(ptr addrspace(1) %ptr.i8, ptr addrspace(1) %ptr.float) {
+ ; CHECK:       bb14:
+ ; CHECK-NEXT:    store i8 undef, ptr addrspace(1) [[SCEVGEP]], align 1
+ ; CHECK-NEXT:    [[T6:%.*]] = load ptr addrspace(1), ptr addrspace(1) [[PTR_FLOAT]], align 2
+-; CHECK-NEXT:    [[SCEVGEP1:%.*]] = getelementptr i8, ptr addrspace(1) [[T6]], i16 16
+-; CHECK-NEXT:    [[SCEVGEP2:%.*]] = getelementptr i8, ptr addrspace(1) [[SCEVGEP1]], i16 [[T4]]
++; CHECK-NEXT:    [[SCEVGEP1:%.*]] = getelementptr inbounds i8, ptr addrspace(1) [[T6]], i16 16
++; CHECK-NEXT:    [[SCEVGEP2:%.*]] = getelementptr inbounds i8, ptr addrspace(1) [[SCEVGEP1]], i16 [[T4]]
+ ; CHECK-NEXT:    store i8 undef, ptr addrspace(1) [[SCEVGEP2]], align 1
+ ; CHECK-NEXT:    br label [[BB14]]
+ ;
+diff --git a/llvm/test/Transforms/LoopStrengthReduce/uglygep.ll b/llvm/test/Transforms/LoopStrengthReduce/uglygep.ll
+index 2d7c3cb3c5..9d4c939303 100644
+--- a/llvm/test/Transforms/LoopStrengthReduce/uglygep.ll
++++ b/llvm/test/Transforms/LoopStrengthReduce/uglygep.ll
+@@ -29,8 +29,8 @@ define void @test(ptr %ptr.i8, ptr %ptr.float) {
+ ; CHECK:       bb14:
+ ; CHECK-NEXT:    store i8 undef, ptr [[SCEVGEP]], align 1
+ ; CHECK-NEXT:    [[T6:%.*]] = load ptr, ptr [[PTR_FLOAT]], align 8
+-; CHECK-NEXT:    [[SCEVGEP1:%.*]] = getelementptr i8, ptr [[T6]], i64 16
+-; CHECK-NEXT:    [[SCEVGEP2:%.*]] = getelementptr i8, ptr [[SCEVGEP1]], i64 [[T4]]
++; CHECK-NEXT:    [[SCEVGEP1:%.*]] = getelementptr inbounds i8, ptr [[T6]], i64 16
++; CHECK-NEXT:    [[SCEVGEP2:%.*]] = getelementptr inbounds i8, ptr [[SCEVGEP1]], i64 [[T4]]
+ ; CHECK-NEXT:    store i8 undef, ptr [[SCEVGEP2]], align 1
+ ; CHECK-NEXT:    br label [[BB14]]
+ ;
+diff --git a/llvm/test/Transforms/LoopVectorize/AArch64/sve-interleaved-accesses.ll b/llvm/test/Transforms/LoopVectorize/AArch64/sve-interleaved-accesses.ll
+index fa8e35f469..c9288aeb0a 100644
+--- a/llvm/test/Transforms/LoopVectorize/AArch64/sve-interleaved-accesses.ll
++++ b/llvm/test/Transforms/LoopVectorize/AArch64/sve-interleaved-accesses.ll
+@@ -1461,7 +1461,7 @@ define void @PR34743(i16* %a, i32* %b, i64 %n) #1 {
+ ; CHECK-NEXT:    [[TMP5:%.*]] = and i64 [[TMP4]], -4
+ ; CHECK-NEXT:    [[TMP6:%.*]] = getelementptr i8, ptr [[B:%.*]], i64 [[TMP5]]
+ ; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[TMP6]], i64 4
+-; CHECK-NEXT:    [[SCEVGEP1:%.*]] = getelementptr i8, ptr [[A]], i64 2
++; CHECK-NEXT:    [[SCEVGEP1:%.*]] = getelementptr inbounds i8, ptr [[A]], i64 2
+ ; CHECK-NEXT:    [[TMP7:%.*]] = getelementptr i8, ptr [[A]], i64 [[TMP5]]
+ ; CHECK-NEXT:    [[SCEVGEP2:%.*]] = getelementptr i8, ptr [[TMP7]], i64 6
+ ; CHECK-NEXT:    [[BOUND0:%.*]] = icmp ugt ptr [[SCEVGEP2]], [[B]]
+diff --git a/llvm/test/Transforms/LoopVectorize/induction.ll b/llvm/test/Transforms/LoopVectorize/induction.ll
+index 119c0aefaa..a290e08e2b 100644
+--- a/llvm/test/Transforms/LoopVectorize/induction.ll
++++ b/llvm/test/Transforms/LoopVectorize/induction.ll
+@@ -1561,7 +1561,7 @@ define void @scalarize_induction_variable_04(ptr %a, ptr %p, i32 %n) {
+ ; CHECK-NEXT:    [[MIN_ITERS_CHECK:%.*]] = icmp ult i64 [[TMP2]], 2
+ ; CHECK-NEXT:    br i1 [[MIN_ITERS_CHECK]], label [[SCALAR_PH:%.*]], label [[VECTOR_MEMCHECK:%.*]]
+ ; CHECK:       vector.memcheck:
+-; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[P:%.*]], i64 4
++; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr [[P:%.*]], i64 4
+ ; CHECK-NEXT:    [[TMP3:%.*]] = add i32 [[N]], -1
+ ; CHECK-NEXT:    [[TMP4:%.*]] = zext i32 [[TMP3]] to i64
+ ; CHECK-NEXT:    [[TMP5:%.*]] = shl nuw nsw i64 [[TMP4]], 3
+@@ -1626,7 +1626,7 @@ define void @scalarize_induction_variable_04(ptr %a, ptr %p, i32 %n) {
+ ; IND-NEXT:    [[MIN_ITERS_CHECK:%.*]] = icmp eq i32 [[TMP0]], 0
+ ; IND-NEXT:    br i1 [[MIN_ITERS_CHECK]], label [[SCALAR_PH:%.*]], label [[VECTOR_MEMCHECK:%.*]]
+ ; IND:       vector.memcheck:
+-; IND-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[P:%.*]], i64 4
++; IND-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr [[P:%.*]], i64 4
+ ; IND-NEXT:    [[TMP3:%.*]] = add i32 [[N]], -1
+ ; IND-NEXT:    [[TMP4:%.*]] = zext i32 [[TMP3]] to i64
+ ; IND-NEXT:    [[TMP5:%.*]] = shl nuw nsw i64 [[TMP4]], 3
+@@ -1689,7 +1689,7 @@ define void @scalarize_induction_variable_04(ptr %a, ptr %p, i32 %n) {
+ ; UNROLL-NEXT:    [[MIN_ITERS_CHECK:%.*]] = icmp ult i32 [[TMP0]], 3
+ ; UNROLL-NEXT:    br i1 [[MIN_ITERS_CHECK]], label [[SCALAR_PH:%.*]], label [[VECTOR_MEMCHECK:%.*]]
+ ; UNROLL:       vector.memcheck:
+-; UNROLL-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[P:%.*]], i64 4
++; UNROLL-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr [[P:%.*]], i64 4
+ ; UNROLL-NEXT:    [[TMP3:%.*]] = add i32 [[N]], -1
+ ; UNROLL-NEXT:    [[TMP4:%.*]] = zext i32 [[TMP3]] to i64
+ ; UNROLL-NEXT:    [[TMP5:%.*]] = shl nuw nsw i64 [[TMP4]], 3
+@@ -1766,7 +1766,7 @@ define void @scalarize_induction_variable_04(ptr %a, ptr %p, i32 %n) {
+ ; UNROLL-NO-IC-NEXT:    [[MIN_ITERS_CHECK:%.*]] = icmp ult i64 [[TMP2]], 4
+ ; UNROLL-NO-IC-NEXT:    br i1 [[MIN_ITERS_CHECK]], label [[SCALAR_PH:%.*]], label [[VECTOR_MEMCHECK:%.*]]
+ ; UNROLL-NO-IC:       vector.memcheck:
+-; UNROLL-NO-IC-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[P:%.*]], i64 4
++; UNROLL-NO-IC-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr [[P:%.*]], i64 4
+ ; UNROLL-NO-IC-NEXT:    [[TMP3:%.*]] = add i32 [[N]], -1
+ ; UNROLL-NO-IC-NEXT:    [[TMP4:%.*]] = zext i32 [[TMP3]] to i64
+ ; UNROLL-NO-IC-NEXT:    [[TMP5:%.*]] = shl nuw nsw i64 [[TMP4]], 3
+@@ -1845,7 +1845,7 @@ define void @scalarize_induction_variable_04(ptr %a, ptr %p, i32 %n) {
+ ; INTERLEAVE-NEXT:    [[MIN_ITERS_CHECK:%.*]] = icmp ult i32 [[TMP0]], 8
+ ; INTERLEAVE-NEXT:    br i1 [[MIN_ITERS_CHECK]], label [[SCALAR_PH:%.*]], label [[VECTOR_MEMCHECK:%.*]]
+ ; INTERLEAVE:       vector.memcheck:
+-; INTERLEAVE-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[P:%.*]], i64 4
++; INTERLEAVE-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr [[P:%.*]], i64 4
+ ; INTERLEAVE-NEXT:    [[TMP3:%.*]] = add i32 [[N]], -1
+ ; INTERLEAVE-NEXT:    [[TMP4:%.*]] = zext i32 [[TMP3]] to i64
+ ; INTERLEAVE-NEXT:    [[TMP5:%.*]] = shl nuw nsw i64 [[TMP4]], 3
+diff --git a/llvm/test/Transforms/LoopVectorize/interleaved-accesses.ll b/llvm/test/Transforms/LoopVectorize/interleaved-accesses.ll
+index 9a27c294f1..116da856ff 100644
+--- a/llvm/test/Transforms/LoopVectorize/interleaved-accesses.ll
++++ b/llvm/test/Transforms/LoopVectorize/interleaved-accesses.ll
+@@ -1478,7 +1478,7 @@ define void @PR34743(ptr %a, ptr %b, i64 %n) {
+ ; CHECK-NEXT:    [[TMP3:%.*]] = and i64 [[TMP2]], -4
+ ; CHECK-NEXT:    [[TMP4:%.*]] = getelementptr i8, ptr [[B:%.*]], i64 [[TMP3]]
+ ; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[TMP4]], i64 4
+-; CHECK-NEXT:    [[SCEVGEP1:%.*]] = getelementptr i8, ptr [[A]], i64 2
++; CHECK-NEXT:    [[SCEVGEP1:%.*]] = getelementptr inbounds i8, ptr [[A]], i64 2
+ ; CHECK-NEXT:    [[TMP5:%.*]] = getelementptr i8, ptr [[A]], i64 [[TMP3]]
+ ; CHECK-NEXT:    [[SCEVGEP2:%.*]] = getelementptr i8, ptr [[TMP5]], i64 6
+ ; CHECK-NEXT:    [[BOUND0:%.*]] = icmp ugt ptr [[SCEVGEP2]], [[B]]
+diff --git a/llvm/test/Transforms/LoopVectorize/multiple-strides-vectorization.ll b/llvm/test/Transforms/LoopVectorize/multiple-strides-vectorization.ll
+index fc6dcc3d27..931166427e 100644
+--- a/llvm/test/Transforms/LoopVectorize/multiple-strides-vectorization.ll
++++ b/llvm/test/Transforms/LoopVectorize/multiple-strides-vectorization.ll
+@@ -38,12 +38,12 @@ define void @Test(ptr nocapture %obj, i64 %z) #0 {
+ ; CHECK-NEXT:    [[I:%.*]] = phi i64 [ 0, [[TMP0:%.*]] ], [ [[I_NEXT:%.*]], [[DOTOUTER:%.*]] ]
+ ; CHECK-NEXT:    [[TMP3:%.*]] = shl nuw nsw i64 [[I]], 7
+ ; CHECK-NEXT:    [[TMP4:%.*]] = add i64 [[TMP3]], 256
+-; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[OBJ]], i64 [[TMP4]]
++; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr [[OBJ]], i64 [[TMP4]]
+ ; CHECK-NEXT:    [[TMP5:%.*]] = add i64 [[TMP2]], [[TMP3]]
+ ; CHECK-NEXT:    [[SCEVGEP1:%.*]] = getelementptr i8, ptr [[OBJ]], i64 [[TMP5]]
+ ; CHECK-NEXT:    [[TMP6:%.*]] = shl nuw nsw i64 [[I]], 2
+ ; CHECK-NEXT:    [[TMP7:%.*]] = add i64 [[TMP6]], 128
+-; CHECK-NEXT:    [[SCEVGEP3:%.*]] = getelementptr i8, ptr [[OBJ]], i64 [[TMP7]]
++; CHECK-NEXT:    [[SCEVGEP3:%.*]] = getelementptr inbounds i8, ptr [[OBJ]], i64 [[TMP7]]
+ ; CHECK-NEXT:    [[TMP8:%.*]] = add i64 [[TMP6]], 132
+ ; CHECK-NEXT:    [[SCEVGEP4:%.*]] = getelementptr i8, ptr [[OBJ]], i64 [[TMP8]]
+ ; CHECK-NEXT:    [[TMP9:%.*]] = getelementptr inbounds [[STRUCT_S:%.*]], ptr [[OBJ]], i64 0, i32 1, i64 [[I]]
+@@ -107,12 +107,12 @@ define void @Test(ptr nocapture %obj, i64 %z) #0 {
+ ; CHECK-NEXT:    br i1 [[EXITCOND_INNER]], label [[DOTOUTER]], label [[DOTINNER]], !llvm.loop [[LOOP11:![0-9]+]]
+ ;
+ ; CHECK-HOIST-LABEL: @Test(
+-; CHECK-HOIST-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[OBJ:%.*]], i64 256
++; CHECK-HOIST-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr [[OBJ:%.*]], i64 256
+ ; CHECK-HOIST-NEXT:    [[TMP1:%.*]] = shl i64 [[Z:%.*]], 2
+ ; CHECK-HOIST-NEXT:    [[TMP2:%.*]] = add i64 [[TMP1]], 4224
+ ; CHECK-HOIST-NEXT:    [[SCEVGEP1:%.*]] = getelementptr i8, ptr [[OBJ]], i64 [[TMP2]]
+ ; CHECK-HOIST-NEXT:    [[SCEVGEP2:%.*]] = getelementptr i8, ptr [[OBJ]], i64 [[TMP1]]
+-; CHECK-HOIST-NEXT:    [[SCEVGEP3:%.*]] = getelementptr i8, ptr [[OBJ]], i64 128
++; CHECK-HOIST-NEXT:    [[SCEVGEP3:%.*]] = getelementptr inbounds i8, ptr [[OBJ]], i64 128
+ ; CHECK-HOIST-NEXT:    br label [[DOTOUTER_PREHEADER:%.*]]
+ ; CHECK-HOIST:       .outer.preheader:
+ ; CHECK-HOIST-NEXT:    [[I:%.*]] = phi i64 [ 0, [[TMP0:%.*]] ], [ [[I_NEXT:%.*]], [[DOTOUTER:%.*]] ]
+diff --git a/llvm/test/Transforms/LoopVectorize/runtime-checks-difference.ll b/llvm/test/Transforms/LoopVectorize/runtime-checks-difference.ll
+index 5fe1686fa7..93e296dfaf 100644
+--- a/llvm/test/Transforms/LoopVectorize/runtime-checks-difference.ll
++++ b/llvm/test/Transforms/LoopVectorize/runtime-checks-difference.ll
+@@ -184,7 +184,7 @@ define void @nested_loop_outer_iv_addrec_invariant_in_inner1(ptr %a, ptr %b, i64
+ 
+ ; CHECK:       outer.header:
+ ; CHECK:         [[OUTER_IV_SHL_2:%.]] = shl i64 %outer.iv, 2
+-; CHECK-NEXT:    [[A_GEP_UPPER:%.*]] = getelementptr i8, ptr %a, i64 [[OUTER_IV_SHL_2]]
++; CHECK-NEXT:    [[A_GEP_UPPER:%.*]] = getelementptr inbounds i8, ptr %a, i64 [[OUTER_IV_SHL_2]]
+ ; CHECK-NEXT:    [[OUTER_IV_4:%.]] = add i64 [[OUTER_IV_SHL_2]], 4
+ ; CHECK-NEXT:    [[A_GEP_UPPER_4:%.*]] = getelementptr i8, ptr %a, i64 [[OUTER_IV_4]]
+ ; CHECK:         [[MIN_ITERS_CHECK:%.*]] = icmp ult i64 [[N:%.*]], 4
+@@ -234,7 +234,7 @@ define void @nested_loop_outer_iv_addrec_invariant_in_inner2(ptr %a, ptr %b, i64
+ 
+ ; CHECK:       outer.header:
+ ; CHECK:         [[OUTER_IV_SHL_2:%.]] = shl i64 %outer.iv, 2
+-; CHECK-NEXT:    [[A_GEP_UPPER:%.*]] = getelementptr i8, ptr %a, i64 [[OUTER_IV_SHL_2]]
++; CHECK-NEXT:    [[A_GEP_UPPER:%.*]] = getelementptr inbounds i8, ptr %a, i64 [[OUTER_IV_SHL_2]]
+ ; CHECK-NEXT:    [[OUTER_IV_4:%.]] = add i64 [[OUTER_IV_SHL_2]], 4
+ ; CHECK-NEXT:    [[A_GEP_UPPER_4:%.*]] = getelementptr i8, ptr %a, i64 [[OUTER_IV_4]]
+ ; CHECK:         [[MIN_ITERS_CHECK:%.*]] = icmp ult i64 [[N:%.*]], 4
+diff --git a/llvm/test/Transforms/LoopVersioning/bound-check-partially-known.ll b/llvm/test/Transforms/LoopVersioning/bound-check-partially-known.ll
+index 70c12a2d62..52cd53b809 100644
+--- a/llvm/test/Transforms/LoopVersioning/bound-check-partially-known.ll
++++ b/llvm/test/Transforms/LoopVersioning/bound-check-partially-known.ll
+@@ -11,7 +11,7 @@ define void @bound_check_partially_known_1(i32 %N) {
+ ; CHECK-NEXT:  loop.lver.check:
+ ; CHECK-NEXT:    [[N_EXT:%.*]] = zext i32 [[N]] to i64
+ ; CHECK-NEXT:    [[TMP0:%.*]] = shl nuw nsw i64 [[N_EXT]], 3
+-; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr @global, i64 [[TMP0]]
++; CHECK-NEXT:    [[SCEVGEP:%.*]] = getelementptr inbounds i8, ptr @global, i64 [[TMP0]]
+ ; CHECK-NEXT:    [[TMP1:%.*]] = shl nuw nsw i64 [[N_EXT]], 4
+ ; CHECK-NEXT:    [[SCEVGEP1:%.*]] = getelementptr i8, ptr @global, i64 [[TMP1]]
+ ; CHECK-NEXT:    [[TMP2:%.*]] = add nuw nsw i64 [[TMP0]], 256000
