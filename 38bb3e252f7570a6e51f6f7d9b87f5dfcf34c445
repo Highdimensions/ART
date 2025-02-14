@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17b4897a_f496cffa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-14T20:58:42Z",
+      "side": 1,
+      "message": "I thought I had gotten rid of the monitor.cc changes, but that will have to wait for the next PS.",
+      "revId": "38bb3e252f7570a6e51f6f7d9b87f5dfcf34c445",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
