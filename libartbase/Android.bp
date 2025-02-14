@@ -116,6 +116,14 @@ cc_defaults {
                 "libcap",
             ],
         },
+        musl: {
+            static_libs: [
+                "libcap",
+            ],
+            export_static_lib_headers: [
+                "libcap",
+            ],
+        },
         windows: {
             srcs: [
                 "base/mem_map_windows.cc",
@@ -181,6 +189,11 @@ cc_defaults {
             ],
         },
         linux_glibc: {
+            whole_static_libs: [
+                "libcap",
+            ],
+        },
+        musl: {
             whole_static_libs: [
                 "libcap",
             ],
