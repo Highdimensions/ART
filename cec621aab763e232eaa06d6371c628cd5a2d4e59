@@ -1,0 +1,105 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "955a5960_57ef055f",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T09:31:24Z",
+      "side": 1,
+      "message": "Do we really need this abstraction? What\u0027s wrong with passing two arguments to `PropagateValue` one as an int, one as a HConstant ?",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 4
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "7b9d05dd_07255f0c",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 57,
+                "startChar": 0,
+                "endLine": 81,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 83,
+                "startChar": 0,
+                "endLine": 84,
+                "endChar": 0
+              },
+              "replacement": "                      HConstant* constant);\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 247,
+                "startChar": 0,
+                "endLine": 248,
+                "endChar": 0
+              },
+              "replacement": "                                             HConstant* constant) {\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 257,
+                "startChar": 0,
+                "endLine": 258,
+                "endChar": 0
+              },
+              "replacement": "                                     constant,\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 287,
+                "startChar": 0,
+                "endLine": 289,
+                "endChar": 0
+              },
+              "replacement": "  PropagateValue(inst-\u003eIfTrueSuccessor(), if_input, graph-\u003eGetIntConstant(1u));\n  PropagateValue(inst-\u003eIfFalseSuccessor(), if_input, graph-\u003eGetIntConstant(0u));\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 361,
+                "startChar": 0,
+                "endLine": 362,
+                "endChar": 0
+              },
+              "replacement": "  PropagateValue(starting_block, variable, constant);\n"
+            },
+            {
+              "path": "compiler/optimizing/constant_folding.cc",
+              "range": {
+                "startLine": 373,
+                "startChar": 0,
+                "endLine": 374,
+                "endChar": 0
+              },
+              "replacement": "    PropagateValue(other_starting_block, variable, graph-\u003eGetIntConstant(value));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "cec621aab763e232eaa06d6371c628cd5a2d4e59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
