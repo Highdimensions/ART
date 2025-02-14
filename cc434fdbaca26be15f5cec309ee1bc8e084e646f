@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c612176_976d7a3c",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-14T12:43:19Z",
+      "side": 1,
+      "message": "Is `variable-\u003eGetUses().HasExactlyOneElement()` true 95% of the time? (Am I interpreting the commit message correctly?)\n\nIf yes, then we should probably do this check before loading the `stats_` for the `recording_stats` check. (Additional optimization opportunity for this or another CL.)",
+      "range": {
+        "startLine": 231,
+        "startChar": 7,
+        "endLine": 231,
+        "endChar": 49
+      },
+      "revId": "cc434fdbaca26be15f5cec309ee1bc8e084e646f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ebe7291_3fbb85ff",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-14T12:43:19Z",
+      "side": 1,
+      "message": "We\u0027re passing the first instruction of a block and `strictly_dominated \u003d false` which makes the\n\n    dominated \u003d\n          strictly_dominated ? dominator-\u003eStrictlyDominates(user) : dominator-\u003eDominates(user);\n\nfor block equality always true in the `HInstruction::ReplaceUsesDominatedBy()`. We could investigate if it makes sense to specialize that function and pass the block directly instead. (Optimization opportunity for another CL.)",
+      "range": {
+        "startLine": 235,
+        "startChar": 4,
+        "endLine": 237,
+        "endChar": 69
+      },
+      "revId": "cc434fdbaca26be15f5cec309ee1bc8e084e646f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3218e596_e936b9d3",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-14T12:43:19Z",
+      "side": 1,
+      "message": "Remove (unused).",
+      "range": {
+        "startLine": 265,
+        "startChar": 2,
+        "endLine": 265,
+        "endChar": 29
+      },
+      "revId": "cc434fdbaca26be15f5cec309ee1bc8e084e646f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
