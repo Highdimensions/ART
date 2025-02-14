@@ -1,0 +1,95 @@
+diff --git a/llvm/include/llvm/CodeGen/SelectionDAGNodes.h b/llvm/include/llvm/CodeGen/SelectionDAGNodes.h
+index 65b06d0f45..b4d56cb3e2 100644
+--- a/llvm/include/llvm/CodeGen/SelectionDAGNodes.h
++++ b/llvm/include/llvm/CodeGen/SelectionDAGNodes.h
+@@ -400,6 +400,9 @@ private:
+   // Instructions with attached 'unpredictable' metadata on IR level.
+   bool Unpredictable : 1;
+ 
++  bool ZeroExt : 1;
++  bool SignExt : 1;
++
+ public:
+   /// Default constructor turns off all optimization flags.
+   SDNodeFlags()
+@@ -407,7 +410,7 @@ public:
+         Disjoint(false), NonNeg(false), NoNaNs(false), NoInfs(false),
+         NoSignedZeros(false), AllowReciprocal(false), AllowContract(false),
+         ApproximateFuncs(false), AllowReassociation(false), NoFPExcept(false),
+-        Unpredictable(false) {}
++        Unpredictable(false), ZeroExt(false), SignExt(false) {}
+ 
+   /// Propagate the fast-math-flags from an IR FPMathOperator.
+   void copyFMF(const FPMathOperator &FPMO) {
+@@ -435,6 +438,8 @@ public:
+   void setAllowReassociation(bool b) { AllowReassociation = b; }
+   void setNoFPExcept(bool b) { NoFPExcept = b; }
+   void setUnpredictable(bool b) { Unpredictable = b; }
++  void setZeroExt(bool b) { ZeroExt = b; }
++  void setSignExt(bool b) { SignExt = b; }
+ 
+   // These are accessors for each flag.
+   bool hasNoUnsignedWrap() const { return NoUnsignedWrap; }
+@@ -451,6 +456,8 @@ public:
+   bool hasAllowReassociation() const { return AllowReassociation; }
+   bool hasNoFPExcept() const { return NoFPExcept; }
+   bool hasUnpredictable() const { return Unpredictable; }
++  bool hasZeroExt() const { return ZeroExt; }
++  bool hasSignExt() const { return SignExt; }
+ 
+   /// Clear any flags in this flag set that aren't also set in Flags. All
+   /// flags will be cleared if Flags are undefined.
+@@ -469,6 +476,8 @@ public:
+     AllowReassociation &= Flags.AllowReassociation;
+     NoFPExcept &= Flags.NoFPExcept;
+     Unpredictable &= Flags.Unpredictable;
++    ZeroExt &= Flags.ZeroExt;
++    SignExt &= Flags.SignExt;
+   }
+ };
+ 
+diff --git a/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp b/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
+index a705afb25c..a396f3cc43 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
+@@ -5896,7 +5896,17 @@ SDValue DAGTypeLegalizer::PromoteIntRes_PATCHPOINT(SDNode *N) {
+   SDValue To[] = {Res.getValue(1), Res.getValue(2)};
+   DAG.ReplaceAllUsesOfValuesWith(From, To, 2);
+ 
+-  return Res.getValue(0);
++  Res = Res.getValue(0);
++  if (N->getFlags().hasZeroExt()) {
++    Res = DAG.getNode(ISD::AssertZext, dl, NVT, Res,
++                      DAG.getValueType(N->getValueType(0).getScalarType()));
++  }
++  if (N->getFlags().hasSignExt()) {
++    Res = DAG.getNode(ISD::AssertSext, dl, NVT, Res,
++                      DAG.getValueType(N->getValueType(0).getScalarType()));
++  }
++
++  return Res;
+ }
+ 
+ SDValue DAGTypeLegalizer::PromoteIntOp_EXTRACT_VECTOR_ELT(SDNode *N) {
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+index 5bbc7e805d..50e04f9786 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+@@ -10181,6 +10181,17 @@ void SelectionDAGBuilder::visitPatchpoint(const CallBase &CB,
+   // Replace the target specific call node with a PATCHPOINT node.
+   SDValue PPV = DAG.getNode(ISD::PATCHPOINT, dl, NodeTys, Ops);
+ 
++  if (CB.hasRetAttr(Attribute::ZExt)) {
++    SDNodeFlags Flags = PPV->getFlags();
++    Flags.setZeroExt(true);
++    PPV->setFlags(Flags);
++  }
++  if (CB.hasRetAttr(Attribute::SExt)) {
++    SDNodeFlags Flags = PPV->getFlags();
++    Flags.setSignExt(true);
++    PPV->setFlags(Flags);
++  }
++
+   // Update the NodeMap.
+   if (HasDef) {
+     if (IsAnyRegCC)

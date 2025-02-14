@@ -1,0 +1,23 @@
+diff --git a/llvm/lib/Transforms/Scalar/LICM.cpp b/llvm/lib/Transforms/Scalar/LICM.cpp
+index f3e40a5cb8..5ed8f05a55 100644
+--- a/llvm/lib/Transforms/Scalar/LICM.cpp
++++ b/llvm/lib/Transforms/Scalar/LICM.cpp
+@@ -1317,6 +1317,18 @@ bool llvm::canSinkOrHoistInst(Instruction &I, AAResults *AA, DominatorTree *DT,
+           }
+       }
+     return true;
++  } else if (auto *PTII = dyn_cast<PtrToIntInst>(&I)) {
++    const DataLayout &DL = I.getModule()->getDataLayout();
++    // Non-integral pointers may not have a stable bit representation, therefore casting them to an integer is not loop invariant.
++    if (DL.isNonIntegralPointerType(PTII->getPointerOperand()->getType())) {
++      return false;
++    }
++  } else if (auto *ITPI = dyn_cast<IntToPtrInst>(&I)) {
++    const DataLayout &DL = I.getModule()->getDataLayout();
++    // Non-integral pointers may not have a stable bit representation, therefore casting an integer to a non-integral pointer type is not loop invariant.
++    if (DL.isNonIntegralPointerType(ITPI->getType())) {
++      return false;
++    }
+   }
+ 
+   assert(!I.mayReadOrWriteMemory() && "unhandled aliasing");

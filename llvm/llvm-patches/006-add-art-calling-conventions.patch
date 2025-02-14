@@ -1,0 +1,576 @@
+diff --git a/llvm/include/llvm/CodeGen/StackMaps.h b/llvm/include/llvm/CodeGen/StackMaps.h
+index 578020ca55..913d6a652c 100644
+--- a/llvm/include/llvm/CodeGen/StackMaps.h
++++ b/llvm/include/llvm/CodeGen/StackMaps.h
+@@ -94,7 +94,10 @@ private:
+ public:
+   explicit PatchPointOpers(const MachineInstr *MI);
+ 
+-  bool isAnyReg() const { return (getCallingConv() == CallingConv::AnyReg); }
++  bool isAnyReg() const {
++    return (getCallingConv() == CallingConv::AnyReg) ||
++           (getCallingConv() == CallingConv::ARTAnyReg);
++  }
+   bool hasDef() const { return HasDef; }
+ 
+   /// Return the ID for the given patchpoint.
+diff --git a/llvm/include/llvm/IR/CallingConv.h b/llvm/include/llvm/IR/CallingConv.h
+index bca31b2572..6f42735ccf 100644
+--- a/llvm/include/llvm/IR/CallingConv.h
++++ b/llvm/include/llvm/IR/CallingConv.h
+@@ -261,6 +261,38 @@ namespace CallingConv {
+     /// except that the first parameter is mapped to x9.
+     ARM64EC_Thunk_Native = 109,
+ 
++    /// Used by Android runtime for general function calls.
++    ARTInvokeDex = 110,
++
++    /// Used by Android runtime for interface function calls.
++    ARTInvokeInterface = 111,
++
++    /// Used by Android runtime for polymorphic function calls.
++    ARTInvokePolymorphic = 112,
++
++    /// Used by Android runtime for critical native calls.
++    ARTCriticalNative = 113,
++
++    /// Used by Android runtime for general runtime calls.
++    ARTInvokeRuntime = 114,
++
++    /// Used by Android runtime for runtime calls to
++    /// art_quick_invoke_polymorphic_with_hidden_receiver.
++    ARTInvokeRuntimeHiddenReceiver = 115,
++
++    /// Used by Android runtime for general runtime calls.
++    ARTInvokeUnresolved = 116,
++
++    /// Used by Android runtime for StringBuilderAppend runtime calls.
++    ARTStringBuilderAppend = 117,
++
++    /// Used by Android runtime for patchpoints representing single
++    /// instructions, which require the method pointer to be saved to the stack.
++    ARTAnyReg = 118,
++
++    /// Preserves all registers, except for X30.
++    ARTPreserveAll = 119,
++
+     /// The highest possible ID. Must be some 2^k - 1.
+     MaxID = 1023
+   };
+diff --git a/llvm/lib/CodeGen/SelectionDAG/FastISel.cpp b/llvm/lib/CodeGen/SelectionDAG/FastISel.cpp
+index 12ce98fd46..23c60bfe30 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/FastISel.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/FastISel.cpp
+@@ -759,7 +759,8 @@ bool FastISel::selectPatchpoint(const CallInst *I) {
+   //                                         [Args...],
+   //                                         [live variables...])
+   CallingConv::ID CC = I->getCallingConv();
+-  bool IsAnyRegCC = CC == CallingConv::AnyReg;
++  bool IsARTAnyRegCC = CC == CallingConv::ARTAnyReg;
++  bool IsAnyRegCC = CC == CallingConv::AnyReg || CC == CallingConv::ARTAnyReg;
+   bool HasDef = !I->getType()->isVoidTy();
+   Value *Callee = I->getOperand(PatchPointOpers::TargetPos)->stripPointerCasts();
+ 
+@@ -785,7 +786,7 @@ bool FastISel::selectPatchpoint(const CallInst *I) {
+          "Not enough arguments provided to the patchpoint intrinsic");
+ 
+   // For AnyRegCC the arguments are lowered later on manually.
+-  unsigned NumCallArgs = IsAnyRegCC ? 0 : NumArgs;
++  unsigned NumCallArgs = IsARTAnyRegCC ? 1 : IsAnyRegCC ? 0 : NumArgs;
+   CallLoweringInfo CLI;
+   CLI.setIsPatchPoint();
+   if (!lowerCallOperands(I, NumMetaOpers, NumCallArgs, Callee, IsAnyRegCC, CLI))
+@@ -846,18 +847,19 @@ bool FastISel::selectPatchpoint(const CallInst *I) {
+   // Add the arguments we omitted previously. The register allocator should
+   // place these in any free register.
+   if (IsAnyRegCC) {
+-    for (unsigned i = NumMetaOpers, e = NumMetaOpers + NumArgs; i != e; ++i) {
++    unsigned ArgStart = IsARTAnyRegCC ? NumMetaOpers + 1 : NumMetaOpers;
++    for (unsigned i = ArgStart, e = NumMetaOpers + NumArgs; i != e; ++i) {
+       Register Reg = getRegForValue(I->getArgOperand(i));
+       if (!Reg)
+         return false;
+       Ops.push_back(MachineOperand::CreateReg(Reg, /*isDef=*/false));
+     }
++  } else {
++    // Push the arguments from the call instruction.
++    for (auto Reg : CLI.OutRegs)
++      Ops.push_back(MachineOperand::CreateReg(Reg, /*isDef=*/false));
+   }
+ 
+-  // Push the arguments from the call instruction.
+-  for (auto Reg : CLI.OutRegs)
+-    Ops.push_back(MachineOperand::CreateReg(Reg, /*isDef=*/false));
+-
+   // Push live variables for the stack map.
+   if (!addStackMapLiveVars(Ops, I, NumMetaOpers + NumArgs))
+     return false;
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+index 22ad9ce989..5bbc7e805d 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+@@ -10063,7 +10063,8 @@ void SelectionDAGBuilder::visitPatchpoint(const CallBase &CB,
+   //                                         [live variables...])
+ 
+   CallingConv::ID CC = CB.getCallingConv();
+-  bool IsAnyRegCC = CC == CallingConv::AnyReg;
++  bool IsARTAnyRegCC = CC == CallingConv::ARTAnyReg;
++  bool IsAnyRegCC = CC == CallingConv::AnyReg || CC == CallingConv::ARTAnyReg;
+   bool HasDef = !CB.getType()->isVoidTy();
+   SDLoc dl = getCurSDLoc();
+   SDValue Callee = getValue(CB.getArgOperand(PatchPointOpers::TargetPos));
+@@ -10080,6 +10081,8 @@ void SelectionDAGBuilder::visitPatchpoint(const CallBase &CB,
+   // Get the real number of arguments participating in the call <numArgs>
+   SDValue NArgVal = getValue(CB.getArgOperand(PatchPointOpers::NArgPos));
+   unsigned NumArgs = NArgVal->getAsZExtVal();
++  assert(!IsARTAnyRegCC ||
++         NumArgs >= 1 && "Missing method pointer argument from patchpoint");
+ 
+   // Skip the four meta args: <id>, <numNopBytes>, <target>, <numArgs>
+   // Intrinsics include all meta-operands up to but not including CC.
+@@ -10088,7 +10091,7 @@ void SelectionDAGBuilder::visitPatchpoint(const CallBase &CB,
+          "Not enough arguments provided to the patchpoint intrinsic");
+ 
+   // For AnyRegCC the arguments are lowered later on manually.
+-  unsigned NumCallArgs = IsAnyRegCC ? 0 : NumArgs;
++  unsigned NumCallArgs = IsARTAnyRegCC ? 1 : IsAnyRegCC ? 0 : NumArgs;
+   Type *ReturnTy =
+       IsAnyRegCC ? Type::getVoidTy(*DAG.getContext()) : CB.getType();
+ 
+@@ -10137,7 +10140,9 @@ void SelectionDAGBuilder::visitPatchpoint(const CallBase &CB,
+   // stack instead.
+   // Call Node: Chain, Target, {Args}, RegMask, [Glue]
+   unsigned NumCallRegArgs = Call->getNumOperands() - (HasGlue ? 4 : 3);
+-  NumCallRegArgs = IsAnyRegCC ? NumArgs : NumCallRegArgs;
++  NumCallRegArgs = IsARTAnyRegCC ? NumArgs - 1
++                   : IsAnyRegCC  ? NumArgs
++                                 : NumCallRegArgs;
+   Ops.push_back(DAG.getTargetConstant(NumCallRegArgs, dl, MVT::i32));
+ 
+   // Add the calling convention
+@@ -10145,13 +10150,15 @@ void SelectionDAGBuilder::visitPatchpoint(const CallBase &CB,
+ 
+   // Add the arguments we omitted previously. The register allocator should
+   // place these in any free register.
+-  if (IsAnyRegCC)
+-    for (unsigned i = NumMetaOpers, e = NumMetaOpers + NumArgs; i != e; ++i)
++  if (IsAnyRegCC) {
++    unsigned ArgStart = IsARTAnyRegCC ? NumMetaOpers + 1 : NumMetaOpers;
++    for (unsigned i = ArgStart, e = NumMetaOpers + NumArgs; i != e; ++i)
+       Ops.push_back(getValue(CB.getArgOperand(i)));
+-
+-  // Push the arguments from the call instruction.
+-  SDNode::op_iterator e = HasGlue ? Call->op_end()-2 : Call->op_end()-1;
+-  Ops.append(Call->op_begin() + 2, e);
++  } else {
++    // Push the arguments from the call instruction.
++    SDNode::op_iterator e = HasGlue ? Call->op_end() - 2 : Call->op_end() - 1;
++    Ops.append(Call->op_begin() + 2, e);
++  }
+ 
+   // Push live variables for the stack map.
+   addStackMapLiveVars(CB, NumMetaOpers + NumArgs, dl, Ops, *this);
+diff --git a/llvm/lib/IR/Verifier.cpp b/llvm/lib/IR/Verifier.cpp
+index f7f92b2431..ba415eec96 100644
+--- a/llvm/lib/IR/Verifier.cpp
++++ b/llvm/lib/IR/Verifier.cpp
+@@ -5570,7 +5570,8 @@ void Verifier::visitIntrinsicCall(Intrinsic::ID ID, CallBase &Call) {
+     break;
+   }
+   case Intrinsic::experimental_patchpoint: {
+-    if (Call.getCallingConv() == CallingConv::AnyReg) {
++    if (Call.getCallingConv() == CallingConv::AnyReg ||
++        Call.getCallingConv() == CallingConv::ARTAnyReg) {
+       Check(Call.getType()->isSingleValueType(),
+             "patchpoint: invalid return type used with anyregcc", Call);
+     }
+diff --git a/llvm/lib/Target/AArch64/AArch64CallingConvention.h b/llvm/lib/Target/AArch64/AArch64CallingConvention.h
+index 3b51ee12b7..269066eff2 100644
+--- a/llvm/lib/Target/AArch64/AArch64CallingConvention.h
++++ b/llvm/lib/Target/AArch64/AArch64CallingConvention.h
+@@ -52,6 +52,39 @@ bool CC_AArch64_Arm64EC_CFGuard_Check(unsigned ValNo, MVT ValVT, MVT LocVT,
+ bool CC_AArch64_GHC(unsigned ValNo, MVT ValVT, MVT LocVT,
+                     CCValAssign::LocInfo LocInfo, ISD::ArgFlagsTy ArgFlags,
+                     CCState &State);
++bool CC_AArch64_ARTInvokeDex(unsigned ValNo, MVT ValVT, MVT LocVT,
++                             CCValAssign::LocInfo LocInfo,
++                             ISD::ArgFlagsTy ArgFlags, CCState &State);
++bool CC_AArch64_ARTInvokeInterface(unsigned ValNo, MVT ValVT, MVT LocVT,
++                                   CCValAssign::LocInfo LocInfo,
++                                   ISD::ArgFlagsTy ArgFlags, CCState &State);
++bool CC_AArch64_ARTInvokePolymorphic(unsigned ValNo, MVT ValVT, MVT LocVT,
++                                     CCValAssign::LocInfo LocInfo,
++                                     ISD::ArgFlagsTy ArgFlags, CCState &State);
++bool CC_AArch64_ARTCriticalNative(unsigned ValNo, MVT ValVT, MVT LocVT,
++                                  CCValAssign::LocInfo LocInfo,
++                                  ISD::ArgFlagsTy ArgFlags, CCState &State);
++bool CC_AArch64_ARTInvokeRuntime(unsigned ValNo, MVT ValVT, MVT LocVT,
++                                 CCValAssign::LocInfo LocInfo,
++                                 ISD::ArgFlagsTy ArgFlags, CCState &State);
++bool CC_AArch64_ARTInvokeRuntimeHiddenReceiver(unsigned ValNo, MVT ValVT,
++                                               MVT LocVT,
++                                               CCValAssign::LocInfo LocInfo,
++                                               ISD::ArgFlagsTy ArgFlags,
++                                               CCState &State);
++bool CC_AArch64_ARTInvokeUnresolved(unsigned ValNo, MVT ValVT, MVT LocVT,
++                                    CCValAssign::LocInfo LocInfo,
++                                    ISD::ArgFlagsTy ArgFlags, CCState &State);
++bool CC_AArch64_ARTStringBuilderAppend(unsigned ValNo, MVT ValVT, MVT LocVT,
++                                       CCValAssign::LocInfo LocInfo,
++                                       ISD::ArgFlagsTy ArgFlags,
++                                       CCState &State);
++bool CC_AArch64_ARTAnyReg(unsigned ValNo, MVT ValVT, MVT LocVT,
++                          CCValAssign::LocInfo LocInfo,
++                          ISD::ArgFlagsTy ArgFlags, CCState &State);
++bool CC_AArch64_ARTPreserveAll(unsigned ValNo, MVT ValVT, MVT LocVT,
++                               CCValAssign::LocInfo LocInfo,
++                               ISD::ArgFlagsTy ArgFlags, CCState &State);
+ bool RetCC_AArch64_AAPCS(unsigned ValNo, MVT ValVT, MVT LocVT,
+                          CCValAssign::LocInfo LocInfo, ISD::ArgFlagsTy ArgFlags,
+                          CCState &State);
+diff --git a/llvm/lib/Target/AArch64/AArch64CallingConvention.td b/llvm/lib/Target/AArch64/AArch64CallingConvention.td
+index 8e67f0f5c8..f24d65966b 100644
+--- a/llvm/lib/Target/AArch64/AArch64CallingConvention.td
++++ b/llvm/lib/Target/AArch64/AArch64CallingConvention.td
+@@ -494,6 +494,244 @@ def CC_AArch64_GHC : CallingConv<[
+   CCIfType<[i64], CCAssignToReg<[X19, X20, X21, X22, X23, X24, X25, X26, X27, X28]>>
+ ]>;
+ 
++// Calling conventions used by ART.
++
++def ART {
++  int UncompressedGCAddrSpace = 1;
++  int CompressedGCAddrSpace = 2;
++  int MethodAddrSpace = 10;
++  int CriticalNativeFunctionAddrSpace = 11;
++}
++
++let Entry = 1 in
++def CC_AArch64_ARTInvokeDex : CallingConv<[
++  // Promote i1, i8 and i16 to i32.
++  CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
++
++  // Truncate GC pointer arguments to 32 bits before assigning stack slots.
++  CCIfPtrAddrSpace<ART.UncompressedGCAddrSpace, CCTruncToType<i32>>,
++  CCIfPtrAddrSpace<ART.CompressedGCAddrSpace, CCTruncToType<i32>>,
++
++  // The first (callee) method pointer argument is passed in X0.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToReg<[X0]>>,
++
++  // The second (caller) method pointer argument is passed on the stack at offset 0.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToRegAndStack<[X16], 8, 8>>,
++
++  CCIfType<[i32], CCAssignToRegAndStack<[W1, W2, W3, W4, W5, W6, W7], 4, 4>>,
++  CCIfType<[i64], CCAssignToRegAndStack<[X1, X2, X3, X4, X5, X6, X7], 8, 4>>,
++  // CCIfType<[f16, bf16], CCAssignToRegAndStack<[H0, H1, H2, H3, H4, H5, H6, H7], 4, 4>>,
++  CCIfType<[f32], CCAssignToRegAndStack<[S0, S1, S2, S3, S4, S5, S6, S7], 4, 4>>,
++  CCIfType<[f64], CCAssignToRegAndStack<[D0, D1, D2, D3, D4, D5, D6, D7], 8, 4>>,
++
++  // CCIfType<[v1i64, v2i32, v4i16, v8i8, v1f64, v2f32, v4f16, v4bf16],
++  //     CCAssignToReg<[D0, D1, D2, D3, D4, D5, D6, D7]>>,
++  // CCIfType<[f128, v2i64, v4i32, v8i16, v16i8, v4f32, v2f64, v8f16, v8bf16],
++  //     CCAssignToReg<[Q0, Q1, Q2, Q3, Q4, Q5, Q6, Q7]>>,
++
++  // Pass the remaining parameters on the stack.
++  CCIfType<[i32, f32], CCAssignToStack<4, 4>>,
++  CCIfType<[i64, f64], CCAssignToStack<8, 4>>
++]>;
++
++let Entry = 1 in
++def CC_AArch64_ARTInvokeInterface : CallingConv<[
++  // Promote i1, i8 and i16 to i32.
++  CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
++
++  // Truncate GC pointer arguments to 32 bits before assigning stack slots.
++  CCIfPtrAddrSpace<ART.UncompressedGCAddrSpace, CCTruncToType<i32>>,
++  CCIfPtrAddrSpace<ART.CompressedGCAddrSpace, CCTruncToType<i32>>,
++
++  // The first two (callee) method pointer arguments are passed in X0 and X17.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToReg<[X0, X17]>>,
++
++  // The third (caller) method pointer argument is passed on the stack at offset 0.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToRegAndStack<[X16], 8, 8>>,
++
++  CCIfType<[i32], CCAssignToRegAndStack<[W1, W2, W3, W4, W5, W6, W7], 4, 4>>,
++  CCIfType<[i64], CCAssignToRegAndStack<[X1, X2, X3, X4, X5, X6, X7], 8, 4>>,
++  // CCIfType<[f16, bf16], CCAssignToRegAndStack<[H0, H1, H2, H3, H4, H5, H6, H7], 4, 4>>,
++  CCIfType<[f32], CCAssignToRegAndStack<[S0, S1, S2, S3, S4, S5, S6, S7], 4, 4>>,
++  CCIfType<[f64], CCAssignToRegAndStack<[D0, D1, D2, D3, D4, D5, D6, D7], 8, 4>>,
++
++  // CCIfType<[v1i64, v2i32, v4i16, v8i8, v1f64, v2f32, v4f16, v4bf16],
++  //     CCAssignToReg<[D0, D1, D2, D3, D4, D5, D6, D7]>>,
++  // CCIfType<[f128, v2i64, v4i32, v8i16, v16i8, v4f32, v2f64, v8f16, v8bf16],
++  //     CCAssignToReg<[Q0, Q1, Q2, Q3, Q4, Q5, Q6, Q7]>>,
++
++  // Pass the remaining parameters on the stack.
++  CCIfType<[i32, f32], CCAssignToStack<4, 4>>,
++  CCIfType<[i64, f64], CCAssignToStack<8, 4>>
++]>;
++
++let Entry = 1 in
++def CC_AArch64_ARTInvokePolymorphic : CallingConv<[
++  // Promote i1, i8 and i16 to i32.
++  CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
++
++  // Truncate GC pointer arguments to 32 bits before assigning stack slots.
++  CCIfPtrAddrSpace<ART.UncompressedGCAddrSpace, CCTruncToType<i32>>,
++  CCIfPtrAddrSpace<ART.CompressedGCAddrSpace, CCTruncToType<i32>>,
++
++  // The caller method pointer argument is passed on the stack at offset 0.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToRegAndStack<[X16], 8, 8>>,
++
++  CCIfType<[i32], CCAssignToRegAndStack<[W1, W2, W3, W4, W5, W6, W7], 4, 4>>,
++  CCIfType<[i64], CCAssignToRegAndStack<[X1, X2, X3, X4, X5, X6, X7], 8, 4>>,
++  // CCIfType<[f16, bf16], CCAssignToRegAndStack<[H0, H1, H2, H3, H4, H5, H6, H7], 4, 4>>,
++  CCIfType<[f32], CCAssignToRegAndStack<[S0, S1, S2, S3, S4, S5, S6, S7], 4, 4>>,
++  CCIfType<[f64], CCAssignToRegAndStack<[D0, D1, D2, D3, D4, D5, D6, D7], 8, 4>>,
++
++  // CCIfType<[v1i64, v2i32, v4i16, v8i8, v1f64, v2f32, v4f16, v4bf16],
++  //     CCAssignToReg<[D0, D1, D2, D3, D4, D5, D6, D7]>>,
++  // CCIfType<[f128, v2i64, v4i32, v8i16, v16i8, v4f32, v2f64, v8f16, v8bf16],
++  //     CCAssignToReg<[Q0, Q1, Q2, Q3, Q4, Q5, Q6, Q7]>>,
++
++  // Pass the remaining parameters on the stack.
++  CCIfType<[i32, f32], CCAssignToStack<4, 4>>,
++  CCIfType<[i64, f64], CCAssignToStack<8, 4>>
++]>;
++
++let Entry = 1 in
++def CC_AArch64_ARTCriticalNative : CallingConv<[
++  // Promote i1, i8 and i16 to i32.
++  CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
++
++  // The first (callee) method pointer argument is passed in X15.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToReg<[X15]>>,
++
++  // The callee is put into LR.
++  CCIfPtrAddrSpace<ART.CriticalNativeFunctionAddrSpace, CCAssignToReg<[LR]>>,
++
++  CCIfType<[i32], CCAssignToReg<[W0, W1, W2, W3, W4, W5, W6, W7]>>,
++  CCIfType<[i64], CCAssignToReg<[X0, X1, X2, X3, X4, X5, X6, X7]>>,
++  // CCIfType<[f16, bf16], CCAssignToReg<[H0, H1, H2, H3, H4, H5, H6, H7]>>,
++  CCIfType<[f32], CCAssignToReg<[S0, S1, S2, S3, S4, S5, S6, S7]>>,
++  CCIfType<[f64], CCAssignToReg<[D0, D1, D2, D3, D4, D5, D6, D7]>>,
++
++  // The remaining arguments should be passed on the stack, however the stack must be
++  // adjusted before and after the call for this. We do that at the IR level using patchpoints.
++]>;
++
++let Entry = 1 in
++def CC_AArch64_ARTInvokeRuntime : CallingConv<[
++  // Promote i1, i8 and i16 to i32.
++  CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
++
++  // The current method pointer argument is passed on the stack at offset 0.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToRegAndStack<[X16], 8, 8>>,
++
++  // All arguments must be passed in registers.
++  CCIfType<[i32], CCAssignToReg<[W0, W1, W2, W3, W4, W5, W6, W7]>>,
++  CCIfType<[i64], CCAssignToReg<[X0, X1, X2, X3, X4, X5, X6, X7]>>,
++  CCIfType<[f32], CCAssignToReg<[S0, S1, S2, S3, S4, S5, S6, S7]>>,
++  CCIfType<[f64], CCAssignToReg<[D0, D1, D2, D3, D4, D5, D6, D7]>>,
++]>;
++
++let Entry = 1 in
++def CC_AArch64_ARTInvokeRuntimeHiddenReceiver : CallingConv<[
++  // Promote i1, i8 and i16 to i32.
++  CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
++
++  // Truncate GC pointer arguments to 32 bits before assigning stack slots.
++  CCIfPtrAddrSpace<ART.UncompressedGCAddrSpace, CCTruncToType<i32>>,
++  CCIfPtrAddrSpace<ART.CompressedGCAddrSpace, CCTruncToType<i32>>,
++
++  // The current method pointer argument is passed on the stack at offset 0.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToRegAndStack<[X16], 8, 8>>,
++
++  CCIfType<[i32], CCAssignToRegAndStack<[W0, W1, W2, W3, W4, W5, W6, W7], 4, 4>>,
++  CCIfType<[i64], CCAssignToRegAndStack<[X0, X1, X2, X3, X4, X5, X6, X7], 8, 4>>,
++  // CCIfType<[f16, bf16], CCAssignToRegAndStack<[H0, H1, H2, H3, H4, H5, H6, H7], 4, 4>>,
++  CCIfType<[f32], CCAssignToRegAndStack<[S0, S1, S2, S3, S4, S5, S6, S7], 4, 4>>,
++  CCIfType<[f64], CCAssignToRegAndStack<[D0, D1, D2, D3, D4, D5, D6, D7], 8, 4>>,
++
++  // CCIfType<[v1i64, v2i32, v4i16, v8i8, v1f64, v2f32, v4f16, v4bf16],
++  //     CCAssignToReg<[D0, D1, D2, D3, D4, D5, D6, D7]>>,
++  // CCIfType<[f128, v2i64, v4i32, v8i16, v16i8, v4f32, v2f64, v8f16, v8bf16],
++  //     CCAssignToReg<[Q0, Q1, Q2, Q3, Q4, Q5, Q6, Q7]>>,
++
++  // Pass the remaining parameters on the stack.
++  CCIfType<[i32, f32], CCAssignToStack<4, 4>>,
++  CCIfType<[i64, f64], CCAssignToStack<8, 4>>
++]>;
++
++let Entry = 1 in
++def CC_AArch64_ARTInvokeUnresolved : CallingConv<[
++  // Promote i1, i8 and i16 to i32.
++  CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
++
++  // Truncate GC pointer arguments to 32 bits before assigning stack slots.
++  CCIfPtrAddrSpace<ART.UncompressedGCAddrSpace, CCTruncToType<i32>>,
++  CCIfPtrAddrSpace<ART.CompressedGCAddrSpace, CCTruncToType<i32>>,
++
++  // The (caller) method pointer argument is passed on the stack at offset 0.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToRegAndStack<[X16], 8, 8>>,
++
++  // The first argument is expected to be the called method index, which is passed in x0.
++  CCIfType<[i32], CCAssignToReg<[W0]>>,
++  CCIfType<[i64], CCAssignToReg<[X0]>>,
++
++  CCIfType<[i32], CCAssignToRegAndStack<[W1, W2, W3, W4, W5, W6, W7], 4, 4>>,
++  CCIfType<[i64], CCAssignToRegAndStack<[X1, X2, X3, X4, X5, X6, X7], 8, 4>>,
++  // CCIfType<[f16, bf16], CCAssignToRegAndStack<[H0, H1, H2, H3, H4, H5, H6, H7], 4, 4>>,
++  CCIfType<[f32], CCAssignToRegAndStack<[S0, S1, S2, S3, S4, S5, S6, S7], 4, 4>>,
++  CCIfType<[f64], CCAssignToRegAndStack<[D0, D1, D2, D3, D4, D5, D6, D7], 8, 4>>,
++
++  // CCIfType<[v1i64, v2i32, v4i16, v8i8, v1f64, v2f32, v4f16, v4bf16],
++  //     CCAssignToReg<[D0, D1, D2, D3, D4, D5, D6, D7]>>,
++  // CCIfType<[f128, v2i64, v4i32, v8i16, v16i8, v4f32, v2f64, v8f16, v8bf16],
++  //     CCAssignToReg<[Q0, Q1, Q2, Q3, Q4, Q5, Q6, Q7]>>,
++
++  // Pass the remaining parameters on the stack.
++  CCIfType<[i32, f32], CCAssignToStack<4, 4>>,
++  CCIfType<[i64, f64], CCAssignToStack<8, 4>>
++]>;
++
++let Entry = 1 in
++def CC_AArch64_ARTStringBuilderAppend : CallingConv<[
++  // NOTE: i1, i8 and i16 arguments shouldn't be passed directly,
++  // they should be promoted to i32 in the IR.
++  // CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
++
++  // Truncate GC pointer arguments to 32 bits before assigning stack slots.
++  CCIfPtrAddrSpace<ART.UncompressedGCAddrSpace, CCTruncToType<i32>>,
++  CCIfPtrAddrSpace<ART.CompressedGCAddrSpace, CCTruncToType<i32>>,
++
++  // The current method pointer argument is passed on the stack at offset 0.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToRegAndStack<[X16], 8, 8>>,
++
++  // Assign the first i32 to W0.
++  CCIfType<[i32], CCAssignToReg<[W0]>>,
++
++  // Pass everything on the stack, with its default alignment.
++  CCIfType<[i32, f32], CCAssignToStack<4, 4>>,
++  CCIfType<[i64], CCIfSplit<CCAssignToStack<8, 16>>>,
++  CCIfType<[i64, f64], CCAssignToStack<8, 8>>
++]>;
++
++let Entry = 1 in
++def CC_AArch64_ARTAnyReg : CallingConv<[
++  // The current method pointer argument is passed on the stack at offset 0.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToRegAndStack<[X16], 8, 8>>,
++]>;
++
++let Entry = 1 in
++def CC_AArch64_ARTPreserveAll : CallingConv<[
++  // Promote i1, i8 and i16 to i32.
++  CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
++
++  // The current method pointer argument is passed on the stack at offset 0.
++  CCIfPtrAddrSpace<ART.MethodAddrSpace, CCAssignToRegAndStack<[X16], 8, 8>>,
++
++  // All arguments must be passed in registers.
++  CCIfType<[i32], CCAssignToReg<[W0, W1, W2, W3, W4, W5, W6, W7]>>,
++  CCIfType<[i64], CCAssignToReg<[X0, X1, X2, X3, X4, X5, X6, X7]>>,
++  CCIfType<[f32], CCAssignToReg<[S0, S1, S2, S3, S4, S5, S6, S7]>>,
++  CCIfType<[f64], CCAssignToReg<[D0, D1, D2, D3, D4, D5, D6, D7]>>,
++]>;
++
+ // The order of the callee-saves in this file is important, because the
+ // FrameLowering code will use this order to determine the layout the
+ // callee-save area in the stack frame. As can be observed below, Darwin
+@@ -604,6 +842,14 @@ def CSR_AArch64_AllRegs
+                            (sequence "S%u", 0, 31), (sequence "D%u", 0, 31),
+                            (sequence "Q%u", 0, 31))>;
+ 
++// ART fault handlers preserve all general purpose registers except x30,
++// and preserve the lower 64 bits of floating-point registers.
++def CSR_AArch64_ARTPreserveAllRegs
++    : CalleeSavedRegs<(add (sequence "W%u", 0, 15), (sequence "W%u", 19, 29), WSP,
++                           (sequence "X%u", 0, 15), (sequence "X%u", 19, 28), FP, SP,
++                           (sequence "B%u", 0, 31), (sequence "H%u", 0, 31),
++                           (sequence "S%u", 0, 31), (sequence "D%u", 0, 31))>;
++
+ def CSR_AArch64_NoRegs : CalleeSavedRegs<(add)>;
+ 
+ def CSR_AArch64_RT_MostRegs :  CalleeSavedRegs<(add CSR_AArch64_AAPCS,
+diff --git a/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp b/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
+index 8015d1c950..8f184ca815 100644
+--- a/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
++++ b/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
+@@ -6545,6 +6545,46 @@ CCAssignFn *AArch64TargetLowering::CCAssignFnForCall(CallingConv::ID CC,
+       return CC_AArch64_DarwinPCS;
+     return Subtarget->isTargetILP32() ? CC_AArch64_DarwinPCS_ILP32_VarArg
+                                       : CC_AArch64_DarwinPCS_VarArg;
++  case CallingConv::ARTInvokeDex:
++    assert(Subtarget->isTargetAndroid() &&
++           "ART calling convention used for non-Android target");
++    return CC_AArch64_ARTInvokeDex;
++  case CallingConv::ARTInvokeInterface:
++    assert(Subtarget->isTargetAndroid() &&
++           "ART calling convention used for non-Android target");
++    return CC_AArch64_ARTInvokeInterface;
++  case CallingConv::ARTInvokePolymorphic:
++    assert(Subtarget->isTargetAndroid() &&
++           "ART calling convention used for non-Android target");
++    return CC_AArch64_ARTInvokePolymorphic;
++  case CallingConv::ARTCriticalNative:
++    assert(Subtarget->isTargetAndroid() &&
++           "ART calling convention used for non-Android target");
++    return CC_AArch64_ARTCriticalNative;
++  case CallingConv::ARTInvokeRuntime:
++    assert(Subtarget->isTargetAndroid() &&
++           "ART calling convention used for non-Android target");
++    return CC_AArch64_ARTInvokeRuntime;
++  case CallingConv::ARTInvokeRuntimeHiddenReceiver:
++    assert(Subtarget->isTargetAndroid() &&
++           "ART calling convention used for non-Android target");
++    return CC_AArch64_ARTInvokeRuntimeHiddenReceiver;
++  case CallingConv::ARTInvokeUnresolved:
++    assert(Subtarget->isTargetAndroid() &&
++           "ART calling convention used for non-Android target");
++    return CC_AArch64_ARTInvokeUnresolved;
++  case CallingConv::ARTStringBuilderAppend:
++    assert(Subtarget->isTargetAndroid() &&
++           "ART calling convention used for non-Android target");
++    return CC_AArch64_ARTStringBuilderAppend;
++  case CallingConv::ARTAnyReg:
++    assert(Subtarget->isTargetAndroid() &&
++           "ART calling convention used for non-Android target");
++    return CC_AArch64_ARTAnyReg;
++  case CallingConv::ARTPreserveAll:
++    assert(Subtarget->isTargetAndroid() &&
++           "ART calling convention used for non-Android target");
++    return CC_AArch64_ARTPreserveAll;
+    case CallingConv::Win64:
+      if (IsVarArg) {
+        if (Subtarget->isWindowsArm64EC())
+@@ -6781,6 +6821,7 @@ SDValue AArch64TargetLowering::LowerFormalArguments(
+       case CCValAssign::AExt:
+       case CCValAssign::SExt:
+       case CCValAssign::ZExt:
++      case CCValAssign::Trunc:
+         break;
+       case CCValAssign::AExtUpper:
+         ArgValue = DAG.getNode(ISD::SRL, DL, RegVT, ArgValue,
+diff --git a/llvm/lib/Target/AArch64/AArch64RegisterInfo.cpp b/llvm/lib/Target/AArch64/AArch64RegisterInfo.cpp
+index 48e1c1bc73..5e3c9d2a56 100644
+--- a/llvm/lib/Target/AArch64/AArch64RegisterInfo.cpp
++++ b/llvm/lib/Target/AArch64/AArch64RegisterInfo.cpp
+@@ -77,6 +77,9 @@ AArch64RegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
+     return CSR_AArch64_NoRegs_SaveList;
+   if (MF->getFunction().getCallingConv() == CallingConv::AnyReg)
+     return CSR_AArch64_AllRegs_SaveList;
++  if (MF->getFunction().getCallingConv() == CallingConv::ARTAnyReg ||
++      MF->getFunction().getCallingConv() == CallingConv::ARTPreserveAll)
++    return CSR_AArch64_ARTPreserveAllRegs_SaveList;
+ 
+   if (MF->getFunction().getCallingConv() == CallingConv::ARM64EC_Thunk_X64)
+     return CSR_Win_AArch64_Arm64EC_Thunk_SaveList;
+@@ -266,6 +269,8 @@ AArch64RegisterInfo::getCallPreservedMask(const MachineFunction &MF,
+     return SCS ? CSR_AArch64_NoRegs_SCS_RegMask : CSR_AArch64_NoRegs_RegMask;
+   if (CC == CallingConv::AnyReg)
+     return SCS ? CSR_AArch64_AllRegs_SCS_RegMask : CSR_AArch64_AllRegs_RegMask;
++  if (CC == CallingConv::ARTAnyReg || CC == CallingConv::ARTPreserveAll)
++    return CSR_AArch64_ARTPreserveAllRegs_RegMask;
+ 
+   // All the following calling conventions are handled differently on Darwin.
+   if (MF.getSubtarget<AArch64Subtarget>().isTargetDarwin()) {

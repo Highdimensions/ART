@@ -39,6 +39,7 @@
 #include "intrinsic_objects.h"
 #include "intrinsics.h"
 #include "intrinsics_list.h"
+#include "linear_order.h"
 #include "mirror/class-inl.h"
 #include "scoped_thread_state_change-inl.h"
 #include "ssa_builder.h"
@@ -575,6 +576,11 @@ void HGraph::SimplifyLoop(HBasicBlock* header) {
     // Called from DeadBlockElimination. Update SuspendCheck pointer.
     info->SetSuspendCheck(first_instruction->AsSuspendCheck());
   }
+}
+
+void HGraph::LinearizeGraph() {
+  DCHECK(linear_order_.empty());
+  ::art::LinearizeGraph(this, &linear_order_);
 }
 
 void HGraph::ComputeTryBlockInformation() {

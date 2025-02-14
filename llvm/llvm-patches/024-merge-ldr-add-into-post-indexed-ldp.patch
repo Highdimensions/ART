@@ -1,0 +1,217 @@
+diff --git a/llvm/lib/Target/AArch64/AArch64InstrInfo.cpp b/llvm/lib/Target/AArch64/AArch64InstrInfo.cpp
+index 9b4bb7c88b..dcc6dda344 100644
+--- a/llvm/lib/Target/AArch64/AArch64InstrInfo.cpp
++++ b/llvm/lib/Target/AArch64/AArch64InstrInfo.cpp
+@@ -3994,7 +3994,11 @@ int AArch64InstrInfo::getMemScale(unsigned Opc) {
+   case AArch64::STRWpre:
+   case AArch64::LDPSi:
+   case AArch64::LDPSWi:
++  case AArch64::LDPSWpre:
++  case AArch64::LDPSWpost:
+   case AArch64::LDPWi:
++  case AArch64::LDPWpre:
++  case AArch64::LDPWpost:
+   case AArch64::STPSi:
+   case AArch64::STPWi:
+     return 4;
+@@ -4012,6 +4016,8 @@ int AArch64InstrInfo::getMemScale(unsigned Opc) {
+   case AArch64::STRXpre:
+   case AArch64::LDPDi:
+   case AArch64::LDPXi:
++  case AArch64::LDPXpre:
++  case AArch64::LDPXpost:
+   case AArch64::STPDi:
+   case AArch64::STPXi:
+     return 8;
+diff --git a/llvm/lib/Target/AArch64/AArch64LoadStoreOptimizer.cpp b/llvm/lib/Target/AArch64/AArch64LoadStoreOptimizer.cpp
+index 926a894662..ee96be9a56 100644
+--- a/llvm/lib/Target/AArch64/AArch64LoadStoreOptimizer.cpp
++++ b/llvm/lib/Target/AArch64/AArch64LoadStoreOptimizer.cpp
+@@ -169,7 +169,8 @@ struct AArch64LoadStoreOpt : public MachineFunctionPass {
+   // pre or post indexed addressing with writeback. Scan forwards.
+   MachineBasicBlock::iterator
+   findMatchingUpdateInsnForward(MachineBasicBlock::iterator I,
+-                                int UnscaledOffset, unsigned Limit);
++                                int UnscaledOffset, unsigned Limit,
++                                bool IsLDPPostIndex);
+ 
+   // Scan the instruction list to find a base register update that can
+   // be combined with the current instruction (a load or store) using
+@@ -182,10 +183,16 @@ struct AArch64LoadStoreOpt : public MachineFunctionPass {
+   bool isMatchingUpdateInsn(MachineInstr &MemMI, MachineInstr &MI,
+                             unsigned BaseReg, int Offset);
+ 
++  enum LdStMergeKind {
++    PreIdx,
++    PostIdx,
++    LDPPostIdx,
++  };
++
+   // Merge a pre- or post-index base register update into a ld/st instruction.
+   MachineBasicBlock::iterator
+   mergeUpdateInsn(MachineBasicBlock::iterator I,
+-                  MachineBasicBlock::iterator Update, bool IsPreIdx);
++                  MachineBasicBlock::iterator Update, LdStMergeKind MergeKind);
+ 
+   // Find and merge zero store instructions.
+   bool tryToMergeZeroStInst(MachineBasicBlock::iterator &MBBI);
+@@ -686,6 +693,7 @@ static bool isMergeableLdStUpdate(MachineInstr &MI) {
+   case AArch64::LDRWui:
+   case AArch64::LDRHHui:
+   case AArch64::LDRBBui:
++  case AArch64::LDRSWui:
+   case AArch64::STGi:
+   case AArch64::STZGi:
+   case AArch64::ST2Gi:
+@@ -1972,7 +1980,7 @@ maybeMoveCFI(MachineInstr &MI, MachineBasicBlock::iterator MaybeCFI) {
+ MachineBasicBlock::iterator
+ AArch64LoadStoreOpt::mergeUpdateInsn(MachineBasicBlock::iterator I,
+                                      MachineBasicBlock::iterator Update,
+-                                     bool IsPreIdx) {
++                                     LdStMergeKind MergeKind) {
+   assert((Update->getOpcode() == AArch64::ADDXri ||
+           Update->getOpcode() == AArch64::SUBXri) &&
+          "Unexpected base register update instruction to merge!");
+@@ -1982,7 +1990,7 @@ AArch64LoadStoreOpt::mergeUpdateInsn(MachineBasicBlock::iterator I,
+   // If updating the SP and the following instruction is CFA offset related CFI
+   // instruction move it after the merged instruction.
+   MachineBasicBlock::iterator CFI =
+-      IsPreIdx ? maybeMoveCFI(*Update, next_nodbg(Update, E)) : E;
++      MergeKind == PreIdx ? maybeMoveCFI(*Update, next_nodbg(Update, E)) : E;
+ 
+   // Return the instruction following the merged instruction, which is
+   // the instruction following our unmerged load. Unless that's the add/sub
+@@ -1996,12 +2004,41 @@ AArch64LoadStoreOpt::mergeUpdateInsn(MachineBasicBlock::iterator I,
+   if (Update->getOpcode() == AArch64::SUBXri)
+     Value = -Value;
+ 
+-  unsigned NewOpc = IsPreIdx ? getPreIndexedOpcode(I->getOpcode())
+-                             : getPostIndexedOpcode(I->getOpcode());
++  unsigned NewOpc;
++  switch (MergeKind) {
++  case PreIdx:
++    NewOpc = getPreIndexedOpcode(I->getOpcode());
++    break;
++  case PostIdx:
++    NewOpc = getPostIndexedOpcode(I->getOpcode());
++    break;
++  case LDPPostIdx:
++    NewOpc = getPostIndexedOpcode(getMatchingPairOpcode(I->getOpcode()));
++    break;
++  }
+   MachineInstrBuilder MIB;
+   int Scale, MinOffset, MaxOffset;
+   getPrePostIndexedMemOpInfo(*I, Scale, MinOffset, MaxOffset);
+-  if (!AArch64InstrInfo::isPairedLdSt(*I)) {
++  if (MergeKind == LDPPostIdx) {
++    // Non-paired instruction transformed into a paired instruction.
++    assert((I->getOpcode() == AArch64::LDRXui ||
++            I->getOpcode() == AArch64::LDRWui ||
++            I->getOpcode() == AArch64::LDRSWui) &&
++           "Expected LDRXui or LDRWui instruction");
++    unsigned ZeroReg =
++        I->getOpcode() == AArch64::LDRWui ? AArch64::WZR : AArch64::XZR;
++    // NOTE: The scale wasn't calculated right above, so we need to update it.
++    Scale = TII->getMemScale(NewOpc);
++    MIB = BuildMI(*I->getParent(), I, I->getDebugLoc(), TII->get(NewOpc))
++              .add(getLdStRegOp(*Update))
++              .addDef(ZeroReg)
++              .setOperandDead(1)
++              .add(getLdStRegOp(*I))
++              .add(AArch64InstrInfo::getLdStBaseOp(*I))
++              .addImm(Value / Scale)
++              .setMemRefs(I->memoperands())
++              .setMIFlags(I->mergeFlagsWith(*Update));
++  } else if (!AArch64InstrInfo::isPairedLdSt(*I)) {
+     // Non-paired instruction.
+     MIB = BuildMI(*I->getParent(), I, I->getDebugLoc(), TII->get(NewOpc))
+               .add(getLdStRegOp(*Update))
+@@ -2026,7 +2063,7 @@ AArch64LoadStoreOpt::mergeUpdateInsn(MachineBasicBlock::iterator I,
+     MBB->splice(std::next(MIB.getInstr()->getIterator()), MBB, CFI);
+   }
+ 
+-  if (IsPreIdx) {
++  if (MergeKind == PreIdx) {
+     ++NumPreFolded;
+     LLVM_DEBUG(dbgs() << "Creating pre-indexed load/store.");
+   } else {
+@@ -2096,7 +2133,8 @@ bool AArch64LoadStoreOpt::isMatchingUpdateInsn(MachineInstr &MemMI,
+ }
+ 
+ MachineBasicBlock::iterator AArch64LoadStoreOpt::findMatchingUpdateInsnForward(
+-    MachineBasicBlock::iterator I, int UnscaledOffset, unsigned Limit) {
++    MachineBasicBlock::iterator I, int UnscaledOffset, unsigned Limit,
++    bool IsLDPPostIndex) {
+   MachineBasicBlock::iterator E = I->getParent()->end();
+   MachineInstr &MemMI = *I;
+   MachineBasicBlock::iterator MBBI = I;
+@@ -2153,7 +2191,8 @@ MachineBasicBlock::iterator AArch64LoadStoreOpt::findMatchingUpdateInsnForward(
+       ++Count;
+ 
+     // If we found a match, return it.
+-    if (isMatchingUpdateInsn(*I, MI, BaseReg, UnscaledOffset))
++    if (isMatchingUpdateInsn(*I, MI, BaseReg,
++                             IsLDPPostIndex ? 0 : UnscaledOffset))
+       return MBBI;
+ 
+     // Update the status of what the instruction clobbered and used.
+@@ -2390,13 +2429,34 @@ bool AArch64LoadStoreOpt::tryToMergeLdStUpdate
+   // add x20, x20, #32
+   //   merged into:
+   // ldr x0, [x20], #32
+-  Update = findMatchingUpdateInsnForward(MBBI, 0, UpdateLimit);
++  Update = findMatchingUpdateInsnForward(MBBI, 0, UpdateLimit, false);
+   if (Update != E) {
+     // Merge the update into the ld/st.
+-    MBBI = mergeUpdateInsn(MBBI, Update, /*IsPreIdx=*/false);
++    MBBI = mergeUpdateInsn(MBBI, Update, PostIdx);
+     return true;
+   }
+ 
++  // Look forward to try to form a post-index instruction using LDP.
++  // For example,
++  // ldr x0, [sp, #8]
++  // add sp, sp, #32
++  //   merged into:
++  // ldp xzr, x0, [sp], #32
++  if (MI.getOpcode() == AArch64::LDRWui || MI.getOpcode() == AArch64::LDRXui ||
++      MI.getOpcode() == AArch64::LDRSWui) {
++    // This transformation is only valid when we're loading from SP, because of
++    // its 16-byte alignment requirement.
++    if (MI.getOperand(1).isReg() && MI.getOperand(1).getReg() == AArch64::SP) {
++      Update = findMatchingUpdateInsnForward(MBBI, TII->getMemScale(*MBBI),
++                                             UpdateLimit, true);
++      if (Update != E) {
++        // Merge the update into the ld.
++        MBBI = mergeUpdateInsn(MBBI, Update, LDPPostIdx);
++        return true;
++      }
++    }
++  }
++
+   // Don't know how to handle unscaled pre/post-index versions below, so bail.
+   if (TII->hasUnscaledLdStOffset(MI.getOpcode()))
+     return false;
+@@ -2409,7 +2469,7 @@ bool AArch64LoadStoreOpt::tryToMergeLdStUpdate
+   Update = findMatchingUpdateInsnBackward(MBBI, UpdateLimit);
+   if (Update != E) {
+     // Merge the update into the ld/st.
+-    MBBI = mergeUpdateInsn(MBBI, Update, /*IsPreIdx=*/true);
++    MBBI = mergeUpdateInsn(MBBI, Update, PreIdx);
+     return true;
+   }
+ 
+@@ -2424,10 +2484,11 @@ bool AArch64LoadStoreOpt::tryToMergeLdStUpdate
+   // add x0, x0, #64
+   //   merged into:
+   // ldr x1, [x0, #64]!
+-  Update = findMatchingUpdateInsnForward(MBBI, UnscaledOffset, UpdateLimit);
++  Update =
++      findMatchingUpdateInsnForward(MBBI, UnscaledOffset, UpdateLimit, false);
+   if (Update != E) {
+     // Merge the update into the ld/st.
+-    MBBI = mergeUpdateInsn(MBBI, Update, /*IsPreIdx=*/true);
++    MBBI = mergeUpdateInsn(MBBI, Update, PreIdx);
+     return true;
+   }
+ 

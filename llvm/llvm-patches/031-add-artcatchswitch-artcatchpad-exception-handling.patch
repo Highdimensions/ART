@@ -1,0 +1,1236 @@
+diff --git a/llvm/include/llvm-c/Core.h b/llvm/include/llvm-c/Core.h
+index 83530ae7b5..93fae9839a 100644
+--- a/llvm/include/llvm-c/Core.h
++++ b/llvm/include/llvm-c/Core.h
+@@ -142,7 +142,9 @@ typedef enum {
+   LLVMCatchRet       = 62,
+   LLVMCatchPad       = 63,
+   LLVMCleanupPad     = 64,
+-  LLVMCatchSwitch    = 65
++  LLVMCatchSwitch    = 65,
++  LLVMARTCatchSwitch = 69,
++  LLVMARTCatchPad    = 70,
+ } LLVMOpcode;
+ 
+ typedef enum {
+diff --git a/llvm/include/llvm/Analysis/AliasAnalysis.h b/llvm/include/llvm/Analysis/AliasAnalysis.h
+index e8e4f491be..932cd305e4 100644
+--- a/llvm/include/llvm/Analysis/AliasAnalysis.h
++++ b/llvm/include/llvm/Analysis/AliasAnalysis.h
+@@ -57,6 +57,7 @@ class AtomicCmpXchgInst;
+ class BasicBlock;
+ class CatchPadInst;
+ class CatchReturnInst;
++class ARTCatchPadInst;
+ class DominatorTree;
+ class FenceInst;
+ class Function;
+@@ -592,6 +593,8 @@ public:
+                            AAQueryInfo &AAQI);
+   ModRefInfo getModRefInfo(const CatchReturnInst *I, const MemoryLocation &Loc,
+                            AAQueryInfo &AAQI);
++  ModRefInfo getModRefInfo(const ARTCatchPadInst *I, const MemoryLocation &Loc,
++                           AAQueryInfo &AAQI);
+   ModRefInfo getModRefInfo(const Instruction *I,
+                            const std::optional<MemoryLocation> &OptLoc,
+                            AAQueryInfo &AAQIP);
+diff --git a/llvm/include/llvm/AsmParser/LLParser.h b/llvm/include/llvm/AsmParser/LLParser.h
+index cf358c384f..5608b4f6be 100644
+--- a/llvm/include/llvm/AsmParser/LLParser.h
++++ b/llvm/include/llvm/AsmParser/LLParser.h
+@@ -638,6 +638,8 @@ namespace llvm {
+     bool parseCatchSwitch(Instruction *&Inst, PerFunctionState &PFS);
+     bool parseCatchPad(Instruction *&Inst, PerFunctionState &PFS);
+     bool parseCleanupPad(Instruction *&Inst, PerFunctionState &PFS);
++    bool parseARTCatchSwitch(Instruction *&Inst, PerFunctionState &PFS);
++    bool parseARTCatchPad(Instruction *&Inst, PerFunctionState &PFS);
+     bool parseCallBr(Instruction *&Inst, PerFunctionState &PFS);
+ 
+     bool parseUnaryOp(Instruction *&Inst, PerFunctionState &PFS, unsigned Opc,
+diff --git a/llvm/include/llvm/AsmParser/LLToken.h b/llvm/include/llvm/AsmParser/LLToken.h
+index 147cf56c82..64bcaa2066 100644
+--- a/llvm/include/llvm/AsmParser/LLToken.h
++++ b/llvm/include/llvm/AsmParser/LLToken.h
+@@ -323,6 +323,8 @@ enum Kind {
+   kw_catchret,
+   kw_catchpad,
+   kw_cleanuppad,
++  kw_artcatchswitch,
++  kw_artcatchpad,
+   kw_callbr,
+ 
+   kw_alloca,
+diff --git a/llvm/include/llvm/Bitcode/LLVMBitCodes.h b/llvm/include/llvm/Bitcode/LLVMBitCodes.h
+index c6f0ddf29a..0d6e2df35e 100644
+--- a/llvm/include/llvm/Bitcode/LLVMBitCodes.h
++++ b/llvm/include/llvm/Bitcode/LLVMBitCodes.h
+@@ -615,15 +615,17 @@ enum FunctionCodes {
+       52, // CATCHSWITCH: [num,args...] or [num,args...,bb]
+   // 53 is unused.
+   // 54 is unused.
+-  FUNC_CODE_OPERAND_BUNDLE = 55,  // OPERAND_BUNDLE: [tag#, value...]
+-  FUNC_CODE_INST_UNOP = 56,       // UNOP:       [opcode, ty, opval]
+-  FUNC_CODE_INST_CALLBR = 57,     // CALLBR:     [attr, cc, norm, transfs,
+-                                  //              fnty, fnid, args...]
+-  FUNC_CODE_INST_FREEZE = 58,     // FREEZE: [opty, opval]
+-  FUNC_CODE_INST_ATOMICRMW = 59,  // ATOMICRMW: [ptrty, ptr, valty, val,
+-                                  //             operation, align, vol,
+-                                  //             ordering, synchscope]
+-  FUNC_CODE_BLOCKADDR_USERS = 60, // BLOCKADDR_USERS: [value...]
++  FUNC_CODE_OPERAND_BUNDLE = 55,      // OPERAND_BUNDLE: [tag#, value...]
++  FUNC_CODE_INST_UNOP = 56,           // UNOP:       [opcode, ty, opval]
++  FUNC_CODE_INST_CALLBR = 57,         // CALLBR:     [attr, cc, norm, transfs,
++                                      //              fnty, fnid, args...]
++  FUNC_CODE_INST_FREEZE = 58,         // FREEZE: [opty, opval]
++  FUNC_CODE_INST_ATOMICRMW = 59,      // ATOMICRMW: [ptrty, ptr, valty, val,
++                                      //             operation, align, vol,
++                                      //             ordering, synchscope]
++  FUNC_CODE_BLOCKADDR_USERS = 60,     // BLOCKADDR_USERS: [value...]
++  FUNC_CODE_INST_ARTCATCHSWITCH = 61, // ARTCATCHSWITCH: [num, args...]
++  FUNC_CODE_INST_ARTCATCHPAD = 62,    // ARTCATCHPAD: []
+ };
+ 
+ enum UseListCodes {
+diff --git a/llvm/include/llvm/CodeGen/GlobalISel/IRTranslator.h b/llvm/include/llvm/CodeGen/GlobalISel/IRTranslator.h
+index 5454df0291..10c4b4b9c8 100644
+--- a/llvm/include/llvm/CodeGen/GlobalISel/IRTranslator.h
++++ b/llvm/include/llvm/CodeGen/GlobalISel/IRTranslator.h
+@@ -563,6 +563,9 @@ private:
+   bool translateCatchSwitch(const User &U, MachineIRBuilder &MIRBuilder) {
+     return false;
+   }
++  bool translateARTCatchSwitch(const User &U, MachineIRBuilder &MIRBuilder) {
++    return false;
++  }
+   bool translateAddrSpaceCast(const User &U, MachineIRBuilder &MIRBuilder) {
+     return translateCast(TargetOpcode::G_ADDRSPACE_CAST, U, MIRBuilder);
+   }
+@@ -572,6 +575,9 @@ private:
+   bool translateCatchPad(const User &U, MachineIRBuilder &MIRBuilder) {
+     return false;
+   }
++  bool translateARTCatchPad(const User &U, MachineIRBuilder &MIRBuilder) {
++    return false;
++  }
+   bool translateUserOp1(const User &U, MachineIRBuilder &MIRBuilder) {
+     return false;
+   }
+diff --git a/llvm/include/llvm/IR/IRBuilder.h b/llvm/include/llvm/IR/IRBuilder.h
+index f292231109..d28c48e25e 100644
+--- a/llvm/include/llvm/IR/IRBuilder.h
++++ b/llvm/include/llvm/IR/IRBuilder.h
+@@ -1254,6 +1254,14 @@ public:
+     return Insert(CatchReturnInst::Create(CatchPad, BB));
+   }
+ 
++  ARTCatchSwitchInst *CreateARTCatchSwitch(unsigned NumHandlers) {
++    return Insert(ARTCatchSwitchInst::Create(Context, NumHandlers));
++  }
++
++  ARTCatchPadInst *CreateARTCatchPad() {
++    return Insert(ARTCatchPadInst::Create(Context));
++  }
++
+   UnreachableInst *CreateUnreachable() {
+     return Insert(new UnreachableInst(Context));
+   }
+diff --git a/llvm/include/llvm/IR/InstVisitor.h b/llvm/include/llvm/IR/InstVisitor.h
+index 311e0ac47d..e595e2751a 100644
+--- a/llvm/include/llvm/IR/InstVisitor.h
++++ b/llvm/include/llvm/IR/InstVisitor.h
+@@ -197,6 +197,7 @@ public:
+   RetTy visitFuncletPadInst(FuncletPadInst &I) { DELEGATE(Instruction); }
+   RetTy visitCleanupPadInst(CleanupPadInst &I) { DELEGATE(FuncletPadInst); }
+   RetTy visitCatchPadInst(CatchPadInst &I)     { DELEGATE(FuncletPadInst); }
++  RetTy visitARTCatchPadInst(ARTCatchPadInst &I) { DELEGATE(Instruction); }
+   RetTy visitFreezeInst(FreezeInst &I)         { DELEGATE(Instruction); }
+ 
+   // Handle the special intrinsic instruction classes.
+@@ -250,6 +251,9 @@ public:
+   RetTy visitCatchSwitchInst(CatchSwitchInst &I) {
+     return static_cast<SubClass *>(this)->visitTerminator(I);
+   }
++  RetTy visitARTCatchSwitchInst(ARTCatchSwitchInst &I) {
++    return static_cast<SubClass *>(this)->visitTerminator(I);
++  }
+   RetTy visitTerminator(Instruction &I)    { DELEGATE(Instruction);}
+ 
+   // Next level propagators: If the user does not overload a specific
+diff --git a/llvm/include/llvm/IR/Instruction.def b/llvm/include/llvm/IR/Instruction.def
+index a5ad92f58f..2eec896652 100644
+--- a/llvm/include/llvm/IR/Instruction.def
++++ b/llvm/include/llvm/IR/Instruction.def
+@@ -134,91 +134,93 @@ HANDLE_TERM_INST  ( 7, Unreachable   , UnreachableInst)
+ HANDLE_TERM_INST  ( 8, CleanupRet    , CleanupReturnInst)
+ HANDLE_TERM_INST  ( 9, CatchRet      , CatchReturnInst)
+ HANDLE_TERM_INST  (10, CatchSwitch   , CatchSwitchInst)
+-HANDLE_TERM_INST  (11, CallBr        , CallBrInst) // A call-site terminator
+-  LAST_TERM_INST  (11)
++HANDLE_TERM_INST  (11, ARTCatchSwitch, ARTCatchSwitchInst)
++HANDLE_TERM_INST  (12, CallBr        , CallBrInst) // A call-site terminator
++  LAST_TERM_INST  (12)
+ 
+ // Standard unary operators...
+- FIRST_UNARY_INST(12)
+-HANDLE_UNARY_INST(12, FNeg  , UnaryOperator)
+-  LAST_UNARY_INST(12)
++ FIRST_UNARY_INST(13)
++HANDLE_UNARY_INST(13, FNeg  , UnaryOperator)
++  LAST_UNARY_INST(13)
+ 
+ // Standard binary operators...
+- FIRST_BINARY_INST(13)
+-HANDLE_BINARY_INST(13, Add  , BinaryOperator)
+-HANDLE_BINARY_INST(14, FAdd , BinaryOperator)
+-HANDLE_BINARY_INST(15, Sub  , BinaryOperator)
+-HANDLE_BINARY_INST(16, FSub , BinaryOperator)
+-HANDLE_BINARY_INST(17, Mul  , BinaryOperator)
+-HANDLE_BINARY_INST(18, FMul , BinaryOperator)
+-HANDLE_BINARY_INST(19, UDiv , BinaryOperator)
+-HANDLE_BINARY_INST(20, SDiv , BinaryOperator)
+-HANDLE_BINARY_INST(21, FDiv , BinaryOperator)
+-HANDLE_BINARY_INST(22, URem , BinaryOperator)
+-HANDLE_BINARY_INST(23, SRem , BinaryOperator)
+-HANDLE_BINARY_INST(24, FRem , BinaryOperator)
++ FIRST_BINARY_INST(14)
++HANDLE_BINARY_INST(14, Add  , BinaryOperator)
++HANDLE_BINARY_INST(15, FAdd , BinaryOperator)
++HANDLE_BINARY_INST(16, Sub  , BinaryOperator)
++HANDLE_BINARY_INST(17, FSub , BinaryOperator)
++HANDLE_BINARY_INST(18, Mul  , BinaryOperator)
++HANDLE_BINARY_INST(19, FMul , BinaryOperator)
++HANDLE_BINARY_INST(20, UDiv , BinaryOperator)
++HANDLE_BINARY_INST(21, SDiv , BinaryOperator)
++HANDLE_BINARY_INST(22, FDiv , BinaryOperator)
++HANDLE_BINARY_INST(23, URem , BinaryOperator)
++HANDLE_BINARY_INST(24, SRem , BinaryOperator)
++HANDLE_BINARY_INST(25, FRem , BinaryOperator)
+ 
+ // Logical operators (integer operands)
+-HANDLE_BINARY_INST(25, Shl  , BinaryOperator) // Shift left  (logical)
+-HANDLE_BINARY_INST(26, LShr , BinaryOperator) // Shift right (logical)
+-HANDLE_BINARY_INST(27, AShr , BinaryOperator) // Shift right (arithmetic)
+-HANDLE_BINARY_INST(28, And  , BinaryOperator)
+-HANDLE_BINARY_INST(29, Or   , BinaryOperator)
+-HANDLE_BINARY_INST(30, Xor  , BinaryOperator)
+-  LAST_BINARY_INST(30)
++HANDLE_BINARY_INST(26, Shl  , BinaryOperator) // Shift left  (logical)
++HANDLE_BINARY_INST(27, LShr , BinaryOperator) // Shift right (logical)
++HANDLE_BINARY_INST(28, AShr , BinaryOperator) // Shift right (arithmetic)
++HANDLE_BINARY_INST(29, And  , BinaryOperator)
++HANDLE_BINARY_INST(30, Or   , BinaryOperator)
++HANDLE_BINARY_INST(31, Xor  , BinaryOperator)
++  LAST_BINARY_INST(31)
+ 
+ // Memory operators...
+- FIRST_MEMORY_INST(31)
+-HANDLE_MEMORY_INST(31, Alloca, AllocaInst)  // Stack management
+-HANDLE_MEMORY_INST(32, Load  , LoadInst  )  // Memory manipulation instrs
+-HANDLE_MEMORY_INST(33, Store , StoreInst )
+-HANDLE_MEMORY_INST(34, GetElementPtr, GetElementPtrInst)
+-HANDLE_MEMORY_INST(35, Fence , FenceInst )
+-HANDLE_MEMORY_INST(36, AtomicCmpXchg , AtomicCmpXchgInst )
+-HANDLE_MEMORY_INST(37, AtomicRMW , AtomicRMWInst )
+-  LAST_MEMORY_INST(37)
++ FIRST_MEMORY_INST(32)
++HANDLE_MEMORY_INST(32, Alloca, AllocaInst)  // Stack management
++HANDLE_MEMORY_INST(33, Load  , LoadInst  )  // Memory manipulation instrs
++HANDLE_MEMORY_INST(34, Store , StoreInst )
++HANDLE_MEMORY_INST(35, GetElementPtr, GetElementPtrInst)
++HANDLE_MEMORY_INST(36, Fence , FenceInst )
++HANDLE_MEMORY_INST(37, AtomicCmpXchg , AtomicCmpXchgInst )
++HANDLE_MEMORY_INST(38, AtomicRMW , AtomicRMWInst )
++  LAST_MEMORY_INST(38)
+ 
+ // Cast operators ...
+ // NOTE: The order matters here because CastInst::isEliminableCastPair
+ // NOTE: (see Instructions.cpp) encodes a table based on this ordering.
+- FIRST_CAST_INST(38)
+-HANDLE_CAST_INST(38, Trunc   , TruncInst   )  // Truncate integers
+-HANDLE_CAST_INST(39, ZExt    , ZExtInst    )  // Zero extend integers
+-HANDLE_CAST_INST(40, SExt    , SExtInst    )  // Sign extend integers
+-HANDLE_CAST_INST(41, FPToUI  , FPToUIInst  )  // floating point -> UInt
+-HANDLE_CAST_INST(42, FPToSI  , FPToSIInst  )  // floating point -> SInt
+-HANDLE_CAST_INST(43, UIToFP  , UIToFPInst  )  // UInt -> floating point
+-HANDLE_CAST_INST(44, SIToFP  , SIToFPInst  )  // SInt -> floating point
+-HANDLE_CAST_INST(45, FPTrunc , FPTruncInst )  // Truncate floating point
+-HANDLE_CAST_INST(46, FPExt   , FPExtInst   )  // Extend floating point
+-HANDLE_CAST_INST(47, PtrToInt, PtrToIntInst)  // Pointer -> Integer
+-HANDLE_CAST_INST(48, IntToPtr, IntToPtrInst)  // Integer -> Pointer
+-HANDLE_CAST_INST(49, BitCast , BitCastInst )  // Type cast
+-HANDLE_CAST_INST(50, AddrSpaceCast, AddrSpaceCastInst)  // addrspace cast
+-  LAST_CAST_INST(50)
+-
+- FIRST_FUNCLETPAD_INST(51)
+-HANDLE_FUNCLETPAD_INST(51, CleanupPad, CleanupPadInst)
+-HANDLE_FUNCLETPAD_INST(52, CatchPad  , CatchPadInst)
+-  LAST_FUNCLETPAD_INST(52)
++ FIRST_CAST_INST(39)
++HANDLE_CAST_INST(39, Trunc   , TruncInst   )  // Truncate integers
++HANDLE_CAST_INST(40, ZExt    , ZExtInst    )  // Zero extend integers
++HANDLE_CAST_INST(41, SExt    , SExtInst    )  // Sign extend integers
++HANDLE_CAST_INST(42, FPToUI  , FPToUIInst  )  // floating point -> UInt
++HANDLE_CAST_INST(43, FPToSI  , FPToSIInst  )  // floating point -> SInt
++HANDLE_CAST_INST(44, UIToFP  , UIToFPInst  )  // UInt -> floating point
++HANDLE_CAST_INST(45, SIToFP  , SIToFPInst  )  // SInt -> floating point
++HANDLE_CAST_INST(46, FPTrunc , FPTruncInst )  // Truncate floating point
++HANDLE_CAST_INST(47, FPExt   , FPExtInst   )  // Extend floating point
++HANDLE_CAST_INST(48, PtrToInt, PtrToIntInst)  // Pointer -> Integer
++HANDLE_CAST_INST(49, IntToPtr, IntToPtrInst)  // Integer -> Pointer
++HANDLE_CAST_INST(50, BitCast , BitCastInst )  // Type cast
++HANDLE_CAST_INST(51, AddrSpaceCast, AddrSpaceCastInst)  // addrspace cast
++  LAST_CAST_INST(51)
++
++ FIRST_FUNCLETPAD_INST(52)
++HANDLE_FUNCLETPAD_INST(52, CleanupPad, CleanupPadInst)
++HANDLE_FUNCLETPAD_INST(53, CatchPad  , CatchPadInst)
++  LAST_FUNCLETPAD_INST(53)
+ 
+ // Other operators...
+- FIRST_OTHER_INST(53)
+-HANDLE_OTHER_INST(53, ICmp   , ICmpInst   )  // Integer comparison instruction
+-HANDLE_OTHER_INST(54, FCmp   , FCmpInst   )  // Floating point comparison instr.
+-HANDLE_OTHER_INST(55, PHI    , PHINode    )  // PHI node instruction
+-HANDLE_OTHER_INST(56, Call   , CallInst   )  // Call a function
+-HANDLE_OTHER_INST(57, Select , SelectInst )  // select instruction
+-HANDLE_USER_INST (58, UserOp1, Instruction)  // May be used internally in a pass
+-HANDLE_USER_INST (59, UserOp2, Instruction)  // Internal to passes only
+-HANDLE_OTHER_INST(60, VAArg  , VAArgInst  )  // vaarg instruction
+-HANDLE_OTHER_INST(61, ExtractElement, ExtractElementInst)// extract from vector
+-HANDLE_OTHER_INST(62, InsertElement, InsertElementInst)  // insert into vector
+-HANDLE_OTHER_INST(63, ShuffleVector, ShuffleVectorInst)  // shuffle two vectors.
+-HANDLE_OTHER_INST(64, ExtractValue, ExtractValueInst)// extract from aggregate
+-HANDLE_OTHER_INST(65, InsertValue, InsertValueInst)  // insert into aggregate
+-HANDLE_OTHER_INST(66, LandingPad, LandingPadInst)  // Landing pad instruction.
+-HANDLE_OTHER_INST(67, Freeze, FreezeInst) // Freeze instruction.
+-  LAST_OTHER_INST(67)
++ FIRST_OTHER_INST(54)
++HANDLE_OTHER_INST(54, ICmp   , ICmpInst   )  // Integer comparison instruction
++HANDLE_OTHER_INST(55, FCmp   , FCmpInst   )  // Floating point comparison instr.
++HANDLE_OTHER_INST(56, PHI    , PHINode    )  // PHI node instruction
++HANDLE_OTHER_INST(57, Call   , CallInst   )  // Call a function
++HANDLE_OTHER_INST(58, Select , SelectInst )  // select instruction
++HANDLE_USER_INST (59, UserOp1, Instruction)  // May be used internally in a pass
++HANDLE_USER_INST (60, UserOp2, Instruction)  // Internal to passes only
++HANDLE_OTHER_INST(61, VAArg  , VAArgInst  )  // vaarg instruction
++HANDLE_OTHER_INST(62, ExtractElement, ExtractElementInst)// extract from vector
++HANDLE_OTHER_INST(63, InsertElement, InsertElementInst)  // insert into vector
++HANDLE_OTHER_INST(64, ShuffleVector, ShuffleVectorInst)  // shuffle two vectors.
++HANDLE_OTHER_INST(65, ExtractValue, ExtractValueInst)// extract from aggregate
++HANDLE_OTHER_INST(66, InsertValue, InsertValueInst)  // insert into aggregate
++HANDLE_OTHER_INST(67, LandingPad, LandingPadInst)  // Landing pad instruction.
++HANDLE_OTHER_INST(68, Freeze, FreezeInst) // Freeze instruction.
++HANDLE_OTHER_INST(69, ARTCatchPad, ARTCatchPadInst) // artcatchpad instruction.
++  LAST_OTHER_INST(69)
+ 
+ #undef  FIRST_TERM_INST
+ #undef HANDLE_TERM_INST
+diff --git a/llvm/include/llvm/IR/Instruction.h b/llvm/include/llvm/IR/Instruction.h
+index fcd2ba838e..0111e02f6f 100644
+--- a/llvm/include/llvm/IR/Instruction.h
++++ b/llvm/include/llvm/IR/Instruction.h
+@@ -311,6 +311,7 @@ public:
+     case Instruction::CatchSwitch:
+     case Instruction::CatchRet:
+     case Instruction::CleanupRet:
++    case Instruction::ARTCatchSwitch:
+     case Instruction::Invoke:
+     case Instruction::Resume:
+     case Instruction::CallBr:
+@@ -792,6 +793,8 @@ public:
+     case Instruction::CatchPad:
+     case Instruction::CleanupPad:
+     case Instruction::LandingPad:
++    case Instruction::ARTCatchSwitch:
++    case Instruction::ARTCatchPad:
+       return true;
+     default:
+       return false;
+diff --git a/llvm/include/llvm/IR/Instructions.h b/llvm/include/llvm/IR/Instructions.h
+index 4b5a4423b7..cbf0290419 100644
+--- a/llvm/include/llvm/IR/Instructions.h
++++ b/llvm/include/llvm/IR/Instructions.h
+@@ -4775,6 +4775,136 @@ struct OperandTraits<CleanupReturnInst>
+ 
+ DEFINE_TRANSPARENT_OPERAND_ACCESSORS(CleanupReturnInst, Value)
+ 
++//===----------------------------------------------------------------------===//
++//                         ARTCatchSwitchInst Class
++//===----------------------------------------------------------------------===//
++class ARTCatchSwitchInst : public Instruction {
++  /// The number of operands actually allocated.  NumOperands is
++  /// the number actually in use.
++  unsigned ReservedSpace;
++
++  // Operand[n] = BasicBlock to go to on match
++  ARTCatchSwitchInst(const ARTCatchSwitchInst &CSI);
++
++  /// Create a new switch instruction, specifying a default destination.  The
++  /// number of additional handlers can be specified here to make memory
++  /// allocation more efficient. This constructor can also autoinsert before
++  /// another instruction.
++  ARTCatchSwitchInst(LLVMContext &Context, unsigned NumHandlers,
++                     Instruction *InsertBefore);
++
++  /// Create a new switch instruction, specifying a default destination.  The
++  /// number of additional handlers can be specified here to make memory
++  /// allocation more efficient. This constructor also autoinserts at the end of
++  /// the specified BasicBlock.
++  ARTCatchSwitchInst(LLVMContext &Context, unsigned NumHandlers,
++                     BasicBlock *InsertAtEnd);
++
++  // allocate space for exactly zero operands
++  void *operator new(size_t Size) { return User::operator new(Size); }
++
++  void init(unsigned NumReserved);
++  void growOperands(unsigned Size);
++
++protected:
++  // Note: Instruction needs to be a friend here to call cloneImpl.
++  friend class Instruction;
++
++  ARTCatchSwitchInst *cloneImpl() const;
++
++public:
++  void operator delete(void *Ptr) { return User::operator delete(Ptr); }
++
++  static ARTCatchSwitchInst *Create(LLVMContext &Context, unsigned NumHandlers,
++                                    Instruction *InsertBefore = nullptr) {
++    return new ARTCatchSwitchInst(Context, NumHandlers, InsertBefore);
++  }
++
++  static ARTCatchSwitchInst *Create(LLVMContext &Context, unsigned NumHandlers,
++                                    BasicBlock *InsertAtEnd) {
++    return new ARTCatchSwitchInst(Context, NumHandlers, InsertAtEnd);
++  }
++
++  /// Provide fast operand accessors
++  DECLARE_TRANSPARENT_OPERAND_ACCESSORS(Value);
++
++  /// return the number of 'handlers' in this artcatchswitch instruction
++  unsigned getNumHandlers() const { return getNumOperands(); }
++
++  /// Add an entry to the switch instruction...
++  /// Note:
++  /// This action invalidates handler_end(). Old handler_end() iterator will
++  /// point to the added handler.
++  void addHandler(BasicBlock *Handler);
++
++  unsigned getNumSuccessors() const { return getNumOperands(); }
++  BasicBlock *getSuccessor(unsigned Idx) const {
++    assert(Idx < getNumSuccessors() &&
++           "Successor # out of range for catchswitch!");
++    return cast<BasicBlock>(getOperand(Idx));
++  }
++  void setSuccessor(unsigned Idx, BasicBlock *NewSucc) {
++    assert(Idx < getNumSuccessors() &&
++           "Successor # out of range for catchswitch!");
++    setOperand(Idx, NewSucc);
++  }
++
++  // Methods for support type inquiry through isa, cast, and dyn_cast:
++  static bool classof(const Instruction *I) {
++    return I->getOpcode() == Instruction::ARTCatchSwitch;
++  }
++  static bool classof(const Value *V) {
++    return isa<Instruction>(V) && classof(cast<Instruction>(V));
++  }
++};
++
++template <>
++struct OperandTraits<ARTCatchSwitchInst> : public HungoffOperandTraits<0> {};
++
++DEFINE_TRANSPARENT_OPERAND_ACCESSORS(ARTCatchSwitchInst, Value)
++
++//===----------------------------------------------------------------------===//
++//                               ARTCatchPadInst Class
++//===----------------------------------------------------------------------===//
++class ARTCatchPadInst : public Instruction {
++private:
++  ARTCatchPadInst(LLVMContext &Context, Instruction *InsertBefore = nullptr)
++      : Instruction(Type::getVoidTy(Context), Instruction::ARTCatchPad, nullptr,
++                    0, InsertBefore) {}
++
++  ARTCatchPadInst(LLVMContext &Context, BasicBlock *InsertAtEnd)
++      : Instruction(Type::getVoidTy(Context), Instruction::ARTCatchPad, nullptr,
++                    0, InsertAtEnd) {}
++
++  // allocate space for exactly zero operands
++  void *operator new(size_t S) { return User::operator new(S, 0); }
++
++protected:
++  // Note: Instruction needs to be a friend here to call cloneImpl.
++  friend class Instruction;
++
++  ARTCatchPadInst *cloneImpl() const;
++
++public:
++  static ARTCatchPadInst *Create(LLVMContext &Context,
++                                 Instruction *InsertBefore = nullptr) {
++    return new ARTCatchPadInst(Context, InsertBefore);
++  }
++
++  static ARTCatchPadInst *Create(LLVMContext &Context,
++                                 BasicBlock *InsertAtEnd) {
++    return new ARTCatchPadInst(Context, InsertAtEnd);
++  }
++
++  /// Methods for support type inquiry through isa, cast, and dyn_cast:
++  static bool classof(const Instruction *I) {
++    return I->getOpcode() == Instruction::ARTCatchPad;
++  }
++  static bool classof(const Value *V) {
++    return isa<Instruction>(V) && classof(cast<Instruction>(V));
++  }
++};
++
+ //===----------------------------------------------------------------------===//
+ //                           UnreachableInst Class
+ //===----------------------------------------------------------------------===//
+diff --git a/llvm/lib/Analysis/AliasAnalysis.cpp b/llvm/lib/Analysis/AliasAnalysis.cpp
+index 6eaaad5f33..6065a3d0cf 100644
+--- a/llvm/lib/Analysis/AliasAnalysis.cpp
++++ b/llvm/lib/Analysis/AliasAnalysis.cpp
+@@ -563,6 +563,19 @@ ModRefInfo AAResults::getModRefInfo(const CatchReturnInst *CatchRet,
+   return ModRefInfo::ModRef;
+ }
+ 
++ModRefInfo AAResults::getModRefInfo(const ARTCatchPadInst *CatchPad,
++                                    const MemoryLocation &Loc,
++                                    AAQueryInfo &AAQI) {
++  if (Loc.Ptr) {
++    // If the pointer is a pointer to invariant memory,
++    // then it could not have been modified by this artcatchpad.
++    return getModRefInfoMask(Loc, AAQI);
++  }
++
++  // Otherwise, an artcatchpad reads and writes.
++  return ModRefInfo::ModRef;
++}
++
+ ModRefInfo AAResults::getModRefInfo(const AtomicCmpXchgInst *CX,
+                                     const MemoryLocation &Loc,
+                                     AAQueryInfo &AAQI) {
+@@ -630,6 +643,8 @@ ModRefInfo AAResults::getModRefInfo(const Instruction *I,
+     return getModRefInfo((const CatchPadInst *)I, Loc, AAQIP);
+   case Instruction::CatchRet:
+     return getModRefInfo((const CatchReturnInst *)I, Loc, AAQIP);
++  case Instruction::ARTCatchPad:
++    return getModRefInfo((const ARTCatchPadInst *)I, Loc, AAQIP);
+   default:
+     assert(!I->mayReadOrWriteMemory() &&
+            "Unhandled memory access instruction!");
+diff --git a/llvm/lib/Analysis/ValueTracking.cpp b/llvm/lib/Analysis/ValueTracking.cpp
+index 9f9451e4e8..ae76491358 100644
+--- a/llvm/lib/Analysis/ValueTracking.cpp
++++ b/llvm/lib/Analysis/ValueTracking.cpp
+@@ -6247,6 +6247,8 @@ bool llvm::isSafeToSpeculativelyExecuteWithOpcode(
+   case Instruction::CatchRet:
+   case Instruction::CleanupPad:
+   case Instruction::CleanupRet:
++  case Instruction::ARTCatchSwitch:
++  case Instruction::ARTCatchPad:
+     return false; // Misc instructions which have effects
+   }
+ }
+diff --git a/llvm/lib/AsmParser/LLLexer.cpp b/llvm/lib/AsmParser/LLLexer.cpp
+index c8da3efbb6..a571ec0299 100644
+--- a/llvm/lib/AsmParser/LLLexer.cpp
++++ b/llvm/lib/AsmParser/LLLexer.cpp
+@@ -899,6 +899,8 @@ lltok::Kind LLLexer::LexIdentifier() {
+   INSTKEYWORD(catchswitch,  CatchSwitch);
+   INSTKEYWORD(catchpad,     CatchPad);
+   INSTKEYWORD(cleanuppad,   CleanupPad);
++  INSTKEYWORD(artcatchswitch, ARTCatchSwitch);
++  INSTKEYWORD(artcatchpad, ARTCatchPad);
+ 
+   INSTKEYWORD(freeze,       Freeze);
+ 
+diff --git a/llvm/lib/AsmParser/LLParser.cpp b/llvm/lib/AsmParser/LLParser.cpp
+index d6c5993797..2dbd2714bb 100644
+--- a/llvm/lib/AsmParser/LLParser.cpp
++++ b/llvm/lib/AsmParser/LLParser.cpp
+@@ -6453,6 +6453,10 @@ int LLParser::parseInstruction(Instruction *&Inst, BasicBlock *BB,
+     return parseCatchPad(Inst, PFS);
+   case lltok::kw_cleanuppad:
+     return parseCleanupPad(Inst, PFS);
++  case lltok::kw_artcatchswitch:
++    return parseARTCatchSwitch(Inst, PFS);
++  case lltok::kw_artcatchpad:
++    return parseARTCatchPad(Inst, PFS);
+   case lltok::kw_callbr:
+     return parseCallBr(Inst, PFS);
+   // Unary Operators.
+@@ -7115,6 +7119,37 @@ bool LLParser::parseCleanupPad(Instruction *&Inst, PerFunctionState &PFS) {
+   return false;
+ }
+ 
++/// parseARTCatchSwitch
++///   ::= 'artcatchswitch' '[' LabelList ']'
++bool LLParser::parseARTCatchSwitch(Instruction *&Inst, PerFunctionState &PFS) {
++  if (parseToken(lltok::lsquare, "expected '[' with artcatchswitch labels"))
++    return true;
++
++  SmallVector<BasicBlock *, 32> Table;
++  do {
++    BasicBlock *DestBB;
++    if (parseTypeAndBasicBlock(DestBB, PFS))
++      return true;
++    Table.push_back(DestBB);
++  } while (EatIfPresent(lltok::comma));
++
++  if (parseToken(lltok::rsquare, "expected ']' after artcatchswitch labels"))
++    return true;
++
++  auto *CatchSwitch = ARTCatchSwitchInst::Create(M->getContext(), Table.size());
++  for (BasicBlock *DestBB : Table)
++    CatchSwitch->addHandler(DestBB);
++  Inst = CatchSwitch;
++  return false;
++}
++
++/// parseARTCatchPad
++///   ::= 'artcatchpad'
++bool LLParser::parseARTCatchPad(Instruction *&Inst, PerFunctionState &PFS) {
++  Inst = ARTCatchPadInst::Create(M->getContext());
++  return false;
++}
++
+ //===----------------------------------------------------------------------===//
+ // Unary Operators.
+ //===----------------------------------------------------------------------===//
+diff --git a/llvm/lib/Bitcode/Reader/BitcodeReader.cpp b/llvm/lib/Bitcode/Reader/BitcodeReader.cpp
+index a027d0c21b..9f8dbcf965 100644
+--- a/llvm/lib/Bitcode/Reader/BitcodeReader.cpp
++++ b/llvm/lib/Bitcode/Reader/BitcodeReader.cpp
+@@ -5405,6 +5405,34 @@ Error BitcodeReader::parseFunctionBody(Function *F) {
+       InstructionList.push_back(I);
+       break;
+     }
++    case bitc::FUNC_CODE_INST_ARTCATCHSWITCH: { // ARTCATCHSWITCH: [num,(bb)*]
++      // We must have, at minimum, the number of arguments.
++      if (Record.size() < 1)
++        return error("Invalid record");
++
++      unsigned Idx = 0;
++
++      unsigned NumHandlers = Record[Idx++];
++
++      SmallVector<BasicBlock *, 2> Handlers;
++      for (unsigned Op = 0; Op != NumHandlers; ++Op) {
++        BasicBlock *BB = getBasicBlock(Record[Idx++]);
++        if (!BB)
++          return error("Invalid record");
++        Handlers.push_back(BB);
++      }
++
++      if (Record.size() != Idx)
++        return error("Invalid record");
++
++      auto *CatchSwitch = ARTCatchSwitchInst::Create(Context, NumHandlers);
++      for (BasicBlock *Handler : Handlers)
++        CatchSwitch->addHandler(Handler);
++      I = CatchSwitch;
++      ResTypeID = getVirtualTypeID(I->getType());
++      InstructionList.push_back(I);
++      break;
++    }
+     case bitc::FUNC_CODE_INST_CATCHPAD:
+     case bitc::FUNC_CODE_INST_CLEANUPPAD: { // [tok,num,(ty,val)*]
+       // We must have, at minimum, the outer scope and the number of arguments.
+@@ -5441,6 +5469,14 @@ Error BitcodeReader::parseFunctionBody(Function *F) {
+       InstructionList.push_back(I);
+       break;
+     }
++    case bitc::FUNC_CODE_INST_ARTCATCHPAD: {
++      if (Record.size() != 0)
++        return error("Invalid record");
++      I = ARTCatchPadInst::Create(Context);
++      ResTypeID = getVirtualTypeID(I->getType());
++      InstructionList.push_back(I);
++      break;
++    }
+     case bitc::FUNC_CODE_INST_SWITCH: { // SWITCH: [opty, op0, op1, ...]
+       // Check magic
+       if ((Record[0] >> 16) == SWITCH_INST_MAGIC) {
+diff --git a/llvm/lib/Bitcode/Writer/BitcodeWriter.cpp b/llvm/lib/Bitcode/Writer/BitcodeWriter.cpp
+index a5fc267b18..d3a997041a 100644
+--- a/llvm/lib/Bitcode/Writer/BitcodeWriter.cpp
++++ b/llvm/lib/Bitcode/Writer/BitcodeWriter.cpp
+@@ -3084,6 +3084,10 @@ void ModuleBitcodeWriter::writeInstruction(const Instruction &I,
+       pushValueAndType(FuncletPad.getArgOperand(Op), InstID, Vals);
+     break;
+   }
++  case Instruction::ARTCatchPad: {
++    Code = bitc::FUNC_CODE_INST_ARTCATCHPAD;
++    break;
++  }
+   case Instruction::CatchSwitch: {
+     Code = bitc::FUNC_CODE_INST_CATCHSWITCH;
+     const auto &CatchSwitch = cast<CatchSwitchInst>(I);
+@@ -3099,6 +3103,16 @@ void ModuleBitcodeWriter::writeInstruction(const Instruction &I,
+       Vals.push_back(VE.getValueID(CatchSwitch.getUnwindDest()));
+     break;
+   }
++  case Instruction::ARTCatchSwitch: {
++    Code = bitc::FUNC_CODE_INST_CATCHSWITCH;
++    const auto &CatchSwitch = cast<ARTCatchSwitchInst>(I);
++
++    unsigned NumHandlers = CatchSwitch.getNumHandlers();
++    Vals.push_back(NumHandlers);
++    for (const Value *CatchPadBB : CatchSwitch.operands())
++      Vals.push_back(VE.getValueID(CatchPadBB));
++    break;
++  }
+   case Instruction::CallBr: {
+     const CallBrInst *CBI = cast<CallBrInst>(&I);
+     const Value *Callee = CBI->getCalledOperand();
+diff --git a/llvm/lib/CodeGen/MachineFunction.cpp b/llvm/lib/CodeGen/MachineFunction.cpp
+index 6e2df506b0..d6c875defa 100644
+--- a/llvm/lib/CodeGen/MachineFunction.cpp
++++ b/llvm/lib/CodeGen/MachineFunction.cpp
+@@ -818,7 +818,8 @@ MCSymbol *MachineFunction::addLandingPad(MachineBasicBlock *LandingPad) {
+     }
+ 
+   } else {
+-    assert(isa<CleanupPadInst>(FirstI) && "Invalid landingpad!");
++    assert((isa<CleanupPadInst, ARTCatchPadInst>(FirstI)) &&
++           "Invalid landingpad!");
+   }
+ 
+   return LandingPadLabel;
+diff --git a/llvm/lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp b/llvm/lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp
+index 031a7da4dd..56c0e255f9 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp
+@@ -244,12 +244,12 @@ void FunctionLoweringInfo::set(const Function &fn, MachineFunction &mf,
+         MF->setHasEHFunclets(isFuncletEHPersonality(Personality));
+         MF->getFrameInfo().setHasOpaqueSPAdjustment(Personality != EHPersonality::ART);
+       }
+-      if (isa<CatchSwitchInst>(PadInst)) {
++      if (isa<CatchSwitchInst>(PadInst) || isa<ARTCatchSwitchInst>(PadInst)) {
+         assert(&*BB.begin() == PadInst &&
+                "WinEHPrepare failed to remove PHIs from imaginary BBs");
+         continue;
+       }
+-      if (isa<FuncletPadInst>(PadInst))
++      if (isa<FuncletPadInst>(PadInst) || isa<ARTCatchPadInst>(PadInst))
+         assert(&*BB.begin() == PadInst && "WinEHPrepare failed to demote PHIs");
+     }
+ 
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+index a2298be179..dd00328434 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+@@ -2089,6 +2089,13 @@ static void findUnwindDestinations(
+           UnwindDests.back().first->setIsEHScopeEntry();
+       }
+       NewEHPadBB = CatchSwitch->getUnwindDest();
++    } else if (const auto *ARTCatchSwitch = dyn_cast<ARTCatchSwitchInst>(Pad)) {
++      // Add the catchpad handlers to the possible destinations.
++      for (const Value *Op : ARTCatchSwitch->operands()) {
++        const BasicBlock *CatchPadBB = cast<BasicBlock>(Op);
++        UnwindDests.emplace_back(FuncInfo.MBBMap[CatchPadBB], Prob);
++      }
++      break;
+     } else {
+       continue;
+     }
+@@ -2126,6 +2133,18 @@ void SelectionDAGBuilder::visitCatchSwitch(const CatchSwitchInst &CSI) {
+   report_fatal_error("visitCatchSwitch not yet implemented!");
+ }
+ 
++void SelectionDAGBuilder::visitARTCatchSwitch(const ARTCatchSwitchInst &I) {
++  report_fatal_error("visitARTCatchSwitch not yet implemented!");
++}
++
++void SelectionDAGBuilder::visitARTCatchPad(const ARTCatchPadInst &I) {
++  auto Pers = classifyEHPersonality(FuncInfo.Fn->getPersonalityFn());
++  assert(Pers == EHPersonality::ART &&
++         "artcatchpad can only be used with ART personality");
++  MachineBasicBlock *CatchPadMBB = FuncInfo.MBB;
++  CatchPadMBB->setIsCatchpadEntry();
++}
++
+ void SelectionDAGBuilder::visitRet(const ReturnInst &I) {
+   const TargetLowering &TLI = DAG.getTargetLoweringInfo();
+   auto &DL = DAG.getDataLayout();
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.h b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.h
+index 23c415df8d..2203be07b8 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.h
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.h
+@@ -502,6 +502,8 @@ private:
+   void visitCatchRet(const CatchReturnInst &I);
+   void visitCatchPad(const CatchPadInst &I);
+   void visitCleanupPad(const CleanupPadInst &CPI);
++  void visitARTCatchSwitch(const ARTCatchSwitchInst &I);
++  void visitARTCatchPad(const ARTCatchPadInst &I);
+ 
+   BranchProbability getEdgeProbability(const MachineBasicBlock *Src,
+                                        const MachineBasicBlock *Dst) const;
+diff --git a/llvm/lib/CodeGen/TargetLoweringBase.cpp b/llvm/lib/CodeGen/TargetLoweringBase.cpp
+index 7dffd8d4f2..2894200c30 100644
+--- a/llvm/lib/CodeGen/TargetLoweringBase.cpp
++++ b/llvm/lib/CodeGen/TargetLoweringBase.cpp
+@@ -1849,6 +1849,8 @@ int TargetLoweringBase::InstructionOpcodeToISD(unsigned Opcode) const {
+   case CatchPad:       return 0;
+   case CatchSwitch:    return 0;
+   case CleanupPad:     return 0;
++  case ARTCatchSwitch: return 0;
++  case ARTCatchPad:    return 0;
+   case FNeg:           return ISD::FNEG;
+   case Add:            return ISD::ADD;
+   case FAdd:           return ISD::FADD;
+diff --git a/llvm/lib/CodeGen/TargetPassConfig.cpp b/llvm/lib/CodeGen/TargetPassConfig.cpp
+index 6f13653ee5..a1e21ef764 100644
+--- a/llvm/lib/CodeGen/TargetPassConfig.cpp
++++ b/llvm/lib/CodeGen/TargetPassConfig.cpp
+@@ -908,7 +908,7 @@ void TargetPassConfig::addPassesToHandleExceptions() {
+   case ExceptionHandling::AIX:
+   case ExceptionHandling::ZOS:
+     if (AddWinEHPreparePass) {
+-      addPass(createWinEHPass(true));
++      addPass(createWinEHPass());
+     }
+     addPass(createDwarfEHPass(getOptLevel()));
+     break;
+diff --git a/llvm/lib/CodeGen/WinEHPrepare.cpp b/llvm/lib/CodeGen/WinEHPrepare.cpp
+index 95976c218c..becb0cd507 100644
+--- a/llvm/lib/CodeGen/WinEHPrepare.cpp
++++ b/llvm/lib/CodeGen/WinEHPrepare.cpp
+@@ -862,7 +862,9 @@ void WinEHPrepareImpl::demotePHIsOnFunclets(Function &F,
+   for (BasicBlock &BB : make_early_inc_range(F)) {
+     if (!BB.isEHPad())
+       continue;
+-    if (DemoteCatchSwitchPHIOnly && !isa<CatchSwitchInst>(BB.getFirstNonPHI()))
++    if (DemoteCatchSwitchPHIOnly &&
++        !isa<CatchSwitchInst>(BB.getFirstNonPHI()) &&
++        !isa<ARTCatchSwitchInst>(BB.getFirstNonPHI()))
+       continue;
+ 
+     for (Instruction &I : make_early_inc_range(BB)) {
+diff --git a/llvm/lib/IR/AsmWriter.cpp b/llvm/lib/IR/AsmWriter.cpp
+index 3c15784a0e..f69f7912b4 100644
+--- a/llvm/lib/IR/AsmWriter.cpp
++++ b/llvm/lib/IR/AsmWriter.cpp
+@@ -4285,6 +4285,16 @@ void AssemblyWriter::printInstruction(const Instruction &I) {
+       writeOperand(FPI->getArgOperand(Op), /*PrintType=*/true);
+     }
+     Out << ']';
++  } else if (const auto *ARTCatchSwitch = dyn_cast<ARTCatchSwitchInst>(&I)) {
++    Out << " [";
++    unsigned Op = 0;
++    for (const Value *PadBB : ARTCatchSwitch->operands()) {
++      if (Op > 0)
++        Out << ", ";
++      writeOperand(PadBB, /*PrintType=*/true);
++      ++Op;
++    }
++    Out << ']';
+   } else if (isa<ReturnInst>(I) && !Operand) {
+     Out << " void";
+   } else if (const auto *CRI = dyn_cast<CatchReturnInst>(&I)) {
+diff --git a/llvm/lib/IR/EHPersonalities.cpp b/llvm/lib/IR/EHPersonalities.cpp
+index 6842a93930..df3f5935bf 100644
+--- a/llvm/lib/IR/EHPersonalities.cpp
++++ b/llvm/lib/IR/EHPersonalities.cpp
+@@ -134,6 +134,9 @@ DenseMap<BasicBlock *, ColorVector> llvm::colorEHFunclets(Function &F) {
+       // Mark this funclet head as a member of itself.
+       Color = Visiting;
+     }
++    if (isa<ARTCatchPadInst>(VisitingHead)) {
++      Color = EntryBlock;
++    }
+     // Note that this is a member of the given color.
+     ColorVector &Colors = BlockColors[Visiting];
+     if (!is_contained(Colors, Color))
+diff --git a/llvm/lib/IR/Instruction.cpp b/llvm/lib/IR/Instruction.cpp
+index d7bf144792..99fbadccf3 100644
+--- a/llvm/lib/IR/Instruction.cpp
++++ b/llvm/lib/IR/Instruction.cpp
+@@ -619,6 +619,8 @@ const char *Instruction::getOpcodeName(unsigned OpCode) {
+   case CatchRet: return "catchret";
+   case CatchPad: return "catchpad";
+   case CatchSwitch: return "catchswitch";
++  case ARTCatchSwitch: return "artcatchswitch";
++  case ARTCatchPad: return "artcatchpad";
+   case CallBr: return "callbr";
+ 
+   // Standard unary operators...
+@@ -844,6 +846,7 @@ bool Instruction::mayReadFromMemory() const {
+   case Instruction::AtomicRMW:
+   case Instruction::CatchPad:
+   case Instruction::CatchRet:
++  case Instruction::ARTCatchPad:
+     return true;
+   case Instruction::Call:
+   case Instruction::Invoke:
+@@ -864,6 +867,7 @@ bool Instruction::mayWriteToMemory() const {
+   case Instruction::AtomicRMW:
+   case Instruction::CatchPad:
+   case Instruction::CatchRet:
++  case Instruction::ARTCatchPad:
+     return true;
+   case Instruction::Call:
+   case Instruction::Invoke:
+diff --git a/llvm/lib/IR/Instructions.cpp b/llvm/lib/IR/Instructions.cpp
+index 87874c3abc..35460f435a 100644
+--- a/llvm/lib/IR/Instructions.cpp
++++ b/llvm/lib/IR/Instructions.cpp
+@@ -1197,6 +1197,59 @@ FuncletPadInst::FuncletPadInst(Instruction::FuncletPadOps Op, Value *ParentPad,
+   init(ParentPad, Args, NameStr);
+ }
+ 
++//===----------------------------------------------------------------------===//
++//                       ARTCatchSwitchInst Implementation
++//===----------------------------------------------------------------------===//
++
++ARTCatchSwitchInst::ARTCatchSwitchInst(const ARTCatchSwitchInst &CSI)
++    : Instruction(CSI.getType(), Instruction::ARTCatchSwitch, nullptr,
++                  CSI.getNumOperands()) {
++  init(CSI.getNumOperands());
++  setNumHungOffUseOperands(ReservedSpace);
++  Use *OL = getOperandList();
++  const Use *InOL = CSI.getOperandList();
++  for (unsigned I = 1, E = ReservedSpace; I != E; ++I)
++    OL[I] = InOL[I];
++}
++
++ARTCatchSwitchInst::ARTCatchSwitchInst(LLVMContext &Context,
++                                       unsigned NumHandlers,
++                                       Instruction *InsertBefore)
++    : Instruction(Type::getVoidTy(Context), Instruction::ARTCatchSwitch,
++                  nullptr, 0, InsertBefore) {
++  init(NumHandlers);
++}
++
++ARTCatchSwitchInst::ARTCatchSwitchInst(LLVMContext &Context,
++                                       unsigned NumHandlers,
++                                       BasicBlock *InsertAtEnd)
++    : Instruction(Type::getVoidTy(Context), Instruction::ARTCatchSwitch,
++                  nullptr, 0, InsertAtEnd) {
++  init(NumHandlers);
++}
++
++void ARTCatchSwitchInst::init(unsigned NumReserved) {
++  ReservedSpace = NumReserved;
++  setNumHungOffUseOperands(0);
++  allocHungoffUses(ReservedSpace);
++}
++
++void ARTCatchSwitchInst::growOperands(unsigned Size) {
++  unsigned NumOperands = getNumOperands();
++  if (ReservedSpace >= NumOperands + Size)
++    return;
++  ReservedSpace = (std::max(NumOperands, 1U) + Size / 2) * 2;
++  growHungoffUses(ReservedSpace);
++}
++
++void ARTCatchSwitchInst::addHandler(BasicBlock *Handler) {
++  unsigned OpNo = getNumOperands();
++  growOperands(1);
++  assert(OpNo < ReservedSpace && "Growing didn't work!");
++  setNumHungOffUseOperands(OpNo + 1);
++  getOperandList()[OpNo] = Handler;
++}
++
+ //===----------------------------------------------------------------------===//
+ //                      UnreachableInst Implementation
+ //===----------------------------------------------------------------------===//
+@@ -4975,6 +5028,14 @@ FuncletPadInst *FuncletPadInst::cloneImpl() const {
+   return new (getNumOperands()) FuncletPadInst(*this);
+ }
+ 
++ARTCatchSwitchInst *ARTCatchSwitchInst::cloneImpl() const {
++  return new ARTCatchSwitchInst(*this);
++}
++
++ARTCatchPadInst *ARTCatchPadInst::cloneImpl() const {
++  return new ARTCatchPadInst(getContext());
++}
++
+ UnreachableInst *UnreachableInst::cloneImpl() const {
+   LLVMContext &Context = getContext();
+   return new UnreachableInst(Context);
+diff --git a/llvm/lib/Transforms/InstCombine/InstCombineCompares.cpp b/llvm/lib/Transforms/InstCombine/InstCombineCompares.cpp
+index 9973a80a7d..0441690369 100644
+--- a/llvm/lib/Transforms/InstCombine/InstCombineCompares.cpp
++++ b/llvm/lib/Transforms/InstCombine/InstCombineCompares.cpp
+@@ -470,7 +470,8 @@ static bool canRewriteGEPAsOffset(Value *Start, Value *Base,
+ 
+       if (auto *PN = dyn_cast<PHINode>(V)) {
+         // We cannot transform PHIs on unsplittable basic blocks.
+-        if (isa<CatchSwitchInst>(PN->getParent()->getTerminator()))
++        if (isa<CatchSwitchInst, ARTCatchSwitchInst>(
++                PN->getParent()->getTerminator()))
+           return false;
+         Explored.insert(PN);
+         PHIs.insert(PN);
+diff --git a/llvm/lib/Transforms/InstCombine/InstructionCombining.cpp b/llvm/lib/Transforms/InstCombine/InstructionCombining.cpp
+index da25e8ed43..8e2384708d 100644
+--- a/llvm/lib/Transforms/InstCombine/InstructionCombining.cpp
++++ b/llvm/lib/Transforms/InstCombine/InstructionCombining.cpp
+@@ -4255,7 +4255,7 @@ bool InstCombinerImpl::tryToSinkInstruction(Instruction *I,
+     return false;
+ 
+   // Do not sink into catchswitch blocks.
+-  if (isa<CatchSwitchInst>(DestBlock->getTerminator()))
++  if (isa<CatchSwitchInst, ARTCatchSwitchInst>(DestBlock->getTerminator()))
+     return false;
+ 
+   // Do not sink convergent call instructions.
+diff --git a/llvm/lib/Transforms/Instrumentation/InstrProfiling.cpp b/llvm/lib/Transforms/Instrumentation/InstrProfiling.cpp
+index a19b140872..5c2ce70d54 100644
+--- a/llvm/lib/Transforms/Instrumentation/InstrProfiling.cpp
++++ b/llvm/lib/Transforms/Instrumentation/InstrProfiling.cpp
+@@ -497,7 +497,8 @@ private:
+                       const SmallVectorImpl<BasicBlock *> &LoopExitBlocks) {
+     // We can't insert into a catchswitch.
+     if (llvm::any_of(LoopExitBlocks, [](BasicBlock *Exit) {
+-          return isa<CatchSwitchInst>(Exit->getTerminator());
++          return isa<CatchSwitchInst, ARTCatchSwitchInst>(
++              Exit->getTerminator());
+         }))
+       return false;
+ 
+diff --git a/llvm/lib/Transforms/Instrumentation/MemorySanitizer.cpp b/llvm/lib/Transforms/Instrumentation/MemorySanitizer.cpp
+index 15bca53886..f56052564c 100644
+--- a/llvm/lib/Transforms/Instrumentation/MemorySanitizer.cpp
++++ b/llvm/lib/Transforms/Instrumentation/MemorySanitizer.cpp
+@@ -4492,6 +4492,11 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
+     setOrigin(&I, getCleanOrigin());
+   }
+ 
++  void visitARTCatchSwitchInst(ARTCatchSwitchInst &I) {
++    setShadow(&I, getCleanShadow(&I));
++    setOrigin(&I, getCleanOrigin());
++  }
++
+   void visitGetElementPtrInst(GetElementPtrInst &I) { handleShadowOr(I); }
+ 
+   void visitExtractValueInst(ExtractValueInst &I) {
+diff --git a/llvm/lib/Transforms/Scalar/DivRemPairs.cpp b/llvm/lib/Transforms/Scalar/DivRemPairs.cpp
+index 57d3f31218..f42cf8177f 100644
+--- a/llvm/lib/Transforms/Scalar/DivRemPairs.cpp
++++ b/llvm/lib/Transforms/Scalar/DivRemPairs.cpp
+@@ -287,7 +287,8 @@ static bool optimizeDivRem(Function &F, const TargetTransformInfo &TTI,
+       }
+       // FIXME: We could handle more hoisting cases.
+ 
+-      if (PredBB && !isa<CatchSwitchInst>(PredBB->getTerminator()) &&
++      if (PredBB &&
++          !isa<CatchSwitchInst, ARTCatchSwitchInst>(PredBB->getTerminator()) &&
+           isGuaranteedToTransferExecutionToSuccessor(PredBB->getTerminator()) &&
+           IsSafeToHoist(RemInst, RemBB) && IsSafeToHoist(DivInst, DivBB) &&
+           all_of(successors(PredBB),
+diff --git a/llvm/lib/Transforms/Scalar/LICM.cpp b/llvm/lib/Transforms/Scalar/LICM.cpp
+index 5ed8f05a55..6a5d31ef94 100644
+--- a/llvm/lib/Transforms/Scalar/LICM.cpp
++++ b/llvm/lib/Transforms/Scalar/LICM.cpp
+@@ -477,7 +477,7 @@ bool LoopInvariantCodeMotion::runOnLoop(Loop *L, AAResults *AA, LoopInfo *LI,
+ 
+     // We can't insert into a catchswitch.
+     bool HasCatchSwitch = llvm::any_of(ExitBlocks, [](BasicBlock *Exit) {
+-      return isa<CatchSwitchInst>(Exit->getTerminator());
++      return isa<CatchSwitchInst, ARTCatchSwitchInst>(Exit->getTerminator());
+     });
+ 
+     if (!HasCatchSwitch) {
+@@ -1393,7 +1393,7 @@ static bool isNotUsedOrFoldableInLoop(const Instruction &I, const Loop *CurLoop,
+     if (const PHINode *PN = dyn_cast<PHINode>(UI)) {
+       const BasicBlock *BB = PN->getParent();
+       // We cannot sink uses in catchswitches.
+-      if (isa<CatchSwitchInst>(BB->getTerminator()))
++      if (isa<CatchSwitchInst, ARTCatchSwitchInst>(BB->getTerminator()))
+         return false;
+ 
+       // We need to sink a callsite to a unique funclet.  Avoid sinking if the
+diff --git a/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp b/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp
+index 0f01d865d2..68329e8d06 100644
+--- a/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp
++++ b/llvm/lib/Transforms/Scalar/LoopStrengthReduce.cpp
+@@ -3577,7 +3577,8 @@ LSRInstance::CollectLoopInvariantFixupsAndFormulae() {
+         }
+ 
+         // Don't bother rewriting PHIs in catchswitch blocks.
+-        if (isa<CatchSwitchInst>(UserInst->getParent()->getTerminator()))
++        if (isa<CatchSwitchInst, ARTCatchSwitchInst>(
++                UserInst->getParent()->getTerminator()))
+           continue;
+         // Ignore uses which are part of other SCEV expressions, to avoid
+         // analyzing them multiple times.
+@@ -5334,7 +5335,7 @@ LSRInstance::HoistInsertPosition(BasicBlock::iterator IP,
+     Instruction *BetterPos = nullptr;
+     // Don't bother attempting to insert before a catchswitch, their basic block
+     // cannot have other non-PHI instructions.
+-    if (isa<CatchSwitchInst>(Tentative))
++    if (isa<CatchSwitchInst, ARTCatchSwitchInst>(Tentative))
+       return IP;
+ 
+     for (Instruction *Inst : Inputs) {
+@@ -5646,7 +5647,7 @@ void LSRInstance::RewriteForPHI(
+       // users.
+       if (e != 1 && BB->getTerminator()->getNumSuccessors() > 1 &&
+           !isa<IndirectBrInst>(BB->getTerminator()) &&
+-          !isa<CatchSwitchInst>(BB->getTerminator())) {
++          !isa<CatchSwitchInst, ARTCatchSwitchInst>(BB->getTerminator())) {
+         BasicBlock *Parent = PN->getParent();
+         Loop *PNLoop = LI.getLoopFor(Parent);
+         if (!PNLoop || Parent != PNLoop->getHeader()) {
+@@ -5941,9 +5942,10 @@ LSRInstance::LSRInstance(Loop *L, IVUsers &IU, ScalarEvolution &SE,
+     if (auto *PN = dyn_cast<PHINode>(U.getUser())) {
+        auto *FirstNonPHI = PN->getParent()->getFirstNonPHI();
+        if (isa<FuncletPadInst>(FirstNonPHI) ||
+-           isa<CatchSwitchInst>(FirstNonPHI))
++           isa<CatchSwitchInst, ARTCatchSwitchInst>(FirstNonPHI))
+          for (BasicBlock *PredBB : PN->blocks())
+-           if (isa<CatchSwitchInst>(PredBB->getFirstNonPHI()))
++           if (isa<CatchSwitchInst, ARTCatchSwitchInst>(
++                   PredBB->getFirstNonPHI()))
+              return;
+     }
+   }
+diff --git a/llvm/lib/Transforms/Scalar/SimpleLoopUnswitch.cpp b/llvm/lib/Transforms/Scalar/SimpleLoopUnswitch.cpp
+index afd731b723..d3de5de055 100644
+--- a/llvm/lib/Transforms/Scalar/SimpleLoopUnswitch.cpp
++++ b/llvm/lib/Transforms/Scalar/SimpleLoopUnswitch.cpp
+@@ -1241,9 +1241,9 @@ static BasicBlock *buildClonedLoopBlocks(
+ 
+       // The only instructions in the exit block should be PHI nodes and
+       // potentially a landing pad.
+-      assert(
+-          (isa<PHINode>(I) || isa<LandingPadInst>(I) || isa<CatchPadInst>(I)) &&
+-          "Bad instruction in exit block!");
++      assert((isa<PHINode>(I) || isa<LandingPadInst>(I) ||
++              isa<CatchPadInst>(I) || isa<ARTCatchPadInst>(I)) &&
++             "Bad instruction in exit block!");
+       // We should have a value map between the instruction and its clone.
+       assert(VMap.lookup(&I) == &ClonedI && "Mismatch in the value map!");
+ 
+@@ -3289,7 +3289,7 @@ static bool isSafeForNoNTrivialUnswitching(Loop &L, LoopInfo &LI) {
+   // restriction.
+   for (auto *ExitBB : ExitBlocks) {
+     auto *I = ExitBB->getFirstNonPHI();
+-    if (isa<CleanupPadInst>(I) || isa<CatchSwitchInst>(I)) {
++    if (isa<CleanupPadInst>(I) || isa<CatchSwitchInst, ARTCatchSwitchInst>(I)) {
+       LLVM_DEBUG(dbgs() << "Cannot unswitch because of cleanuppad/catchswitch "
+                            "in exit block\n");
+       return false;
+diff --git a/llvm/lib/Transforms/Utils/CodeExtractor.cpp b/llvm/lib/Transforms/Utils/CodeExtractor.cpp
+index 2781118834..c60a1096b6 100644
+--- a/llvm/lib/Transforms/Utils/CodeExtractor.cpp
++++ b/llvm/lib/Transforms/Utils/CodeExtractor.cpp
+@@ -170,6 +170,15 @@ static bool isBlockValidForExtraction(const BasicBlock &BB,
+       continue;
+     }
+ 
++    // All catch handlers of an artcatchswitch instruction must be in the
++    // subgraph.
++    if (const auto *CSI = dyn_cast<ARTCatchSwitchInst>(I)) {
++      for (const Value *HBB : CSI->operands())
++        if (!Result.count(const_cast<BasicBlock *>(cast<BasicBlock>(HBB))))
++          return false;
++      continue;
++    }
++
+     if (const CallInst *CI = dyn_cast<CallInst>(I)) {
+       if (const Function *F = CI->getCalledFunction()) {
+         auto IID = F->getIntrinsicID();
+diff --git a/llvm/lib/Transforms/Utils/DemoteRegToStack.cpp b/llvm/lib/Transforms/Utils/DemoteRegToStack.cpp
+index c894afee68..67809d7283 100644
+--- a/llvm/lib/Transforms/Utils/DemoteRegToStack.cpp
++++ b/llvm/lib/Transforms/Utils/DemoteRegToStack.cpp
+@@ -95,9 +95,9 @@ AllocaInst *llvm::DemoteRegToStack(Instruction &I, bool VolatileLoads,
+     InsertPt = ++I.getIterator();
+     // Don't insert before PHI nodes or landingpad instrs.
+     for (; isa<PHINode>(InsertPt) || InsertPt->isEHPad(); ++InsertPt)
+-      if (isa<CatchSwitchInst>(InsertPt))
++      if (isa<CatchSwitchInst, ARTCatchSwitchInst>(InsertPt))
+         break;
+-    if (isa<CatchSwitchInst>(InsertPt)) {
++    if (isa<CatchSwitchInst, ARTCatchSwitchInst>(InsertPt)) {
+       for (BasicBlock *Handler : successors(&*InsertPt))
+         new StoreInst(&I, Slot, &*Handler->getFirstInsertionPt());
+       return Slot;
+@@ -148,9 +148,9 @@ AllocaInst *llvm::DemotePHIToStack(PHINode *P, Instruction *AllocaPoint) {
+   BasicBlock::iterator InsertPt = P->getIterator();
+   // Don't insert before PHI nodes or landingpad instrs.
+   for (; isa<PHINode>(InsertPt) || InsertPt->isEHPad(); ++InsertPt)
+-    if (isa<CatchSwitchInst>(InsertPt))
++    if (isa<CatchSwitchInst, ARTCatchSwitchInst>(InsertPt))
+       break;
+-  if (isa<CatchSwitchInst>(InsertPt)) {
++  if (isa<CatchSwitchInst, ARTCatchSwitchInst>(InsertPt)) {
+     // We need a separate load before each actual use of the PHI
+     SmallVector<Instruction *, 4> Users;
+     for (User *U : P->users()) {
+diff --git a/llvm/lib/Transforms/Utils/MoveAutoInit.cpp b/llvm/lib/Transforms/Utils/MoveAutoInit.cpp
+index 9a5dba219c..04fac7c7e4 100644
+--- a/llvm/lib/Transforms/Utils/MoveAutoInit.cpp
++++ b/llvm/lib/Transforms/Utils/MoveAutoInit.cpp
+@@ -181,7 +181,8 @@ static bool runMoveAutoInit(Function &F, DominatorTree &DT, MemorySSA &MSSA) {
+ 
+     // CatchSwitchInst blocks can only have one instruction, so they are not
+     // good candidates for insertion.
+-    while (isa<CatchSwitchInst>(UsersDominator->getFirstNonPHI())) {
++    while (isa<CatchSwitchInst, ARTCatchSwitchInst>(
++        UsersDominator->getFirstNonPHI())) {
+       for (BasicBlock *Pred : predecessors(UsersDominator))
+         if (DT.isReachableFromEntry(Pred))
+           UsersDominator = DT.findNearestCommonDominator(UsersDominator, Pred);
+diff --git a/llvm/lib/Transforms/Utils/SCCPSolver.cpp b/llvm/lib/Transforms/Utils/SCCPSolver.cpp
+index 3dc6016a0a..d27f5d4af3 100644
+--- a/llvm/lib/Transforms/Utils/SCCPSolver.cpp
++++ b/llvm/lib/Transforms/Utils/SCCPSolver.cpp
+@@ -637,6 +637,11 @@ private:
+     visitTerminator(CPI);
+   }
+ 
++  void visitARTCatchSwitchInst(ARTCatchSwitchInst &CPI) {
++    markOverdefined(&CPI);
++    visitTerminator(CPI);
++  }
++
+   // Instructions that cannot be folded away.
+ 
+   void visitStoreInst(StoreInst &I);
+diff --git a/llvm/lib/Transforms/Utils/ScalarEvolutionExpander.cpp b/llvm/lib/Transforms/Utils/ScalarEvolutionExpander.cpp
+index 06b2f3e801..c191e3e209 100644
+--- a/llvm/lib/Transforms/Utils/ScalarEvolutionExpander.cpp
++++ b/llvm/lib/Transforms/Utils/ScalarEvolutionExpander.cpp
+@@ -107,7 +107,7 @@ SCEVExpander::findInsertPointAfter(Instruction *I,
+ 
+   if (isa<FuncletPadInst>(IP) || isa<LandingPadInst>(IP)) {
+     ++IP;
+-  } else if (isa<CatchSwitchInst>(IP)) {
++  } else if (isa<CatchSwitchInst, ARTCatchSwitchInst>(IP)) {
+     IP = MustDominate->getParent()->getFirstInsertionPt();
+   } else {
+     assert(!IP->isEHPad() && "unexpected eh pad!");
+diff --git a/llvm/lib/Transforms/Utils/SimplifyIndVar.cpp b/llvm/lib/Transforms/Utils/SimplifyIndVar.cpp
+index 1b142f14d8..c0c7f9c031 100644
+--- a/llvm/lib/Transforms/Utils/SimplifyIndVar.cpp
++++ b/llvm/lib/Transforms/Utils/SimplifyIndVar.cpp
+@@ -1747,7 +1747,8 @@ Instruction *WidenIV::widenIVUse(WidenIV::NarrowIVDefUse DU, SCEVExpander &Rewri
+         // Widening the PHI requires us to insert a trunc.  The logical place
+         // for this trunc is in the same BB as the PHI.  This is not possible if
+         // the BB is terminated by a catchswitch.
+-        if (isa<CatchSwitchInst>(UsePhi->getParent()->getTerminator()))
++        if (isa<CatchSwitchInst, ARTCatchSwitchInst>(
++                UsePhi->getParent()->getTerminator()))
+           return nullptr;
+ 
+         PHINode *WidePhi =
+diff --git a/llvm/lib/Transforms/Vectorize/SLPVectorizer.cpp b/llvm/lib/Transforms/Vectorize/SLPVectorizer.cpp
+index 0a9e2c7f49..25abf82409 100644
+--- a/llvm/lib/Transforms/Vectorize/SLPVectorizer.cpp
++++ b/llvm/lib/Transforms/Vectorize/SLPVectorizer.cpp
+@@ -5845,7 +5845,7 @@ void BoUpSLP::buildTree_rec(ArrayRef<Value *> VL, unsigned Depth,
+   // Don't go into catchswitch blocks, which can happen with PHIs.
+   // Such blocks can only have PHIs and the catchswitch.  There is no
+   // place to insert a shuffle if we need to, so just avoid that issue.
+-  if (isa<CatchSwitchInst>(BB->getTerminator())) {
++  if (isa<CatchSwitchInst, ARTCatchSwitchInst>(BB->getTerminator())) {
+     LLVM_DEBUG(dbgs() << "SLP: bundle in catchswitch block.\n");
+     newTreeEntry(VL, std::nullopt /*not vectorized*/, S, UserTreeIdx);
+     return;

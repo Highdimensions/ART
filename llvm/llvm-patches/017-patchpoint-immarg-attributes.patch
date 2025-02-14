@@ -1,0 +1,23 @@
+diff --git a/llvm/include/llvm/IR/Intrinsics.td b/llvm/include/llvm/IR/Intrinsics.td
+index 55184e2f77..95e853e5fd 100644
+--- a/llvm/include/llvm/IR/Intrinsics.td
++++ b/llvm/include/llvm/IR/Intrinsics.td
+@@ -1578,12 +1578,16 @@ def int_experimental_patchpoint_void : Intrinsic<[],
+                                                  [llvm_i64_ty, llvm_i32_ty,
+                                                   llvm_ptr_ty, llvm_i32_ty,
+                                                   llvm_vararg_ty],
+-                                                  [Throws]>;
++                                                  [Throws, ImmArg<ArgIndex<0>>,
++                                                   ImmArg<ArgIndex<1>>,
++                                                   ImmArg<ArgIndex<3>>]>;
+ def int_experimental_patchpoint : Intrinsic<[llvm_any_ty],
+                                             [llvm_i64_ty, llvm_i32_ty,
+                                              llvm_ptr_ty, llvm_i32_ty,
+                                              llvm_vararg_ty],
+-                                            [Throws]>;
++                                            [Throws, ImmArg<ArgIndex<0>>,
++                                             ImmArg<ArgIndex<1>>,
++                                             ImmArg<ArgIndex<3>>]>;
+ 
+ 
+ //===------------------------ Garbage Collection Intrinsics ---------------===//

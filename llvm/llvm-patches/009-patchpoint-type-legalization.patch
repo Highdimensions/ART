@@ -1,0 +1,168 @@
+diff --git a/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp b/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
+index 814f746f5a..a705afb25c 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
+@@ -307,6 +307,10 @@ void DAGTypeLegalizer::PromoteIntegerResult(SDNode *N, unsigned ResNo) {
+   case ISD::LLRINT:
+     Res = PromoteIntRes_XRINT(N);
+     break;
++
++  case ISD::PATCHPOINT:
++    Res = PromoteIntRes_PATCHPOINT(N);
++    break;
+   }
+ 
+   // If the result is null then the sub-method took care of registering it.
+@@ -5877,6 +5881,24 @@ SDValue DAGTypeLegalizer::PromoteIntRes_VP_REDUCE(SDNode *N) {
+                      N->getOperand(1), N->getOperand(2), N->getOperand(3));
+ }
+ 
++SDValue DAGTypeLegalizer::PromoteIntRes_PATCHPOINT(SDNode *N) {
++  EVT NVT = TLI.getTypeToTransformTo(*DAG.getContext(), N->getValueType(0));
++  SDLoc dl(N);
++
++  assert(N->getNumValues() == 3 && "Expected 3 values for PATCHPOINT");
++  SDVTList VTList = DAG.getVTList({NVT, MVT::Other, MVT::Glue});
++
++  SmallVector<SDValue> Ops(N->ops());
++  SDValue Res = DAG.getNode(ISD::PATCHPOINT, dl, VTList, Ops);
++
++  // Replace chain and glue uses with the new patchpoint.
++  SDValue From[] = {SDValue(N, 1), SDValue(N, 2)};
++  SDValue To[] = {Res.getValue(1), Res.getValue(2)};
++  DAG.ReplaceAllUsesOfValuesWith(From, To, 2);
++
++  return Res.getValue(0);
++}
++
+ SDValue DAGTypeLegalizer::PromoteIntOp_EXTRACT_VECTOR_ELT(SDNode *N) {
+   SDLoc dl(N);
+   SDValue V0 = GetPromotedInteger(N->getOperand(0));
+diff --git a/llvm/lib/CodeGen/SelectionDAG/LegalizeTypes.h b/llvm/lib/CodeGen/SelectionDAG/LegalizeTypes.h
+index 09f0bca8b8..4fd57bcc4c 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/LegalizeTypes.h
++++ b/llvm/lib/CodeGen/SelectionDAG/LegalizeTypes.h
+@@ -366,6 +366,7 @@ private:
+   SDValue PromoteIntRes_FunnelShift(SDNode *N);
+   SDValue PromoteIntRes_VPFunnelShift(SDNode *N);
+   SDValue PromoteIntRes_IS_FPCLASS(SDNode *N);
++  SDValue PromoteIntRes_PATCHPOINT(SDNode *N);
+ 
+   // Integer Operand Promotion.
+   bool PromoteIntegerOperand(SDNode *N, unsigned OpNo);
+diff --git a/llvm/test/CodeGen/AArch64/arm64-anyregcc.ll b/llvm/test/CodeGen/AArch64/arm64-anyregcc.ll
+index cb65867184..22e8088165 100644
+--- a/llvm/test/CodeGen/AArch64/arm64-anyregcc.ll
++++ b/llvm/test/CodeGen/AArch64/arm64-anyregcc.ll
+@@ -8,11 +8,11 @@
+ ; CHECK-NEXT:   .byte 0
+ ; CHECK-NEXT:   .short 0
+ ; Num Functions
+-; CHECK-NEXT:   .long 18
++; CHECK-NEXT:   .long 22
+ ; Num LargeConstants
+ ; CHECK-NEXT:   .long 0
+ ; Num Callsites
+-; CHECK-NEXT:   .long 18
++; CHECK-NEXT:   .long 22
+ 
+ ; Functions and stack size
+ ; CHECK-NEXT:   .quad _test
+@@ -39,6 +39,18 @@
+ ; CHECK-NEXT:   .quad _patchpoint_spillargs
+ ; CHECK-NEXT:   .quad 128
+ ; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_i1
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_i8
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_i16
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
++; CHECK-NEXT:   .quad _generic_test_i29
++; CHECK-NEXT:   .quad 16
++; CHECK-NEXT:   .quad 1
+ ; CHECK-NEXT:   .quad _generic_test_i32
+ ; CHECK-NEXT:   .quad 16
+ ; CHECK-NEXT:   .quad 1
+@@ -487,6 +499,78 @@ entry:
+   ret i64 %result
+ }
+ 
++; generic_test_i1
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_i1
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 4
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define i1 @generic_test_i1() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc i1 (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.i1(i64 14, i32 20, ptr null, i32 0)
++  ret i1 %ret
++}
++
++; generic_test_i8
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_i8
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 4
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define i8 @generic_test_i8() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc i8 (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.i8(i64 14, i32 20, ptr null, i32 0)
++  ret i8 %ret
++}
++
++; generic_test_i16
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_i16
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 4
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define i16 @generic_test_i16() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc i16 (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.i16(i64 14, i32 20, ptr null, i32 0)
++  ret i16 %ret
++}
++
++; generic_test_i29
++; CHECK-LABEL:  .long   L{{.*}}-_generic_test_i29
++; CHECK-NEXT:   .short  0
++; 1 location
++; CHECK-NEXT:   .short  1
++; Loc 0: Register <-- this is the return register
++; CHECK-NEXT:   .byte 1
++; CHECK-NEXT:   .byte 0
++; CHECK-NEXT:   .short 4
++; CHECK-NEXT:   .short {{[0-9]+}}
++; CHECK-NEXT:   .short 0
++; CHECK-NEXT:   .long 0
++define i29 @generic_test_i29() nounwind ssp uwtable {
++entry:
++  %ret = call anyregcc i29 (i64, i32, ptr, i32, ...) @llvm.experimental.patchpoint.i29(i64 14, i32 20, ptr null, i32 0)
++  ret i29 %ret
++}
++
+ ; generic_test_i32
+ ; CHECK-LABEL:  .long   L{{.*}}-_generic_test_i32
+ ; CHECK-NEXT:   .short  0

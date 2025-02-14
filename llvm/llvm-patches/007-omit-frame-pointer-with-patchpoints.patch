@@ -1,0 +1,12 @@
+diff --git a/llvm/lib/Target/AArch64/AArch64FrameLowering.cpp b/llvm/lib/Target/AArch64/AArch64FrameLowering.cpp
+index 732e787d2a..cd21888a5f 100644
+--- a/llvm/lib/Target/AArch64/AArch64FrameLowering.cpp
++++ b/llvm/lib/Target/AArch64/AArch64FrameLowering.cpp
+@@ -454,7 +454,6 @@ bool AArch64FrameLowering::hasFP(const MachineFunction &MF) const {
+   if (MF.getTarget().Options.DisableFramePointerElim(MF))
+     return true;
+   if (MFI.hasVarSizedObjects() || MFI.isFrameAddressTaken() ||
+-      MFI.hasStackMap() || MFI.hasPatchPoint() ||
+       RegInfo->hasStackRealignment(MF))
+     return true;
+   // With large callframes around we may need to use FP to access the scavenging

@@ -1,0 +1,19 @@
+diff --git a/llvm/lib/Transforms/Scalar/SimpleLoopUnswitch.cpp b/llvm/lib/Transforms/Scalar/SimpleLoopUnswitch.cpp
+index 7eb0ba1c2c..afd731b723 100644
+--- a/llvm/lib/Transforms/Scalar/SimpleLoopUnswitch.cpp
++++ b/llvm/lib/Transforms/Scalar/SimpleLoopUnswitch.cpp
+@@ -1231,6 +1231,14 @@ static BasicBlock *buildClonedLoopBlocks(
+       Instruction &I = std::get<0>(ZippedInsts);
+       Instruction &ClonedI = std::get<1>(ZippedInsts);
+ 
++      // Skip instructions with 'token' type, because they can't be used for PHI
++      // inputs.
++      if (I.getType()->isTokenTy()) {
++        assert(I.getNumUses() == 0 && "Expected zero uses for token value");
++        assert(ClonedI.getNumUses() == 0 && "Expected zero uses for token value");
++        continue;
++      }
++
+       // The only instructions in the exit block should be PHI nodes and
+       // potentially a landing pad.
+       assert(
