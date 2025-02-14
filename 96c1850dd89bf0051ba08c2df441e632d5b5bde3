@@ -16,6 +16,23 @@
       "message": "The aforementioned bug was caused because we called `ShouldMethodBeCompiled()` before the locations were built in `AllocateRegisters()` during liveness analysis. In this patch it didn\u0027t cause an issue because we unconditionally rejected all instructions however in the [stage 2.1 setup](https://android-review.googlesource.com/c/platform/art/+/2901291/5/compiler/optimizing/optimizing_compiler.cc#778) this allows instructions that haven\u0027t had their locations set yet, thus allowing all instructions and methods to pass through the filter.\n\nMoving `ShouldMethodBeCompiled()` after register allocation ensures that methods are correctly checked and rejected based on their instructions.",
       "revId": "96c1850dd89bf0051ba08c2df441e632d5b5bde3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "584ff81e_b9f3f881",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-14T15:08:06Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "96c1850dd89bf0051ba08c2df441e632d5b5bde3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
