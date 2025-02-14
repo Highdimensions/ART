@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bfc8fc9a_6f2f9dd6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T16:28:38Z",
+      "side": 1,
+      "message": "lgtm, but interested in Lokesh\u0027s review especially on the linear alloc question.",
+      "revId": "8eaf06d365f27e55799a91d9e65ff6bffec96115",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "710dc8cf_b6db353a",
         "filename": "runtime/art_method.h",
         "patchSetId": 9
@@ -76,6 +93,30 @@
       "side": 1,
       "message": "`HasCodeItem()` is used in different contexts. The `ClassLinker::LoadClass()` does not deal with runtime and proxy methods, so it needs only the access flags check (it doesn\u0027t even have an `ArtMethod` at that point), so I pulled it out to a separate function. I didn\u0027t want to call it `HasCodeItem()` because there is no runtime or proxy method check. If you can suggest a better name than `NeedsCodeItem()`, I want to hear it.\n\n(AI suggested edit is rubbish as usual.)",
       "parentUuid": "710dc8cf_b6db353a",
+      "range": {
+        "startLine": 912,
+        "startChar": 14,
+        "endLine": 912,
+        "endChar": 27
+      },
+      "revId": "8eaf06d365f27e55799a91d9e65ff6bffec96115",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd5d857e_dc0a4cad",
+        "filename": "runtime/art_method.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-14T16:28:38Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "6f686f2e_d1828c92",
       "range": {
         "startLine": 912,
         "startChar": 14,
