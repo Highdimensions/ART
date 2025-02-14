@@ -148,6 +148,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c7abd9b_9cfa82dd",
+        "filename": "libartbase/base/unix_file/fd_file.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-14T23:23:07Z",
+      "side": 1,
+      "message": "Alright, SGTM.",
+      "parentUuid": "5a547c11_136a6738",
+      "range": {
+        "startLine": 420,
+        "startChar": 0,
+        "endLine": 420,
+        "endChar": 71
+      },
+      "revId": "98b60e3055478d4b34539248ca1bf50de34e0e3a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "172d2b96_8616a231",
