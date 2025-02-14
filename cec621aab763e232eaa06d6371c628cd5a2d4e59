@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e3574f6_654a9940",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-14T10:44:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13709cc8_8f325460",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 24
+      },
+      "revId": "cec621aab763e232eaa06d6371c628cd5a2d4e59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "955a5960_57ef055f",
@@ -121,6 +145,30 @@
           ]
         }
       ],
+      "revId": "cec621aab763e232eaa06d6371c628cd5a2d4e59",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f17cc8a_1a78e79c",
+        "filename": "compiler/optimizing/constant_folding.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-14T10:44:12Z",
+      "side": 1,
+      "message": "WDYT about the `std::variant` suggestion by Vladimir? I\u0027d rather have that versus two arguments and e.g. checking whether the HConstant* is nullptr",
+      "parentUuid": "955a5960_57ef055f",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 4
+      },
       "revId": "cec621aab763e232eaa06d6371c628cd5a2d4e59",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
