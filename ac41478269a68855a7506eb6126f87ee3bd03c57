@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6f526e4_76b6f152",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 1098,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T15:04:24Z",
+      "side": 1,
+      "message": "```suggestion\n        pw.println(\"  on-ota-staged [--slot SLOT | --start]\");\n```",
+      "range": {
+        "startLine": 1098,
+        "startChar": 36,
+        "endLine": 1098,
+        "endChar": 47
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b56c2c0_97ee24ad",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T15:04:24Z",
+      "side": 1,
+      "message": "This covers quite a bit of what I\u0027d like to see in the README.md file. I think it\u0027s a bit more discoverable there, and I think we can just dispense with it here to avoid duplication and get slightly less strings in the jar (afterall, it starts to go more into how the command is used than what it does).",
+      "range": {
+        "startLine": 1101,
+        "startChar": 0,
+        "endLine": 1112,
+        "endChar": 73
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c12a671_46d2afb9",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T15:04:24Z",
+      "side": 1,
+      "message": "Side note, but I often find myself following references to figure out that `PreRebootDexoptJob` goes through `BackgroundDexoptJobService` to interface with Job Scheduler. Wouldn\u0027t `ArtServiceJobService` be a more apt name for it? Or else it could at least have a comment that it also caters for `PreRebootDexoptJob`.",
+      "range": {
+        "startLine": 68,
+        "startChar": 43,
+        "endLine": 68,
+        "endChar": 65
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "264bb932_d10d0f31",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T15:04:24Z",
+      "side": 1,
+      "message": "Ah, this requires the synchronization monitor. That\u0027s unfortunate, but I think this check is valuable enough from a readability perspective, especially given that `triggerUpdateEnginePostinstallAndWait` has a nontrivial return flow.\n\nGood to see the `mCancellationSignal.isCanceled()` condition as well. I suggest returning if that is true before doing this check. Then the reader doesn\u0027t have to wonder what `run` might do for an already cancelled job.\n\nThat leads to the question whether we want to report stats if the job is cancelled this early. I don\u0027t think that\u0027s a given - we could view it as that update_engine changed its mind and didn\u0027t want us to do anything after all, and we also haven\u0027t spent any noticeable effort so far, so it seems fair to act as if it never happened.",
+      "range": {
+        "startLine": 396,
+        "startChar": 0,
+        "endLine": 396,
+        "endChar": 90
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

@@ -167,6 +167,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "080cf27e_94cc2faa",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T15:04:24Z",
+      "side": 1,
+      "message": "Ok. I\u0027d phrase it something like: \"It\u0027s always safe to go through update_engine\u0027s triggerPostinstall to map the snapshots if any are available, so use isUpdateEngineReady\u003dfalse.\"",
+      "parentUuid": "f93aabd2_409add44",
+      "range": {
+        "startLine": 776,
+        "startChar": 57,
+        "endLine": 776,
+        "endChar": 88
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "05a0e13d_0934b6da",
         "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
         "patchSetId": 12
@@ -414,6 +438,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8d11f5dc_26bac7fd",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T15:04:24Z",
+      "side": 1,
+      "message": "Aha, so it\u0027s the notify call in `cancelGivenLocked` it refers to. Some thoughts:\n\n- The notification isn\u0027t restricted to before `PreRebootDriver.run` is called, what I can see. Isn\u0027t it more accurate to say that it\u0027s notified when cancelled through `cancelGivenLocked` or `cancelAnyLocked`, and notably _not_ through the `mCancellationSignal` object itself?\n\n- I don\u0027t understand the \"This is not strictly necessary\" comments in the cancel methods. If they weren\u0027t there, then triggerUpdateEnginePostinstallAndWait would fail with a timeout exception, wouldn\u0027t it?",
+      "parentUuid": "5bccee97_1783df58",
+      "range": {
+        "startLine": 83,
+        "startChar": 7,
+        "endLine": 84,
+        "endChar": 55
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d1f82c8d_6e8c1b6f",
         "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
         "patchSetId": 12
@@ -514,6 +562,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "f6f890b7_1feccf4f",
+      "range": {
+        "startLine": 169,
+        "startChar": 41,
+        "endLine": 169,
+        "endChar": 42
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f1e2283_5b90d916",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T15:04:24Z",
+      "side": 1,
+      "message": "Nice.",
+      "parentUuid": "863296d6_a4f346f7",
       "range": {
         "startLine": 169,
         "startChar": 41,
@@ -662,6 +734,30 @@
       "side": 1,
       "message": "My idea was that I wrote the tests in a way that they are self-explantory enough to show how typical flows look like.\n\nThe idea was from go/tott/708 :\n\n\u003e /.../ They are also easier to understand since they basically act as code samples that show all the ways that callers can interact with the code, so ideally even someone who\u0027s not familiar with the implementation should be able to read through the tests to understand the behavior of a class.\n\nFor example, [this test](https://android-review.git.corp.google.com/c/platform/art/+/3427501/12/libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java#246) shows a typical async flow: the postinstall script calls `on-ota-staged` the first time with the slot information, the job scheduler then kicks of the job at some point, and the postinstall script calls `on-ota-staged` the second time with `--start` to notify that update_engine has mapped the snapshot devices.\n\nI added a comment with a pointer to the tests. If you still think it\u0027s necessary to describe the flows in texts, I can add some texts to README.md.",
       "parentUuid": "696d93f6_20da15fc",
+      "range": {
+        "startLine": 422,
+        "startChar": 17,
+        "endLine": 422,
+        "endChar": 36
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cf9ff51_480d4152",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T15:04:24Z",
+      "side": 1,
+      "message": "Documenting through tests is nice in theory, but the drawback is readability - they\u0027d have to be _really_ short and sweet to compete with human readable docs. Having to parse through 200+ lines of separate test cases to piece together this code flow is vastly worse than reading through the steps you wrote in the design doc. So yes, I still think it\u0027s necessary (or at least really really useful).\n\nAlso, docs help convey the overall picture to be able to determine if the tests themselves are correct or not.",
+      "parentUuid": "54280055_b167f973",
       "range": {
         "startLine": 422,
         "startChar": 17,
@@ -1030,6 +1126,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70c76c74_e1ea1737",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T15:04:24Z",
+      "side": 1,
+      "message": "That\u0027s a valid point, but it\u0027s still a trade-off. The reason I pointed this one out is that the duplication forced me as reviewer to reexamine the threading situation with the semaphore etc. That\u0027s cognitive load that\u0027s significant enough to be worth to encapsulate in a helper, imo. I always get antsy when threads and synchronization primitives are afoot - they\u0027re sneaky bastards.",
+      "parentUuid": "e083c86f_6f27efb9",
+      "range": {
+        "startLine": 311,
+        "startChar": 0,
+        "endLine": 338,
+        "endChar": 9
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "72135118_601ff1e0",
@@ -1067,6 +1187,30 @@
       "side": 1,
       "message": "Same here.",
       "parentUuid": "72135118_601ff1e0",
+      "range": {
+        "startLine": 354,
+        "startChar": 0,
+        "endLine": 375,
+        "endChar": 9
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56be38a5_7519b835",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T15:04:24Z",
+      "side": 1,
+      "message": "Well, a parameter is a different approach - it\u0027s a way of reducing duplication here without having helpers, so I\u0027m not sure the TotT you pointed to applies. It may be enough to stop at one of the approaches, or perhaps do both. As I said, it\u0027s all down to trade-offs. I don\u0027t think this code is straightforward enough to be easily digested as-is, but I\u0027ll leave it to you.",
+      "parentUuid": "342bb018_d1c7f977",
       "range": {
         "startLine": 354,
         "startChar": 0,
