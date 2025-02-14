@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "121733d1_eb00462a",
+        "filename": "runtime/mirror/array-inl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-14T16:18:06Z",
+      "side": 1,
+      "message": "the performance is improved for 64-bit double. (However, I can\u0027t post the link here as it\u0027s banned.)",
+      "parentUuid": "33cc946a_92a4d3d5",
+      "range": {
+        "startLine": 218,
+        "startChar": 33,
+        "endLine": 218,
+        "endChar": 41
+      },
+      "revId": "d7f4984338214a1f59af5eb2b5f853a4ec5cdbf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f49c96db_ddc6ed9b",
         "filename": "runtime/mirror/array-inl.h",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2025-02-14T15:55:30Z",
       "side": 1,
       "message": "nit: this does not look arch-specific",
+      "range": {
+        "startLine": 219,
+        "startChar": 56,
+        "endLine": 219,
+        "endChar": 63
+      },
+      "revId": "d7f4984338214a1f59af5eb2b5f853a4ec5cdbf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73202f8d_e948e741",
+        "filename": "runtime/mirror/array-inl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-14T16:18:06Z",
+      "side": 1,
+      "message": "I don\u0027t know as I haven\u0027t checked. But the 64-bit double is fine on Pixel 6. So x86_64 may not have this problem.",
+      "parentUuid": "f49c96db_ddc6ed9b",
       "range": {
         "startLine": 219,
         "startChar": 56,
