@@ -372,6 +372,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "77ec34d2_6fa548e9",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T18:23:32Z",
+      "side": 1,
+      "message": "Now I\u0027m confused by the `else` block. Should it really skip \u003chigh priority stuff\u003e altogether if the `if` condition is true? I thought only `setpriority(\u003cme\u003e, 0);` should be bypassed.",
+      "parentUuid": "04666927_4d212845",
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "44399c55_45cd0c8b",
         "filename": "runtime/thread_priorities.md",
         "patchSetId": 14
@@ -407,6 +425,30 @@
       "side": 1,
       "message": "I don\u0027t expect that to happen. Clarified. The problem is with runtime code, like GC code, that can block other threads, including high priority ones, indefinitely. Currently, explicitly running the garbage collector from a low-priority thread is a very subtle way to shoot yourself in the foot.",
       "parentUuid": "44399c55_45cd0c8b",
+      "range": {
+        "startLine": 101,
+        "startChar": 47,
+        "endLine": 102,
+        "endChar": 22
+      },
+      "revId": "c8c43fa5c05481ce12e9712e99119ee892c630b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ddd15661_73c95dec",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 14
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T18:23:32Z",
+      "side": 1,
+      "message": "Thanks for the clarification, but if the \u003chigh priority stuff\u003e doesn\u0027t alter priority, then `setPriority` is called from another thread? That could be worth spelling out, lest readers may think they see a contradiction.",
+      "parentUuid": "027f1ae7_97c76ecc",
       "range": {
         "startLine": 101,
         "startChar": 47,

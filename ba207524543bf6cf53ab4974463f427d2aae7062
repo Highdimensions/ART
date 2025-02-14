@@ -134,6 +134,29 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "650151f3_2f61df3d",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T18:23:32Z",
+      "side": 1,
+      "message": "I note \"java-priority\" isn\u0027t used here and in many cases below. That seems ok if it refers to the (generic) concept rather than the API-specific term. In some cases it\u0027s used in close proximity to Java APIs so the distinction is somewhat blurred, but generally I think it\u0027s less cumbersome with simply \"priority\".",
+      "range": {
+        "startLine": 57,
+        "startChar": 18,
+        "endLine": 57,
+        "endChar": 26
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "40be1061_e79b400b",
@@ -177,6 +200,70 @@
                 "endChar": 0
               },
               "replacement": "*y* while it is already temporarily raised to *y*, resulting in no immediate change, *A* will have\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10a6fd6b_579923da",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T18:23:32Z",
+      "side": 1,
+      "message": "Nit: You\u0027ve changed to \"java-priority\" in some other places. Here too?",
+      "range": {
+        "startLine": 99,
+        "startChar": 90,
+        "endLine": 100,
+        "endChar": 11
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eec3a68c_d0cd97b3",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T18:23:32Z",
+      "side": 1,
+      "message": "\"a\"",
+      "range": {
+        "startLine": 108,
+        "startChar": 8,
+        "endLine": 108,
+        "endChar": 9
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e437e12f_ea689f71",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread_priorities.md",
+              "range": {
+                "startLine": 108,
+                "startChar": 0,
+                "endLine": 109,
+                "endChar": 0
+              },
+              "replacement": "   since a cross-process priority setting doesn\u0027t affect the cached value.\n"
             }
           ]
         }
@@ -259,6 +346,94 @@
                 "endChar": 0
               },
               "replacement": "   executing managed code, or that may therwise be concurrently adjusting its own priorities.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f26bd29_637ca832",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T18:23:32Z",
+      "side": 1,
+      "message": "Also \"o\" in front of \"therwise\".",
+      "parentUuid": "deb20b31_0bd220f8",
+      "range": {
+        "startLine": 119,
+        "startChar": 64,
+        "endLine": 119,
+        "endChar": 73
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "807819bb_d64c0aa5",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T18:23:32Z",
+      "side": 1,
+      "message": "Both \"cached niceness\" and \"cached Java priority\" is used in this pseudocode, which may create uncertainty if they refer to two different caches. To keep things clear, consider something like `map_to_niceness(\u003ccached java-priority\u003e)` here.",
+      "range": {
+        "startLine": 127,
+        "startChar": 52,
+        "endLine": 127,
+        "endChar": 67
+      },
+      "revId": "ba207524543bf6cf53ab4974463f427d2aae7062",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "648516b6_d5ed6a3a",
+        "filename": "runtime/thread_priorities.md",
+        "patchSetId": 16
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-14T18:23:32Z",
+      "side": 1,
+      "message": "\"java-priority\"",
+      "range": {
+        "startLine": 136,
+        "startChar": 32,
+        "endLine": 136,
+        "endChar": 45
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "38c0ad40_0c8273b0",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread_priorities.md",
+              "range": {
+                "startLine": 136,
+                "startChar": 0,
+                "endLine": 137,
+                "endChar": 0
+              },
+              "replacement": "      setpriority(\u003cme\u003e, \u003ccached java-priority\u003e);\n"
             }
           ]
         }
