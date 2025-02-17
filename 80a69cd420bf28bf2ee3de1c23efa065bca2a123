@@ -96,6 +96,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "042e68d9_a82b3053",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T11:37:25Z",
+      "side": 1,
+      "message": "Ah I see, you mean the new method doesn\u0027t need those checks. LGTM.",
+      "parentUuid": "7f36c0e3_5e255f82",
+      "range": {
+        "startLine": 16,
+        "startChar": 57,
+        "endLine": 17,
+        "endChar": 36
+      },
+      "revId": "80a69cd420bf28bf2ee3de1c23efa065bca2a123",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4ebc7b7_368300c6",
