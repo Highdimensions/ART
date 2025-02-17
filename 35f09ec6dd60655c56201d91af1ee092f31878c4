@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58ab8e09_2a90ad45",
+        "filename": "runtime/class_linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-17T12:03:40Z",
+      "side": 1,
+      "message": "Lokesh, do you want some extra comments here why we need the mutator lock?\n\nIs there a specific `Bug:` I should add to the commit message?",
+      "range": {
+        "startLine": 546,
+        "startChar": 6,
+        "endLine": 546,
+        "endChar": 44
+      },
+      "revId": "35f09ec6dd60655c56201d91af1ee092f31878c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
