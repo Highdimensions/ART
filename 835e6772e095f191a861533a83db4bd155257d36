@@ -22,6 +22,30 @@
       },
       "revId": "835e6772e095f191a861533a83db4bd155257d36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea5d049b_ec5b7299",
+        "filename": "test/860-vdex-failure/smali/TestCase.smali",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T16:28:31Z",
+      "side": 1,
+      "message": "Yes, with vdex, we don\u0027t verify at compile the time classes that are not marked as verified, so we don\u0027t know if it\u0027s hard failing or just lock counting failing.",
+      "parentUuid": "ee1859fd_1803914e",
+      "range": {
+        "startLine": 20,
+        "startChar": 2,
+        "endLine": 20,
+        "endChar": 23
+      },
+      "revId": "835e6772e095f191a861533a83db4bd155257d36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
