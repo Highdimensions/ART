@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c0d16e8_7c956794",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-02-17T19:55:43Z",
+      "side": 1,
+      "message": "+2 but I\u0027ll keep the comment unresolved in case you change your mind.",
+      "revId": "9cc21bc503c0832a1bb295c67b193256bb8e7446",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4feb1f2c_97680587",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-02-17T19:55:43Z",
+      "side": 1,
+      "message": "I\u0027m not sure it\u0027s a good change; it harms readability (it\u0027s hard to see that the unrolled iterations are identical, there\u0027s more code to read, and the fact that it\u0027s the same as `FixUpUserRecordsAfterUseInsertion` is lost). I think it\u0027s compiler\u0027s job to make such optimizations. Does it really have a noticeable effect on performance?",
+      "range": {
+        "startLine": 2236,
+        "startChar": 0,
+        "endLine": 2250,
+        "endChar": 1
+      },
+      "revId": "9cc21bc503c0832a1bb295c67b193256bb8e7446",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
