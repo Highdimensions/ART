@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d84d50a_9dc944a4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-17T10:59:52Z",
+      "side": 1,
+      "message": "No, it\u0027s in this CL but the moving of code to `-inl.h` makes the diffs a bit confusing.",
+      "parentUuid": "a4fb085f_bec48682",
+      "range": {
+        "startLine": 16,
+        "startChar": 57,
+        "endLine": 17,
+        "endChar": 36
+      },
+      "revId": "80a69cd420bf28bf2ee3de1c23efa065bca2a123",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4ebc7b7_368300c6",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-02-14T09:52:59Z",
       "side": 1,
       "message": "CHECK",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 10
+      },
+      "revId": "80a69cd420bf28bf2ee3de1c23efa065bca2a123",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2f28317_fed56535",
+        "filename": "runtime/instrumentation-inl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-17T10:59:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4ebc7b7_368300c6",
       "range": {
         "startLine": 99,
         "startChar": 4,
