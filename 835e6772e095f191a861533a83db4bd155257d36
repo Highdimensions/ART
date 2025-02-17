@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee1859fd_1803914e",
+        "filename": "test/860-vdex-failure/smali/TestCase.smali",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-17T15:50:30Z",
+      "side": 1,
+      "message": "This causes a hard failure, right? Does this really take the `ShouldVerifyAtRuntime()` path in inliner?",
+      "range": {
+        "startLine": 20,
+        "startChar": 2,
+        "endLine": 20,
+        "endChar": 23
+      },
+      "revId": "835e6772e095f191a861533a83db4bd155257d36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
