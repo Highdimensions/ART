@@ -1,0 +1,263 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5704d18f_84e7c59b",
+        "filename": "runtime/oat/oat_file_assistant.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T11:36:22Z",
+      "side": 1,
+      "message": "Fills silly to create all those OatFileInfo below, when only one will be needed. Can we make all of this on-demand?",
+      "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97b0d169_37b0c31f",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T11:36:22Z",
+      "side": 1,
+      "message": "Change this with an enum type and a GetType virtual method.",
+      "range": {
+        "startLine": 390,
+        "startChar": 0,
+        "endLine": 393,
+        "endChar": 51
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "90395e2b_bd72720a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 381,
+                "startChar": 0,
+                "endLine": 381,
+                "endChar": 0
+              },
+              "replacement": "  enum class OatFileType {\n    kOat,\n    kVdex,\n    kDm,\n  };\n\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 390,
+                "startChar": 0,
+                "endLine": 394,
+                "endChar": 0
+              },
+              "replacement": "    virtual OatFileType GetType() \u003d 0;\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 513,
+                "startChar": 0,
+                "endLine": 515,
+                "endChar": 0
+              },
+              "replacement": "    OatFileType GetType() override { return OatFileType::kOat; }\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 545,
+                "startChar": 0,
+                "endLine": 547,
+                "endChar": 0
+              },
+              "replacement": "    OatFileType GetType() override { return OatFileType::kVdex; }\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 568,
+                "startChar": 0,
+                "endLine": 570,
+                "endChar": 0
+              },
+              "replacement": "    OatFileType GetType() override { return OatFileType::kDm; }\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4f796ce_cb080d3a",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T11:36:22Z",
+      "side": 1,
+      "message": "How could we rename this method? The debug strings following are hard to reason about, as the vdex is not really next to the dex file.",
+      "range": {
+        "startLine": 549,
+        "startChar": 13,
+        "endLine": 549,
+        "endChar": 26
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "47aa08ff_42c095e2",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 386,
+                "startChar": 0,
+                "endLine": 387,
+                "endChar": 0
+              },
+              "replacement": "        : oat_file_assistant_(oat_file_assistant), filename_(\"\"), is_oat_file_(false) {}\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 398,
+                "startChar": 0,
+                "endLine": 399,
+                "endChar": 0
+              },
+              "replacement": "    bool IsOatFile() const;\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 450,
+                "startChar": 0,
+                "endLine": 451,
+                "endChar": 0
+              },
+              "replacement": "    // Pass true for is_oat_file if the information associated with this\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 454,
+                "startChar": 0,
+                "endLine": 455,
+                "endChar": 0
+              },
+              "replacement": "                bool is_oat_file)\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 457,
+                "startChar": 0,
+                "endLine": 458,
+                "endChar": 0
+              },
+              "replacement": "          is_oat_file_(is_oat_file) {}\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 482,
+                "startChar": 0,
+                "endLine": 483,
+                "endChar": 0
+              },
+              "replacement": "    const bool is_oat_file_;\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 502,
+                "startChar": 0,
+                "endLine": 503,
+                "endChar": 0
+              },
+              "replacement": "                           bool is_oat_file,\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 507,
+                "startChar": 0,
+                "endLine": 508,
+                "endChar": 0
+              },
+              "replacement": "        : OatFileInfo(oat_file_assistant, filename, is_oat_file),\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 517,
+                "startChar": 0,
+                "endLine": 518,
+                "endChar": 0
+              },
+              "replacement": "      return IsOatFile() ? \"odex in dalvik-cache\" : \"odex next to the dex file\";\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 536,
+                "startChar": 0,
+                "endLine": 537,
+                "endChar": 0
+              },
+              "replacement": "                            bool is_oat_file,\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 540,
+                "startChar": 0,
+                "endLine": 541,
+                "endChar": 0
+              },
+              "replacement": "        : OatFileInfo(oat_file_assistant, filename, is_oat_file),\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 549,
+                "startChar": 0,
+                "endLine": 550,
+                "endChar": 0
+              },
+              "replacement": "      return IsOatFile() ? \"vdex in dalvik-cache\" : \"vdex next to the dex file\";\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 566,
+                "startChar": 0,
+                "endLine": 567,
+                "endChar": 0
+              },
+              "replacement": "        : OatFileInfo(oat_file_assistant, filename, /*is_oat_file\u003d*/false) {}\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
