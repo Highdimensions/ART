@@ -88,6 +88,30 @@
       },
       "revId": "661670f04b7c137bbe6da0c1f966f03b6c04f39b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c717f4c0_f7ee8560",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 1958,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-17T10:40:55Z",
+      "side": 1,
+      "message": "The OatFile class maintains a mapping between locations and oat dex files. Each oat dex file is [added to the mapping twice with two keys](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat_file.cc;l\u003d1047-1056;drc\u003d99f6baed65d610f178693e737610b102467927fd): the `--dex-location` value passed to dex2oat, and the location that OatFileAssistant got at runtime when loading the oat.\n\nIn normal cases, these two keys are the same, but in the Cloud Compilation case, one key is the relative path and the other is the absolute path. The lines above retrives the oat dex file by the relative path. Because the mapping is local to the oat file, there is no key conflict.",
+      "parentUuid": "9ff9522c_b2bd7497",
+      "range": {
+        "startLine": 1957,
+        "startChar": 2,
+        "endLine": 1958,
+        "endChar": 91
+      },
+      "revId": "661670f04b7c137bbe6da0c1f966f03b6c04f39b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
