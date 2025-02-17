@@ -64,6 +64,30 @@
       },
       "revId": "661670f04b7c137bbe6da0c1f966f03b6c04f39b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ff9522c_b2bd7497",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 1958,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T10:31:32Z",
+      "side": 1,
+      "message": "The lines above (1947-1952), where we look at the location and open the dex file. Given the location is unknown, how can that work?",
+      "parentUuid": "cd3bb72f_779b85c0",
+      "range": {
+        "startLine": 1957,
+        "startChar": 2,
+        "endLine": 1958,
+        "endChar": 91
+      },
+      "revId": "661670f04b7c137bbe6da0c1f966f03b6c04f39b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
