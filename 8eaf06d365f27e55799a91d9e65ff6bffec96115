@@ -242,6 +242,30 @@
       },
       "revId": "8eaf06d365f27e55799a91d9e65ff6bffec96115",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d460bf9_47fdf3e1",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 4366,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-17T08:39:08Z",
+      "side": 1,
+      "message": "Can you give a CR+2, Nicolas?\n\nI\u0027ll prepare a follow-up to annotate the `AllocArt{Field,Method}Array()` with `REQUIRES_SHARED(Locks::mutator_lock_)`.",
+      "parentUuid": "8fe531b9_10859501",
+      "range": {
+        "startLine": 4362,
+        "startChar": 0,
+        "endLine": 4366,
+        "endChar": 66
+      },
+      "revId": "8eaf06d365f27e55799a91d9e65ff6bffec96115",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
