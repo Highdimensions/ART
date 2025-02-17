@@ -3553,7 +3553,8 @@ struct OatdumpMain : public CmdlineMain<OatdumpArgs> {
                                         /*only_load_trusted_executable=*/false,
                                         ofa_context.get());
 
-    if (!oat_file_assistant.ValidateBootClassPathChecksums(*oat_file, error_msg)) {
+    if (!oat_file_assistant.ValidateBootClassPathChecksums(*oat_file)) {
+      *error_msg = "BCP checksum check failed";
       return false;
     }
 
