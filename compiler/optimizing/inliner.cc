@@ -22,6 +22,7 @@
 #include "builder.h"
 #include "class_linker.h"
 #include "class_root-inl.h"
+#include "compiler_callbacks.h"
 #include "constant_folding.h"
 #include "data_type-inl.h"
 #include "dead_code_elimination.h"
@@ -400,6 +401,8 @@ ArtMethod* HInliner::FindMethodFromCHA(ArtMethod* resolved_method) {
 static bool IsMethodVerified(ArtMethod* method)
     REQUIRES_SHARED(Locks::mutator_lock_) {
   if (method->GetDeclaringClass()->IsVerified()) {
+    DCHECK(!Runtime::Current()->GetCompilerCallbacks()->IsUncompilableMethod(
+                MethodReference(method->GetDexFile(), method->GetDexMethodIndex())));
     return true;
   }
   // For AOT, we check if the class has a verification status that allows us to
@@ -407,9 +410,14 @@ static bool IsMethodVerified(ArtMethod* method)
   // At runtime, we know this is cold code if the class is not verified, so don't
   // bother analyzing.
   if (Runtime::Current()->IsAotCompiler()) {
-    if (method->GetDeclaringClass()->IsVerifiedNeedsAccessChecks() ||
-        method->GetDeclaringClass()->ShouldVerifyAtRuntime()) {
+    if (method->GetDeclaringClass()->IsVerifiedNeedsAccessChecks()) {
+      DCHECK(!Runtime::Current()->GetCompilerCallbacks()->IsUncompilableMethod(
+                  MethodReference(method->GetDexFile(), method->GetDexMethodIndex())));
       return true;
+    }
+    if (method->GetDeclaringClass()->ShouldVerifyAtRuntime()) {
+      return !Runtime::Current()->GetCompilerCallbacks()->IsUncompilableMethod(
+          MethodReference(method->GetDexFile(), method->GetDexMethodIndex()));
     }
   }
   return false;
