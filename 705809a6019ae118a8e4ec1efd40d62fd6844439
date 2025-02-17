@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0385fcb_b0092eef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T16:32:23Z",
+      "side": 1,
+      "message": "Thanks Vladimir. To not conflict with my CL implementing if branches, I\u0027ll follow-up with your comments in a CL built on top of aosp/3497150. PTAL at aosp/3497150 first.",
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5136c1eb_8cad7a7e",
