@@ -64,6 +64,30 @@
       },
       "revId": "1ee050d32f6ba2e127efe175d9e46b44b35074c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f391416_c64353a6",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 2557,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-17T11:41:12Z",
+      "side": 1,
+      "message": "Marking as resolved for submitting.",
+      "parentUuid": "4fd95ee1_6ae35191",
+      "range": {
+        "startLine": 2557,
+        "startChar": 0,
+        "endLine": 2557,
+        "endChar": 86
+      },
+      "revId": "1ee050d32f6ba2e127efe175d9e46b44b35074c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
