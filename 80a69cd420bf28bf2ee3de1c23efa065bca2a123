@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f36c0e3_5e255f82",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-17T11:35:19Z",
+      "side": 1,
+      "message": "Compare the old `InitializeMethodsCode()` in `instrumentation.cc` (`CanUseNterp()` at lines 408 and 430  remains in the new `ReinitializeMethodsCode()` at lines 383 and 399) with the new function `GetInitialEntrypoint()` plus the moved `InitializeMethodsCode()` in `instrumentation-inl.h`.",
+      "parentUuid": "d0348b61_4319b275",
+      "range": {
+        "startLine": 16,
+        "startChar": 57,
+        "endLine": 17,
+        "endChar": 36
+      },
+      "revId": "80a69cd420bf28bf2ee3de1c23efa065bca2a123",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4ebc7b7_368300c6",
