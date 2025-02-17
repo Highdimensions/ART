@@ -542,11 +542,13 @@ class ClassLinker {
 
   LengthPrefixedArray<ArtField>* AllocArtFieldArray(Thread* self,
                                                     LinearAlloc* allocator,
-                                                    size_t length);
+                                                    size_t length)
+      REQUIRES_SHARED(Locks::mutator_lock_);
 
   LengthPrefixedArray<ArtMethod>* AllocArtMethodArray(Thread* self,
                                                       LinearAlloc* allocator,
-                                                      size_t length);
+                                                      size_t length)
+      REQUIRES_SHARED(Locks::mutator_lock_);
 
   // Convenience AllocClass() overload that uses mirror::Class::InitializeClassVisitor
   // for the class initialization and uses the `java_lang_Class` from class roots
