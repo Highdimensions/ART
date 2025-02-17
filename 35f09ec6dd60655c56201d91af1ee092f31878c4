@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6ca5b2a_8b28f348",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-17T19:19:14Z",
+      "side": 1,
+      "message": "Thanks for taking care of this.",
+      "revId": "35f09ec6dd60655c56201d91af1ee092f31878c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "58ab8e09_2a90ad45",
@@ -31,6 +48,30 @@
       "writtenOn": "2025-02-17T12:03:40Z",
       "side": 1,
       "message": "Lokesh, do you want some extra comments here why we need the mutator lock?\n\nIs there a specific `Bug:` I should add to the commit message?",
+      "range": {
+        "startLine": 546,
+        "startChar": 6,
+        "endLine": 546,
+        "endChar": 44
+      },
+      "revId": "35f09ec6dd60655c56201d91af1ee092f31878c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e80fd3bf_d7ef5a15",
+        "filename": "runtime/class_linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-17T19:19:14Z",
+      "side": 1,
+      "message": "It would be nice to add the following comment:\n\n`Need to allocate in Runnable state as CMC\u0027s compaction-pause expects new arenas are not added to linear-alloc simultaneously, which can happen when allocating ArtField/ArtMethod array`\n\nDon\u0027t have a bug number.",
+      "parentUuid": "58ab8e09_2a90ad45",
       "range": {
         "startLine": 546,
         "startChar": 6,
