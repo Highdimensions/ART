@@ -1,0 +1,126 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41c5048f_60debb9a",
+        "filename": "libartservice/service/README.internal.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-17T18:41:34Z",
+      "side": 1,
+      "message": "\"runs in synchronous mode from the postinstall script while update_engine keeps the snapshot devices mapped\"",
+      "range": {
+        "startLine": 22,
+        "startChar": 32,
+        "endLine": 22,
+        "endChar": 54
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "09450d0d_776e517b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/README.internal.md",
+              "range": {
+                "startLine": 22,
+                "startChar": 0,
+                "endLine": 24,
+                "endChar": 0
+              },
+              "replacement": "  By default, Pre-reboot Dexopt runs in synchronous mode from the postinstall\n  script while update_engine keeps the snapshot devices mapped. The command blocks\n  until Pre-reboot Dexopt finishes.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "66bca700d9721d81d5acb81993349a41d67e15b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7975b1c2_7b5adf1e",
+        "filename": "libartservice/service/README.internal.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-17T18:41:34Z",
+      "side": 1,
+      "message": "Typo: \"The\"",
+      "range": {
+        "startLine": 40,
+        "startChar": 52,
+        "endLine": 40,
+        "endChar": 55
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "faa82982_1c6398c1",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/README.internal.md",
+              "range": {
+                "startLine": 40,
+                "startChar": 0,
+                "endLine": 41,
+                "endChar": 0
+              },
+              "replacement": "  Pre-reboot Dexopt is always in asynchronous mode. The command schedules an\n"
+            }
+          ]
+        }
+      ],
+      "revId": "66bca700d9721d81d5acb81993349a41d67e15b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a992181_c4e5d2ef",
+        "filename": "libartservice/service/README.internal.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-17T18:41:34Z",
+      "side": 1,
+      "message": "It\u0027s worth noting here that the command call blocks until the job is done, and that update_engine unmaps again upon return.\n\nAlso, I\u0027d like to see a mention that the actual work is done in the job that called `triggerPostinstall` rather than in the `--start` command. (That probably is a pure internal implementation detail, but quite useful to understand the code flow.)",
+      "revId": "66bca700d9721d81d5acb81993349a41d67e15b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f89fa0b_46c6f25c",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 782,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-17T18:41:34Z",
+      "side": 1,
+      "message": "The one little nugget of info that\u0027s helpful is that it will always map the snapshots and call us back, if there are any snapshots to map (also in testing workflows etc). That\u0027s why I phrased it \"... to map the snapshots if any are available\". That\u0027s not entirely clear here.",
+      "range": {
+        "startLine": 782,
+        "startChar": 72,
+        "endLine": 782,
+        "endChar": 85
+      },
+      "revId": "66bca700d9721d81d5acb81993349a41d67e15b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aacf83fa_9f09d3b6",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-17T18:41:34Z",
+      "side": 1,
+      "message": "Well, dang, I had a gut feeling about the semaphore but couldn\u0027t put my finger on it.\n\nGoes to show that semaphores aren\u0027t the ideal abstraction to order thread critical sections sequentially. A `synchronized` monitor lock, or perhaps a `Lock` with a `Condition`, is better for that.\n\nI\u0027d much prefer to have these two semaphores replaced with either of those, to make the sequenced regions explicit. The drawback is that it gets a bit clunky with the loops to deal with \"spurious wakeups\", but it does a much better job at shaking out mistakes like this.\n\nStill marking as optional, because it\u0027s not clear to me how clunky it\u0027d get, and after picking through this I think these two semaphores should be enough (although steps 1 and 2 aren\u0027t technically speaking serialised wrt each other).",
+      "range": {
+        "startLine": 336,
+        "startChar": 23,
+        "endLine": 336,
+        "endChar": 47
+      },
+      "revId": "6d645f794af34c4efbe3ebee52ad6a7f7cfd4e05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6eee915b_f4124c3a",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-17T18:41:34Z",
+      "side": 1,
+      "message": "Isn\u0027t there a synchronisation gap between these two lines too? Does it work if you insert something like `sleep(10000)` there?",
+      "range": {
+        "startLine": 419,
+        "startChar": 0,
+        "endLine": 420,
+        "endChar": 58
+      },
+      "revId": "6d645f794af34c4efbe3ebee52ad6a7f7cfd4e05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

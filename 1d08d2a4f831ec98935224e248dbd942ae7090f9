@@ -510,6 +510,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "73b658a0_17c1b410",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-17T18:41:34Z",
+      "side": 1,
+      "message": "\u003e If someone adds something else that can possibly fire mCancellationSignal before PreRebootDriver.run is called, then they should notify the monitor as well\n\nAll right, I see what you\u0027re getting at. Then I suggest s/it\u0027s guaranteed/it must be guaranteed/ It\u0027s a small change, but it emphasizes that the onus is on the code changer, rather than that the code inherently ensures it.\n\n\u003e If they weren\u0027t there, triggerUpdateEnginePostinstallAndWait would still return, though after an unnecessary wait. I don\u0027t think there would be a timeout exception.\n\nSo something else notifies the monitor lock a bit later but still before the timeout then? What\u0027s that? I\u0027d like to understand the guarantee mentioned here, and since those notifies aren\u0027t necessary I reckon it cannot be them.",
+      "parentUuid": "2a49b697_e0fe949c",
+      "range": {
+        "startLine": 83,
+        "startChar": 7,
+        "endLine": 84,
+        "endChar": 55
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d1f82c8d_6e8c1b6f",
         "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
         "patchSetId": 12

@@ -121,6 +121,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "7d1db4ca_ba1ec2bd",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-17T18:41:34Z",
+      "side": 1,
+      "message": "Thanks. I actually suggested moving all the three bullet points since I think the README file is a better location for all of it.\n\nThen it\u0027s also somewhat more \"user facing\", and I think it wouldn\u0027t be out of place in the same file. Also note that the user here is an OEM system integrator, and for them the interactions between ART and update_engine may be relevant for troubleshooting, if they have their own postinstall script, etc. And it is afterall a module/platform API, so I don\u0027t think the info is really that \"internal\".\n\nAnyway, it\u0027s bikeshedding - I won\u0027t block on it.",
+      "parentUuid": "6e0d4933_60799c69",
+      "range": {
+        "startLine": 1101,
+        "startChar": 0,
+        "endLine": 1112,
+        "endChar": 73
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "9c12a671_46d2afb9",
         "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
         "patchSetId": 13
@@ -156,6 +180,30 @@
       "side": 1,
       "message": "We talked about this in https://android-review.git.corp.google.com/c/platform/art/+/3460186/comment/5edf7758_ff3f148d/. I added a comment to `BackgroundDexoptJobService`.",
       "parentUuid": "9c12a671_46d2afb9",
+      "range": {
+        "startLine": 68,
+        "startChar": 43,
+        "endLine": 68,
+        "endChar": 65
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47f79ee2_f15b181c",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-17T18:41:34Z",
+      "side": 1,
+      "message": "Sorry, I actually missed that reply. Thanks.",
+      "parentUuid": "f3c3d16a_db0c17dc",
       "range": {
         "startLine": 68,
         "startChar": 43,
@@ -203,6 +251,30 @@
       "side": 1,
       "message": "Alright, added an early return. I\u0027m not a fan of inessential code because people may thought it must be there and be hesitant when they want to change it, just like how we hesitanted many times when we were porting the legacy code and saw code that didn\u0027t look essential. However, saving people time on tracing into a function may be a good reason for it. I added a comment to mitigate my concern.\n\nI do think the stats reporting is necessary. At this point, `mCancellationSignal` is likely fired by the job scheduler through `onStopJob` -\u003e `onStopJobImpl` -\u003e `cancelGivenLocked`, not by update_engine (because we were just notified by update_engine a blink ago). In this case, we do want to know why the job scheduler changed its mind so quickly.",
       "parentUuid": "264bb932_d10d0f31",
+      "range": {
+        "startLine": 396,
+        "startChar": 0,
+        "endLine": 396,
+        "endChar": 90
+      },
+      "revId": "ac41478269a68855a7506eb6126f87ee3bd03c57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecb228cf_49d6d483",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-17T18:41:34Z",
+      "side": 1,
+      "message": "\u003e people may thought it must be there and be hesitant when they want to change it\n\nActually, they should be. When that time comes there may be code in `run` that (perhaps inadvertently) depends on this return, regardless of what a comment might claim. Personally I wouldn\u0027t trust it.\n\nEven so, \"unnecessarily\" returning early on cancel outweighs that imo, also because it follows the principle of least surprise.\n\n\u003e In this case, we do want to know why the job scheduler changed its mind so quickly.\n\nI see, good point.",
+      "parentUuid": "68d1fd2e_76a5ac16",
       "range": {
         "startLine": 396,
         "startChar": 0,
