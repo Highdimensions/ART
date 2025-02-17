@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2eebdd2c_95e6ce20",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 2557,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T10:28:39Z",
+      "side": 1,
+      "message": "Isn\u0027t this easy to sort out? Why not fixing it this way?",
+      "range": {
+        "startLine": 2557,
+        "startChar": 0,
+        "endLine": 2557,
+        "endChar": 86
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "16359db5_c909ad37",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/instruction_builder.cc",
+              "range": {
+                "startLine": 2557,
+                "startChar": 0,
+                "endLine": 2559,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "1ee050d32f6ba2e127efe175d9e46b44b35074c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
