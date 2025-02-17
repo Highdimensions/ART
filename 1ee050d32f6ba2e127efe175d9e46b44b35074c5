@@ -40,6 +40,30 @@
       ],
       "revId": "1ee050d32f6ba2e127efe175d9e46b44b35074c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fd95ee1_6ae35191",
+        "filename": "compiler/optimizing/instruction_builder.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 2557,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-17T10:52:16Z",
+      "side": 1,
+      "message": "The `kAccCompileDontBother` is not recorded in the vdex file and it seems we still accept the class as AOT-verified, so we shall not re-run verification at runtime to set that flag on the method.\n\nI think vdex is your area of expertise, right? So, if you have a quick fix, please implement it. I may need some time to dig around the `ClassStatus` handling in the `CompilerDriver`. And I\u0027d prefer to make the build targer green ASAP.",
+      "parentUuid": "2eebdd2c_95e6ce20",
+      "range": {
+        "startLine": 2557,
+        "startChar": 0,
+        "endLine": 2557,
+        "endChar": 86
+      },
+      "revId": "1ee050d32f6ba2e127efe175d9e46b44b35074c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
