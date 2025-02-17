@@ -177,7 +177,7 @@ class HInstructionBuilder : public ValueObject {
   HNewArray* BuildNewArray(uint32_t dex_pc, dex::TypeIndex type_index, HInstruction* length);
 
   // Builds a new array node and the instructions that fill it.
-  bool BuildFilledNewArray(uint32_t dex_pc,
+  void BuildFilledNewArray(uint32_t dex_pc,
                            dex::TypeIndex type_index,
                            const InstructionOperands& operands);
 
