@@ -46,6 +46,30 @@
       },
       "revId": "f1f96a51b6105c64932233ffbedb256115420e0d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eabb3aa4_9b27335c",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 1955,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T11:23:11Z",
+      "side": 1,
+      "message": "I\u0027m thinking it should be fine - do things break when you do it late?",
+      "parentUuid": "ce6a1bed_14faa3ca",
+      "range": {
+        "startLine": 1954,
+        "startChar": 0,
+        "endLine": 1955,
+        "endChar": 51
+      },
+      "revId": "f1f96a51b6105c64932233ffbedb256115420e0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
