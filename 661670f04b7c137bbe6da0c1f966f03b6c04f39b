@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1bc63540_555587b7",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 1958,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T09:46:26Z",
+      "side": 1,
+      "message": "Actually, what does the code lines 1947-1950 mean in the context of cloud compilation? Shouldn\u0027t you change that to be a relative location?",
+      "range": {
+        "startLine": 1957,
+        "startChar": 2,
+        "endLine": 1958,
+        "endChar": 91
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "f729197d_3650a585",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/class_linker.cc",
+              "range": {
+                "startLine": 1957,
+                "startChar": 0,
+                "endLine": 1962,
+                "endChar": 0
+              },
+              "replacement": "    // This is needed when the location on device is unknown at compile-time,\n    // typically during Cloud Compilation because the compilation is done on the\n    // server and the apk is later installed on device into\n    // `/data/app/\u003crandom_string\u003e`.\n    // This is not needed during dexpreopt because the location on device is\n    // known to be a certain location in /system, /product, etc.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "661670f04b7c137bbe6da0c1f966f03b6c04f39b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
