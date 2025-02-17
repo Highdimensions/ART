@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f215e5ea_0b430556",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 568,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T16:30:37Z",
+      "side": 1,
+      "message": "nit: avoid this block?",
+      "range": {
+        "startLine": 568,
+        "startChar": 0,
+        "endLine": 568,
+        "endChar": 7
+      },
+      "revId": "c84e0145d5f8850f092961c28e498d5f5077affc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
