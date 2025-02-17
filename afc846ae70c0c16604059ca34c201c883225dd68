@@ -70,6 +70,30 @@
       ],
       "revId": "afc846ae70c0c16604059ca34c201c883225dd68",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11153e8c_f5349880",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-17T16:01:02Z",
+      "side": 1,
+      "message": "Yes, writing can happen concurrently with updating traced_methods_. There is no reason for them to be mututally exclusive. So I added a new lock for the trace_file and moved it to TraceDumpCheckpoint class.",
+      "parentUuid": "00516c88_f2a44876",
+      "range": {
+        "startLine": 111,
+        "startChar": 1,
+        "endLine": 112,
+        "endChar": 49
+      },
+      "revId": "afc846ae70c0c16604059ca34c201c883225dd68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
