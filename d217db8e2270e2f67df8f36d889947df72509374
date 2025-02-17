@@ -1,0 +1,126 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f385c40c_843f0d70",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T09:51:57Z",
+      "side": 1,
+      "message": "Can you split it so the SIGSYS handling is its own CL? Would be good to isolate the two changes to balance risks.",
+      "revId": "d217db8e2270e2f67df8f36d889947df72509374",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04131150_30b899b9",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 19
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T09:51:57Z",
+      "side": 1,
+      "message": "Return the result to a local variable which you can then CHECK (I consider CHECKs to be changeable with DCHECK).",
+      "range": {
+        "startLine": 601,
+        "startChar": 2,
+        "endLine": 601,
+        "endChar": 8
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "411513c0_38309112",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 601,
+                "startChar": 0,
+                "endLine": 602,
+                "endChar": 0
+              },
+              "replacement": "  int ret \u003d madvise(moving_space_begin, moving_space_size, MADV_NOHUGEPAGE);\n  CHECK_EQ(ret, 0) \u003c\u003c strerror(errno);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "d217db8e2270e2f67df8f36d889947df72509374",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38c34c8e_04666e7c",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 19
+      },
+      "lineNbr": 1314,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T09:51:57Z",
+      "side": 1,
+      "message": "Can you point to a buganizer link?",
+      "range": {
+        "startLine": 1314,
+        "startChar": 22,
+        "endLine": 1314,
+        "endChar": 24
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "920dc805_e82397fa",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1313,
+                "startChar": 0,
+                "endLine": 1315,
+                "endChar": 0
+              },
+              "replacement": "        // TODO: remove this code once we are sure that app-compat issues (like\n        // MOVE ioctl being blocked by seccomp) are taken care of.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "d217db8e2270e2f67df8f36d889947df72509374",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fc0b0b3_76916d02",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 19
+      },
+      "lineNbr": 3625,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T09:51:57Z",
+      "side": 1,
+      "message": "Explain what this is about.",
+      "range": {
+        "startLine": 3625,
+        "startChar": 0,
+        "endLine": 3625,
+        "endChar": 65
+      },
+      "revId": "d217db8e2270e2f67df8f36d889947df72509374",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
