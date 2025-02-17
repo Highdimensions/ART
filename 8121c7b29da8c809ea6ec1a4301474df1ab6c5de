@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2d86890_f8c03804",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-17T15:39:18Z",
+      "side": 1,
+      "message": "Thanks Vladimir, PTAL, I\u0027ve changed the CL as discussed.",
+      "revId": "8121c7b29da8c809ea6ec1a4301474df1ab6c5de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
