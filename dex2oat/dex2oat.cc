@@ -1373,12 +1373,9 @@ class Dex2Oat final {
     // In theory the files should be the same.
     if (dm_file_ != nullptr) {
       if (input_vdex_file_ == nullptr) {
-        std::string error_msg;
-        input_vdex_file_ = VdexFile::OpenFromDm(dm_file_location_, *dm_file_, &error_msg);
+        input_vdex_file_ = VdexFile::OpenFromDm(dm_file_location_, *dm_file_);
         if (input_vdex_file_ != nullptr) {
           VLOG(verifier) << "Doing fast verification with vdex from DexMetadata archive";
-        } else {
-          LOG(WARNING) << error_msg;
         }
       } else {
         LOG(INFO) << "Ignoring vdex file in dex metadata due to vdex file already being passed";

@@ -22,11 +22,12 @@
 #include <memory>
 #include <unordered_set>
 
-#include "android-base/logging.h"
-#include "android-base/stringprintf.h"
+#include <android-base/logging.h>
+#include <android-base/stringprintf.h>
+#include <log/log.h>
+
 #include "base/bit_utils.h"
 #include "base/leb128.h"
-#include "base/macros.h"
 #include "base/stl_util.h"
 #include "base/systrace.h"
 #include "base/unix_file/fd_file.h"
@@ -38,9 +39,8 @@
 #include "dex/dex_file_loader.h"
 #include "gc/heap.h"
 #include "gc/space/image_space.h"
-#include "handle_scope-inl.h"
-#include "log/log.h"
 #include "mirror/class-inl.h"
+#include "handle_scope-inl.h"
 #include "runtime.h"
 #include "verifier/verifier_deps.h"
 
@@ -140,28 +140,30 @@ std::unique_ptr<VdexFile> VdexFile::OpenAtAddress(uint8_t* mmap_addr,
 }
 
 std::unique_ptr<VdexFile> VdexFile::OpenFromDm(const std::string& filename,
-                                               const ZipArchive& archive,
-                                               std::string* error_msg) {
-  std::unique_ptr<ZipEntry> zip_entry(archive.Find(VdexFile::kVdexNameInDmFile, error_msg));
+                                               const ZipArchive& archive) {
+  std::string error_msg;
+  std::unique_ptr<ZipEntry> zip_entry(archive.Find(VdexFile::kVdexNameInDmFile, &error_msg));
   if (zip_entry == nullptr) {
-    *error_msg = ART_FORMAT("No {} file in DexMetadata archive. Not doing fast verification: {}",
-                            VdexFile::kVdexNameInDmFile,
-                            *error_msg);
+    LOG(INFO) << "No " << VdexFile::kVdexNameInDmFile << " file in DexMetadata archive. "
+              << "Not doing fast verification.";
     return nullptr;
   }
   MemMap input_file = zip_entry->MapDirectlyOrExtract(
-      filename.c_str(), VdexFile::kVdexNameInDmFile, error_msg, alignof(VdexFile));
+      filename.c_str(),
+      VdexFile::kVdexNameInDmFile,
+      &error_msg,
+      alignof(VdexFile));
   if (!input_file.IsValid()) {
-    *error_msg = "Could not open vdex file in DexMetadata archive: " + *error_msg;
+    LOG(WARNING) << "Could not open vdex file in DexMetadata archive: " << error_msg;
     return nullptr;
   }
   std::unique_ptr<VdexFile> vdex_file = std::make_unique<VdexFile>(std::move(input_file));
   if (!vdex_file->IsValid()) {
-    *error_msg = "The dex metadata .vdex is not valid. Ignoring it.";
+    LOG(WARNING) << "The dex metadata .vdex is not valid. Ignoring it.";
     return nullptr;
   }
   if (vdex_file->HasDexSection()) {
-    *error_msg = "The dex metadata is not allowed to contain dex files";
+    LOG(ERROR) << "The dex metadata is not allowed to contain dex files";
     android_errorWriteLog(0x534e4554, "178055795");  // Report to SafetyNet.
     return nullptr;
   }
