@@ -22,6 +22,30 @@
       },
       "revId": "0bd9bff87560ef638af673f24b914fa03d9dede5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce9ae8aa_97b48226",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-18T12:31:14Z",
+      "side": 1,
+      "message": "I don\u0027t really want to do the trick of allocating `Runtime` and `Instrumentation` in one chunk. I think the separate allocation is much cleaner.\n\nI usually do not store medium-sized objects inside large objects by value unless I have a reason (performance). But feel free to ask Ian why he did it in 62d6c772205b8859f0ebf7ad105402ec4c3e2e01 (not available in AOSP gerrit). Maybe it was for performance but those reasons may not be valid anymore after more than 10 years.\n\n(The only stub we\u0027re touching is the `GenericJNI` and that\u0027s certainly not performance-critical. And my recent changes make sure we\u0027re not re-fetching the `Instrumenation` inside a loop for class loading. The strange removed name `RUN_EXIT_HOOKS_OFFSET_FROM_RUNTIME_INSTANCE` also indicated that this was a non-standard coding pattern.)",
+      "parentUuid": "bb5da985_a994f319",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 44
+      },
+      "revId": "0bd9bff87560ef638af673f24b914fa03d9dede5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
