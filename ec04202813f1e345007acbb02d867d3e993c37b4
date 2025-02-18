@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0cf0a9d_45776e3b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-18T17:08:09Z",
+      "side": 1,
+      "message": "@lokeshgidra@google.com I have seen the test failure in heap_test.cc to be intermittent, do you think it is possible this is another instance of b/391531096 (so possibly the GC duration is quicker than one millisecond)?",
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
