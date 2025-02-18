@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c536b70_8d555a57",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-18T07:11:13Z",
+      "side": 1,
+      "message": "I\u0027ve done the inlining of `FixUpUserRecordsAfterEnvUseInsertion()` first and I saw a nice reduction in `self` samples in `art::Add` within `HInstructionBuild::AppendInstruction`. So I went ahead and did it for the enviromnent as well. And then I threw in the allocator cleanup, so you do not get to see this very cleanly in the data posted on bug 181943478, comment #241.\n\nI\u0027ll submit this as is and I\u0027ll add a comment in a follow-up CL.",
+      "parentUuid": "4feb1f2c_97680587",
+      "range": {
+        "startLine": 2236,
+        "startChar": 0,
+        "endLine": 2250,
+        "endChar": 1
+      },
+      "revId": "9cc21bc503c0832a1bb295c67b193256bb8e7446",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e5faa09_2dd8fd20",
