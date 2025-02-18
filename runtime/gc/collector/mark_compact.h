@@ -830,6 +830,9 @@ class MarkCompact final : public GarbageCollector {
   // allocated objects. Aligned up to page size.
   uint8_t* post_compact_end_;
 
+  // Timestamp when the read-barrier is enabled
+  uint64_t app_slow_path_start_time_;
+
   // BEGIN HOT FIELDS: accessed per object
 
   accounting::ObjectStack* mark_stack_;
