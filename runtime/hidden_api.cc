@@ -68,6 +68,10 @@ static const std::vector<std::string> kWarningExemptions = {
     "Lsun/misc/Unsafe;",
 };
 
+static const std::vector<std::string> kCorePlatformApiExemptions = {
+    "Ljava/nio/charset/CharsetEncoder;-><init>(Ljava/nio/charset/Charset;FF[BZ)V",
+};
+
 static inline std::ostream& operator<<(std::ostream& os, AccessMethod value) {
   switch (value) {
     case AccessMethod::kCheck:
@@ -134,8 +138,7 @@ static Domain DetermineDomainFromLocation(const std::string& dex_location,
   // These checks will be skipped on target buildbots where ANDROID_ART_ROOT
   // is set to "/system".
   if (ArtModuleRootDistinctFromAndroidRoot()) {
-    if (LocationIsOnArtModule(dex_location) || LocationIsOnConscryptModule(dex_location) ||
-        LocationIsOnI18nModule(dex_location)) {
+    if (LocationIsOnArtModule(dex_location) || LocationIsOnConscryptModule(dex_location)) {
       return Domain::kCorePlatform;
     }
 
@@ -834,6 +837,15 @@ bool ShouldDenyAccessToMember(T* member,
 
       // If this is a proxy method, look at the interface method instead.
       member = detail::GetInterfaceMemberIfProxy(member);
+
+      // Check for exemptions.
+      // TODO(b/377676642): Fix API annotations and delete this.
+      detail::MemberSignature member_signature(member);
+      if (member_signature.DoesPrefixMatchAny(kCorePlatformApiExemptions)) {
+        // Avoid re-examining the exemption list next time.
+        detail::MaybeUpdateAccessFlags(Runtime::Current(), member, kAccCorePlatformApi);
+        return false;
+      }
 
       // Access checks are not disabled, report the violation.
       // This may also add kAccCorePlatformApi to the access flags of `member`
