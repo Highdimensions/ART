@@ -136,6 +136,8 @@ class CompilerDriver {
   bool GetCompiledClass(const ClassReference& ref, ClassStatus* status) const;
 
   CompiledMethod* GetCompiledMethod(MethodReference ref) const;
+  const dchecked_vector<Atomic<CompiledMethod*>>* GetCompiledMethods(const DexFile* dex_file) const;
+
   // Add a compiled method.
   void AddCompiledMethod(const MethodReference& method_ref, CompiledMethod* const compiled_method);
   CompiledMethod* RemoveCompiledMethod(const MethodReference& method_ref);
