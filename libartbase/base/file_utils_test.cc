@@ -189,7 +189,6 @@ TEST_F(FileUtilsTest, ArtApexDataPath) {
 
 TEST_F(FileUtilsTest, GetApexDataOatFilename) {
   ScopedUnsetEnvironmentVariable android_root("ANDROID_ROOT");
-  ScopedUnsetEnvironmentVariable i18n_root("ANDROID_I18N_ROOT");
   ScopedUnsetEnvironmentVariable art_apex_data("ART_APEX_DATA");
 
   EXPECT_EQ(GetArtApexData() + "/dalvik-cache/arm/boot-beep.oat",
@@ -197,9 +196,6 @@ TEST_F(FileUtilsTest, GetApexDataOatFilename) {
 
   const std::string art_apex_jar = std::string {kAndroidArtApexDefaultPath} + "/javalib/some.jar";
   EXPECT_EQ(std::string{}, GetApexDataOatFilename(art_apex_jar, InstructionSet::kArm));
-
-  const std::string i18n_jar = std::string{kAndroidI18nApexDefaultPath} + "/javalib/core-icu4j.jar";
-  EXPECT_EQ(std::string{}, GetApexDataOatFilename(i18n_jar, InstructionSet::kArm));
 
   const std::string system_jar_apexdata_oat = GetArtApexData() + "/dalvik-cache/x86/boot-lace.oat";
   EXPECT_EQ(system_jar_apexdata_oat,
@@ -218,11 +214,6 @@ TEST_F(FileUtilsTest, GetApexDataOdexFilename) {
       GetArtApexData() + "/dalvik-cache/arm/apex@com.android.art@javalib@some.jar@classes.odex",
       GetApexDataOdexFilename(art_apex_jar, InstructionSet::kArm));
 
-  const std::string i18n_jar = std::string{kAndroidI18nApexDefaultPath} + "/javalib/core-icu4j.jar";
-  EXPECT_EQ(GetArtApexData() +
-                "/dalvik-cache/arm/apex@com.android.i18n@javalib@core-icu4j.jar@classes.odex",
-            GetApexDataOdexFilename(i18n_jar, InstructionSet::kArm));
-
   const std::string system_jar_apexdata_odex =
       GetArtApexData() + "/dalvik-cache/x86/system@framework@cookie.jar@classes.odex";
   EXPECT_EQ(system_jar_apexdata_odex,
@@ -232,9 +223,6 @@ TEST_F(FileUtilsTest, GetApexDataOdexFilename) {
 TEST_F(FileUtilsTest, GetApexDataBootImage) {
   ScopedUnsetEnvironmentVariable android_root("ANDROID_ROOT");
   ScopedUnsetEnvironmentVariable art_apex_data("ART_APEX_DATA");
-
-  EXPECT_EQ(std::string{},
-            GetApexDataBootImage(std::string{kAndroidI18nApexDefaultPath} + "/javalib/bar.jar"));
 
   // Check image location has the prefix "boot-" in front of the basename of dex location and
   // that image suffix is .art.
@@ -295,7 +283,6 @@ TEST_F(FileUtilsTest, GetApexDataDalvikCacheFilename) {
 
 TEST_F(FileUtilsTest, OverrideDalvikCacheSubDirectory) {
   ScopedUnsetEnvironmentVariable android_root("ANDROID_ROOT");
-  ScopedUnsetEnvironmentVariable i18n_root("ANDROID_I18N_ROOT");
   ScopedUnsetEnvironmentVariable art_apex_data("ART_APEX_DATA");
 
   ScopedOverrideDalvikCacheSubDirectory dalvik_cache("overridden-cache");

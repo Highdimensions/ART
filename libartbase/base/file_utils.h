@@ -31,7 +31,6 @@ namespace art {
 static constexpr const char kAndroidArtApexDefaultPath[] = "/apex/com.android.art";
 static constexpr const char kArtApexDataDefaultPath[] = "/data/misc/apexdata/com.android.art";
 static constexpr const char kAndroidConscryptApexDefaultPath[] = "/apex/com.android.conscrypt";
-static constexpr const char kAndroidI18nApexDefaultPath[] = "/apex/com.android.i18n";
 
 static constexpr const char* kOatExtension = ".oat";
 static constexpr const char* kOdexExtension = ".odex";
@@ -196,9 +195,6 @@ bool LocationIsOnArtApexData(std::string_view location);
 
 // Return whether the location is on /apex/com.android.conscrypt
 bool LocationIsOnConscryptModule(std::string_view location);
-
-// Return whether the location is on /apex/com.android.i18n
-bool LocationIsOnI18nModule(std::string_view location);
 
 // Return whether the location is on system (i.e. android root).
 bool LocationIsOnSystem(const std::string& location);

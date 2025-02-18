@@ -29,8 +29,7 @@ namespace {
 std::string GetDexFileName(const std::string& jar_prefix, const std::string& prefix) {
   const char* apexPath =
       (jar_prefix == "conscrypt") ?
-          kAndroidConscryptApexDefaultPath :
-          (jar_prefix == "core-icu4j" ? kAndroidI18nApexDefaultPath : kAndroidArtApexDefaultPath);
+          kAndroidConscryptApexDefaultPath : kAndroidArtApexDefaultPath;
   return android::base::StringPrintf(
       "%s%s/javalib/%s.jar", prefix.c_str(), apexPath, jar_prefix.c_str());
 }
