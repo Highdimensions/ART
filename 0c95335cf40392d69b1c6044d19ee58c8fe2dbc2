@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81f51568_738a6177",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-18T15:18:32Z",
+      "side": 1,
+      "message": "Should there be a lock associated to it?",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 88
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "f512b291_2e7d9221",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 105,
+                "startChar": 0,
+                "endLine": 106,
+                "endChar": 0
+              },
+              "replacement": "  std::unique_ptr\u003cuint8_t\u003e curr_buffer_ GUARDED_BY(trace_data_lock_);\n"
+            },
+            {
+              "path": "runtime/trace_profile.h",
+              "range": {
+                "startLine": 108,
+                "startChar": 0,
+                "endLine": 109,
+                "endChar": 0
+              },
+              "replacement": "  size_t curr_index_ GUARDED_BY(trace_data_lock_);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "0c95335cf40392d69b1c6044d19ee58c8fe2dbc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
