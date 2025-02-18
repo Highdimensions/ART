@@ -16,6 +16,70 @@
       "message": "I thought I had gotten rid of the monitor.cc changes, but that will have to wait for the next PS.",
       "revId": "38bb3e252f7570a6e51f6f7d9b87f5dfcf34c445",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2def5e8_cf2475ed",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 17
+      },
+      "lineNbr": 4933,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-02-18T21:27:43Z",
+      "side": 1,
+      "message": "Any concerns this could get stuck in an infinite loop?",
+      "range": {
+        "startLine": 4933,
+        "startChar": 16,
+        "endLine": 4933,
+        "endChar": 30
+      },
+      "revId": "38bb3e252f7570a6e51f6f7d9b87f5dfcf34c445",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43ae04ac_e4fc6af0",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 17
+      },
+      "lineNbr": 4938,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-02-18T21:27:43Z",
+      "side": 1,
+      "message": "Max? Otherwise what\u0027s right of the \u0026\u0026 looks redundant.",
+      "range": {
+        "startLine": 4938,
+        "startChar": 43,
+        "endLine": 4938,
+        "endChar": 46
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "a60c080b_87d17348",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread.cc",
+              "range": {
+                "startLine": 4938,
+                "startChar": 0,
+                "endLine": 4939,
+                "endChar": 0
+              },
+              "replacement": "    if (pm[kMinThreadPriority] \u003d\u003d 0 \u0026\u0026 pm[kMaxThreadPriority] \u003d\u003d 0) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "38bb3e252f7570a6e51f6f7d9b87f5dfcf34c445",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
