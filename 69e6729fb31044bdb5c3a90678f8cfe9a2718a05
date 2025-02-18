@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "53ac1551_072d9c7f",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T11:17:19Z",
+      "side": 1,
+      "message": "We wait for the barrier in WaitForThreadsToRunThroughCheckpoint. The barrier is updated in the Checkpoint::Run method executed by each thread. I am not sure it is is easy to move this logic out. Maybe I am missing something.",
+      "parentUuid": "bd8555e2_d5a4a60d",
+      "range": {
+        "startLine": 427,
+        "startChar": 0,
+        "endLine": 427,
+        "endChar": 81
+      },
+      "revId": "69e6729fb31044bdb5c3a90678f8cfe9a2718a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "856a497c_fa59e2ea",
         "filename": "runtime/trace_profile.cc",
         "patchSetId": 2
@@ -92,6 +116,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "133d7acb_d9b5bfd9",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T11:17:19Z",
+      "side": 1,
+      "message": "Done. I reworked this. We no longer need these parameters.",
+      "parentUuid": "856a497c_fa59e2ea",
+      "range": {
+        "startLine": 437,
+        "startChar": 26,
+        "endLine": 437,
+        "endChar": 46
+      },
+      "revId": "69e6729fb31044bdb5c3a90678f8cfe9a2718a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ceb5e0f0_6bff6b65",
@@ -115,6 +163,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4030539_662dde24",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T11:17:19Z",
+      "side": 1,
+      "message": "I reworked this. I was not really happy with this earlier, so reworked it so DumpData actually dumps thread and method info as well. We no longer need the two out parameters.",
+      "parentUuid": "ceb5e0f0_6bff6b65",
+      "range": {
+        "startLine": 627,
+        "startChar": 0,
+        "endLine": 636,
+        "endChar": 28
+      },
+      "revId": "69e6729fb31044bdb5c3a90678f8cfe9a2718a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e42f8ab_ebf97609",
@@ -128,6 +200,30 @@
       "writtenOn": "2025-02-14T09:58:47Z",
       "side": 1,
       "message": "const",
+      "range": {
+        "startLine": 102,
+        "startChar": 30,
+        "endLine": 102,
+        "endChar": 31
+      },
+      "revId": "69e6729fb31044bdb5c3a90678f8cfe9a2718a05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcedb753_f9b133ef",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T11:17:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e42f8ab_ebf97609",
       "range": {
         "startLine": 102,
         "startChar": 30,
