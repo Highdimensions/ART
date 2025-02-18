@@ -268,6 +268,8 @@ void GarbageCollector::Run(GcCause gc_cause, bool clear_soft_references) {
     gc_freed_bytes_delta_->Add(current_iteration->GetFreedBytes());
     gc_duration_->Add(NsToMs(current_iteration->GetDurationNs()));
     gc_duration_delta_->Add(NsToMs(current_iteration->GetDurationNs()));
+    gc_app_slow_path_during_gc_duration_delta_->Add(current_iteration->GetAppSlowPathEndTimeMs() -
+                                                    current_iteration->GetAppSlowPathStartTimeMs());
   }
 
   // Report some metrics via the ATrace interface, to surface them in Perfetto.
