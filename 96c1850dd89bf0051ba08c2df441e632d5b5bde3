@@ -33,6 +33,23 @@
       "message": "Thanks!",
       "revId": "96c1850dd89bf0051ba08c2df441e632d5b5bde3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bac0f71_3124b5d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-02-18T08:42:06Z",
+      "side": 1,
+      "message": "Chris, there are some failures on `m cpplint-art-all`. Thay are about function size (in lines of code). It\u0027s not that you added so much code, but sometimes a few lines are enough to go over the limit. Can you annotate the problematic functions with `// NOLINT(readability/fn_size)`? Like this:\n\n```\nint foo() {\n  ...\n  ... really long function body ....\n  ...\n}  // NOLINT(readability/fn_size)\n```\n\nLet me know if you can\u0027t reproduce the cpplint failures, or have any other problems with it.",
+      "revId": "96c1850dd89bf0051ba08c2df441e632d5b5bde3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
