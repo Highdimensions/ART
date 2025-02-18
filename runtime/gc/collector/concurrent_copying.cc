@@ -155,6 +155,7 @@ ConcurrentCopying::ConcurrentCopying(Heap* heap,
     gc_freed_bytes_delta_ = metrics->YoungGcFreedBytesDelta();
     gc_duration_ = metrics->YoungGcDuration();
     gc_duration_delta_ = metrics->YoungGcDurationDelta();
+    gc_app_slow_path_during_gc_duration_delta_ = metrics->AppSlowPathDuringYoungGcDurationDelta();
   } else {
     gc_time_histogram_ = metrics->FullGcCollectionTime();
     metrics_gc_count_ = metrics->FullGcCount();
@@ -169,6 +170,7 @@ ConcurrentCopying::ConcurrentCopying(Heap* heap,
     gc_freed_bytes_delta_ = metrics->FullGcFreedBytesDelta();
     gc_duration_ = metrics->FullGcDuration();
     gc_duration_delta_ = metrics->FullGcDurationDelta();
+    gc_app_slow_path_during_gc_duration_delta_ = metrics->AppSlowPathDuringFullGcDurationDelta();
   }
 }
 
@@ -562,6 +564,7 @@ class ConcurrentCopying::FlipCallback : public Closure {
       cc->from_space_num_bytes_at_first_pause_ = cc->region_space_->GetBytesAllocated();
     }
     cc->is_marking_ = true;
+    cc->GetCurrentIteration()->SetAppSlowPathStartTimeMs(MilliTime());
     if (kIsDebugBuild && !cc->use_generational_cc_) {
       cc->region_space_->AssertAllRegionLiveBytesZeroOrCleared();
     }
@@ -1748,6 +1751,7 @@ class ConcurrentCopying::DisableMarkingCallback : public Closure {
     // to avoid a race with ThreadList::Register().
     CHECK(concurrent_copying_->is_marking_);
     concurrent_copying_->is_marking_ = false;
+    concurrent_copying_->GetCurrentIteration()->SetAppSlowPathEndTimeMs(MilliTime());
     if (kUseBakerReadBarrier && kGrayDirtyImmuneObjects) {
       CHECK(concurrent_copying_->is_using_read_barrier_entrypoints_);
       concurrent_copying_->is_using_read_barrier_entrypoints_ = false;

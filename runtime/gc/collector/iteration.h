@@ -70,6 +70,10 @@ class Iteration {
   void SetFreedRevoke(uint64_t freed) {
     freed_bytes_revoke_ = freed;
   }
+  uint64_t GetAppSlowPathStartTimeMs() const { return app_slow_path_start_time_ms_; }
+  void SetAppSlowPathStartTimeMs(uint64_t start_time) { app_slow_path_start_time_ms_ = start_time; }
+  uint64_t GetAppSlowPathEndTimeMs() const { return app_slow_path_end_time_ms_; }
+  void SetAppSlowPathEndTimeMs(uint64_t end_time) { app_slow_path_end_time_ms_ = end_time; }
   void Reset(GcCause gc_cause, bool clear_soft_references);
   // Returns the estimated throughput of the iteration.
   uint64_t GetEstimatedThroughput() const;
@@ -91,6 +95,8 @@ class Iteration {
   GcCause gc_cause_;
   bool clear_soft_references_;
   uint64_t duration_ns_;
+  uint64_t app_slow_path_start_time_ms_;
+  uint64_t app_slow_path_end_time_ms_;
   uint64_t bytes_scanned_;
   TimingLogger timings_;
   ObjectBytePair freed_;
