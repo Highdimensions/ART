@@ -74,6 +74,30 @@
       },
       "revId": "fd8a6ade3107543f5ced4f5d3f81e4fc6a12027d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14121f78_651cdc59",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagedInstallFileHelper.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-18T17:13:38Z",
+      "side": 1,
+      "message": "Right, I also recall that I\u0027ve been disappointed by the nullness linter before. Thanks for looking into it!\n\nAs for the last two examples, I\u0027m not sure those strings are supposed to be caught by the UnnecessaryCheckNotNull checker you pointed to, because it explicitly mentions checking for a literal in the first argument - a String being passed around should be considered a valid non-null value.",
+      "parentUuid": "ae31ab25_64c91a22",
+      "range": {
+        "startLine": 43,
+        "startChar": 25,
+        "endLine": 43,
+        "endChar": 33
+      },
+      "revId": "fd8a6ade3107543f5ced4f5d3f81e4fc6a12027d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
