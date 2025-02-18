@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d7547c2_b2d1cee6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-18T23:10:03Z",
+      "side": 1,
+      "message": "Thanks.",
+      "revId": "b2b472702c146552f66833efeff62a1c20670e45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aea5008e_f9be6d5b",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-18T23:10:03Z",
+      "side": 1,
+      "message": "If this fails I think it\u0027ll only show up on LUCI (go/art-buildbot). Unfortunately I wasn\u0027t able to start a manual presubmit run there, so we\u0027ll have to see.",
+      "revId": "b2b472702c146552f66833efeff62a1c20670e45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
