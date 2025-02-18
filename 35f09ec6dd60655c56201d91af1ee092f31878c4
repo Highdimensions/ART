@@ -80,6 +80,30 @@
       },
       "revId": "35f09ec6dd60655c56201d91af1ee092f31878c4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa68db1a_aaa3b369",
+        "filename": "runtime/class_linker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-18T12:56:36Z",
+      "side": 1,
+      "message": "I\u0027ve written the same in my own words.\n\nPlease have a look at PS2. (The CR+2 was retained, so I\u0027ll submit tomorrow if there are no new comments.)",
+      "parentUuid": "e80fd3bf_d7ef5a15",
+      "range": {
+        "startLine": 546,
+        "startChar": 6,
+        "endLine": 546,
+        "endChar": 44
+      },
+      "revId": "35f09ec6dd60655c56201d91af1ee092f31878c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
