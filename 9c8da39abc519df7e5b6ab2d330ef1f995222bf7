@@ -16,6 +16,24 @@
       "message": "You can avoid the repetition in all these patches by using `host_linux` instead of `linux_glibc` above.",
       "revId": "9c8da39abc519df7e5b6ab2d330ef1f995222bf7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e26d0624_a74497ee",
+        "filename": "libartbase/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1978766
+      },
+      "writtenOn": "2025-02-18T17:42:00Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "7577b41c_a841132d",
+      "revId": "9c8da39abc519df7e5b6ab2d330ef1f995222bf7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
