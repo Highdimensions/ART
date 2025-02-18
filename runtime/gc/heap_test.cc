@@ -109,11 +109,11 @@ TEST_F(HeapTest, DumpGCPerformanceOnShutdown) {
 bool AnyIsFalse(bool x, bool y) { return !x || !y; }
 
 TEST_F(HeapTest, GCMetrics) {
-  // Allocate a few string objects (to be collected), then trigger garbage
+  // Allocate a lot of string objects (to be collected), then trigger garbage
   // collection, and check that GC metrics are updated (where applicable).
   Heap* heap = Runtime::Current()->GetHeap();
   {
-    constexpr const size_t kNumObj = 128;
+    constexpr const size_t kNumObj = 32768;
     ScopedObjectAccess soa(Thread::Current());
     StackHandleScope<kNumObj> hs(soa.Self());
     for (size_t i = 0u; i < kNumObj; ++i) {
@@ -144,6 +144,8 @@ TEST_F(HeapTest, GCMetrics) {
   metrics::MetricsBase<uint64_t>* full_gc_freed_bytes_delta = metrics->FullGcFreedBytesDelta();
   metrics::MetricsBase<uint64_t>* full_gc_duration = metrics->FullGcDuration();
   metrics::MetricsBase<uint64_t>* full_gc_duration_delta = metrics->FullGcDurationDelta();
+  metrics::MetricsBase<uint64_t>* full_gc_app_slow_path_duration_delta =
+      metrics->AppSlowPathDuringFullGcDurationDelta();
   // ART young-generation GC metrics.
   metrics::MetricsBase<int64_t>* young_gc_collection_time = metrics->YoungGcCollectionTime();
   metrics::MetricsBase<uint64_t>* young_gc_count = metrics->YoungGcCount();
@@ -160,6 +162,8 @@ TEST_F(HeapTest, GCMetrics) {
   metrics::MetricsBase<uint64_t>* young_gc_freed_bytes_delta = metrics->YoungGcFreedBytesDelta();
   metrics::MetricsBase<uint64_t>* young_gc_duration = metrics->YoungGcDuration();
   metrics::MetricsBase<uint64_t>* young_gc_duration_delta = metrics->YoungGcDurationDelta();
+  metrics::MetricsBase<uint64_t>* young_gc_app_slow_path_duration_delta =
+      metrics->AppSlowPathDuringYoungGcDurationDelta();
 
   CollectorType fg_collector_type = heap->GetForegroundCollectorType();
   if (fg_collector_type == kCollectorTypeCC || fg_collector_type == kCollectorTypeCMC) {
@@ -167,7 +171,7 @@ TEST_F(HeapTest, GCMetrics) {
     // GC metrics at the moment.
     if (heap->GetUseGenerational()) {
       // Check that full-heap and/or young-generation GC metrics are non-null
-      // after trigerring the collection.
+      // after triggering the collection.
       EXPECT_PRED2(
           AnyIsFalse, full_gc_collection_time->IsNull(), young_gc_collection_time->IsNull());
       EXPECT_PRED2(AnyIsFalse, full_gc_count->IsNull(), young_gc_count->IsNull());
@@ -186,6 +190,9 @@ TEST_F(HeapTest, GCMetrics) {
       EXPECT_PRED2(AnyIsFalse, full_gc_freed_bytes->IsNull(), young_gc_freed_bytes->IsNull());
       EXPECT_PRED2(
           AnyIsFalse, full_gc_freed_bytes_delta->IsNull(), young_gc_freed_bytes_delta->IsNull());
+      EXPECT_PRED2(AnyIsFalse,
+                   full_gc_app_slow_path_duration_delta->IsNull(),
+                   young_gc_app_slow_path_duration_delta->IsNull());
       // We have observed that sometimes the GC duration (both for full-heap and
       // young-generation collections) is null (b/271112044). Temporarily
       // suspend the following checks while we investigate.
@@ -197,7 +204,7 @@ TEST_F(HeapTest, GCMetrics) {
       EXPECT_PRED2(AnyIsFalse, full_gc_duration_delta->IsNull(), young_gc_duration_delta->IsNull());
 #endif
     } else {
-      // Check that only full-heap GC metrics are non-null after trigerring the collection.
+      // Check that only full-heap GC metrics are non-null after triggering the collection.
       EXPECT_FALSE(full_gc_collection_time->IsNull());
       EXPECT_FALSE(full_gc_count->IsNull());
       EXPECT_FALSE(full_gc_count_delta->IsNull());
@@ -209,6 +216,7 @@ TEST_F(HeapTest, GCMetrics) {
       EXPECT_FALSE(full_gc_scanned_bytes_delta->IsNull());
       EXPECT_FALSE(full_gc_freed_bytes->IsNull());
       EXPECT_FALSE(full_gc_freed_bytes_delta->IsNull());
+      EXPECT_FALSE(full_gc_app_slow_path_duration_delta->IsNull());
       // Like the generational case, these GC duration can be less than a
       // millisecond here as well (b/391531096). Temporarily disabling the
       // tests.
@@ -232,9 +240,10 @@ TEST_F(HeapTest, GCMetrics) {
       EXPECT_TRUE(young_gc_freed_bytes_delta->IsNull());
       EXPECT_TRUE(young_gc_duration->IsNull());
       EXPECT_TRUE(young_gc_duration_delta->IsNull());
+      EXPECT_TRUE(young_gc_app_slow_path_duration_delta->IsNull());
     }
   } else {
-    // Check that all metrics are null after trigerring the collection.
+    // Check that all metrics are null after triggering the collection.
     EXPECT_TRUE(full_gc_collection_time->IsNull());
     EXPECT_TRUE(full_gc_count->IsNull());
     EXPECT_TRUE(full_gc_count_delta->IsNull());
@@ -248,6 +257,7 @@ TEST_F(HeapTest, GCMetrics) {
     EXPECT_TRUE(full_gc_freed_bytes_delta->IsNull());
     EXPECT_TRUE(full_gc_duration->IsNull());
     EXPECT_TRUE(full_gc_duration_delta->IsNull());
+    EXPECT_TRUE(full_gc_app_slow_path_duration_delta->IsNull());
 
     EXPECT_TRUE(young_gc_collection_time->IsNull());
     EXPECT_TRUE(young_gc_count->IsNull());
@@ -262,6 +272,7 @@ TEST_F(HeapTest, GCMetrics) {
     EXPECT_TRUE(young_gc_freed_bytes_delta->IsNull());
     EXPECT_TRUE(young_gc_duration->IsNull());
     EXPECT_TRUE(young_gc_duration_delta->IsNull());
+    EXPECT_TRUE(young_gc_app_slow_path_duration_delta->IsNull());
   }
 }
 
