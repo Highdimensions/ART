@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "44a45fb7_8a507840",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtManagedInstallFileHelperTest.java",
+        "patchSetId": 23
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T21:31:16Z",
+      "side": 1,
+      "message": "\u003e I guess we could be harsher if we see an ISA that\u0027s never valid, but maybe there\u0027s little point?\n\nThe problem is that there isn\u0027t an easy way to obtain a complete list of valid ISAs (there is `VMRuntime.ABI_TO_INSTRUCTION_SET_MAP` but it\u0027s private).\n\nAdded a test for x86_64.",
+      "parentUuid": "08b826d8_8d35671b",
+      "revId": "7c9db41918debea74b9a7b20aefe06459521d7ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5daecf9e_741dec29",
@@ -49,6 +67,30 @@
       "writtenOn": "2025-02-18T17:13:38Z",
       "side": 1,
       "message": "These line breaks don\u0027t help. Are these lines really long enough for clang-format to do this?",
+      "range": {
+        "startLine": 250,
+        "startChar": 62,
+        "endLine": 251,
+        "endChar": 27
+      },
+      "revId": "7c9db41918debea74b9a7b20aefe06459521d7ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d5461d5_b1985cf6",
+        "filename": "libartservice/service/javatests/com/android/server/art/DumpHelperTest.java",
+        "patchSetId": 23
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T21:31:16Z",
+      "side": 1,
+      "message": "Yeah, the line exceeds 100 chars.",
+      "parentUuid": "5daecf9e_741dec29",
       "range": {
         "startLine": 250,
         "startChar": 62,
