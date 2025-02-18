@@ -1725,13 +1725,28 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   hidden_api_policy_ = runtime_options.GetOrDefault(Opt::HiddenApiPolicy);
   DCHECK_IMPLIES(is_zygote_, hidden_api_policy_ == hiddenapi::EnforcementPolicy::kDisabled);
 
-  // Set core platform API enforcement policy. The checks are disabled by default and
-  // can be enabled with a command line flag. AndroidRuntime will pass the flag if
-  // a system property is set.
-  core_platform_api_policy_ = runtime_options.GetOrDefault(Opt::CorePlatformApiPolicy);
-  if (core_platform_api_policy_ != hiddenapi::EnforcementPolicy::kDisabled) {
-    LOG(INFO) << "Core platform API reporting enabled, enforcing="
-        << (core_platform_api_policy_ == hiddenapi::EnforcementPolicy::kEnabled ? "true" : "false");
+  // Set core platform API enforcement policy. Always enabled if the platform
+  // SDK level is 36+, otherwise the checks are disabled by default and can be
+  // enabled with a command line flag. AndroidRuntime will pass the flag if a
+  // system property is set.
+  {
+    int sdk_version = 0;
+    android::base::ParseInt(
+        android::base::GetProperty("ro.build.version.sdk", /*default_value=*/""), &sdk_version);
+    const char* reason;
+    LOG(INFO) << "SDK version: " << sdk_version;  // TODO
+    if (sdk_version >= 35 /*TODO*/) {
+      core_platform_api_policy_ = hiddenapi::EnforcementPolicy::kEnabled;
+      reason = "for SDK level 35+";  // TODO: Fix SDK level
+    } else {
+      core_platform_api_policy_ = runtime_options.GetOrDefault(Opt::CorePlatformApiPolicy);
+      reason = "by system property";
+    }
+    if (core_platform_api_policy_ != hiddenapi::EnforcementPolicy::kDisabled) {
+      LOG(INFO) << "Core platform API reporting enabled " << reason << ", enforcing="
+                << (core_platform_api_policy_ == hiddenapi::EnforcementPolicy::kEnabled ? "true"
+                                                                                        : "false");
+    }
   }
 
   // Dex2Oat's Runtime does not need the signal chain or the fault handler
