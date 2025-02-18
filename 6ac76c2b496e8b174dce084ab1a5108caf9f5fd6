@@ -1,0 +1,62 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6cd311d_7cc75780",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-18T22:49:47Z",
+      "side": 1,
+      "message": "Some nits below.",
+      "revId": "6ac76c2b496e8b174dce084ab1a5108caf9f5fd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "066394b8_b88e41c1",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 4542,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-18T22:49:47Z",
+      "side": 1,
+      "message": "static_cast like below is probably better. A space after each of the colons may be more readable.",
+      "range": {
+        "startLine": 4542,
+        "startChar": 57,
+        "endLine": 4542,
+        "endChar": 72
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "43aa0f3a_a1c8f909",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 4542,
+                "startChar": 0,
+                "endLine": 4549,
+                "endChar": 0
+              },
+              "replacement": "                               \u003c\u003c \" black_dense_end: \" \u003c\u003c static_cast\u003cvoid*\u003e(black_dense_end_)\n                               \u003c\u003c \" mid_gen_end: \" \u003c\u003c static_cast\u003cvoid*\u003e(mid_gen_end_)\n                               \u003c\u003c \" prev_post_compact_end: \" \u003c\u003c static_cast\u003cvoid*\u003e(prev_post_compact_end_)\n                               \u003c\u003c \" prev_black_allocations_begin: \" \u003c\u003c static_cast\u003cvoid*\u003e(prev_black_allocations_begin_)\n                               \u003c\u003c \" prev_black_dense_end: \" \u003c\u003c static_cast\u003cvoid*\u003e(prev_black_dense_end_)\n                               \u003c\u003c \" prev_gc_young: \" \u003c\u003c static_cast\u003cvoid*\u003e(prev_gc_young_)\n                               \u003c\u003c \" prev_gc_performed_comaction: \" \u003c\u003c static_cast\u003cvoid*\u003e(prev_gc_performed_compaction_);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "6ac76c2b496e8b174dce084ab1a5108caf9f5fd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
