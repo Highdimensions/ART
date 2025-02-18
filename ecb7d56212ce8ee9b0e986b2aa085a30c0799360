@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5f77791_f6bb5fe9",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagedInstallFileHelper.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T16:13:41Z",
+      "side": 1,
+      "message": "OK, looks like warning and skipping makes more sense. Done.",
+      "parentUuid": "3b6c90e7_8909f291",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 80
+      },
+      "revId": "ecb7d56212ce8ee9b0e986b2aa085a30c0799360",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a5c239c3_975a8f75",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-02-14T17:36:34Z",
       "side": 1,
       "message": "Test that the sdm line is for the right arch? Maybe not necessary in every test, but one of them.\n\nAlso, what about testing a package with sdm\u0027s for more than one arch?",
+      "range": {
+        "startLine": 244,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 80
+      },
+      "revId": "ecb7d56212ce8ee9b0e986b2aa085a30c0799360",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "277ab5ff_48a267d1",
+        "filename": "libartservice/service/javatests/com/android/server/art/DumpHelperTest.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T16:13:41Z",
+      "side": 1,
+      "message": "This makes the assertion a bit verbose but I can do it in one test case.",
+      "parentUuid": "a5c239c3_975a8f75",
       "range": {
         "startLine": 244,
         "startChar": 0,

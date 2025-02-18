@@ -50,6 +50,30 @@
       ],
       "revId": "fd8a6ade3107543f5ced4f5d3f81e4fc6a12027d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae31ab25_64c91a22",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagedInstallFileHelper.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T16:13:41Z",
+      "side": 1,
+      "message": "Thanks for bringing this up.\n\nI looked for guidelines on this but couldn\u0027t find anything. The closest I could find is http://go/android-annotations#heading\u003dh.d1u13hnot637, which says things that are neither @NonNull nor @Nullable are unspecified, but it doesn\u0027t mention what if the nullness can be obviously inferred.\n\nThen I looked into the tool itself. I found the doc at go/error-prone/bugpatterns. Surprisingly, the tool doesn\u0027t do much on nullness check!\n\nOne check that could probably be interesting is go/bugpattern/NullArgumentForNonNullParameter, but it does not do much unless you set `-XepOpt:Nullness:Conservative\u003dfalse`, and nobody sets it in Android. And even if you set it, it still doesn\u0027t do much useful. It only fails when you **explicitly** passes a `null` to a `@NonNull` parameter.\n\nFor example, this fails, which should.\n\n```\n    void g(@NonNull String arg) {}\n\n    void main() {\n        g(null);\n    }\n```\n\nBut this passes, unexpectedly!\n\n```\n    @Nullable\n    String f() {\n        return null;\n    }\n\n    void g(@NonNull String arg) {}\n\n    void main() {\n        g(f());\n    }\n```\n\nAnd this passes too!\n\n```\n    void g(@NonNull String arg) {}\n\n    void main() {\n        String s \u003d null;\n        g(s);\n    }\n```\n\nAnother check that could be useful is go/bugpattern/UnnecessaryCheckNotNull, but like the one above, it\u0027s very limited.\n\nFor example, this fails, which should.\n\n```\n    void main() {\n        Objects.requireNonNull(\"\");\n    }\n```\n\nBut this passes!\n\n```\n    @NonNull\n    String f() {\n        return \"\";\n    }\n    \n    void main() {\n        Objects.requireNonNull(f());\n    }\n```\n\nAnd this passes too!\n\n```\n    @NonNull static final String s \u003d \"\";\n\n    void main() {\n        Objects.requireNonNull(s);\n    }\n```\n\nTherefore, I think we can reach the conclusion that the nullness annotations are just for readers, not for tools. And since that\u0027s the case, we should remove the @NonNull annotations here because they don\u0027t really improve readability.",
+      "parentUuid": "eb8b65ec_4b1282bd",
+      "range": {
+        "startLine": 43,
+        "startChar": 25,
+        "endLine": 43,
+        "endChar": 33
+      },
+      "revId": "fd8a6ade3107543f5ced4f5d3f81e4fc6a12027d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
