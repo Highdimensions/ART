@@ -70,6 +70,30 @@
       },
       "revId": "f1f96a51b6105c64932233ffbedb256115420e0d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9f2c529_017d7122",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 1955,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T21:31:59Z",
+      "side": 1,
+      "message": "I don\u0027t see anything broken when I do it late. Moved it to a later stage. To be more assured, I just added a DCHECK in `DexCache::GetLocation()` to make sure no one gets a wrong location.",
+      "parentUuid": "eabb3aa4_9b27335c",
+      "range": {
+        "startLine": 1954,
+        "startChar": 0,
+        "endLine": 1955,
+        "endChar": 51
+      },
+      "revId": "f1f96a51b6105c64932233ffbedb256115420e0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

@@ -136,6 +136,30 @@
       },
       "revId": "661670f04b7c137bbe6da0c1f966f03b6c04f39b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6886f886_a3d14e42",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 1958,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T21:31:59Z",
+      "side": 1,
+      "message": "\u003e  This requires some comments too - so the OpenOatDexFile line 1949 will use the table oat_dex_files_ to find it?\n\nSure, added a comment here.\n\n\u003e Could we be running into issues if the dex cache\u0027s location suddently isn\u0027t in the table anymore?\n\nThe dex cache\u0027s location after the change is still a valid key in the table. The comment I added explains that too.",
+      "parentUuid": "5cb3539c_6f29e62d",
+      "range": {
+        "startLine": 1957,
+        "startChar": 2,
+        "endLine": 1958,
+        "endChar": 91
+      },
+      "revId": "661670f04b7c137bbe6da0c1f966f03b6c04f39b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
