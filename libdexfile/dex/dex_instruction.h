@@ -197,7 +197,6 @@ class Instruction {
     kVerifyRegBCallSite       = 0x0800000,
     kVerifyRegBMethodHandle   = 0x1000000,
     kVerifyRegBPrototype      = 0x2000000,
-    kVerifyRegBFilledNewArray = 0x4000000,
   };
 
   // Collect the enums in a struct for better locality.
@@ -607,8 +606,7 @@ class Instruction {
         kVerifyRegBNewInstance |
         kVerifyRegBString |
         kVerifyRegBType |
-        kVerifyRegBWide |
-        kVerifyRegBFilledNewArray;
+        kVerifyRegBWide;
     return VerifyFlagsOf(opcode) & kMask;
   }
 
