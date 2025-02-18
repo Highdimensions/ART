@@ -62,6 +62,30 @@
       },
       "revId": "6d645f794af34c4efbe3ebee52ad6a7f7cfd4e05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f5ea67d_c6f2378c",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtShellCommandTest.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T21:38:17Z",
+      "side": 1,
+      "message": "I don\u0027t see any synchronisation gap. Discussed offline.",
+      "parentUuid": "6eee915b_f4124c3a",
+      "range": {
+        "startLine": 419,
+        "startChar": 0,
+        "endLine": 420,
+        "endChar": 58
+      },
+      "revId": "6d645f794af34c4efbe3ebee52ad6a7f7cfd4e05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

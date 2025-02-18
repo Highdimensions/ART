@@ -42,6 +42,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "02bfeb7b_5a43247c",
+        "filename": "libartservice/service/README.internal.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T21:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41c5048f_60debb9a",
+      "range": {
+        "startLine": 22,
+        "startChar": 32,
+        "endLine": 22,
+        "endChar": 54
+      },
+      "revId": "66bca700d9721d81d5acb81993349a41d67e15b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7975b1c2_7b5adf1e",
@@ -83,6 +107,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3dc34d4_dd5d70be",
+        "filename": "libartservice/service/README.internal.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T21:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7975b1c2_7b5adf1e",
+      "range": {
+        "startLine": 40,
+        "startChar": 52,
+        "endLine": 40,
+        "endChar": 55
+      },
+      "revId": "66bca700d9721d81d5acb81993349a41d67e15b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7a992181_c4e5d2ef",
@@ -100,6 +148,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "785d6382_3bb121cf",
+        "filename": "libartservice/service/README.internal.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T21:38:17Z",
+      "side": 1,
+      "message": "I\u0027ll update it in a separate CL so that we can discuss the phrasing there.",
+      "parentUuid": "7a992181_c4e5d2ef",
+      "revId": "66bca700d9721d81d5acb81993349a41d67e15b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9f89fa0b_46c6f25c",
@@ -113,6 +179,30 @@
       "writtenOn": "2025-02-17T18:41:34Z",
       "side": 1,
       "message": "The one little nugget of info that\u0027s helpful is that it will always map the snapshots and call us back, if there are any snapshots to map (also in testing workflows etc). That\u0027s why I phrased it \"... to map the snapshots if any are available\". That\u0027s not entirely clear here.",
+      "range": {
+        "startLine": 782,
+        "startChar": 72,
+        "endLine": 782,
+        "endChar": 85
+      },
+      "revId": "66bca700d9721d81d5acb81993349a41d67e15b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc0603d1_e31bd582",
+        "filename": "libartservice/service/java/com/android/server/art/ArtShellCommand.java",
+        "patchSetId": 15
+      },
+      "lineNbr": 782,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T21:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f89fa0b_46c6f25c",
       "range": {
         "startLine": 782,
         "startChar": 72,

@@ -532,6 +532,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c4231c1_6ee24b0a",
+        "filename": "libartservice/service/java/com/android/server/art/PreRebootDexoptJob.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-18T21:38:17Z",
+      "side": 1,
+      "message": "Rephrased.",
+      "parentUuid": "73b658a0_17c1b410",
+      "range": {
+        "startLine": 83,
+        "startChar": 7,
+        "endLine": 84,
+        "endChar": 55
+      },
+      "revId": "1d08d2a4f831ec98935224e248dbd942ae7090f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d1f82c8d_6e8c1b6f",
