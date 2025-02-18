@@ -700,8 +700,9 @@ TEST_F(HiddenApiTest, InstanceFieldCorePlatformApiMatch) {
       << "LMain;->ifield:I,unsupported,core-platform-api" << std::endl;
   auto dex_file = RunHiddenapiEncode(flags_csv, {}, dex);
   ASSERT_NE(dex_file.get(), nullptr);
-  ASSERT_EQ(hiddenapi::ApiList::CorePlatformApi() |
-  hiddenapi::ApiList::Unsupported(), GetIFieldHiddenFlags(*dex_file));
+  ASSERT_EQ(hiddenapi::ApiList::Combine(hiddenapi::ApiList::CorePlatformApi(),
+                                        hiddenapi::ApiList::Unsupported()),
+            GetIFieldHiddenFlags(*dex_file));
 }
 
 TEST_F(HiddenApiTest, InstanceFieldTestApiMatch) {
@@ -712,8 +713,9 @@ TEST_F(HiddenApiTest, InstanceFieldTestApiMatch) {
       << "LMain;->ifield:I,unsupported,test-api" << std::endl;
   auto dex_file = RunHiddenapiEncode(flags_csv, {}, dex);
   ASSERT_NE(dex_file.get(), nullptr);
-  ASSERT_EQ(hiddenapi::ApiList::TestApi()
-  | hiddenapi::ApiList::Unsupported(), GetIFieldHiddenFlags(*dex_file));
+  ASSERT_EQ(
+      hiddenapi::ApiList::Combine(hiddenapi::ApiList::TestApi(), hiddenapi::ApiList::Unsupported()),
+      GetIFieldHiddenFlags(*dex_file));
 }
 
 TEST_F(HiddenApiTest, InstanceFieldUnknownFlagMatch) {
