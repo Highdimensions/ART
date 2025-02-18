@@ -1,0 +1,223 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5dfc3fd0_64076875",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T17:20:57Z",
+      "side": 1,
+      "message": "Thanks! Mostly looks good. I still need to look at the new generic_jni_simulator in x86_64.cc",
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5baca939_a9e4853b",
+        "filename": "compiler/optimizing/codegen_test_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T17:20:57Z",
+      "side": 1,
+      "message": "Can we avoid creating if we just want to check? I know this was the same earlier as well but wondering if it is possible to check without creating a simulator.",
+      "range": {
+        "startLine": 191,
+        "startChar": 6,
+        "endLine": 191,
+        "endChar": 64
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "926dc0d6_b31deb23",
+        "filename": "runtime/entrypoints/quick/runtime_entrypoints_list.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T17:20:57Z",
+      "side": 1,
+      "message": "I believe we should bump the oat version if there is a change to the entrypoints.",
+      "range": {
+        "startLine": 114,
+        "startChar": 2,
+        "endLine": 121,
+        "endChar": 38
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "496565b8_206d827a",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T17:20:57Z",
+      "side": 1,
+      "message": "nit: code_simulator? So it is not confused with the instruction simulator which we also call simulator. Another option is to rename simulator_ to instruction_simulator_.",
+      "range": {
+        "startLine": 37,
+        "startChar": 29,
+        "endLine": 37,
+        "endChar": 38
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28070118_7c8bbb0a",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T17:20:57Z",
+      "side": 1,
+      "message": "I was thinking of a different name for this, but couldn\u0027t come up with anything nice. Something that says this understands art runtime. If there\u0027s no nice name CustomSimulator is okay",
+      "range": {
+        "startLine": 98,
+        "startChar": 6,
+        "endLine": 98,
+        "endChar": 21
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d1ee62d_fd625d4d",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T17:20:57Z",
+      "side": 1,
+      "message": "IIUC, we need to add all entrypoints that transition from the generated arm64 (quick) code to runtime or runtime to generated code right? Maybe we can expand the comment to say what entrypoints should be included here?\n\nAre these the only ones or we want to start with a smaller set for now?",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 102,
+        "endChar": 60
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2f5425f_09795502",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T17:20:57Z",
+      "side": 1,
+      "message": "Why do we need artMethodExitHook here but not artMethodEntryHook?",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 111,
+        "endChar": 50
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec580838_7090925f",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T17:20:57Z",
+      "side": 1,
+      "message": "CodeSimulatorArm64()?",
+      "range": {
+        "startLine": 181,
+        "startChar": 40,
+        "endLine": 181,
+        "endChar": 58
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "368b2371_e6dfa87c",
+        "filename": "simulator/code_simulator_container.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-18T17:20:57Z",
+      "side": 1,
+      "message": "I was wondering if we should rename BasicCodeSimulator to BasicCodeExecutor to avoid confusion with CodeSimulator and InstructionSimulator. We can also just rename the simulator_ to instruction_simulator_ as I suggested earlier. I am fine with either.",
+      "range": {
+        "startLine": 38,
+        "startChar": 22,
+        "endLine": 38,
+        "endChar": 41
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1af60dc5_58e0c8a3",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "simulator/code_simulator_container.h",
+              "range": {
+                "startLine": 38,
+                "startChar": 0,
+                "endLine": 39,
+                "endChar": 0
+              },
+              "replacement": "  BasicCodeExecutor* CreateBasicExecutor(size_t stack_size);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
