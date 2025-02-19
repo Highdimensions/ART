@@ -146,6 +146,30 @@
       },
       "revId": "fd8a6ade3107543f5ced4f5d3f81e4fc6a12027d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b19480da_f2172988",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagedInstallFileHelper.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-19T11:41:06Z",
+      "side": 1,
+      "message": "It depends on the goal.\n\nIf the goal is only to detect mistakenly passing an error message as the object under the non-null check (the second bullet point in go/bugpattern/UnnecessaryCheckNotNull), then the check does its job, to some extent.\n\nBut if the goal is to detect unnecessary non-null check in general, then my last two examples are very basic cases that the check should cover (I used the String type in the examples, but the examples apply to any object type), because it\u0027s unnecessary to call `Objects.requireNonNull` on objects that are obviously non-null.\n\nI think the tool is not very useful if its goal is only the former.",
+      "parentUuid": "15833a8d_dfd5d2f0",
+      "range": {
+        "startLine": 43,
+        "startChar": 25,
+        "endLine": 43,
+        "endChar": 33
+      },
+      "revId": "fd8a6ade3107543f5ced4f5d3f81e4fc6a12027d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
