@@ -16,6 +16,7 @@
 
 #include "file_utils.h"
 
+#include <fcntl.h>
 #include <inttypes.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -44,12 +45,14 @@
 #include <vector>
 
 #include "android-base/file.h"
+#include "android-base/hex.h"
 #include "android-base/logging.h"
 #include "android-base/properties.h"
 #include "android-base/stringprintf.h"
 #include "android-base/strings.h"
 #include "base/bit_utils.h"
 #include "base/globals.h"
+#include "base/macros.h"
 #include "base/os.h"
 #include "base/stl_util.h"
 #include "base/unix_file/fd_file.h"
@@ -66,6 +69,10 @@
 #include <linux/unistd.h>
 #endif
 
+#if defined(__BIONIC__)
+#include <linux/fsverity.h>
+#endif
+
 #ifdef ART_TARGET_ANDROID
 #include "android-modules-utils/sdk_level.h"
 #endif
@@ -75,6 +82,7 @@ namespace art {
 using android::base::ConsumePrefix;
 using android::base::GetBoolProperty;
 using android::base::GetProperty;
+using android::base::HexString;
 using android::base::StringPrintf;
 
 static constexpr const char* kClassesDex = "classes.dex";
@@ -930,6 +938,44 @@ int DupCloexec(int fd) {
   return fcntl(fd, F_DUPFD_CLOEXEC, 0);
 #else
   return dup(fd); // NOLINT
+#endif
+}
+
+bool EnableFsVerity(int fd, std::string* error_msg) {
+#if defined(__BIONIC__)
+  struct fsverity_enable_arg arg = {
+      .version = 1, .hash_algorithm = FS_VERITY_HASH_ALG_SHA256, .block_size = 4096};
+  if (ioctl(fd, FS_IOC_ENABLE_VERITY, &arg) != 0) {
+    *error_msg = "Failed to FS_IOC_ENABLE_VERITY";
+    return false;
+  }
+  return true;
+#else
+  (void)fd;
+  *error_msg = "fs-verify not supported";
+  return false;
+#endif
+}
+
+std::string GetFsVerityDigest(int fd,
+                              /*out*/ std::string* error_msg) {
+#if defined(__BIONIC__)
+  constexpr int kMaxDigestSize = 64;
+  std::unique_ptr<uint8_t[]> buf(new (std::align_val_t(alignof(struct fsverity_digest)))
+                                     uint8_t[sizeof(struct fsverity_digest) + kMaxDigestSize]);
+  auto fsverity_digest = reinterpret_cast<struct fsverity_digest*>(buf.get());
+  fsverity_digest->digest_size = kMaxDigestSize;
+
+  if (ioctl(fd, FS_IOC_MEASURE_VERITY, fsverity_digest) != 0) {
+    *error_msg = ART_FORMAT("Failed to FS_IOC_MEASURE_VERITY: {}", strerror(errno));
+    return "";
+  }
+
+  return HexString(fsverity_digest->digest, fsverity_digest->digest_size);
+#else
+  (void)fd;
+  *error_msg = "fs-verify not supported";
+  return "";
 #endif
 }
 
