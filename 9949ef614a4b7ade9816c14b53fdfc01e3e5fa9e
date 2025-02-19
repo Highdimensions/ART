@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3daf1636_2724ddb6",
+        "filename": "tools/veridex/api_list_filter.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-19T15:25:59Z",
+      "side": 1,
+      "message": "This is outside ART and therefore I mildly prefer `\u003c...\u003e`.\n\nIs `clang-format` changing this? If so, I\u0027ll yield on this point.",
+      "range": {
+        "startLine": 22,
+        "startChar": 9,
+        "endLine": 22,
+        "endChar": 33
+      },
+      "revId": "9949ef614a4b7ade9816c14b53fdfc01e3e5fa9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
