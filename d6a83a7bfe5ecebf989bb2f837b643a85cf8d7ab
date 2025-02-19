@@ -16,6 +16,29 @@
       "message": "Hi @jiakaiz@google.com\nJust heads up in bug b/397561164 once this CL merge done.",
       "revId": "d6a83a7bfe5ecebf989bb2f837b643a85cf8d7ab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d436d67_e67e0dbc",
+        "filename": "libartservice/service/javatests/com/android/server/art/DexUseManagerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-19T11:53:32Z",
+      "side": 1,
+      "message": "This is another generic class in `android.os`, so I wonder if we may run into similar trouble with it as well. But even if so it\u0027s a different matter.",
+      "range": {
+        "startLine": 90,
+        "startChar": 12,
+        "endLine": 90,
+        "endChar": 34
+      },
+      "revId": "d6a83a7bfe5ecebf989bb2f837b643a85cf8d7ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
