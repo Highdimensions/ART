@@ -16,6 +16,24 @@
       "message": "@lokeshgidra@google.com I have seen the test failure in heap_test.cc to be intermittent, do you think it is possible this is another instance of b/391531096 (so possibly the GC duration is quicker than one millisecond)?",
       "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4da597b5_7fcaa44a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-19T10:47:31Z",
+      "side": 1,
+      "message": "I tried adding an artificial `sleep` in `MarkCompact::CompactionPhase()` just before setting the end time and after that the test is always green, which seems to prove the point above.",
+      "parentUuid": "c0cf0a9d_45776e3b",
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
