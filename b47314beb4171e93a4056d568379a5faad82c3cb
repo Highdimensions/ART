@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfb06bdb_d97cb87a",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-19T15:29:01Z",
+      "side": 0,
+      "message": "LUCI CI shows test failures in ART run-tests, libcore, and JDWP tests: https://ci.chromium.org/ui/p/art/builders/ci/target.arm.64/241/overview\n\nSo as I feared, this didn\u0027t work. I suspect the test artifacts don\u0027t end up in the right places to keep our scripts that set up a test chroot on device working. If so it\u0027s likely that art/tools/buildbot-sync.sh needs some work to look for them in the right places.\n\n@nelsonli@google.com, you can trigger these failures locally in a full AOSP tree using the instructions [here](https://cs.android.com/android/platform/superproject/main/+/main:art/test/README.chroot.md). It\u0027s particularly the tests executed in steps 8-10 that fail.",
+      "range": {
+        "startLine": 154,
+        "startChar": 2,
+        "endLine": 154,
+        "endChar": 82
+      },
+      "revId": "b47314beb4171e93a4056d568379a5faad82c3cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
