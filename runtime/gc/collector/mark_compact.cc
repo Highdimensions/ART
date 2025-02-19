@@ -883,7 +883,9 @@ void MarkCompact::RunPhases() {
     post_compact_end_ = black_allocations_begin_;
   }
   FinishPhase(perform_compaction);
+#if defined(__x86_64__) || defined(__i386__)
   GetHeap()->PostGcVerification(this);
+#endif
   thread_running_gc_ = nullptr;
 }
 
@@ -4824,6 +4826,12 @@ void MarkCompact::FinishPhase(bool performed_compaction) {
   compacting_ = false;
   marking_done_ = false;
   uint8_t* mark_bitmap_clear_end = black_dense_end_;
+  LOG(ERROR) << " black_dense_end:" << static_cast<void*>(black_dense_end_)
+             << " mid_gen_end:" << static_cast<void*>(mid_gen_end_)
+             << " post_compact_end:" << static_cast<void*>(post_compact_end_)
+             << " black_allocations_begin:" << static_cast<void*>(black_allocations_begin_)
+             << " young:" << young_gen_ << " performed_compaction:" << performed_compaction;
+
   // Retain values of some fields for logging in next GC cycle, in case there is
   // a memory corruption detected.
   prev_black_allocations_begin_ = static_cast<void*>(black_allocations_begin_);
