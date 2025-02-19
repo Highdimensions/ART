@@ -22,6 +22,30 @@
       },
       "revId": "2520ac84ade86248914844be8892c7085a38539c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b8d2c77_7f46cc74",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 886,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-19T21:45:26Z",
+      "side": 1,
+      "message": "That mekes total sense. Fixed in PS2. Thanks.",
+      "parentUuid": "53827e0a_57cd91e7",
+      "range": {
+        "startLine": 886,
+        "startChar": 1,
+        "endLine": 886,
+        "endChar": 44
+      },
+      "revId": "2520ac84ade86248914844be8892c7085a38539c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
