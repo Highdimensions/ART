@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffac34b1_fc700442",
+        "filename": "Android.mk",
+        "patchSetId": 11
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-19T20:35:28Z",
+      "side": 1,
+      "message": "Note that Build team recently started an effort to convert this .mk file to a .bp (b/396022230), and .mk files are already ignored in some builds. We may need to ask you to either move this to Android.bp or put it in a script. @nelsonli@google.com",
+      "revId": "50f41ab016288e44e70689d6ed60e38f749c59e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
