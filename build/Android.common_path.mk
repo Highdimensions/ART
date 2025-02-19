@@ -138,6 +138,6 @@ TZDATA_APEX := com.android.tzdata
 # A phony file to create the ICU data file for host.
 HOST_I18N_DATA := $(HOST_OUT)/$(I18N_APEX)/timestamp
 # A phony file to create the tz data file for host.
-HOST_TZDATA_DATA := $(HOST_OUT)/$(TZDATA_APEX)/timestamp
+HOST_TZDATA_DATA := host_tzdata
 
 endif # ART_ANDROID_COMMON_PATH_MK
