@@ -72,3 +72,21 @@ genrule {
     out: ["cpplint_output.txt"],
     cmd: "$(location cpplint) --quiet art/**/*.h art/**/*.cc > $(out)",
 }
+
+phony_rule {
+    name: "host_tzdata",
+    phony_deps: [
+        // com.android.tzdata/etc/tz
+        "tzdata_host_tzdata_apex",
+        "tz_version_host_tzdata_apex",
+
+        // com.android.tzdata/etc/tz/versioned/8
+        "versioned_files_ver8_host_tzdata_apex",
+        "icu_res_files_ver8_host_tzdata_apex",
+
+        // com.android.tzdata/etc/tz/versioned/9
+        "versioned_files_ver9_host_tzdata_apex",
+        "tzdata_icu_res_files_host_prebuilts",
+        "tzlookup.xml_host_tzdata_apex",
+    ],
+}
