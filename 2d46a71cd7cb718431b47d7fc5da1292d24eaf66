@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "328aa46b_2a466ec8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-19T22:06:21Z",
+      "side": 1,
+      "message": "LGTM. Please still check with someone who understands the release process to make sure this doesn\u0027t make anything critical too jank while it\u0027s in.",
+      "revId": "2d46a71cd7cb718431b47d7fc5da1292d24eaf66",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
