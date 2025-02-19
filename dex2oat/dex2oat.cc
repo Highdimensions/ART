@@ -1373,9 +1373,12 @@ class Dex2Oat final {
     // In theory the files should be the same.
     if (dm_file_ != nullptr) {
       if (input_vdex_file_ == nullptr) {
-        input_vdex_file_ = VdexFile::OpenFromDm(dm_file_location_, *dm_file_);
+        std::string error_msg;
+        input_vdex_file_ = VdexFile::OpenFromDm(dm_file_location_, *dm_file_, &error_msg);
         if (input_vdex_file_ != nullptr) {
           VLOG(verifier) << "Doing fast verification with vdex from DexMetadata archive";
+        } else {
+          LOG(WARNING) << error_msg;
         }
       } else {
         LOG(INFO) << "Ignoring vdex file in dex metadata due to vdex file already being passed";
@@ -1987,7 +1990,6 @@ class Dex2Oat final {
                         dex_files,
                         timings_,
                         &compiler_options_->image_classes_);
-    callbacks_->SetVerificationResults(nullptr);  // Should not be needed anymore.
     driver_->CompileAll(class_loader, dex_files, timings_);
     driver_->FreeThreadPools();
     return class_loader;

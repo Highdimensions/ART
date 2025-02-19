@@ -282,7 +282,7 @@ Runtime::Runtime()
       abort_(nullptr),
       stats_enabled_(false),
       is_running_on_memory_tool_(kRunningOnMemoryTool),
-      instrumentation_(),
+      instrumentation_(new instrumentation::Instrumentation()),
       main_thread_group_(nullptr),
       system_thread_group_(nullptr),
       system_class_loader_(nullptr),
@@ -2450,8 +2450,8 @@ void Runtime::DumpDeoptimizations(std::ostream& os) {
   }
 }
 
-std::optional<uint64_t> Runtime::SiqQuitNanoTime() const {
-  return signal_catcher_ != nullptr ? signal_catcher_->SiqQuitNanoTime() : std::nullopt;
+std::optional<uint64_t> Runtime::SigQuitNanoTime() const {
+  return signal_catcher_ != nullptr ? signal_catcher_->SigQuitNanoTime() : std::nullopt;
 }
 
 void Runtime::DumpForSigQuit(std::ostream& os) {
@@ -3213,21 +3213,21 @@ class DeoptimizeBootImageClassVisitor : public ClassVisitor {
       if (Runtime::Current()->GetHeap()->IsInBootImageOatFile(code) &&
           (!m.IsNative() || deoptimize_native_methods) &&
           !m.IsProxyMethod()) {
-        instrumentation_->InitializeMethodsCode(&m, /*aot_code=*/ nullptr);
+        instrumentation_->ReinitializeMethodsCode(&m);
       }
 
       if (Runtime::Current()->GetJit() != nullptr &&
           Runtime::Current()->GetJit()->GetCodeCache()->IsInZygoteExecSpace(code) &&
           (!m.IsNative() || deoptimize_native_methods)) {
         DCHECK(!m.IsProxyMethod());
-        instrumentation_->InitializeMethodsCode(&m, /*aot_code=*/ nullptr);
+        instrumentation_->ReinitializeMethodsCode(&m);
       }
 
       if (m.IsPreCompiled()) {
         // Precompilation is incompatible with debuggable, so clear the flag
         // and update the entrypoint in case it has been compiled.
         m.ClearPreCompiled();
-        instrumentation_->InitializeMethodsCode(&m, /*aot_code=*/ nullptr);
+        instrumentation_->ReinitializeMethodsCode(&m);
       }
 
       // Clear MemorySharedAccessFlags so the boot class methods can be JITed better.
