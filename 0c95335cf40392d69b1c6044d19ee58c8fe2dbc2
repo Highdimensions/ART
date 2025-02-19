@@ -50,6 +50,30 @@
       ],
       "revId": "0c95335cf40392d69b1c6044d19ee58c8fe2dbc2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "426587fe_0384c5ec",
+        "filename": "runtime/trace_profile.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-19T10:23:18Z",
+      "side": 1,
+      "message": "Yes, I forgot to add GUARDED_BY annotation. We already access them only under a trace_data_lock_.",
+      "parentUuid": "81f51568_738a6177",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 88
+      },
+      "revId": "0c95335cf40392d69b1c6044d19ee58c8fe2dbc2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
