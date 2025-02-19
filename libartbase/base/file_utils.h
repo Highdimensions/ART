@@ -234,6 +234,17 @@ int DupCloexec(int fd);
 // Returns true if `path` begins with a slash.
 inline bool IsAbsoluteLocation(const std::string& path) { return !path.empty() && path[0] == '/'; }
 
+// Enables fs-verity for the file.
+bool EnableFsVerity(int fd, std::string* error_msg);
+
+// Returns the fs-verity digest for the file.
+std::string GetFsVerityDigest(const std::string& filename,
+                              /*out*/ std::string* error_msg);
+
+// Returns the fs-verity digest for the file.
+std::string GetFsVerityDigest(int fd,
+                              /*out*/ std::string* error_msg);
+
 }  // namespace art
 
 #endif  // ART_LIBARTBASE_BASE_FILE_UTILS_H_
