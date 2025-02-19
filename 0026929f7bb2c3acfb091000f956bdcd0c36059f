@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "817492c4_ce473334",
+        "filename": "runtime/oat/oat_file_assistant.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-19T16:43:10Z",
+      "side": 1,
+      "message": "I don\u0027t feel making these on-demand will make the code simpler. It\u0027s actually quite convenient to have a list of candidates and go over them whenever needed. For example, in `GetBestInfo`, after going over them once and there is no usable artifacts, we can easily go over them again to find one oat file that at least opens.",
+      "parentUuid": "5704d18f_84e7c59b",
+      "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "97b0d169_37b0c31f",
@@ -95,6 +113,30 @@
           ]
         }
       ],
+      "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26aadcda_be5c60f6",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-19T16:43:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97b0d169_37b0c31f",
+      "range": {
+        "startLine": 390,
+        "startChar": 0,
+        "endLine": 393,
+        "endChar": 51
+      },
       "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -256,6 +298,30 @@
           ]
         }
       ],
+      "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "77de6588_14894135",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-19T16:43:10Z",
+      "side": 1,
+      "message": "Why are the debug strings hard to reason about? The vdex is next to the dex file (in the `oat/` directory). I could say \"vdex in the oat directory next to the dex file\" but it\u0027s a bit verbose, so I simplified it to \"vdex next to the dex file\". Anyway, this expression [has been there since Android U](https://source.corp.google.com/h/googleplex-android/platform/superproject/udc/+/udc-dev:art/runtime/oat_file_assistant.cc;l\u003d934;drc\u003d35ea7e066db64f4c9c740894d2c428707015a8c0). I\u0027m just keeping it unchanged.",
+      "parentUuid": "f4f796ce_cb080d3a",
+      "range": {
+        "startLine": 549,
+        "startChar": 13,
+        "endLine": 549,
+        "endChar": 26
+      },
       "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
