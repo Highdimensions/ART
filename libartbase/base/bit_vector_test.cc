@@ -25,6 +25,87 @@
 
 namespace art {
 
+template <typename StorageType, StorageType kWord0, StorageType kWord1>
+void TestRawBitVectorSetBitAndClearBit() {
+  static /*constexpr*/ StorageType kStorage[2] = { kWord0, kWord1 };
+  static /*constexpr*/ size_t kBits = 2 * BitSizeOf<StorageType>();
+  static /*constexpr*/ RawBitVector<const StorageType> kRbv(kStorage, kBits);
+  auto get_bit_from_params = [](size_t index) /*constexpr*/ {
+    StorageType word = (index < BitSizeOf<StorageType>()) ? kWord0 : kWord1;
+    size_t shift = index & (BitSizeOf<StorageType>() - 1);
+    return (word & (static_cast<StorageType>(1u) << shift)) != 0u;
+  };
+  auto verify = [get_bit_from_params]() /*constexpr*/ {
+    for (size_t index = 0; index != kBits; ++index) {
+      // If the `CHECK_EQ()` fails, the `constexpr` evaluation if `verify()` fails at compile time.
+      CHECK_EQ(get_bit_from_params(index), kRbv.IsBitSet(index)) << index
+          << std::hex << " 0x" << kWord0 << " 0x" << kWord1
+          << " | " << std::dec << kRbv.kWordBits;
+    }
+    return true;
+  };
+  ASSERT_TRUE(verify());
+
+  StorageType storage[2] = {0u, 0u};
+  size_t bits = 2 * BitSizeOf<StorageType>();
+  RawBitVector<StorageType> rbv(storage, bits);
+  for (size_t index = 0; index != bits; ++index) {
+    ASSERT_FALSE(rbv.IsBitSet(index));
+  }
+  // Set one bit at a time, then clear it.
+  for (size_t bit_to_set = 0; bit_to_set != bits; ++bit_to_set) {
+    rbv.SetBit(bit_to_set);
+    for (size_t index = 0; index != bits; ++index) {
+      ASSERT_EQ(index == bit_to_set, rbv.IsBitSet(index));
+    }
+    rbv.ClearBit(bit_to_set);
+    for (size_t index = 0; index != bits; ++index) {
+      ASSERT_FALSE(rbv.IsBitSet(index));
+    }
+  }
+  // Set bits for `kWord0` and `kWord1`.
+  for (size_t index = 0; index != bits; ++index) {
+    if (get_bit_from_params(index)) {
+      rbv.SetBit(index);
+    }
+  }
+  ASSERT_EQ(kWord0, storage[0]);
+  ASSERT_EQ(kWord1, storage[1]);
+  // Clear all bits that are already clear.
+  for (size_t index = 0; index != bits; ++index) {
+    if (!get_bit_from_params(index)) {
+      rbv.ClearBit(index);
+    }
+  }
+  ASSERT_EQ(kWord0, storage[0]);
+  ASSERT_EQ(kWord1, storage[1]);
+  // Clear all bits that are set.
+  for (size_t index = 0; index != bits; ++index) {
+    if (get_bit_from_params(index)) {
+      rbv.ClearBit(index);
+    }
+  }
+  ASSERT_EQ(0u, storage[0]);
+  ASSERT_EQ(0u, storage[1]);
+}
+
+TEST(RawBitVector, Uint32T) {
+  TestRawBitVectorSetBitAndClearBit<uint32_t, 0x12345678u, 0x87654321u>();
+}
+
+TEST(RawBitVector, Uint64T) {
+  TestRawBitVectorSetBitAndClearBit<uint64_t,
+                                    UINT64_C(0x1234567890abcdef),
+                                    UINT64_C(0xfedcba0987654321)>();
+}
+
+TEST(RawBitVector, SizeT) {
+  // Note: The constants below are truncated on 32-bit architectures.
+  TestRawBitVectorSetBitAndClearBit<size_t,
+                                    static_cast<size_t>(UINT64_C(0xfedcba0987654321)),
+                                    static_cast<size_t>(UINT64_C(0x1234567890abcdef))>();
+}
+
 TEST(BitVector, Test) {
   const size_t kBits = 32;
 
