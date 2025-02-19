@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "196f2941_52769544",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3218691
+      },
+      "writtenOn": "2025-02-19T11:44:00Z",
+      "side": 1,
+      "message": "Hi @jiakaiz@google.com\nJust heads up in bug b/397561164 once this CL merge done.",
+      "revId": "d6a83a7bfe5ecebf989bb2f837b643a85cf8d7ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
