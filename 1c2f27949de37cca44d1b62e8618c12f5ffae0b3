@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b453292_7f801bbd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-19T11:13:31Z",
+      "side": 1,
+      "message": "Thanks for the comments.\n\nI have also split `build-art-simulator` into two separate rules for the profile and boot image. This clarifies the dependencies between the two and ensures that each rule only has one output. It should also make each a bit clearer and easier to read.",
+      "revId": "1c2f27949de37cca44d1b62e8618c12f5ffae0b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

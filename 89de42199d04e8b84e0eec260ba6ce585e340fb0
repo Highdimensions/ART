@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "45be38b4_3d24c901",
+        "filename": "Android.mk",
+        "patchSetId": 9
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-19T11:13:31Z",
+      "side": 1,
+      "message": "I was previously using this variable in `build-art-simulator` however as I am no longer using this I will remove it to limit the scope of the changes.",
+      "parentUuid": "4ad78909_157fe3ca",
+      "revId": "89de42199d04e8b84e0eec260ba6ce585e340fb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "16c566a9_7e12bf3c",
@@ -31,6 +49,30 @@
       "writtenOn": "2025-02-13T13:42:56Z",
       "side": 1,
       "message": "Looks like you also need to add the dex files, the profile, etc. as dependencies.",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 287,
+        "endChar": 26
+      },
+      "revId": "89de42199d04e8b84e0eec260ba6ce585e340fb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf28c9ef_0277ad13",
+        "filename": "Android.mk",
+        "patchSetId": 9
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-19T11:13:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16c566a9_7e12bf3c",
       "range": {
         "startLine": 286,
         "startChar": 0,
@@ -64,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7e348ab_bcbbc9ff",
+        "filename": "Android.mk",
+        "patchSetId": 9
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-19T11:13:31Z",
+      "side": 1,
+      "message": "This was a workaround to ensure the number of elements in `TARGET_CORE_IMG_DEX_FILES` didn\u0027t change unexpectedly. Using the foreach loop instead means that this can be removed and avoided.",
+      "parentUuid": "83b7260b_d50da24d",
+      "range": {
+        "startLine": 300,
+        "startChar": 19,
+        "endLine": 300,
+        "endChar": 20
+      },
+      "revId": "89de42199d04e8b84e0eec260ba6ce585e340fb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a70f995e_5a7f9d8e",
@@ -77,6 +143,30 @@
       "writtenOn": "2025-02-13T13:42:56Z",
       "side": 1,
       "message": "Use `$(foreach ...)` with [`int_range_list`](https://cs.android.com/android/platform/superproject/main/+/main:build/make/common/math.mk;l\u003d125;drc\u003d8907ad66d11986f50639c96e6ac16748a5be3187)?",
+      "range": {
+        "startLine": 301,
+        "startChar": 0,
+        "endLine": 310,
+        "endChar": 74
+      },
+      "revId": "89de42199d04e8b84e0eec260ba6ce585e340fb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2727b254_4a697efa",
+        "filename": "Android.mk",
+        "patchSetId": 9
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-19T11:13:31Z",
+      "side": 1,
+      "message": "int_range_list is exactly the kind of function I was looking for here. Thanks for the suggestion!",
+      "parentUuid": "a70f995e_5a7f9d8e",
       "range": {
         "startLine": 301,
         "startChar": 0,
