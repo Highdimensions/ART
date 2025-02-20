@@ -34,6 +34,116 @@
       "parentUuid": "c0cf0a9d_45776e3b",
       "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7a8a765_0127d499",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T07:37:00Z",
+      "side": 1,
+      "message": "You are right. The GC triggered before all the assertions is just too short. If you are comfortable, can you add more allocations before triggering GC. Otherwise, like GC-duration metrics, this one will also have to be commented out.",
+      "parentUuid": "4da597b5_7fcaa44a",
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "465bb851_bd97dec0",
+        "filename": "libartbase/base/metrics/metrics.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T07:37:00Z",
+      "side": 1,
+      "message": "You understand this better but is delta-counter the right metric? Is ask this because for gc-duration we use both delta-counter as well as counter. And I was wondering why both.",
+      "range": {
+        "startLine": 94,
+        "startChar": 47,
+        "endLine": 94,
+        "endChar": 66
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "79a3a829_16c60e84",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartbase/base/metrics/metrics.h",
+              "range": {
+                "startLine": 74,
+                "startChar": 0,
+                "endLine": 95,
+                "endChar": 0
+              },
+              "replacement": "#define ART_VALUE_METRICS(METRIC)                                     \\\n  METRIC(GcWorldStopTimeDelta, MetricsDeltaCounter)                   \\\n  METRIC(GcWorldStopCountDelta, MetricsDeltaCounter)                  \\\n  METRIC(YoungGcScannedBytesDelta, MetricsDeltaCounter)               \\\n  METRIC(YoungGcFreedBytesDelta, MetricsDeltaCounter)                 \\\n  METRIC(YoungGcDurationDelta, MetricsDeltaCounter)                   \\\n  METRIC(FullGcScannedBytesDelta, MetricsDeltaCounter)                \\\n  METRIC(FullGcFreedBytesDelta, MetricsDeltaCounter)                  \\\n  METRIC(FullGcDurationDelta, MetricsDeltaCounter)                    \\\n  METRIC(JitMethodCompileTotalTimeDelta, MetricsDeltaCounter)         \\\n  METRIC(JitMethodCompileCountDelta, MetricsDeltaCounter)             \\\n  METRIC(ClassVerificationTotalTimeDelta, MetricsDeltaCounter)        \\\n  METRIC(ClassVerificationCountDelta, MetricsDeltaCounter)            \\\n  METRIC(ClassLoadingTotalTimeDelta, MetricsDeltaCounter)             \\\n  METRIC(TotalBytesAllocatedDelta, MetricsDeltaCounter)               \\\n  METRIC(TotalGcCollectionTimeDelta, MetricsDeltaCounter)             \\\n  METRIC(YoungGcCountDelta, MetricsDeltaCounter)                      \\\n  METRIC(FullGcCountDelta, MetricsDeltaCounter)                       \\\n  METRIC(TimeElapsedDelta, MetricsDeltaCounter)                       \\\n  METRIC(AppSlowPathDuringYoungGcDurationDelta, MetricsDeltaCounter)  \\\n  METRIC(AppSlowPathDuringFullGcDurationDelta, MetricsDeltaCounter)   \\\n  METRIC(AppSlowPathDuringYoungGcCountDelta, MetricsDeltaCounter)     \\\n  METRIC(AppSlowPathDuringFullGcCountDelta, MetricsDeltaCounter)\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "006cc9d4_c1e91e03",
+        "filename": "runtime/gc/collector/iteration.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T07:37:00Z",
+      "side": 1,
+      "message": "Can you maintain the start time in each garbage collector\u0027s object. And then when read-barrier is disabled, compute the difference and store that here.\n\nIteration object is used by many different classes like Heap and GarbageCollector, so should have only bare minimum data in it.",
+      "range": {
+        "startLine": 98,
+        "startChar": 2,
+        "endLine": 99,
+        "endChar": 38
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "8ceb503c_52ccf624",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/iteration.h",
+              "range": {
+                "startLine": 73,
+                "startChar": 0,
+                "endLine": 77,
+                "endChar": 0
+              },
+              "replacement": "  uint64_t GetAppSlowPathTimeMs() const { return app_slow_path_time_ms_; }\n  void SetAppSlowPathTimeMs(uint64_t time) { app_slow_path_time_ms_ \u003d time; }\n"
+            },
+            {
+              "path": "runtime/gc/collector/iteration.h",
+              "range": {
+                "startLine": 98,
+                "startChar": 0,
+                "endLine": 100,
+                "endChar": 0
+              },
+              "replacement": "  uint64_t app_slow_path_time_ms_;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
