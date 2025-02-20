@@ -210,7 +210,7 @@ TEST(BitVector, Test) {
   EXPECT_EQ(0x80000001U, bv.GetRawStorageWord(0));
   EXPECT_EQ(0x80000001U, *bv.GetRawStorage());
 
-  BitVector::IndexIterator iterator = bv.Indexes().begin();
+  BitVectorIndexIterator<const uint32_t> iterator = bv.Indexes().begin();
   EXPECT_TRUE(iterator != bv.Indexes().end());
   EXPECT_EQ(0u, *iterator);
   ++iterator;
