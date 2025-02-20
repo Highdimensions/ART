@@ -324,6 +324,30 @@
       },
       "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "896dc34a_caf29215",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-20T11:00:16Z",
+      "side": 1,
+      "message": "Sigh, ok, I didn\u0027t know that comment was already there. I find this whole odex/oat distinction confusing.",
+      "parentUuid": "77de6588_14894135",
+      "range": {
+        "startLine": 549,
+        "startChar": 13,
+        "endLine": 549,
+        "endChar": 26
+      },
+      "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
