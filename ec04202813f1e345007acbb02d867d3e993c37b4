@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "98328c52_475bc77e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-20T14:46:16Z",
+      "side": 1,
+      "message": "I have increased (by quite a lot) the number of allocations, but now the test seems to be consistenly green.",
+      "parentUuid": "e7a8a765_0127d499",
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "465bb851_bd97dec0",
@@ -91,6 +109,30 @@
           ]
         }
       ],
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0278714_a2d9cbb2",
+        "filename": "libartbase/base/metrics/metrics.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-20T14:46:16Z",
+      "side": 1,
+      "message": "I think delta-counter is the right kind of metric here - for many of the GC metrics that preceded the introduction of the delta-counters and the value metrics, we used the (simple) counters because it was the only way we had to report this kind of information, but then we realised those counters were never reset so they would always growing going forwards in time, while the delta-counter will be reset to 0 as soon as the metric is reported.\n\n(Mentioning @rpl@google.com here in case he\u0027d like to add more information/context about this).",
+      "parentUuid": "465bb851_bd97dec0",
+      "range": {
+        "startLine": 94,
+        "startChar": 47,
+        "endLine": 94,
+        "endChar": 66
+      },
       "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -142,6 +184,30 @@
           ]
         }
       ],
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc5f0be8_bd2e37d8",
+        "filename": "runtime/gc/collector/iteration.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-20T14:46:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "006cc9d4_c1e91e03",
+      "range": {
+        "startLine": 98,
+        "startChar": 2,
+        "endLine": 99,
+        "endChar": 38
+      },
       "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
