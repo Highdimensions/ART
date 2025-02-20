@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41a41705_6bb32221",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-20T19:36:02Z",
+      "side": 1,
+      "message": "I don\u0027t see a problem with the fix. But I don\u0027t fully understand why scanning just a bit of the young gen won\u0027t work. I guess the issue is that we don\u0027t know the compaction ratio?",
+      "revId": "b98e646f59d2a2b5d2b883a4b7733d023d4433a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1978c928_cebb0b73",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 4437,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-20T19:36:02Z",
+      "side": 1,
+      "message": "There is no easy way to bound this to within a page size either? I don\u0027t quite understand why page alignment forces you to scan the whole young gen.",
+      "range": {
+        "startLine": 4435,
+        "startChar": 10,
+        "endLine": 4437,
+        "endChar": 48
+      },
+      "revId": "b98e646f59d2a2b5d2b883a4b7733d023d4433a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
