@@ -1,0 +1,91 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d937ca49_629a506a",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-20T10:52:13Z",
+      "side": 1,
+      "message": "This makes me wonder - why do we need a location in DexCache? Why can\u0027t we just always use the one in the dex file it\u0027s associated with?\n\nProbably for another CL 😊",
+      "range": {
+        "startLine": 1718,
+        "startChar": 0,
+        "endLine": 1721,
+        "endChar": 55
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "75939459_046ed853",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/class_linker.cc",
+              "range": {
+                "startLine": 1718,
+                "startChar": 0,
+                "endLine": 1718,
+                "endChar": 0
+              },
+              "replacement": "    // The location in the dex cache (from `--dex-location` passed to dex2oat) is not\n    // necessarily the actual dex location on device. `OpenOatDexFile` uses the table\n    // `OatFile::oat_dex_files_` to find the dex file. For each dex file, the table contains two\n    // keys corresponding to it, one from the oat header (from `--dex-location` passed to dex2oat)\n    // and the other being the actual dex location on device, unless they are the same. The lookup\n    // is based on the former key. Later, `PatchDexCacheLocations` will replace the location in the\n    // dex cache with the actual dex location, which is the latter key in the table.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "215c91be6c88bde7674a2e8b22df047bd43905c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27c9564e_dc84f175",
+        "filename": "runtime/mirror/dex_cache-inl.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-20T10:52:13Z",
+      "side": 1,
+      "message": "Can you add a comment about why this check?",
+      "range": {
+        "startLine": 352,
+        "startChar": 51,
+        "endLine": 352,
+        "endChar": 87
+      },
+      "revId": "215c91be6c88bde7674a2e8b22df047bd43905c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93db2468_1c5d55ca",
+        "filename": "runtime/mirror/dex_cache-inl.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-20T10:52:13Z",
+      "side": 1,
+      "message": "And why this check?",
+      "range": {
+        "startLine": 353,
+        "startChar": 33,
+        "endLine": 353,
+        "endChar": 81
+      },
+      "revId": "215c91be6c88bde7674a2e8b22df047bd43905c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
