@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "341bda2f_9dd072a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863710
+      },
+      "writtenOn": "2025-02-20T13:34:35Z",
+      "side": 1,
+      "message": "It looks fine, but I think it\u0027s better if Victor has a look once he\u0027s back.",
+      "revId": "07e123d52e3fb07739c681c3ebd26c438a7718ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
