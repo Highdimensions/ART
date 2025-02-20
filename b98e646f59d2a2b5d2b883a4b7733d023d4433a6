@@ -39,6 +39,30 @@
       },
       "revId": "b98e646f59d2a2b5d2b883a4b7733d023d4433a6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54f09dce_a105dc1d",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 4437,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T19:45:57Z",
+      "side": 1,
+      "message": "Since we are marking, we don\u0027t know which objects will be reachable or not at this stage. Whichever the first reachable object will be in the young-gen, may end up in the last post-compacted page of mid-gen. Please note that such an object could be several pages later. So I can\u0027t think of a way to be sure where that boundary would be.",
+      "parentUuid": "1978c928_cebb0b73",
+      "range": {
+        "startLine": 4435,
+        "startChar": 10,
+        "endLine": 4437,
+        "endChar": 48
+      },
+      "revId": "b98e646f59d2a2b5d2b883a4b7733d023d4433a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
