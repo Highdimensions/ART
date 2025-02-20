@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51b5bb97_969e40de",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-20T14:50:24Z",
+      "side": 1,
+      "message": "Unfortunately this isn\u0027t true on our [master-art thin manifest](https://android.googlesource.com/platform/manifest/+/refs/heads/master-art/default.xml), which essentially leaves out the platform parts. A lot of the logic here is about using the prebuilts to make up for the things we cannot use from there - that\u0027s the whole reason for extracting apex\u0027es etc.\n\nI suspect it\u0027s necessary to move this stuff into a script instead. I suggest a new script `art/tools/build-art.sh` rather than putting it directly into `buildbot-build.sh`, because those make targets are used from [other places too](https://cs.android.com/search?q\u003dbuild-art(-host%7C-target)%5Cb\u0026ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain).",
+      "range": {
+        "startLine": 11,
+        "startChar": 13,
+        "endLine": 12,
+        "endChar": 29
+      },
+      "revId": "fc33e7f67a2921628057c7e0f1764ff836882b98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
