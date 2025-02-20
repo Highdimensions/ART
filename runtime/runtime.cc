@@ -1441,6 +1441,40 @@ static inline void CreatePreAllocatedException(Thread* self,
   detailMessageField->SetObject</* kTransactionActive= */ false>(exception->Read(), message);
 }
 
+inline void Runtime::CreatePreAllocatedExceptions(Thread* self) {
+  // Pre-allocate an OutOfMemoryError for the case when we fail to
+  // allocate the exception to be thrown.
+  CreatePreAllocatedException(self,
+                              this,
+                              &pre_allocated_OutOfMemoryError_when_throwing_exception_,
+                              "Ljava/lang/OutOfMemoryError;",
+                              "OutOfMemoryError thrown while trying to throw an exception; "
+                              "no stack trace available");
+  // Pre-allocate an OutOfMemoryError for the double-OOME case.
+  CreatePreAllocatedException(self,
+                              this,
+                              &pre_allocated_OutOfMemoryError_when_throwing_oome_,
+                              "Ljava/lang/OutOfMemoryError;",
+                              "OutOfMemoryError thrown while trying to throw OutOfMemoryError; "
+                              "no stack trace available");
+  // Pre-allocate an OutOfMemoryError for the case when we fail to
+  // allocate while handling a stack overflow.
+  CreatePreAllocatedException(self,
+                              this,
+                              &pre_allocated_OutOfMemoryError_when_handling_stack_overflow_,
+                              "Ljava/lang/OutOfMemoryError;",
+                              "OutOfMemoryError thrown while trying to handle a stack overflow; "
+                              "no stack trace available");
+  // Pre-allocate a NoClassDefFoundError for the common case of failing to find a system class
+  // ahead of checking the application's class loader.
+  CreatePreAllocatedException(self,
+                              this,
+                              &pre_allocated_NoClassDefFoundError_,
+                              "Ljava/lang/NoClassDefFoundError;",
+                              "Class not found using the boot class loader; "
+                              "no stack trace available");
+}
+
 std::string Runtime::GetApexVersions(ArrayRef<const std::string> boot_class_path_locations) {
   std::vector<std::string_view> bcp_apexes;
   for (std::string_view jar : boot_class_path_locations) {
@@ -1756,6 +1790,9 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
                         (gUseUserfaultfd ? BackgroundGcOption(gc::kCollectorTypeCMCBackground) :
                                            runtime_options.GetOrDefault(Opt::BackgroundGc));
 
+  bool verify_post_gc_heap = xgc_option.verify_post_gc_heap_ &&
+                             (android::base::GetProperty("ro.build.type", "") != "user");
+
   heap_ = new gc::Heap(runtime_options.GetOrDefault(Opt::MemoryInitialSize),
                        runtime_options.GetOrDefault(Opt::HeapGrowthLimit),
                        runtime_options.GetOrDefault(Opt::HeapMinFree),
@@ -1788,7 +1825,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
                        runtime_options.GetOrDefault(Opt::UseTLAB),
                        xgc_option.verify_pre_gc_heap_,
                        xgc_option.verify_pre_sweeping_heap_,
-                       xgc_option.verify_post_gc_heap_,
+                       verify_post_gc_heap,
                        xgc_option.verify_pre_gc_rosalloc_,
                        xgc_option.verify_pre_sweeping_rosalloc_,
                        xgc_option.verify_post_gc_rosalloc_,
@@ -1891,6 +1928,12 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
       // Keep the defaults.
       break;
   }
+
+#ifdef ART_USE_RESTRICTED_MODE
+  // TODO(Simulator): support signal handling and implicit checks.
+  implicit_suspend_checks_ = false;
+  implicit_null_checks_ = false;
+#endif  // ART_USE_RESTRICTED_MODE
 
   fault_manager.Init(!no_sig_chain_);
   if (!no_sig_chain_) {
@@ -2076,38 +2119,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
     DCHECK(pre_allocated_NoClassDefFoundError_.Read()->GetClass()
                ->DescriptorEquals("Ljava/lang/NoClassDefFoundError;"));
   } else {
-    // Pre-allocate an OutOfMemoryError for the case when we fail to
-    // allocate the exception to be thrown.
-    CreatePreAllocatedException(self,
-                                this,
-                                &pre_allocated_OutOfMemoryError_when_throwing_exception_,
-                                "Ljava/lang/OutOfMemoryError;",
-                                "OutOfMemoryError thrown while trying to throw an exception; "
-                                    "no stack trace available");
-    // Pre-allocate an OutOfMemoryError for the double-OOME case.
-    CreatePreAllocatedException(self,
-                                this,
-                                &pre_allocated_OutOfMemoryError_when_throwing_oome_,
-                                "Ljava/lang/OutOfMemoryError;",
-                                "OutOfMemoryError thrown while trying to throw OutOfMemoryError; "
-                                    "no stack trace available");
-    // Pre-allocate an OutOfMemoryError for the case when we fail to
-    // allocate while handling a stack overflow.
-    CreatePreAllocatedException(self,
-                                this,
-                                &pre_allocated_OutOfMemoryError_when_handling_stack_overflow_,
-                                "Ljava/lang/OutOfMemoryError;",
-                                "OutOfMemoryError thrown while trying to handle a stack overflow; "
-                                    "no stack trace available");
-
-    // Pre-allocate a NoClassDefFoundError for the common case of failing to find a system class
-    // ahead of checking the application's class loader.
-    CreatePreAllocatedException(self,
-                                this,
-                                &pre_allocated_NoClassDefFoundError_,
-                                "Ljava/lang/NoClassDefFoundError;",
-                                "Class not found using the boot class loader; "
-                                    "no stack trace available");
+    CreatePreAllocatedExceptions(self);
   }
 
   // Class-roots are setup, we can now finish initializing the JniIdManager.
