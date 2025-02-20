@@ -50,66 +50,6 @@ inline void BitVectorView<StorageType>::SetInitialBits(uint32_t num_bits) {
   std::fill_n(storage_ + words, SizeInWords() - words, static_cast<StorageType>(0));
 }
 
-inline bool BitVector::IndexIterator::operator==(const IndexIterator& other) const {
-  DCHECK(bit_storage_ == other.bit_storage_);
-  DCHECK_EQ(storage_size_, other.storage_size_);
-  return bit_index_ == other.bit_index_;
-}
-
-inline uint32_t BitVector::IndexIterator::operator*() const {
-  DCHECK_LT(bit_index_, BitSize());
-  return bit_index_;
-}
-
-inline BitVector::IndexIterator& BitVector::IndexIterator::operator++() {
-  DCHECK_LT(bit_index_, BitSize());
-  bit_index_ = FindIndex(bit_index_ + 1u);
-  return *this;
-}
-
-inline BitVector::IndexIterator BitVector::IndexIterator::operator++(int) {
-  IndexIterator result(*this);
-  ++*this;
-  return result;
-}
-
-inline uint32_t BitVector::IndexIterator::FindIndex(uint32_t start_index) const {
-  DCHECK_LE(start_index, BitSize());
-  uint32_t word_index = start_index / kWordBits;
-  if (UNLIKELY(word_index == storage_size_)) {
-    return start_index;
-  }
-  uint32_t word = bit_storage_[word_index];
-  // Mask out any bits in the first word we've already considered.
-  word &= static_cast<uint32_t>(-1) << (start_index & 0x1f);
-  while (word == 0u) {
-    ++word_index;
-    if (UNLIKELY(word_index == storage_size_)) {
-      return BitSize();
-    }
-    word = bit_storage_[word_index];
-  }
-  return word_index * 32u + CTZ(word);
-}
-
-inline BitVector::IndexIterator::IndexIterator(const BitVector* bit_vector, begin_tag)
-  : bit_storage_(bit_vector->GetRawStorage()),
-    storage_size_(bit_vector->storage_size_),
-    bit_index_(FindIndex(0u)) { }
-
-inline BitVector::IndexIterator::IndexIterator(const BitVector* bit_vector, end_tag)
-  : bit_storage_(bit_vector->GetRawStorage()),
-    storage_size_(bit_vector->storage_size_),
-    bit_index_(BitSize()) { }
-
-inline BitVector::IndexIterator BitVector::IndexContainer::begin() const {
-  return IndexIterator(bit_vector_, IndexIterator::begin_tag());
-}
-
-inline BitVector::IndexIterator BitVector::IndexContainer::end() const {
-  return IndexIterator(bit_vector_, IndexIterator::end_tag());
-}
-
 inline void BitVector::ClearAllBits() {
   AsView().ClearAllBits();
 }

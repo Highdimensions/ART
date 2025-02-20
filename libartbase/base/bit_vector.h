@@ -112,6 +112,12 @@ class BitVectorView {
     return std::any_of(storage_, storage_ + SizeInWords(), [](WordType w) { return w != 0u; });
   }
 
+  // `BitVectorView` wrapper class for iteration across indexes of set bits.
+  class IndexContainerImpl;
+  using IndexContainer = BitVectorView<const StorageType>::IndexContainerImpl;
+
+  IndexContainer Indexes() const;
+
  private:
   static constexpr size_t WordIndex(size_t index) {
     return index >> WhichPowerOf2(kWordBits);
@@ -129,9 +135,131 @@ class BitVectorView {
   WordType* storage_;
   size_t size_in_bits_;
 
-  // For implicit conversion to a view with constant storage.
+  template <typename ST> friend class BitVectorIndexIterator;
   template <typename ST> friend class BitVectorView;
 };
+
+/**
+ * @brief Convenient iterator across the indexes of the bits in `BitVector` or `BitVectorView<>`.
+ *
+ * @details BitVectorIndexIterator is a Forward iterator (C++11: 24.2.5) from the lowest
+ * to the highest index of the BitVector's set bits. Instances can be retrieved
+ * only through `BitVector{,View}::Indexes()` which return an index container wrapper
+ * object with begin() and end() suitable for range-based loops:
+ *   for (uint32_t idx : bit_vector.Indexes()) {
+ *     // Use idx.
+ *   }
+ */
+template <typename StorageType>
+class BitVectorIndexIterator {
+  static_assert(std::is_const_v<StorageType>);
+ public:
+  using iterator_category = std::forward_iterator_tag;
+  using value_type = size_t;
+  using difference_type = ptrdiff_t;
+  using pointer = void;
+  using reference = void;
+
+  bool operator==(const BitVectorIndexIterator& other) const {
+    DCHECK_EQ(bit_vector_view_.storage_, other.bit_vector_view_.storage_);
+    DCHECK_EQ(bit_vector_view_.size_in_bits_, other.bit_vector_view_.size_in_bits_);
+    return bit_index_ == other.bit_index_;
+  }
+
+  bool operator!=(const BitVectorIndexIterator& other) const {
+    return !(*this == other);
+  }
+
+  size_t operator*() const {
+    DCHECK_LT(bit_index_, bit_vector_view_.size_in_bits_);
+    return bit_index_;
+  }
+
+  BitVectorIndexIterator& operator++() {
+    DCHECK_LT(bit_index_, bit_vector_view_.size_in_bits_);
+    bit_index_ = FindIndex(bit_index_ + 1u);
+    return *this;
+  }
+
+  BitVectorIndexIterator operator++(int) {
+    BitVectorIndexIterator result(*this);
+    ++*this;
+    return result;
+  }
+
+  // Helper function to check for end without comparing with bit_vector.Indexes().end().
+  bool Done() const {
+    return bit_index_ == bit_vector_view_.SizeInBits();
+  }
+
+ private:
+  struct begin_tag { };
+  struct end_tag { };
+
+  BitVectorIndexIterator(BitVectorView<StorageType> bit_vector_view, begin_tag)
+      : bit_vector_view_(bit_vector_view),
+        bit_index_(FindIndex(0u)) { }
+
+  BitVectorIndexIterator(BitVectorView<StorageType> bit_vector_view, end_tag)
+      : bit_vector_view_(bit_vector_view),
+        bit_index_(bit_vector_view_.size_in_bits_) { }
+
+  size_t FindIndex(size_t start_index) const {
+    DCHECK_LE(start_index, bit_vector_view_.size_in_bits_);
+    bit_vector_view_.DCheckTrailingBitsClear();
+    if (UNLIKELY(start_index == bit_vector_view_.size_in_bits_)) {
+      return start_index;
+    }
+    size_t word_index = start_index / kWordBits;
+    DCHECK_LT(word_index, bit_vector_view_.SizeInWords());
+    std::remove_const_t<StorageType> word = bit_vector_view_.storage_[word_index];
+    // Mask out any bits in the first word we've already considered.
+    word &= std::numeric_limits<StorageType>::max() << (start_index % kWordBits);
+    if (word == 0u) {
+      size_t size_in_words = bit_vector_view_.SizeInWords();
+      do {
+        ++word_index;
+        if (UNLIKELY(word_index == size_in_words)) {
+          return bit_vector_view_.size_in_bits_;
+        }
+        word = bit_vector_view_.storage_[word_index];
+      } while (word == 0);
+    }
+    return word_index * kWordBits + CTZ(word);
+  }
+
+  static constexpr size_t kWordBits = BitVectorView<StorageType>::kWordBits;
+
+  const BitVectorView<StorageType> bit_vector_view_;
+  size_t bit_index_;           // Current index (size in bits).
+
+  template <typename ST>
+  friend class BitVectorView;
+};
+
+template <typename StorageType>
+class BitVectorView<StorageType>::IndexContainerImpl {
+  static_assert(std::is_const_v<StorageType>);
+ public:
+  explicit IndexContainerImpl(BitVectorView<StorageType> bit_vector_view)
+      : bit_vector_view_(bit_vector_view) { }
+
+  BitVectorIndexIterator<StorageType> begin() const {
+    return {bit_vector_view_, typename BitVectorIndexIterator<StorageType>::begin_tag()};
+  }
+
+  BitVectorIndexIterator<StorageType> end() const {
+    return {bit_vector_view_, typename BitVectorIndexIterator<StorageType>::end_tag()};
+  }
+
+ private:
+  BitVectorView<StorageType> bit_vector_view_;
+};
+
+template <typename StorageType>
+BitVectorView<StorageType>::IndexContainer BitVectorView<StorageType>::Indexes() const {
+  return BitVectorView<StorageType>::IndexContainer(*this);
+}
 
 /*
  * Expanding bitmap. Bits are numbered starting from zero. All operations on a BitVector are
@@ -144,76 +272,7 @@ class BitVector {
   static constexpr uint32_t kWordBytes = sizeof(uint32_t);
   static constexpr uint32_t kWordBits = kWordBytes * 8;
 
-  class IndexContainer;
-
-  /**
-   * @brief Convenient iterator across the indexes of the BitVector's set bits.
-   *
-   * @details IndexIterator is a Forward iterator (C++11: 24.2.5) from the lowest
-   * to the highest index of the BitVector's set bits. Instances can be retrieved
-   * only through BitVector::Indexes() which returns an IndexContainer wrapper
-   * object with begin() and end() suitable for range-based loops:
-   *   for (uint32_t idx : bit_vector.Indexes()) {
-   *     // Use idx.
-   *   }
-   */
-  class IndexIterator {
-   public:
-    using iterator_category = std::forward_iterator_tag;
-    using value_type = uint32_t;
-    using difference_type = ptrdiff_t;
-    using pointer = void;
-    using reference = void;
-
-    bool operator==(const IndexIterator& other) const;
-
-    bool operator!=(const IndexIterator& other) const {
-      return !(*this == other);
-    }
-
-    uint32_t operator*() const;
-
-    IndexIterator& operator++();
-
-    IndexIterator operator++(int);
-
-    // Helper function to check for end without comparing with bit_vector.Indexes().end().
-    bool Done() const {
-      return bit_index_ == BitSize();
-    }
-
-   private:
-    struct begin_tag { };
-    struct end_tag { };
-
-    IndexIterator(const BitVector* bit_vector, begin_tag);
-    IndexIterator(const BitVector* bit_vector, end_tag);
-
-    uint32_t BitSize() const {
-      return storage_size_ * kWordBits;
-    }
-
-    uint32_t FindIndex(uint32_t start_index) const;
-    const uint32_t* const bit_storage_;
-    const uint32_t storage_size_;  // Size of vector in words.
-    uint32_t bit_index_;           // Current index (size in bits).
-
-    friend class BitVector::IndexContainer;
-  };
-
-  /**
-   * @brief BitVector wrapper class for iteration across indexes of set bits.
-   */
-  class IndexContainer {
-   public:
-    explicit IndexContainer(const BitVector* bit_vector) : bit_vector_(bit_vector) { }
-
-    IndexIterator begin() const;
-    IndexIterator end() const;
-
-   private:
-    const BitVector* const bit_vector_;
-  };
+  using IndexContainer = BitVectorView<uint32_t>::IndexContainer;
 
   // MoveConstructible but not MoveAssignable, CopyConstructible or CopyAssignable.
 
@@ -315,7 +374,7 @@ class BitVector {
   uint32_t NumSetBits(uint32_t end) const;
 
   IndexContainer Indexes() const {
-    return IndexContainer(this);
+    return AsView().Indexes();
   }
 
   uint32_t GetStorageSize() const {
