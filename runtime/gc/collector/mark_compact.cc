@@ -3448,6 +3448,12 @@ void MarkCompact::KernelPreparation() {
   }
 }
 
+bool MarkCompact::SigsysHandler(siginfo_t* info, void* context) {
+  CHECK_EQ(info->si_signo, SIGSYS);
+  DCHECK_NE(context, nullptr);
+  return false;
+}
+
 bool MarkCompact::SigbusHandler(siginfo_t* info) {
   class ScopedInProgressCount {
    public:
