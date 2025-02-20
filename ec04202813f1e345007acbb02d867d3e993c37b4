@@ -72,6 +72,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f62dc72_3a49b440",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T17:54:04Z",
+      "side": 1,
+      "message": "Perfect. Thanks for doing this.\n\nCan you then also uncomment the gc-duration metric assertions. And add the bug mentioned in the comment there into commit message.",
+      "parentUuid": "98328c52_475bc77e",
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "465bb851_bd97dec0",
@@ -127,6 +145,30 @@
       "side": 1,
       "message": "I think delta-counter is the right kind of metric here - for many of the GC metrics that preceded the introduction of the delta-counters and the value metrics, we used the (simple) counters because it was the only way we had to report this kind of information, but then we realised those counters were never reset so they would always growing going forwards in time, while the delta-counter will be reset to 0 as soon as the metric is reported.\n\n(Mentioning @rpl@google.com here in case he\u0027d like to add more information/context about this).",
       "parentUuid": "465bb851_bd97dec0",
+      "range": {
+        "startLine": 94,
+        "startChar": 47,
+        "endLine": 94,
+        "endChar": 66
+      },
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "540d0625_f5eb4182",
+        "filename": "libartbase/base/metrics/metrics.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T17:54:04Z",
+      "side": 1,
+      "message": "Makes sense. Thanks for clarifying.",
+      "parentUuid": "a0278714_a2d9cbb2",
       "range": {
         "startLine": 94,
         "startChar": 47,

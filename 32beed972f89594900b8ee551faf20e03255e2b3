@@ -1,0 +1,330 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76484623_87f87053",
+        "filename": "runtime/gc/collector/concurrent_copying.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1754,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T17:54:04Z",
+      "side": 1,
+      "message": "small nit: I don\u0027t see the need for it?",
+      "range": {
+        "startLine": 1754,
+        "startChar": 13,
+        "endLine": 1754,
+        "endChar": 35
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2f51a317_360a341e",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/concurrent_copying.cc",
+              "range": {
+                "startLine": 1754,
+                "startChar": 0,
+                "endLine": 1755,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/gc/collector/concurrent_copying.cc",
+              "range": {
+                "startLine": 1756,
+                "startChar": 0,
+                "endLine": 1757,
+                "endChar": 0
+              },
+              "replacement": "        MilliTime() - concurrent_copying_-\u003eapp_slow_path_start_time_);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "32beed972f89594900b8ee551faf20e03255e2b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fb63bd3_f66e7110",
+        "filename": "runtime/gc/collector/garbage_collector.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T17:54:04Z",
+      "side": 1,
+      "message": "Can you please move it into ConcurrentCopying and MarkCompact classes? The thing is that this is not something that is applicable to all GCs. Only to CMC and CC so far.\n\nAlso, can you please initialize it to 0 in InitializePhase() functions. Both classes have it.",
+      "range": {
+        "startLine": 199,
+        "startChar": 11,
+        "endLine": 199,
+        "endChar": 36
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "8cfd99f5_ca679278",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/garbage_collector.h",
+              "range": {
+                "startLine": 193,
+                "startChar": 0,
+                "endLine": 194,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/gc/collector/garbage_collector.h",
+              "range": {
+                "startLine": 199,
+                "startChar": 0,
+                "endLine": 200,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "32beed972f89594900b8ee551faf20e03255e2b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9117de92_9a35170f",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 4082,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T17:54:04Z",
+      "side": 1,
+      "message": "Same comment as in concurrent_copying.cc",
+      "range": {
+        "startLine": 4082,
+        "startChar": 11,
+        "endLine": 4082,
+        "endChar": 33
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "543c677b_52bc6b04",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 4082,
+                "startChar": 0,
+                "endLine": 4085,
+                "endChar": 0
+              },
+              "replacement": "  GetCurrentIteration()-\u003eSetAppSlowPathDurationMs(\n      MilliTime() - app_slow_path_start_time_);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "32beed972f89594900b8ee551faf20e03255e2b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf688094_d8cda725",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T17:54:04Z",
+      "side": 1,
+      "message": "Can you mention briefly why a lot is required. Just mention that it is to ensure that GC time is long enough for timing metrics are non-zero.",
+      "range": {
+        "startLine": 112,
+        "startChar": 16,
+        "endLine": 112,
+        "endChar": 19
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "938ea777_afd7b990",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 112,
+                "startChar": 0,
+                "endLine": 114,
+                "endChar": 0
+              },
+              "replacement": "  // Allocate a lot of string objects (to be collected) to ensure that GC time\n  // is long enough for timing metrics to be non-zero, then trigger garbage\n  // collection, and check that GC metrics are updated (where applicable). See\n  // b/271990567.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "32beed972f89594900b8ee551faf20e03255e2b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee416e21_9530af5f",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T17:54:04Z",
+      "side": 1,
+      "message": "This can be uncommented now since you have increased the allocations above.",
+      "range": {
+        "startLine": 203,
+        "startChar": 4,
+        "endLine": 204,
+        "endChar": 100
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "04f80399_6347f47f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 193,
+                "startChar": 0,
+                "endLine": 193,
+                "endChar": 0
+              },
+              "replacement": "      EXPECT_PRED2(AnyIsFalse, full_gc_duration-\u003eIsNull(), young_gc_duration-\u003eIsNull());\n      EXPECT_PRED2(AnyIsFalse, full_gc_duration_delta-\u003eIsNull(), young_gc_duration_delta-\u003eIsNull());\n"
+            },
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 196,
+                "startChar": 0,
+                "endLine": 206,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 219,
+                "startChar": 0,
+                "endLine": 226,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 228,
+                "startChar": 0,
+                "endLine": 229,
+                "endChar": 0
+              },
+              "replacement": "      EXPECT_FALSE(full_gc_app_slow_path_duration_delta-\u003eIsNull());\n"
+            }
+          ]
+        }
+      ],
+      "revId": "32beed972f89594900b8ee551faf20e03255e2b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c23daf10_63b9a937",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-02-20T17:54:04Z",
+      "side": 1,
+      "message": "Ditto. Please uncomment this. And remove the comment above.",
+      "range": {
+        "startLine": 226,
+        "startChar": 5,
+        "endLine": 227,
+        "endChar": 53
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0e76748f_a57df835",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 193,
+                "startChar": 0,
+                "endLine": 193,
+                "endChar": 0
+              },
+              "replacement": "      EXPECT_PRED2(AnyIsFalse, full_gc_duration-\u003eIsNull(), young_gc_duration-\u003eIsNull());\n      EXPECT_PRED2(AnyIsFalse, full_gc_duration_delta-\u003eIsNull(), young_gc_duration_delta-\u003eIsNull());\n"
+            },
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 196,
+                "startChar": 0,
+                "endLine": 206,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 220,
+                "startChar": 0,
+                "endLine": 226,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 228,
+                "startChar": 0,
+                "endLine": 229,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "32beed972f89594900b8ee551faf20e03255e2b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
