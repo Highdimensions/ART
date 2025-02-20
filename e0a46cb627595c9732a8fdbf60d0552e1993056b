@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "10470cb8_faf6a422",
+        "filename": "libartbase/base/bit_vector.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-20T08:05:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c30ac83d_34294423",
+      "range": {
+        "startLine": 32,
+        "startChar": 21,
+        "endLine": 32,
+        "endChar": 34
+      },
+      "revId": "e0a46cb627595c9732a8fdbf60d0552e1993056b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7d796cba_542d3a9b",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-02-19T20:17:08Z",
       "side": 1,
       "message": "`index % BitSizeOf\u003cStorageType\u003e()` might be a bit easier to understand.",
+      "range": {
+        "startLine": 35,
+        "startChar": 19,
+        "endLine": 35,
+        "endChar": 58
+      },
+      "revId": "e0a46cb627595c9732a8fdbf60d0552e1993056b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62145f6a_338f12f0",
+        "filename": "libartbase/base/bit_vector_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-20T08:05:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d796cba_542d3a9b",
       "range": {
         "startLine": 35,
         "startChar": 19,
