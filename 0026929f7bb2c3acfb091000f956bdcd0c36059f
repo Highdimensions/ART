@@ -348,6 +348,30 @@
       },
       "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9967475_282f39c1",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-20T18:42:52Z",
+      "side": 1,
+      "message": "I think it\u0027s the notions of \"oat\" and \"odex\" confusing, and I\u0027ve been trying to mitigate this by adding the debug string.",
+      "parentUuid": "896dc34a_caf29215",
+      "range": {
+        "startLine": 549,
+        "startChar": 13,
+        "endLine": 549,
+        "endChar": 26
+      },
+      "revId": "0026929f7bb2c3acfb091000f956bdcd0c36059f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

@@ -22,6 +22,30 @@
       },
       "revId": "c010f07dec16cccb807d60ad7e71b181e2ab60cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cce7b4b_921113f3",
+        "filename": "runtime/oat/oat_file_assistant.cc",
+        "patchSetId": 18
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-20T18:42:52Z",
+      "side": 0,
+      "message": "Discussed offline. The refactoring doesn\u0027t change the order of precedence. The notions of \"oat\" and \"odex\" are confusing.\n\nBTW, I have a comment in the .h file that the candidates are ordered by precedence. I hope that makes people understand that the order matters.",
+      "parentUuid": "43b93baa_2146a049",
+      "range": {
+        "startLine": 810,
+        "startChar": 1,
+        "endLine": 812,
+        "endChar": 78
+      },
+      "revId": "c010f07dec16cccb807d60ad7e71b181e2ab60cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
