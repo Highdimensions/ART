@@ -1983,7 +1983,7 @@ class BCEVisitor final : public HGraphVisitor {
             }
             user->RemoveAsUserOfInput(index);
             user->SetRawEnvAt(index, phi);
-            phi->AddEnvUseAt(GetGraph()->GetAllocator(), user, index);
+            phi->AddEnvUseAt(user, index);
           }
         }
       }
