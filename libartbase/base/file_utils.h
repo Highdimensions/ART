@@ -241,6 +241,14 @@ bool EnableFsVerity(int fd, std::string* error_msg);
 std::string GetFsVerityDigest(int fd,
                               /*out*/ std::string* error_msg);
 
+// Returns whether a file is in incremental-fs, or std::nullopt if an error occurred.
+std::optional<bool> IsInIncFs(int fd,
+                              /*out*/ std::string* error_msg);
+
+// Returns the incremental-fs signature for the file, which contains a digest.
+std::string GetIncFsSignature(int fd,
+                              /*out*/ std::string* error_msg);
+
 }  // namespace art
 
 #endif  // ART_LIBARTBASE_BASE_FILE_UTILS_H_

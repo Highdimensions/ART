@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <inttypes.h>
 #include <sys/stat.h>
+#include <sys/statfs.h>
 #include <sys/types.h>
 
 #ifndef _WIN32
@@ -41,6 +42,7 @@
 #endif
 
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <vector>
 
@@ -71,6 +73,7 @@
 
 #if defined(__BIONIC__)
 #include <linux/fsverity.h>
+#include <linux/incrementalfs.h>
 #endif
 
 #ifdef ART_TARGET_ANDROID
@@ -975,6 +978,45 @@ std::string GetFsVerityDigest(int fd,
 #else
   (void)fd;
   *error_msg = "fs-verify not supported";
+  return "";
+#endif
+}
+
+std::optional<bool> IsInIncFs(int fd,
+                              /*out*/ std::string* error_msg) {
+#if defined(__BIONIC__)
+  struct statfs st;
+  if (fstatfs(fd, &st) != 0) {
+    *error_msg = ART_FORMAT("Failed to fstatfs: {}", strerror(errno));
+    return std::nullopt;
+  }
+  return st.f_type == INCFS_MAGIC_NUMBER;
+#else
+  (void)fd;
+  (void)error_msg;
+  return false;
+#endif
+}
+
+std::string GetIncFsSignature(int fd,
+                              /*out*/ std::string* error_msg) {
+#if defined(__BIONIC__)
+  std::vector<uint8_t> signature(INCFS_MAX_SIGNATURE_SIZE);
+
+  incfs_get_file_sig_args args = {
+      .file_signature = reinterpret_cast<uint64_t>(signature.data()),
+      .file_signature_buf_size = INCFS_MAX_SIGNATURE_SIZE,
+  };
+
+  if (ioctl(fd, INCFS_IOC_READ_FILE_SIGNATURE, &args) != 0) {
+    *error_msg = ART_FORMAT("Failed to INCFS_IOC_READ_FILE_SIGNATURE: {}", strerror(errno));
+    return "";
+  }
+
+  return HexString(signature.data(), args.file_signature_len_out);
+#else
+  (void)fd;
+  *error_msg = "incremental-fs not supported";
   return "";
 #endif
 }
