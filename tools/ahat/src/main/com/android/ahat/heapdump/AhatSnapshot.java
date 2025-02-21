@@ -50,7 +50,7 @@ public class AhatSnapshot implements Diffable<AhatSnapshot> {
     mHeaps = heaps;
     mRootSite = rootSite;
 
-    AhatInstance.computeReachability(mSuperRoot, progress, mInstances.size());
+    AhatInstance.computeReachability(mSuperRoot, mInstances, progress, mInstances.size());
 
     mBitmapDumpData = AhatBitmapInstance.findBitmapDumpData(mSuperRoot, mInstances);
 

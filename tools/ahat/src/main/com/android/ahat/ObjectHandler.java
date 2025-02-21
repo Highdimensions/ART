@@ -67,9 +67,7 @@ class ObjectHandler implements AhatHandler {
 
     printAllocationSite(doc, query, inst);
 
-    if (!inst.isUnreachable()) {
-      printGcRootPath(doc, query, inst);
-    }
+    printGcRootPath(doc, query, inst);
 
     doc.section("Object Info");
     AhatClassObj cls = inst.getClassObj();
