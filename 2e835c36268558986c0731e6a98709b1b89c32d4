@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7dfcb1cc_d3270f6c",
+        "filename": "libartbase/base/bit_vector.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-02-21T19:23:47Z",
+      "side": 1,
+      "message": "Should there be just two spaces before the comment?",
+      "range": {
+        "startLine": 189,
+        "startChar": 20,
+        "endLine": 189,
+        "endChar": 63
+      },
+      "revId": "2e835c36268558986c0731e6a98709b1b89c32d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
