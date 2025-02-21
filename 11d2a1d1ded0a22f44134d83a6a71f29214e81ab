@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6b6a60a_18d119ed",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-21T14:59:43Z",
+      "side": 1,
+      "message": "approppriately",
+      "range": {
+        "startLine": 603,
+        "startChar": 17,
+        "endLine": 603,
+        "endChar": 30
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6832d62a_147ae29d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 603,
+                "startChar": 0,
+                "endLine": 604,
+                "endChar": 0
+              },
+              "replacement": "    // kernel is appropriately changed, disable mTHP.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "11d2a1d1ded0a22f44134d83a6a71f29214e81ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cc259e0_9a581665",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-21T14:59:43Z",
+      "side": 1,
+      "message": "Can you add a comment what is happening here? man page of ioctl says generally the success return value is 0.",
+      "range": {
+        "startLine": 1334,
+        "startChar": 0,
+        "endLine": 1334,
+        "endChar": 68
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "52987e72_4359e251",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 362,
+                "startChar": 0,
+                "endLine": 365,
+                "endChar": 0
+              },
+              "replacement": "static const bool gUseMoveIoctl \u003d com::android::art::flags::use_uffd_move_ioctl();\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1316,
+                "startChar": 0,
+                "endLine": 1345,
+                "endChar": 0
+              },
+              "replacement": "    use_move_ioctl_ \u003d (gUffdFeatures \u0026 UFFD_FEATURE_MOVE) !\u003d 0 \u0026\u0026 gUseMoveIoctl;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "11d2a1d1ded0a22f44134d83a6a71f29214e81ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
