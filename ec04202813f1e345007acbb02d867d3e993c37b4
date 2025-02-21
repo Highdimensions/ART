@@ -252,6 +252,30 @@
       },
       "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98d1eb19_befa3293",
+        "filename": "runtime/gc/collector/iteration.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-02-21T10:16:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc5f0be8_bd2e37d8",
+      "range": {
+        "startLine": 98,
+        "startChar": 2,
+        "endLine": 99,
+        "endChar": 38
+      },
+      "revId": "ec04202813f1e345007acbb02d867d3e993c37b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
