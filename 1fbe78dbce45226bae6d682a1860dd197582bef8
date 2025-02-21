@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ac9dd6f_b52fb278",
+        "filename": "runtime/mirror/dex_cache-inl.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-21T16:05:55Z",
+      "side": 1,
+      "message": "Rephrase to something like TODO(...): remove the AOT and boot classpath checks?",
+      "range": {
+        "startLine": 354,
+        "startChar": 0,
+        "endLine": 355,
+        "endChar": 60
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b178ef81_2443c5a5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/mirror/dex_cache-inl.h",
+              "range": {
+                "startLine": 354,
+                "startChar": 0,
+                "endLine": 356,
+                "endChar": 0
+              },
+              "replacement": "  // TODO(jiakaiz): Remove the AOT and boot classpath checks?\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1fbe78dbce45226bae6d682a1860dd197582bef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
