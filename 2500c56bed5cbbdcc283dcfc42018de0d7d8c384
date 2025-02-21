@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdb7bae3_73d9c607",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-21T20:37:09Z",
+      "side": 1,
+      "message": "These are actually very common, but only a handful of them cause issues at runtime, e.g. `sun.misc.Unsafe.compareAndSwapLong`, `libcore.io.Memory.peekLong`, and a few other similar methods.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 41
+      },
+      "revId": "2500c56bed5cbbdcc283dcfc42018de0d7d8c384",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c04d397_389d1e5d",
+        "filename": "runtime/hidden_api.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 853,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-21T20:37:09Z",
+      "side": 1,
+      "message": "Another approach here is to ensure @UnsupportedAppUsage in core platform jars implies core-platform-api in the hiddenapi csv\u0027s, but that\u0027s a bit complicated and may require plumbing in various parts of the build system. This achieves the same effect, and we can replace it with the other approach later without changing runtime behaviour.",
+      "revId": "2500c56bed5cbbdcc283dcfc42018de0d7d8c384",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
