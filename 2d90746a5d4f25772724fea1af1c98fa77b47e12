@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08da9c60_cddc443b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1057373
+      },
+      "writtenOn": "2025-02-21T23:48:24Z",
+      "side": 1,
+      "message": "Friendly ping. Any thoughts on the approach in PS5?",
+      "revId": "2d90746a5d4f25772724fea1af1c98fa77b47e12",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
