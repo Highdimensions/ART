@@ -2198,17 +2198,11 @@ class Dex2Oat final {
         }
 
         elf_writer->WriteDynamicSection();
-        {
-          TimingLogger::ScopedTiming t_wdi("Write DebugInfo", timings_);
-          elf_writer->WriteDebugInfo(oat_writer->GetDebugInfo());
-        }
+        elf_writer->WriteDebugInfo(oat_writer->GetDebugInfo());
 
-        {
-          TimingLogger::ScopedTiming t_end("Write ELF End", timings_);
-          if (!elf_writer->End()) {
-            LOG(ERROR) << "Failed to write ELF file " << oat_file->GetPath();
-            return false;
-          }
+        if (!elf_writer->End()) {
+          LOG(ERROR) << "Failed to write ELF file " << oat_file->GetPath();
+          return false;
         }
 
         if (!FlushOutputFile(&vdex_files_[i]) || !FlushOutputFile(&oat_files_[i])) {
@@ -2217,10 +2211,7 @@ class Dex2Oat final {
 
         VLOG(compiler) << "Oat file written successfully: " << oat_filenames_[i];
 
-        {
-          TimingLogger::ScopedTiming t_dow("Destroy OatWriter", timings_);
-          oat_writer.reset();
-        }
+        oat_writer.reset();
         // We may still need the ELF writer later for stripping.
       }
     }
