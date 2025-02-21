@@ -16,8 +16,6 @@
 
 #include "odr_common.h"
 
-#include <sys/system_properties.h>
-
 #include <functional>
 #include <initializer_list>
 #include <regex>
@@ -28,7 +26,12 @@
 #include "android-base/logging.h"
 #include "android-base/parseint.h"
 #include "android-base/result.h"
+#include "base/globals.h"
 #include "base/macros.h"
+
+#ifdef ART_TARGET_ANDROID
+#include <sys/system_properties.h>
+#endif
 
 namespace art {
 namespace odrefresh {
@@ -73,6 +76,10 @@ bool ShouldDisableRefresh(const std::string& sdk_version_str) {
 }
 
 void SystemPropertyForeach(std::function<void(const char* name, const char* value)> action) {
+#ifndef ART_TARGET_ANDROID
+  (void)action;
+  LOG(FATAL) << "Unsupported";
+#else
   __system_property_foreach(
       [](const prop_info* pi, void* cookie) {
         __system_property_read_callback(
@@ -86,6 +93,7 @@ void SystemPropertyForeach(std::function<void(const char* name, const char* valu
             cookie);
       },
       &action);
+#endif
 }
 
 bool CheckBuildUserfaultFdGc(bool build_enable_uffd_gc,

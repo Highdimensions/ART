@@ -16,6 +16,8 @@
 
 #include "odr_metrics_record.h"
 
+#include <signal.h>
+
 #include <iosfwd>
 #include <string>
 

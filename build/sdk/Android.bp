@@ -131,6 +131,7 @@ module_exports {
                 "dexdump",
                 "hiddenapi",
                 "oatdump",
+                "odrefresh",
                 "profman",
                 "veridex",
             ],

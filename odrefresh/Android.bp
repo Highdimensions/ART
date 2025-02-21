@@ -38,12 +38,6 @@ cc_defaults {
     generated_sources: [
         "art-odrefresh-operator-srcs",
     ],
-    shared_libs: [
-        "liblog",
-    ],
-    static_libs: [
-        "libmodules-utils-build",
-    ],
     tidy: true,
     tidy_flags: [
         "-format-style=file",
@@ -52,6 +46,17 @@ cc_defaults {
     target: {
         android: {
             compile_multilib: "first",
+            shared_libs: [
+                "liblog",
+            ],
+            static_libs: [
+                "libmodules-utils-build",
+            ],
+        },
+        host: {
+            static_libs: [
+                "liblog",
+            ],
         },
     },
 }
@@ -71,12 +76,23 @@ cc_defaults {
         "art-apex-cache-info",
     ],
     tidy_disabled_srcs: [":art-apex-cache-info"],
-    shared_libs: [
-        "libarttools",
-        "libbase",
-        "libdexfile#impl",
-        "libselinux",
-    ],
+    target: {
+        android: {
+            shared_libs: [
+                "libarttools",
+                "libbase",
+                "libdexfile#impl",
+                "libselinux",
+            ],
+        },
+        host: {
+            static_libs: [
+                "libarttools",
+                "libbase",
+                "libdexfile",
+            ],
+        },
+    },
 }
 
 cc_defaults {
@@ -126,14 +142,25 @@ gensrcs {
 art_cc_binary {
     name: "odrefresh",
     defaults: ["odrefresh_binary_defaults"],
+    host_supported: true,
     required: [
         "dexoptanalyzer",
         "dex2oat",
     ],
-    shared_libs: [
-        "libart",
-        "libartbase",
-    ],
+    target: {
+        android: {
+            shared_libs: [
+                "libart",
+                "libartbase",
+            ],
+        },
+        host: {
+            static_libs: [
+                "libdex2oat_static",
+            ],
+            stl: "c++_static",
+        },
+    },
     apex_available: [
         "com.android.art",
         "com.android.art.debug",

@@ -66,9 +66,9 @@
 #include "android-base/scopeguard.h"
 #include "android-base/stringprintf.h"
 #include "android-base/strings.h"
-#include "android-modules-utils/sdk_level.h"
 #include "arch/instruction_set.h"
 #include "base/file_utils.h"
+#include "base/globals.h"
 #include "base/logging.h"
 #include "base/macros.h"
 #include "base/os.h"
@@ -86,6 +86,10 @@
 #include "odr_metrics.h"
 #include "odrefresh/odrefresh.h"
 #include "tools/cmdline_builder.h"
+
+#ifdef ART_TARGET_ANDROID
+#include "android-modules-utils/sdk_level.h"
+#endif
 
 namespace art {
 namespace odrefresh {
@@ -105,9 +109,21 @@ using ::android::base::SetProperty;
 using ::android::base::Split;
 using ::android::base::StringPrintf;
 using ::android::base::Timer;
+using ::art::tools::CmdlineBuilder;
+
+#ifdef ART_TARGET_ANDROID
 using ::android::modules::sdklevel::IsAtLeastU;
 using ::android::modules::sdklevel::IsAtLeastV;
-using ::art::tools::CmdlineBuilder;
+#else
+inline bool IsAtLeastU() {
+  LOG(FATAL) << "Unsupported";
+  UNREACHABLE();
+}
+inline bool IsAtLeastV() {
+  LOG(FATAL) << "Unsupported";
+  UNREACHABLE();
+}
+#endif
 
 // Name of cache info file in the ART Apex artifact cache.
 constexpr const char* kCacheInfoFile = "cache-info.xml";
@@ -635,7 +651,7 @@ WARN_UNUSED bool CheckCompilationSpace() {
 bool HasVettedDeviceSystemServerProfiles() {
   // While system_server profiles were bundled on the device prior to U+, they were not used by
   // default or rigorously tested, so we cannot vouch for their efficacy.
-  static const bool kDeviceIsAtLeastU = IsAtLeastU();
+  static const bool kDeviceIsAtLeastU = !kIsTargetAndroid || IsAtLeastU();
   return kDeviceIsAtLeastU;
 }
 

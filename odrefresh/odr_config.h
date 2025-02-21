@@ -30,6 +30,7 @@
 #include "arch/instruction_set.h"
 #include "base/file_utils.h"
 #include "base/globals.h"
+#include "base/macros.h"
 #include "log/log.h"
 #include "odr_common.h"
 #include "odrefresh/odrefresh.h"
@@ -84,14 +85,15 @@ const android::base::NoDestructor<std::vector<SystemPropertyConfig>> kSystemProp
 
 // An enumeration of the possible zygote configurations on Android.
 enum class ZygoteKind : uint8_t {
+  kNone = 0,
   // 32-bit primary zygote, no secondary zygote.
-  kZygote32 = 0,
+  kZygote32 = 1,
   // 32-bit primary zygote, 64-bit secondary zygote.
-  kZygote32_64 = 1,
+  kZygote32_64 = 2,
   // 64-bit primary zygote, 32-bit secondary zygote.
-  kZygote64_32 = 2,
+  kZygote64_32 = 3,
   // 64-bit primary zygote, no secondary zygote.
-  kZygote64 = 3
+  kZygote64 = 4,
 };
 
 class OdrSystemProperties : public tools::SystemProperties {
@@ -131,12 +133,12 @@ class OdrConfig final {
   bool dry_run_;
   std::optional<bool> refresh_;
   std::optional<bool> partial_compilation_;
-  InstructionSet isa_;
+  InstructionSet isa_ = InstructionSet::kNone;
   std::string program_name_;
   std::string system_server_classpath_;
   std::string boot_image_compiler_filter_;
   std::string system_server_compiler_filter_;
-  ZygoteKind zygote_kind_;
+  ZygoteKind zygote_kind_ = ZygoteKind::kNone;
   std::string boot_classpath_;
   std::string artifact_dir_;
   std::string standalone_system_server_jars_;
@@ -158,6 +160,7 @@ class OdrConfig final {
         artifact_dir_(GetApexDataDalvikCacheDirectory(InstructionSet::kNone)),
         odr_system_properties_(&system_properties_) {}
 
+  const std::string& GetArtBinDir() const { return art_bin_dir_; }
   const std::string& GetApexInfoListFile() const { return apex_info_list_file_; }
 
   std::vector<InstructionSet> GetBootClasspathIsas() const {
@@ -177,6 +180,9 @@ class OdrConfig final {
       case ZygoteKind::kZygote64:
         CHECK_NE(isa64, art::InstructionSet::kNone);
         return {isa64};
+      case ZygoteKind::kNone:
+        LOG(FATAL) << "Unexpected";
+        UNREACHABLE();
     }
   }
 
@@ -191,6 +197,9 @@ class OdrConfig final {
       case ZygoteKind::kZygote64:
         CHECK_NE(isa64, art::InstructionSet::kNone);
         return isa64;
+      case ZygoteKind::kNone:
+        LOG(FATAL) << "Unexpected";
+        UNREACHABLE();
     }
   }
 
@@ -211,6 +220,9 @@ class OdrConfig final {
         case ZygoteKind::kZygote64:
           suffix = "64";
           break;
+        case ZygoteKind::kNone:
+          LOG(FATAL) << "Unexpected";
+          UNREACHABLE();
       }
     }
     return art_bin_dir_ + '/' + prefix + suffix;
@@ -226,6 +238,7 @@ class OdrConfig final {
   bool GetRefresh() const {
     return refresh_.value_or(true);
   }
+  InstructionSet GetIsa() const { return isa_; }
   const std::string& GetSystemServerClasspath() const {
     return system_server_classpath_;
   }
@@ -235,6 +248,7 @@ class OdrConfig final {
   const std::string& GetSystemServerCompilerFilter() const {
     return system_server_compiler_filter_;
   }
+  ZygoteKind GetZygoteKind() const { return zygote_kind_; }
   bool GetCompilationOsMode() const { return compilation_os_mode_; }
   bool GetMinimal() const { return minimal_; }
   bool GetOnlyBootImages() const { return only_boot_images_; }

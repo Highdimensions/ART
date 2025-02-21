@@ -35,12 +35,23 @@
 #include "odr_metrics.h"
 #include "odrefresh.h"
 #include "odrefresh/odrefresh.h"
+
+#ifdef ART_TARGET_ANDROID
 #include "selinux/android.h"
 #include "selinux/selinux.h"
+#else
+int setfilecon(const char*, const char*) {
+  LOG(FATAL) << "Unsupported";
+  UNREACHABLE();
+}
+int selinux_android_restorecon(const char*, unsigned int) {
+  LOG(FATAL) << "Unsupported";
+  UNREACHABLE();
+}
+#endif
 
 namespace {
 
-using ::android::base::GetProperty;
 using ::android::base::ParseBool;
 using ::android::base::ParseBoolResult;
 using ::art::odrefresh::CompilationOptions;
@@ -58,6 +69,15 @@ using ::art::odrefresh::ShouldDisableRefresh;
 using ::art::odrefresh::SystemPropertyConfig;
 using ::art::odrefresh::SystemPropertyForeach;
 using ::art::odrefresh::ZygoteKind;
+
+#ifdef ART_TARGET_ANDROID
+using ::android::base::GetProperty;
+#else
+std::string GetProperty(const std::string&, const std::string&) {
+  LOG(FATAL) << "Unsupported";
+  UNREACHABLE();
+}
+#endif
 
 void UsageMsgV(const char* fmt, va_list ap) {
   std::string error;
@@ -130,16 +150,12 @@ bool ArgumentEquals(std::string_view argument, std::string_view expected) {
 }
 
 int InitializeConfig(int argc, char** argv, OdrConfig* config) {
-  config->SetApexInfoListFile("/apex/apex-info-list.xml");
-  config->SetArtBinDir(art::GetArtBinDir());
   config->SetBootClasspath(GetEnvironmentVariableOrDie("BOOTCLASSPATH"));
   config->SetDex2oatBootclasspath(GetEnvironmentVariableOrDie("DEX2OATBOOTCLASSPATH"));
   config->SetSystemServerClasspath(GetEnvironmentVariableOrDie("SYSTEMSERVERCLASSPATH"));
   config->SetStandaloneSystemServerJars(
       GetEnvironmentVariableOrDefault("STANDALONE_SYSTEMSERVER_JARS", /*default_value=*/""));
-  config->SetIsa(art::kRuntimeISA);
 
-  std::string zygote;
   int n = 1;
   for (; n < argc - 1; ++n) {
     const char* arg = argv[n];
@@ -150,7 +166,17 @@ int InitializeConfig(int argc, char** argv, OdrConfig* config) {
       art::OverrideDalvikCacheSubDirectory(value);
       config->SetArtifactDirectory(GetApexDataDalvikCacheDirectory(art::InstructionSet::kNone));
     } else if (ArgumentMatches(arg, "--zygote-arch=", &value)) {
-      zygote = value;
+      ZygoteKind zygote_kind;
+      if (!ParseZygoteKind(value.c_str(), &zygote_kind)) {
+        ArgumentError("Invalid --zygote-arch: '%s'", value.c_str());
+      }
+      config->SetZygoteKind(zygote_kind);
+    } else if (ArgumentMatches(arg, "--instruction-set=", &value)) {
+      art::InstructionSet isa = art::GetInstructionSetFromString(value.c_str());
+      if (isa == art::InstructionSet::kNone) {
+        ArgumentError("Invalid --instruction-set: '%s'", value.c_str());
+      }
+      config->SetIsa(isa);
     } else if (ArgumentMatches(arg, "--boot-image-compiler-filter=", &value)) {
       config->SetBootImageCompilerFilter(value);
     } else if (ArgumentMatches(arg, "--system-server-compiler-filter=", &value)) {
@@ -168,34 +194,63 @@ int InitializeConfig(int argc, char** argv, OdrConfig* config) {
       config->SetMinimal(true);
     } else if (ArgumentEquals(arg, "--only-boot-images")) {
       config->SetOnlyBootImages(true);
+    } else if (ArgumentMatches(arg, "--art-bin-dir=", &value)) {
+      config->SetArtBinDir(value);
     } else {
       ArgumentError("Unrecognized argument: '%s'", arg);
     }
   }
 
-  if (zygote.empty()) {
-    // Use ro.zygote by default, if not overridden by --zygote-arch flag.
-    zygote = GetProperty("ro.zygote", {});
-  }
-  ZygoteKind zygote_kind;
-  if (!ParseZygoteKind(zygote.c_str(), &zygote_kind)) {
-    LOG(FATAL) << "Unknown zygote: " << QuotePath(zygote);
-  }
-  config->SetZygoteKind(zygote_kind);
+  if (art::kIsTargetAndroid) {
+    config->SetApexInfoListFile("/apex/apex-info-list.xml");
 
-  if (config->GetSystemServerCompilerFilter().empty()) {
-    std::string filter = GetProperty("dalvik.vm.systemservercompilerfilter", "");
-    filter = GetProperty(kSystemPropertySystemServerCompilerFilterOverride, filter);
-    config->SetSystemServerCompilerFilter(filter);
-  }
+    if (config->GetArtBinDir().empty()) {
+      config->SetArtBinDir(art::GetArtBinDir());
+    }
 
-  if (!config->HasPartialCompilation() &&
-      ShouldDisablePartialCompilation(
-          GetProperty("ro.build.version.security_patch", /*default_value=*/""))) {
+    if (config->GetZygoteKind() == ZygoteKind::kNone) {
+      // Use ro.zygote by default, if not overridden by --zygote-arch flag.
+      std::string zygote = GetProperty("ro.zygote", {});
+      ZygoteKind zygote_kind;
+      if (!ParseZygoteKind(zygote.c_str(), &zygote_kind)) {
+        LOG(FATAL) << "Unknown zygote: " << QuotePath(zygote);
+      }
+      config->SetZygoteKind(zygote_kind);
+    }
+
+    if (config->GetIsa() == art::InstructionSet::kNone) {
+      config->SetIsa(art::kRuntimeISA);
+    }
+
+    if (config->GetSystemServerCompilerFilter().empty()) {
+      std::string filter = GetProperty("dalvik.vm.systemservercompilerfilter", "");
+      filter = GetProperty(kSystemPropertySystemServerCompilerFilterOverride, filter);
+      config->SetSystemServerCompilerFilter(filter);
+    }
+
+    if (!config->HasPartialCompilation() &&
+        ShouldDisablePartialCompilation(
+            GetProperty("ro.build.version.security_patch", /*default_value=*/""))) {
+      config->SetPartialCompilation(false);
+    }
+
+    if (ShouldDisableRefresh(GetProperty("ro.build.version.sdk", /*default_value=*/""))) {
+      config->SetRefresh(false);
+    }
+  } else {
+    if (config->GetArtBinDir().empty()) {
+      ArgumentError("--art-bin-dir must be specified on host");
+    }
+
+    if (config->GetZygoteKind() == ZygoteKind::kNone) {
+      ArgumentError("--zygote-arch must be specified on host");
+    }
+
+    if (config->GetIsa() == art::InstructionSet::kNone) {
+      ArgumentError("--instruction-set must be specified on host");
+    }
+
     config->SetPartialCompilation(false);
-  }
-
-  if (ShouldDisableRefresh(GetProperty("ro.build.version.sdk", /*default_value=*/""))) {
     config->SetRefresh(false);
   }
 
@@ -277,7 +332,9 @@ int main(int argc, char** argv) {
     ArgumentError("Expected 1 argument, but have %d.", argc);
   }
 
-  GetSystemProperties(config.MutableSystemProperties());
+  if (art::kIsTargetAndroid) {
+    GetSystemProperties(config.MutableSystemProperties());
+  }
 
   OdrMetrics metrics(config.GetArtifactDirectory());
   OnDeviceRefresh odr(config, setfilecon, selinux_android_restorecon);
@@ -285,6 +342,9 @@ int main(int argc, char** argv) {
   std::string_view action(argv[0]);
   CompilationOptions compilation_options;
   if (action == "--check") {
+    if (!art::kIsTargetAndroid) {
+      ArgumentError("--check not supported on host");
+    }
     // Fast determination of whether artifacts are up to date.
     ExitCode exit_code = odr.CheckArtifactsAreUpToDate(metrics, &compilation_options);
     // Normally, `--check` should not write metrics. If compilation is not required, there's no need
@@ -293,6 +353,9 @@ int main(int argc, char** argv) {
     metrics.SetEnabled(exit_code != ExitCode::kOkay && exit_code != ExitCode::kCompilationRequired);
     return exit_code;
   } else if (action == "--compile") {
+    if (!art::kIsTargetAndroid) {
+      ArgumentError("--compile not supported on host");
+    }
     ExitCode exit_code = odr.CheckArtifactsAreUpToDate(metrics, &compilation_options);
     if (exit_code != ExitCode::kCompilationRequired) {
       // No compilation required, so only write metrics when things went wrong.
