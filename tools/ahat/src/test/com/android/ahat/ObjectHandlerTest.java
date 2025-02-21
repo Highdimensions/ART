@@ -16,12 +16,17 @@
 
 package com.android.ahat;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.android.ahat.heapdump.AhatInstance;
 import com.android.ahat.heapdump.AhatSnapshot;
-import java.io.IOException;
+import com.android.ahat.heapdump.Site;
+
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ObjectHandlerTest {
   @Test
@@ -66,6 +71,26 @@ public class ObjectHandlerTest {
     TestDump dump = TestDump.getTestDump();
 
     AhatInstance object = dump.getDumpedAhatInstance("gcPathArray");
+    assertNotNull(object);
+
+    AhatHandler handler = new ObjectHandler(dump.getAhatSnapshot());
+    TestHandler.testNoCrash(handler, "http://localhost:7100/object?id=" + object.getId());
+  }
+
+  @Test
+  public void noCrashUnreachable() throws IOException {
+    // Regression test for a bug we had where printing the path to gc root for
+    // an unreachable object would get stuck an infinite loop.
+
+    // Find an arbitrary unreachable instance to display.
+    TestDump dump = TestDump.getTestDump();
+    AhatSnapshot snapshot = dump.getAhatSnapshot();
+    Site site = snapshot.getSite(0);
+
+    List<AhatInstance> unreachable = new ArrayList<AhatInstance>();
+    unreachable.add(null);
+    site.getObjects(x -> x.isUnreachable(), x -> unreachable.set(0, x));
+    AhatInstance object = unreachable.get(0);
     assertNotNull(object);
 
     AhatHandler handler = new ObjectHandler(dump.getAhatSnapshot());
