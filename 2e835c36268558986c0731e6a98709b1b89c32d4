@@ -22,6 +22,30 @@
       },
       "revId": "2e835c36268558986c0731e6a98709b1b89c32d4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d86cff9f_9dbac7dc",
+        "filename": "libartbase/base/bit_vector.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-22T07:53:11Z",
+      "side": 1,
+      "message": "Done. (Cut-and-pasted comment, previously aligned with another comment that\u0027s being removed.)",
+      "parentUuid": "7dfcb1cc_d3270f6c",
+      "range": {
+        "startLine": 189,
+        "startChar": 20,
+        "endLine": 189,
+        "endChar": 63
+      },
+      "revId": "2e835c36268558986c0731e6a98709b1b89c32d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
