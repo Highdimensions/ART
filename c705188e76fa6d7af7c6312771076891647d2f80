@@ -64,6 +64,30 @@
       },
       "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb53012b_35e30793",
+        "filename": "runtime/hidden_api.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-24T15:34:54Z",
+      "side": 1,
+      "message": "\u003e  it\u0027s not possible because ART has no concept of @IntraCoreApi, right?\n\nRight, hiddeniapi only has three levels: SDK, core platform, and inaccessible. Also, from an API stability perspective there\u0027s no difference between this API and MODULE_LIBRARIES, so in that sense it\u0027s natural to label it as such.\n\nAnother option could be to let @IntraCoreApi imply being part of the core platform APIs, i.e. add the `core-platform` option to the hiddenapi csv files. We can discuss that, but I\u0027d like to dig into that later since it\u0027d require nontrivial changes in the hiddenapi build pipeline.\n\n\u003e Alternatively, in this CL, ART treats ICU as a \"platform\" component, and ICU can only access the @SystemApi(MODULE_LIBRARIES) only with this one exception here, right?\n\nExactly, that\u0027s the intention with this CL.\n\n\u003e If we don\u0027t change the build-time API surface used by ICU, it will be a bit confusing.\n\nAgreed, and that\u0027s what the TODO below is about. However it means modifying `module-lib-current.txt`, which is hard to do right now. I plan to fix that once the final snap is done.\n\nThanks for mentioning the other APIs, I\u0027ll add those too. I only discovered this one because it\u0027s used at boot. Are you confident it\u0027s only those three, or do we need to investigate the ICU-libcore API dependencies further?\n\n\u003e NativeAllocationRegistry.createMalloced which is also @SystemApi(MODULE_LIBRARIES)\n\nIf it\u0027s MODULE_LIBRARIES then it should already have the core platform hiddenapi bit, but I\u0027ll double-check that.",
+      "parentUuid": "c74af364_90299734",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 2
+      },
+      "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
