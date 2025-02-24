@@ -112,6 +112,30 @@
       },
       "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "706bc05f_93fac946",
+        "filename": "runtime/hidden_api.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-24T19:16:10Z",
+      "side": 1,
+      "message": "\u003e If we decide to hard-code a list of @IntraCoreApi APIs here, I can try to go through the list and find you a more precise list.\n\nThank you, As mentioned I\u0027d like to go with the hardcoded approach as a temporary solution. An alternative to vetting a precise subset is to simply hardcode all of those APIs, possibly even just as class prefixes. WDYT?\n\nNote that currently all these APIs are de-facto accessible, so even if we are somewhat blunt here and err on the side of keeping them accessible, it\u0027s still an improvement on runtime checks.\n\n\u003e Are you going to treat ICU as a platform component on Android S+ ? There are very few changes of @IntraCoreApi usage in ICU since Android S, but I am not sure if there is any usage removed\n\nYes, we need to consider the de-facto APIs we have back to S for ICU. However if anything has been removed, wouldn\u0027t it be listed in [removed.txt](https://cs.android.com/android/platform/superproject/main/+/main:libcore/mmodules/intracoreapi/api/intra/removed.txt)?",
+      "parentUuid": "9b0fb649_133391b9",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 2
+      },
+      "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
