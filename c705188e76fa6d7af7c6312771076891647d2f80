@@ -40,6 +40,30 @@
       ],
       "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c74af364_90299734",
+        "filename": "runtime/hidden_api.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-24T11:37:29Z",
+      "side": 1,
+      "message": "It\u0027s a bit confusing, because ICU uses a couple of other @IntraCoreApi APIs, not in this list:\n\n`VersionCodes.R` which is inlined by javac\nhttps://cs.android.com/android/platform/superproject/main/+/main:external/icu/android_icu4j/libcore_bridge/src/java/com/android/i18n/system/ZygoteHooks.java;l\u003d106?q\u003dVersionCode\u0026ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain:external%2Ficu%2F\n\n`NativeAllocationRegistry.createMalloced` which is also `@SystemApi(MODULE_LIBRARIES)`\nhttps://cs.android.com/android/platform/superproject/main/+/main:external/icu/android_icu4j/libcore_bridge/src/java/com/android/icu/util/regex/PatternNative.java;l\u003d30?q\u003dNativeAllocation\u0026ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain:external%2Ficu%2F",
+      "parentUuid": "0adbd5c7_75c07458",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 2
+      },
+      "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
