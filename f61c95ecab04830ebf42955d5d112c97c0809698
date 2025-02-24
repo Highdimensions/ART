@@ -104,6 +104,30 @@
       ],
       "revId": "f61c95ecab04830ebf42955d5d112c97c0809698",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3267e5fc_4d6bf0fc",
+        "filename": "test/674-hiddenapi/src-ex/ChildClass.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-24T19:26:36Z",
+      "side": 1,
+      "message": "Nice catch, thanks.",
+      "parentUuid": "79c8817b_729b0c6f",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 124,
+        "endChar": 10
+      },
+      "revId": "f61c95ecab04830ebf42955d5d112c97c0809698",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
