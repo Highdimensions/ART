@@ -88,6 +88,30 @@
       },
       "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b0fb649_133391b9",
+        "filename": "runtime/hidden_api.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-24T17:20:12Z",
+      "side": 1,
+      "message": "\u003e Are you confident it\u0027s only those three, or do we need to investigate the ICU-libcore API dependencies further?\n\nNot just these three. It\u0027s basically a subset of the APIs in this list.\n\nhttps://cs.android.com/android/platform/superproject/main/+/main:libcore/mmodules/intracoreapi/api/intra/current.txt;l\u003d1\n\nFor example, I believe that `Compatibility` is also used in ICU. If we decide to hard-code a list of @IntraCoreApi APIs here, I can try to go through the list and find you a more precise list.\n\nAre you going to treat ICU as a platform component on Android S+ ? There are very few changes of @IntraCoreApi usage in ICU since Android S, but I am not sure if there is any usage removed, and we may not see the usage on the `main` branch.",
+      "parentUuid": "cb53012b_35e30793",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 2
+      },
+      "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
