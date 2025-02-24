@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7770fd88_839e5435",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1081,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-24T09:27:30Z",
+      "side": 1,
+      "message": "Slow non-inline code.\n\nPlease inline using the knowledge of the instruction format. Then `DCHECK()` against the `instruction.GetTargetOffset()`.",
+      "range": {
+        "startLine": 1081,
+        "startChar": 26,
+        "endLine": 1081,
+        "endChar": 56
+      },
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3ece3fb_d91d92e6",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-24T09:27:30Z",
+      "side": 1,
+      "message": "// TODO: Support for negative branches requires two passes.",
+      "range": {
+        "startLine": 1083,
+        "startChar": 4,
+        "endLine": 1083,
+        "endChar": 45
+      },
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3b25dfec_275766a5",
         "filename": "compiler/optimizing/fast_compiler_arm64.cc",
         "patchSetId": 2
@@ -14,6 +60,75 @@
       "writtenOn": "2025-02-24T09:01:42Z",
       "side": 1,
       "message": "Shouldn\u0027t we do `  if (location.IsConstant() \u0026\u0026 other_location.IsConstant()) {` before doing `MoveConstantsToRegisters();`? We could move the `MoveConstantsToRegisters` from line 1089 to inside `kCompareWithZero` and then do `MoveConstantsToRegisters();` here only if the constant location if case fails",
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e22edfb_59e26ddb",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1131,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-24T09:27:30Z",
+      "side": 1,
+      "message": "Always false after reloading the locations?\n\nShould we load the `other_location` before `MoveConstantsToRegisters()` and reload only after the constant check to ensure the register+register case otherwise?",
+      "range": {
+        "startLine": 1131,
+        "startChar": 6,
+        "endLine": 1131,
+        "endChar": 58
+      },
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f5b7fa0_df537e0a",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1232,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-24T09:27:30Z",
+      "side": 1,
+      "message": "Unnecessary braces.",
+      "range": {
+        "startLine": 1232,
+        "startChar": 33,
+        "endLine": 1232,
+        "endChar": 34
+      },
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f40a88f2_6db9bb9c",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1261,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-24T09:27:30Z",
+      "side": 1,
+      "message": "I don\u0027t see any `move` here, only register updates.",
+      "range": {
+        "startLine": 1261,
+        "startChar": 38,
+        "endLine": 1261,
+        "endChar": 42
+      },
       "revId": "57343b6554a301a924b742950b872e154ac30658",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
