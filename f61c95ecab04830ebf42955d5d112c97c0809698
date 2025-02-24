@@ -22,6 +22,30 @@
       },
       "revId": "f61c95ecab04830ebf42955d5d112c97c0809698",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea2f456b_6745c0c3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-24T15:07:04Z",
+      "side": 1,
+      "message": "Indeed. See my earlier comment on that.",
+      "parentUuid": "28dee4eb_9d14d603",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 0
+      },
+      "revId": "f61c95ecab04830ebf42955d5d112c97c0809698",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
