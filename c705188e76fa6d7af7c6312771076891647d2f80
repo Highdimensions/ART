@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0adbd5c7_75c07458",
+        "filename": "runtime/hidden_api.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-24T11:34:52Z",
+      "side": 1,
+      "message": "ICU is currently compiled against the @IntraCoreApi surface in the build time, and I hope that hidden API check will check the same @IntraCoreApi surface, but it\u0027s not possible because ART has no concept of @IntraCoreApi, right? Or is it possible?\n\nAlternatively, in this CL, ART treats ICU as a \"platform\" component, and ICU can only access the @SystemApi(MODULE_LIBRARIES) only with this one exception here, right? If we don\u0027t change the build-time API surface used by ICU, it will be a bit confusing.",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 2
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b12971f3_bb25050e",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/hidden_api.cc",
+              "range": {
+                "startLine": 71,
+                "startChar": 0,
+                "endLine": 71,
+                "endChar": 0
+              },
+              "replacement": "// Exemptions for core platform API violations. Following signatures do not produce a violation\n// as app developers should not be alerted on the usage of these unsupported APIs. See b/144502743.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
