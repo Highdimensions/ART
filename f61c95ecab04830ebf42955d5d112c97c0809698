@@ -46,6 +46,64 @@
       },
       "revId": "f61c95ecab04830ebf42955d5d112c97c0809698",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cd41550_3914fb0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-24T17:25:51Z",
+      "side": 1,
+      "message": "I am not against this approach, as upstream is deprecating `Unsafe` and soon removing some `Unsafe` methods.\n\nEncoding `@UnsupportedAppUsage` as `core-platform-api` in the dex file is another approach, but will be a bit confusing. I have no strong opinion either. This CL looks like the best option to me.\n\nCR +1 here, because I don\u0027t fully understand the hidden-api code base.",
+      "revId": "f61c95ecab04830ebf42955d5d112c97c0809698",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79c8817b_729b0c6f",
+        "filename": "test/674-hiddenapi/src-ex/ChildClass.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-24T17:25:51Z",
+      "side": 1,
+      "message": "nit: Is the indentation intended here? it seems to be inconsistent with the rest of the code",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 124,
+        "endChar": 10
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "5c41072f_f0480c41",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/674-hiddenapi/src-ex/ChildClass.java",
+              "range": {
+                "startLine": 124,
+                "startChar": 0,
+                "endLine": 129,
+                "endChar": 0
+              },
+              "replacement": "        expected \u003d (hiddenness \u003d\u003d Hiddenness.Unsupported\n                       || hiddenness \u003d\u003d Hiddenness.BlocklistAndCorePlatformApi)\n                ? Behaviour.Granted\n                : Behaviour.Denied;\n        invokesMemberCallback \u003d false;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f61c95ecab04830ebf42955d5d112c97c0809698",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
