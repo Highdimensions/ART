@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b25dfec_275766a5",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-24T09:01:42Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we do `  if (location.IsConstant() \u0026\u0026 other_location.IsConstant()) {` before doing `MoveConstantsToRegisters();`? We could move the `MoveConstantsToRegisters` from line 1089 to inside `kCompareWithZero` and then do `MoveConstantsToRegisters();` here only if the constant location if case fails",
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
