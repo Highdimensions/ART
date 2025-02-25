@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1112d0eb_3d91fd20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-25T20:25:02Z",
+      "side": 1,
+      "message": "Reported merge conflict has been fixed so presubmit should be ready to be run.",
+      "revId": "223c79874f8d79a61e88133598b1c5528e1473f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
