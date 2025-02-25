@@ -136,6 +136,30 @@
       },
       "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e221721_e5fe73c8",
+        "filename": "runtime/hidden_api.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-02-25T11:43:16Z",
+      "side": 1,
+      "message": "\u003e Yes, we need to consider the de-facto APIs we have back to S for ICU. However if anything has been removed, wouldn\u0027t it be listed in removed.txt?\n\n\u003e simply hardcode all of those APIs, possibly even just as class prefixes. WDYT?\n\nIt\u0027s true. If you can hard-code the entire `libcore/mmodules/intracoreapi/api/intra/current.txt` list here or just classes prefixes, it should be safe. Otherwise, if only a subset is hardcoded as shown in this CL patchset, we should examine it a little bit carefully.",
+      "parentUuid": "706bc05f_93fac946",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 2
+      },
+      "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
