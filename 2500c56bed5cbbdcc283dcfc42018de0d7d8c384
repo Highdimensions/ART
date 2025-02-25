@@ -50,6 +50,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "8ef44a8b_6ce45f20",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-25T16:17:40Z",
+      "side": 1,
+      "message": "I agree that\u0027d be preferable in principle, but I only know the ones I\u0027ve noticed while booting, so I\u0027m not convinced there aren\u0027t more. For now I prefer to do this to play safe, but we can iterate on it and restrict more later.",
+      "parentUuid": "597a800e_4f9ebfda",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 41
+      },
+      "revId": "2500c56bed5cbbdcc283dcfc42018de0d7d8c384",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "1c04d397_389d1e5d",
         "filename": "runtime/hidden_api.cc",
         "patchSetId": 1
