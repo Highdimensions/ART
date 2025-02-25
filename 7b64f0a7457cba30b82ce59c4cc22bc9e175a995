@@ -46,6 +46,30 @@
       },
       "revId": "7b64f0a7457cba30b82ce59c4cc22bc9e175a995",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9acb579e_841f9806",
+        "filename": "compiler/optimizing/locations.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-25T17:13:25Z",
+      "side": 1,
+      "message": "Ack. I\u0027d expect most of our enums to be able to be uint8_t. Not sure if a general pass to update them is warranted in the future",
+      "parentUuid": "6c4f4314_36822cb9",
+      "range": {
+        "startLine": 43,
+        "startChar": 23,
+        "endLine": 43,
+        "endChar": 30
+      },
+      "revId": "7b64f0a7457cba30b82ce59c4cc22bc9e175a995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
