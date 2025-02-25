@@ -160,6 +160,30 @@
       },
       "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bee11ac5_2f8e1652",
+        "filename": "runtime/hidden_api.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-25T16:15:17Z",
+      "side": 1,
+      "message": "SG. I went through that file and added the methods, or in some cases classes, that aren\u0027t also in libcore/api/module-lib-current.txt, since if they are they won\u0027t need explicit exemptions.\n\nI\u0027ve also verified with the sources that the shortened signatures don\u0027t match any other methods or fields.",
+      "parentUuid": "2e221721_e5fe73c8",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 2
+      },
+      "revId": "c705188e76fa6d7af7c6312771076891647d2f80",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
