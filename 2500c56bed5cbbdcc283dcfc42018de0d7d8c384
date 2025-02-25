@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "597a800e_4f9ebfda",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-25T11:43:07Z",
+      "side": 1,
+      "message": "Can we update just the ones that are causing issues?",
+      "parentUuid": "fdb7bae3_73d9c607",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 41
+      },
+      "revId": "2500c56bed5cbbdcc283dcfc42018de0d7d8c384",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "1c04d397_389d1e5d",
