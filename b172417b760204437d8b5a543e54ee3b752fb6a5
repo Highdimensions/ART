@@ -52,6 +52,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7bb0c38_19627164",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T09:24:21Z",
+      "side": 1,
+      "message": "Partial review: disassembler.",
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "760bbbd8_73dd9736",
@@ -571,6 +588,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a4b5e87a_debabbbd",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T09:24:21Z",
+      "side": 1,
+      "message": "`instr[1]`\n\nSame below.",
+      "range": {
+        "startLine": 464,
+        "startChar": 46,
+        "endLine": 464,
+        "endChar": 58
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8175ae24_f9fb8448",
         "filename": "disassembler/disassembler_x86.cc",
         "patchSetId": 7
@@ -582,6 +622,161 @@
       "writtenOn": "2024-12-30T16:56:44Z",
       "side": 1,
       "message": "`has_3_operands \u003d ctxt.hasVex();`\n\n(I\u0027d prefer to correctly disassemble VPHADDW even if the assembler cannot generate such instruction.)",
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9c23390_266ef90e",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T09:24:21Z",
+      "side": 1,
+      "message": "`opcode1 \u003d ((rex \u0026 REX_W) !\u003d 0) ? \"fmadd213sd\" : \"fmadd213ss\";`",
+      "range": {
+        "startLine": 739,
+        "startChar": 14,
+        "endLine": 742,
+        "endChar": 15
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "236d692f_3ada27c8",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 942,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T09:24:21Z",
+      "side": 1,
+      "message": "`opcode1 \u003d ((rex \u0026 REX_W) !\u003d 0) ? \"movq\" : \"movd\";`",
+      "range": {
+        "startLine": 939,
+        "startChar": 8,
+        "endLine": 942,
+        "endChar": 9
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6bcdbd46_1b603f35",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T09:24:21Z",
+      "side": 1,
+      "message": "`opcode1 \u003d ((rex \u0026 REX_W) !\u003d 0) ? \"movq\" : \"movd\";`",
+      "range": {
+        "startLine": 1080,
+        "startChar": 8,
+        "endLine": 1083,
+        "endChar": 9
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48edc377_82d90fea",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1346,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T09:24:21Z",
+      "side": 1,
+      "message": "Remove line breaks. (Keep consistent style with the code around.)",
+      "range": {
+        "startLine": 1344,
+        "startChar": 10,
+        "endLine": 1346,
+        "endChar": 18
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7881d75_aea0573e",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1406,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T09:24:21Z",
+      "side": 1,
+      "message": "Reemove line breaks.",
+      "range": {
+        "startLine": 1404,
+        "startChar": 10,
+        "endLine": 1406,
+        "endChar": 18
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "425aa9f4_ac54657b",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1761,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T09:24:21Z",
+      "side": 1,
+      "message": "Rename to `orig_instr_end`.",
+      "range": {
+        "startLine": 1761,
+        "startChar": 17,
+        "endLine": 1761,
+        "endChar": 30
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e38424c_1b1e759c",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1794,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T09:24:21Z",
+      "side": 1,
+      "message": "Add range check against `instr_end` to make sure we can read `instr[1]` and also `instr[2]` for the three byte prefix.",
       "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
