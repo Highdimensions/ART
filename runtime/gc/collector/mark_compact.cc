@@ -4425,14 +4425,17 @@ void MarkCompact::MarkingPhase() {
 
 class MarkCompact::RefFieldsVisitor {
  public:
-  ALWAYS_INLINE RefFieldsVisitor(MarkCompact* const mark_compact, mirror::Object* obj)
+  ALWAYS_INLINE RefFieldsVisitor(MarkCompact* const mark_compact)
       : mark_compact_(mark_compact),
         young_gen_begin_(mark_compact->mid_gen_end_),
         young_gen_end_(mark_compact->moving_space_end_),
         dirty_card_(false),
-        check_refs_to_young_gen_(mark_compact->use_generational_ &&
-                                 (reinterpret_cast<uint8_t*>(obj) < young_gen_begin_ ||
-                                  reinterpret_cast<uint8_t*>(obj) >= young_gen_end_)) {}
+        // Ideally we should only check for objects outside young-gen. However,
+        // the boundary of young-gen can change later in PrepareForCompaction()
+        // as we need the mid-gen-end to be page-aligned. Since most of the
+        // objects don't have native-roots, it's not too costly to check all
+        // objects being visited during marking.
+        check_native_roots_to_young_gen_(mark_compact->use_generational_) {}
 
   bool ShouldDirtyCard() const { return dirty_card_; }
 
@@ -4469,7 +4472,7 @@ class MarkCompact::RefFieldsVisitor {
     }
     mirror::Object* ref = root->AsMirrorPtr();
     mark_compact_->MarkObject(ref);
-    if (check_refs_to_young_gen_) {
+    if (check_native_roots_to_young_gen_) {
       dirty_card_ |= reinterpret_cast<uint8_t*>(ref) >= young_gen_begin_ &&
                      reinterpret_cast<uint8_t*>(ref) < young_gen_end_;
     }
@@ -4480,7 +4483,7 @@ class MarkCompact::RefFieldsVisitor {
   uint8_t* const young_gen_begin_;
   uint8_t* const young_gen_end_;
   mutable bool dirty_card_;
-  const bool check_refs_to_young_gen_;
+  const bool check_native_roots_to_young_gen_;
 };
 
 template <size_t kAlignment>
@@ -4556,7 +4559,7 @@ void MarkCompact::ScanObject(mirror::Object* obj) {
   size_t obj_size = obj->SizeOf<kDefaultVerifyFlags>();
   bytes_scanned_ += obj_size;
 
-  RefFieldsVisitor visitor(this, obj);
+  RefFieldsVisitor visitor(this);
   DCHECK(IsMarked(obj)) << "Scanning marked object " << obj << "\n" << heap_->DumpSpaces();
   if (kUpdateLiveWords && HasAddress(obj)) {
     UpdateLivenessInfo(obj, obj_size);
@@ -4824,7 +4827,7 @@ void MarkCompact::FinishPhase(bool performed_compaction) {
   compacting_ = false;
   marking_done_ = false;
   uint8_t* mark_bitmap_clear_end = black_dense_end_;
-  LOG(INFO) << " black_dense_end:" << static_cast<void*>(black_dense_end_)
+  LOG(INFO) << "ART-GC black_dense_end:" << static_cast<void*>(black_dense_end_)
             << " mid_gen_end:" << static_cast<void*>(mid_gen_end_)
             << " post_compact_end:" << static_cast<void*>(post_compact_end_)
             << " black_allocations_begin:" << static_cast<void*>(black_allocations_begin_)
@@ -4893,8 +4896,19 @@ void MarkCompact::FinishPhase(bool performed_compaction) {
       for (auto obj : dirty_cards_later_vec_) {
         // Only moving and non-moving spaces are relevant as the remaining
         // spaces are all immune-spaces which anyways use card-table.
-        if (HasAddress(obj) || non_moving_space_->HasAddress(obj)) {
-          card_table->MarkCard(PostCompactAddress(obj, black_dense_end_, moving_space_end_));
+        if (HasAddress(obj)) {
+          // Objects in young-gen that refer to other young-gen objects don't
+          // need to be tracked.
+          // The vector contains pre-compact object references whereas
+          // 'mid_gen_end_' is post-compact boundary. So compare against
+          // pist-compact object reference.
+          mirror::Object* compacted_obj =
+              PostCompactAddress(obj, black_dense_end_, moving_space_end_);
+          if (reinterpret_cast<uint8_t*>(compacted_obj) < mid_gen_end_) {
+            card_table->MarkCard(compacted_obj);
+          }
+        } else if (non_moving_space_->HasAddress(obj)) {
+          card_table->MarkCard(obj);
         }
       }
     }
