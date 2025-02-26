@@ -745,15 +745,9 @@ bool VerifierDeps::VerifyDexFileAndUpdateStatus(
       source.Assign(FindClassAndClearException(
           class_linker, self, source_desc, source_desc_length, class_loader));
 
-      if (destination == nullptr || source == nullptr) {
-        // We currently don't use assignability information for unresolved
-        // types, as the status of the class using unresolved types will be soft
-        // fail in the vdex.
-        continue;
-      }
-
-      DCHECK(destination->IsResolved() && source->IsResolved());
-      if (!destination->IsAssignableFrom(source.Get())) {
+      if (destination == nullptr ||
+          source == nullptr ||
+          !destination->IsAssignableFrom(source.Get())) {
         deps.verified_classes_[class_def_index] = false;
         all_validated = false;
         if (number_of_warnings++ < kMaxWarnings) {
