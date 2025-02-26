@@ -139,7 +139,6 @@ using android::base::StringAppendV;
 using android::base::StringPrintf;
 
 bool Thread::is_started_ = false;
-pthread_key_t Thread::pthread_key_self_;
 ConditionVariable* Thread::resume_cond_ = nullptr;
 const size_t Thread::kStackOverflowImplicitCheckSize =
     GetStackOverflowReservedBytes(kRuntimeQuickCodeISA);
@@ -147,6 +146,7 @@ bool (*Thread::is_sensitive_thread_hook_)() = nullptr;
 Thread* Thread::jit_sensitive_thread_ = nullptr;
 std::atomic<Mutex*> Thread::cp_placeholder_mutex_(nullptr);
 #ifndef __BIONIC__
+pthread_key_t Thread::pthread_key_self_;
 thread_local Thread* Thread::self_tls_ = nullptr;
 #endif
 
@@ -2482,6 +2482,7 @@ void Thread::Startup() {
                                          *Locks::thread_suspend_count_lock_);
   }
 
+#ifndef __BIONIC__
   // Allocate a TLS slot.
   CHECK_PTHREAD_CALL(pthread_key_create, (&Thread::pthread_key_self_, Thread::ThreadExitCallback),
                      "self key");
@@ -2490,7 +2491,6 @@ void Thread::Startup() {
   if (pthread_getspecific(pthread_key_self_) != nullptr) {
     LOG(FATAL) << "Newly-created pthread TLS slot is not nullptr";
   }
-#ifndef __BIONIC__
   CHECK(Thread::self_tls_ == nullptr);
 #endif
 }
@@ -2515,7 +2515,9 @@ void Thread::FinishStartup() {
 void Thread::Shutdown() {
   CHECK(is_started_);
   is_started_ = false;
+#ifndef __BIONIC__
   CHECK_PTHREAD_CALL(pthread_key_delete, (Thread::pthread_key_self_), "self key");
+#endif
   MutexLock mu(Thread::Current(), *Locks::thread_suspend_count_lock_);
   if (resume_cond_ != nullptr) {
     delete resume_cond_;

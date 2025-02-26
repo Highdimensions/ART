@@ -2040,8 +2040,11 @@ class EXPORT Thread {
   // Has Thread::Startup been called?
   static bool is_started_;
 
-  // TLS key used to retrieve the Thread*.
+#ifndef __BIONIC__
+  // TLS key used to retrieve the Thread* on the host.
+  // (bionic has a reserved static TLS slot for ART.)
   static pthread_key_t pthread_key_self_;
+#endif
 
   // Used to notify threads that they should attempt to resume, they will suspend again if
   // their suspend count is > 0.
