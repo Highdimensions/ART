@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86eb252f_1057f702",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-02-26T22:41:35Z",
+      "side": 1,
+      "message": "Nit: Maybe one column too wide? Seems to display badly in the top gerrit page.",
+      "range": {
+        "startLine": 12,
+        "startChar": 71,
+        "endLine": 12,
+        "endChar": 74
+      },
+      "revId": "35cb740891bea3d7dcefcd3f9f1ec347e83b284b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
