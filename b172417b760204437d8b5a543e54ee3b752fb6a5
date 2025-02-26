@@ -35,6 +35,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f56fd9a0_19230288",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T08:45:19Z",
+      "side": 1,
+      "message": "Partial review: Disassembler tests.",
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "760bbbd8_73dd9736",
@@ -478,6 +495,75 @@
         "startChar": 57,
         "endLine": 2489,
         "endChar": 59
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b5c5eaa_1c36b3bf",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 2500,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T08:45:19Z",
+      "side": 1,
+      "message": "Add corresponding `AssemblerX86_64Test` that disassembles actual `movaps` instead of `vmovaps`. Similar for other tests that exercise forwarding to the `v*` functions.",
+      "range": {
+        "startLine": 2500,
+        "startChar": 0,
+        "endLine": 2500,
+        "endChar": 46
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8b98a77_161daa1e",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 2510,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T08:45:19Z",
+      "side": 1,
+      "message": "Please use the same line breaking style as above, even in commented-out code.",
+      "range": {
+        "startLine": 2509,
+        "startChar": 21,
+        "endLine": 2510,
+        "endChar": 71
+      },
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bcee66f9_737df8e1",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 2901,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-26T08:45:19Z",
+      "side": 1,
+      "message": "Test wider range of immediates?",
+      "range": {
+        "startLine": 2901,
+        "startChar": 62,
+        "endLine": 2901,
+        "endChar": 64
       },
       "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
