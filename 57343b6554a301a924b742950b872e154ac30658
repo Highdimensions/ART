@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a7fd90d_647fd1e8",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1081,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-26T18:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7770fd88_839e5435",
+      "range": {
+        "startLine": 1081,
+        "startChar": 26,
+        "endLine": 1081,
+        "endChar": 56
+      },
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a3ece3fb_d91d92e6",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-02-24T09:27:30Z",
       "side": 1,
       "message": "// TODO: Support for negative branches requires two passes.",
+      "range": {
+        "startLine": 1083,
+        "startChar": 4,
+        "endLine": 1083,
+        "endChar": 45
+      },
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14e4d639_64e7b000",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-26T18:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3ece3fb_d91d92e6",
       "range": {
         "startLine": 1083,
         "startChar": 4,
@@ -64,6 +112,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c094d97_3bac1faa",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-26T18:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b25dfec_275766a5",
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7e22edfb_59e26ddb",
@@ -77,6 +143,30 @@
       "writtenOn": "2025-02-24T09:27:30Z",
       "side": 1,
       "message": "Always false after reloading the locations?\n\nShould we load the `other_location` before `MoveConstantsToRegisters()` and reload only after the constant check to ensure the register+register case otherwise?",
+      "range": {
+        "startLine": 1131,
+        "startChar": 6,
+        "endLine": 1131,
+        "endChar": 58
+      },
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00aa0608_9f359b83",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1131,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-26T18:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e22edfb_59e26ddb",
       "range": {
         "startLine": 1131,
         "startChar": 6,
@@ -110,6 +200,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c013ffd4_468ced39",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1232,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-26T18:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f5b7fa0_df537e0a",
+      "range": {
+        "startLine": 1232,
+        "startChar": 33,
+        "endLine": 1232,
+        "endChar": 34
+      },
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f40a88f2_6db9bb9c",
@@ -123,6 +237,30 @@
       "writtenOn": "2025-02-24T09:27:30Z",
       "side": 1,
       "message": "I don\u0027t see any `move` here, only register updates.",
+      "range": {
+        "startLine": 1261,
+        "startChar": 38,
+        "endLine": 1261,
+        "endChar": 42
+      },
+      "revId": "57343b6554a301a924b742950b872e154ac30658",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e8b078a_35350292",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1261,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-26T18:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f40a88f2_6db9bb9c",
       "range": {
         "startLine": 1261,
         "startChar": 38,
