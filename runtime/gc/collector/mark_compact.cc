@@ -1218,7 +1218,8 @@ bool MarkCompact::PrepareForCompaction() {
   }
   if (black_objs_slide_diff_ == 0) {
     // Regardless of the gc-type, there are no pages to be compacted.
-    mid_gen_end_ = black_dense_end_;
+    mid_gen_end_ = std::max(mid_gen_end_, black_dense_end_);
+    mid_gen_end_ = std::min(mid_gen_end_, post_compact_end_);
     return false;
   }
   if (use_generational_) {
