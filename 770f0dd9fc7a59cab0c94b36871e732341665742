@@ -103,6 +103,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5e2e7f79_eccef938",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-27T18:19:32Z",
+      "side": 1,
+      "message": "My understanding is that dex2oat will just resort to runtime resolution if it cannot resolve the API at link time, i.e. only delaying the failure.\n\nWe really shouldn\u0027t have accesses to the now blocked APIs in the BCP or anywhere else in our codebase, and my earlier CLs in the chain were to handle some cases of that. So in that sense it\u0027s still supposed to never be invalid. Are you talking about odrefresh recompiling the BCP over and over at every boot if that still was to happen?\n\n\u003e That\u0027s the first time I heard of this tool. Does that run on build host?\n\nIndeed I also became aware of veridex just yesterday. It is a [host binary](https://cs.android.com/android/platform/superproject/main/+/main:art/tools/veridex/Android.bp;l\u003d24-27;drc\u003dd30b340648378d269920519f469ca197e47dcb27) with the main purpose of performing static hidden API checks at build time.\n\n\u003e If that works, why do we still need the runtime check? Are you worried about the build-time check can be easily bypassed by OEMs?\n\nStatic checks are never 100% - there can e.g. be reflection (although I\u0027m told that veridex makes some effort to detect trivial cases of that too). I see them as no more than a complement to runtime checks.",
+      "parentUuid": "8936d357_ca4a5109",
+      "revId": "770f0dd9fc7a59cab0c94b36871e732341665742",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "81bab41b_c3ecc25b",
         "filename": "runtime/runtime.cc",
         "patchSetId": 6
@@ -162,6 +180,30 @@
       "side": 1,
       "message": "What I mean is that we\u0027ll probably have \"IsAtLeastC\", \"IsAtLeastD\", ... in the future, so it will be cleaner if we have a common place for them in the first place.",
       "parentUuid": "a42ffc49_0c598a76",
+      "range": {
+        "startLine": 1735,
+        "startChar": 0,
+        "endLine": 1742,
+        "endChar": 5
+      },
+      "revId": "770f0dd9fc7a59cab0c94b36871e732341665742",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e4b0c0d_9e1321d6",
+        "filename": "runtime/runtime.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 1742,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-27T18:19:32Z",
+      "side": 1,
+      "message": "Seems like premature engineering to me. As a point in case, we ought to use flags instead of doing stuff like this (and the reason I\u0027m not is b/327420679). It may turn out that this will become a pattern for that or other reasons even though it shouldn\u0027t, and then we\u0027d reconsider.",
+      "parentUuid": "bc2df977_a39fd43f",
       "range": {
         "startLine": 1735,
         "startChar": 0,
