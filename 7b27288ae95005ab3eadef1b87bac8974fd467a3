@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c36b5d77_42eccfaa",
+        "filename": "runtime/interpreter/mterp/nterp.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-27T14:18:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "213ffed1_e41da64b",
+      "range": {
+        "startLine": 446,
+        "startChar": 4,
+        "endLine": 447,
+        "endChar": 26
+      },
+      "revId": "7b27288ae95005ab3eadef1b87bac8974fd467a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec470681_fecb0aa7",
@@ -54,6 +78,30 @@
       "writtenOn": "2025-02-27T11:01:18Z",
       "side": 1,
       "message": "What is the advantage of resolving the type for volatile fields if it isn\u0027t requested and we also don\u0027t want to put it in the cache?",
+      "range": {
+        "startLine": 467,
+        "startChar": 45,
+        "endLine": 467,
+        "endChar": 73
+      },
+      "revId": "7b27288ae95005ab3eadef1b87bac8974fd467a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58eab02f_e2d6f9f2",
+        "filename": "runtime/interpreter/mterp/nterp.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-27T14:18:49Z",
+      "side": 1,
+      "message": "The type resolution is required for correctness - as in we need to throw an exception if we fail the resolution.",
+      "parentUuid": "ec470681_fecb0aa7",
       "range": {
         "startLine": 467,
         "startChar": 45,
