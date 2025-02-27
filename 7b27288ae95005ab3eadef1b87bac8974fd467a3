@@ -134,6 +134,30 @@
       },
       "revId": "7b27288ae95005ab3eadef1b87bac8974fd467a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f768d96e_03353cce",
+        "filename": "runtime/interpreter/mterp/nterp.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-27T16:28:23Z",
+      "side": 1,
+      "message": "In the case of storing null, yes, we clear the exception. Those cases are edge case, so I prefer avoiding optimizing the code around them.",
+      "parentUuid": "4e831314_97341ed3",
+      "range": {
+        "startLine": 467,
+        "startChar": 45,
+        "endLine": 467,
+        "endChar": 73
+      },
+      "revId": "7b27288ae95005ab3eadef1b87bac8974fd467a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
