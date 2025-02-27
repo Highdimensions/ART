@@ -110,6 +110,30 @@
       },
       "revId": "7b27288ae95005ab3eadef1b87bac8974fd467a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e831314_97341ed3",
+        "filename": "runtime/interpreter/mterp/nterp.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-27T14:21:53Z",
+      "side": 1,
+      "message": "But we are clearing the exception here right? The comment also says that we shouldn\u0027t be throwing here.",
+      "parentUuid": "58eab02f_e2d6f9f2",
+      "range": {
+        "startLine": 467,
+        "startChar": 45,
+        "endLine": 467,
+        "endChar": 73
+      },
+      "revId": "7b27288ae95005ab3eadef1b87bac8974fd467a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
