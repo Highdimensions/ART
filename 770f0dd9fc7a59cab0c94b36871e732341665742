@@ -155,6 +155,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "66c866bf_06fce9c5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-27T19:45:50Z",
+      "side": 1,
+      "message": "\u003e To clarify as well, that may actually happen as explained earlier - if dex2oat doesn\u0027t pick up the correct system properties. But if my analysis is correct it can only occur when dexpreopting on host.\n\nOh, right! I didn\u0027t realize that the logic is guarded by `ART_TARGET_ANDROID`, so `always_enable` is false on host. The system property thing is from AndroidRuntime.cpp, which is purely for runtime, not for compile-time (and system property is not available on build host anyway). Therefore, the `core_platform_api_policy_` is probably `kDisabled` on build host.\n\nSolving the problem with `veridex` is okay, but OEMs can bypass it. I suggest to add `-Xcore-platform-api-policy:enabled` to [here](https://cs.android.com/android/platform/superproject/main/+/main:build/soong/dexpreopt/dexpreopt.go;l\u003d359;drc\u003d6029aed8b971969c87f42cd940434f0fe1da904b) and [here](https://cs.android.com/android/platform/superproject/main/+/main:build/soong/java/dexpreopt_bootjars.go;l\u003d1218;drc\u003d3b536fff7c188ddbd3b1d4c3f9e8d6106d415c97) to harden it (of course they could remove it too, but that\u0027s one more hack they would need to do).",
+      "parentUuid": "7e621029_576a3164",
+      "revId": "770f0dd9fc7a59cab0c94b36871e732341665742",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "81bab41b_c3ecc25b",
