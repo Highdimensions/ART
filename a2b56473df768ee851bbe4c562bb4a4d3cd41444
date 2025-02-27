@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "74168ba2_670a90e0",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1095,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-27T14:16:20Z",
+      "side": 1,
+      "message": "No need for the unimplemented cases, but yeah, would rather keep it here for simplicity.",
+      "parentUuid": "7e67dac6_e20fc594",
+      "range": {
+        "startLine": 1095,
+        "startChar": 4,
+        "endLine": 1095,
+        "endChar": 31
+      },
+      "revId": "a2b56473df768ee851bbe4c562bb4a4d3cd41444",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a6a05ecf_2da155c0",
@@ -54,6 +78,30 @@
       "writtenOn": "2025-02-27T10:50:56Z",
       "side": 1,
       "message": "Related to the comment above: Do we need to call MoveConstantsToRegisters when the locations are in constants too? e.g. for the `location.IsConstant() \u0026\u0026 other_location.IsConstant()` case. If not, please move after the `if` in line 1137 to avoid those moves",
+      "range": {
+        "startLine": 1136,
+        "startChar": 0,
+        "endLine": 1136,
+        "endChar": 29
+      },
+      "revId": "a2b56473df768ee851bbe4c562bb4a4d3cd41444",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2966f5a8_d7faeae2",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1136,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-27T14:16:20Z",
+      "side": 1,
+      "message": "Yes, we do. It\u0027s the branching that requires doing it (so the merge point has a register shared with the two incoming edges).",
+      "parentUuid": "a6a05ecf_2da155c0",
       "range": {
         "startLine": 1136,
         "startChar": 0,
