@@ -65,6 +65,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "87480900_bb744e42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-27T06:58:55Z",
+      "side": 1,
+      "message": "Good questions. Hiddenapi checks are done at link time when compiling. Since this is a strengthening of them, a gap there will result in an access slipping by as allowed until the oat file is invalidated for other reasons. Hence the failure mode is benign - the worst effect is that an error may get somewhat more confusing if it\u0027s delayed.\n\nThe goal here is to target the case of a preloaded module in new Baklava system images, and then this isn\u0027t a factor for on-device dex2oat invocations. Build time checks on host (covering dexpreopt artifacts, if dexpreopting is enabled) are a different matter, and the plan is to address them by running veridex.\n\nThe remaining case is odrefresh after OTA. That\u0027s also beside the goal, but in any case it\u0027s run after reboot so it\u0027s no different from any other invocation in this regard.\n\n\u003e Could you please verify it locally?\n\nYes, updated the test description.",
+      "parentUuid": "c1ed3da4_c2d59166",
+      "revId": "770f0dd9fc7a59cab0c94b36871e732341665742",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "81bab41b_c3ecc25b",
@@ -78,6 +96,30 @@
       "writtenOn": "2025-02-27T00:49:31Z",
       "side": 1,
       "message": "This is basically our own \"IsAtLeastB\". Can we put it in some common location (such as libartbase)? We may need things like that for every release in the future, so it\u0027s better to keep them in one place.",
+      "range": {
+        "startLine": 1735,
+        "startChar": 0,
+        "endLine": 1742,
+        "endChar": 5
+      },
+      "revId": "770f0dd9fc7a59cab0c94b36871e732341665742",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a42ffc49_0c598a76",
+        "filename": "runtime/runtime.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 1742,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-27T06:58:55Z",
+      "side": 1,
+      "message": "I prefer to do that first when we do indeed use it in more than one place. I doubt that will happen, considering the deadlines.",
+      "parentUuid": "81bab41b_c3ecc25b",
       "range": {
         "startLine": 1735,
         "startChar": 0,
