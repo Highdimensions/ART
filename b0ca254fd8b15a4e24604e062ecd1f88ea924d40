@@ -1,0 +1,163 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "998f5adf_f371cc4f",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-02-27T11:03:25Z",
+      "side": 1,
+      "message": "Please add the new parameter to this comment",
+      "fixSuggestions": [
+        {
+          "fixId": "43d71a68_7ff6d2ae",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+              "range": {
+                "startLine": 48,
+                "startChar": 0,
+                "endLine": 48,
+                "endChar": 0
+              },
+              "replacement": "   * @param stringHash if non-null, restrict instances to those with the given\n   *                   string hash.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b0ca254fd8b15a4e24604e062ecd1f88ea924d40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89552de0_0e8726af",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-02-27T11:03:25Z",
+      "side": 1,
+      "message": "I think this line is not doing what you expect. For me it displays as:\n```\nstringHash: java.lang.String\n```\nMaybe print it as an integer or hex string?",
+      "revId": "b0ca254fd8b15a4e24604e062ecd1f88ea924d40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "531c1a7f_3452dd37",
+        "filename": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-02-27T11:03:25Z",
+      "side": 1,
+      "message": "If I understand the other cases correctly, this table can also optionally print a diff from one heap dump to another. Would that be difficult to implement for this feature?\n\nIt looks like it would need to be computed different than the other cases, maybe as a separate subroutine within `Diff.snapshots`, to compute the duplicate string diff between the two snapshots.\n\nIt looks like the baseline snapshot is already passed to the `AhatSnapshot` instance at some point, so you may be able to add the logic to `AhatSnapshot` somewhere to set some sort of `baselineSize` for each `DuplicatedString` instance.",
+      "revId": "b0ca254fd8b15a4e24604e062ecd1f88ea924d40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f86360b_8c637e3a",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/AhatSnapshot.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-02-27T11:03:25Z",
+      "side": 1,
+      "message": "Please update comment - looks to have copied the \"bitmaps\" references from above.",
+      "fixSuggestions": [
+        {
+          "fixId": "a7a88480_af86e870",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/AhatSnapshot.java",
+              "range": {
+                "startLine": 231,
+                "startChar": 0,
+                "endLine": 232,
+                "endChar": 0
+              },
+              "replacement": "   * Returns duplicated strings in this snapshot\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/AhatSnapshot.java",
+              "range": {
+                "startLine": 233,
+                "startChar": 0,
+                "endLine": 234,
+                "endChar": 0
+              },
+              "replacement": "   * @return list of duplicated strings\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b0ca254fd8b15a4e24604e062ecd1f88ea924d40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff0a22e0_62d3dbd1",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-02-27T11:03:25Z",
+      "side": 1,
+      "message": "This comment seems to not be correct",
+      "fixSuggestions": [
+        {
+          "fixId": "300992f6_80987ee0",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+              "range": {
+                "startLine": 73,
+                "startChar": 0,
+                "endLine": 74,
+                "endChar": 0
+              },
+              "replacement": "         * Returns the content of the string.\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+              "range": {
+                "startLine": 75,
+                "startChar": 0,
+                "endLine": 76,
+                "endChar": 0
+              },
+              "replacement": "         * @return The content of the string.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "b0ca254fd8b15a4e24604e062ecd1f88ea924d40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
