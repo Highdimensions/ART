@@ -110,6 +110,29 @@
       },
       "revId": "a2b56473df768ee851bbe4c562bb4a4d3cd41444",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ece3755d_bec9fce6",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1271,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-27T16:14:13Z",
+      "side": 1,
+      "message": "This explanation is missing some key pieces.\n\nFor the \"record last instruction before return in return register\" optimization, it should point to `CreateNewRegisterLocation()` where we do this.\n\nWe should also explain that this is just in case the register is actually live at the next instruction. In that case, the branch to that instruction would have put a constant value in the register, see `MoveConstantsToRegisters()`, and also would have forced frame creation if we didn\u0027t have a frame yet. And if it\u0027s not live, it does not matter what\u0027s in `vreg_locations_[register_index]`.",
+      "range": {
+        "startLine": 1268,
+        "startChar": 8,
+        "endLine": 1271,
+        "endChar": 42
+      },
+      "revId": "a2b56473df768ee851bbe4c562bb4a4d3cd41444",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
