@@ -181,7 +181,7 @@ void RecordMethodsOnThreadStack(Thread* thread, uintptr_t* method_trace_buffer)
   visitor.WalkStack(true);
 
   // Create method entry events for all methods currently on the thread's stack.
-  uint64_t init_time = TimestampCounter::GetNanoTime(TimestampCounter::GetTimestamp());
+  uint64_t init_time = TimestampCounter::GetMicroTime(TimestampCounter::GetTimestamp());
   // Set the lsb to 0 to indicate method entry.
   init_time = init_time & ~1;
   size_t index = kAlwaysOnTraceBufSize - 1;
