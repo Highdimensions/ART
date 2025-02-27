@@ -43,6 +43,7 @@
 #include "reference_type_propagation.h"
 #include "register_allocator_linear_scan.h"
 #include "scoped_thread_state_change-inl.h"
+#include "scoped_thread_state_change.h"
 #include "sharpening.h"
 #include "ssa_builder.h"
 #include "ssa_phi_elimination.h"
@@ -140,9 +141,16 @@ bool HInliner::Run() {
   if (codegen_->GetCompilerOptions().GetInlineMaxCodeUnits() == 0) {
     // Inlining effectively disabled.
     return false;
-  } else if (graph_->IsDebuggable()) {
+  } 
+
+  if (graph_->IsDebuggable()) {
     // For simplicity, we currently never inline when the graph is debuggable. This avoids
     // doing some logic in the runtime to discover if a method could have been inlined.
+    return false;
+  }
+
+  if (total_number_of_dex_registers_ > kMaximumNumberOfCumulatedDexRegisters) {
+    // Too large environment.
     return false;
   }
 
