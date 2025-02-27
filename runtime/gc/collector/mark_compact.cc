@@ -845,8 +845,8 @@ void MarkCompact::RunPhases() {
   Thread* self = Thread::Current();
   thread_running_gc_ = self;
   Runtime* runtime = Runtime::Current();
-  GetHeap()->PreGcVerification(this);
   InitializePhase();
+  GetHeap()->PreGcVerification(this);
   {
     ReaderMutexLock mu(self, *Locks::mutator_lock_);
     MarkingPhase();
