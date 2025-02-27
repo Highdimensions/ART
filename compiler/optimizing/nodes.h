@@ -1733,26 +1733,26 @@ class SideEffects : public ValueObject {
   }
 
   bool HasSideEffects() const {
-    return (flags_ & kAllChangeBits) != 0u;
+    return (flags_ & kAllChangeBits);
   }
 
   bool HasDependencies() const {
-    return (flags_ & kAllDependOnBits) != 0u;
+    return (flags_ & kAllDependOnBits);
   }
 
   // Returns true if there are no side effects or dependencies.
   bool DoesNothing() const {
-    return flags_ == 0u;
+    return flags_ == 0;
   }
 
   // Returns true if something is written.
   bool DoesAnyWrite() const {
-    return (flags_ & kAllWrites) != 0u;
+    return (flags_ & kAllWrites);
   }
 
   // Returns true if something is read.
   bool DoesAnyRead() const {
-    return (flags_ & kAllReads) != 0u;
+    return (flags_ & kAllReads);
   }
 
   // Returns true if potentially everything is written and read
@@ -1768,7 +1768,7 @@ class SideEffects : public ValueObject {
   // Returns true if `this` may read something written by `other`.
   bool MayDependOn(SideEffects other) const {
     const uint64_t depends_on_flags = (flags_ & kAllDependOnBits) >> kChangeBits;
-    return (other.flags_ & depends_on_flags) != 0u;
+    return (other.flags_ & depends_on_flags);
   }
 
   // Returns string representation of flags (for debugging only).
