@@ -16,6 +16,24 @@
       "message": "To give some context around this change because I anticipate that there might be some comments:\n\nWe want to compile some Arm64 assembly files (e.g.: `quick_entrypoints_arm64.S`) as Arm64 (using `-march\u003darmv8`) during the target build (`buildbot-build.sh --target`) so that we can transform them into x86_64 format ELF files that can be linked into the x86_64 `libart.so`.\n\nThe problem is that `buildbot-build.sh --target` needs to build a host `dex2oat` which in turn requires a host `libart`. To build this host `libart` we need to have compiled and transformed `quick_entrypoints_arm64.S` which isn\u0027t possible unless `cc_object_quick_entrypoints_arm64.S` has `host_supported: true` which then causes clang to compile this file without `-march\u003darmv8`. We used to use this with `host_supported: false` which correctly compiled `quick_entrypoints_arm64.S` with `-march\u003darmv8` however sometime last year this changed to give a dependency error that the host module could not be found.\n\nTo get around this, the current implementation does the following:\n- We need to ensure that the `cc_object_*_entrypoints_arm64.S` modules are built *before* `jni_entrypoints_arm64_to_x86_64` to ensure that the files are available to `transform_arm64_to_x86_64.py`. This is currently done by calling make on the required modules before the main call to make.\n- `transform_arm64_to_x86_64.py` searches for the previously compiled `cc_object_*_entrypoints_arm64.S` and transforms those into x86_64.\n\nI am not an expert with the build system so I would welcome any suggestions to improve this!",
       "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2cde6f50_5480bcd5",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-27T22:52:41Z",
+      "side": 1,
+      "message": "Sorry for the late reply. We are very close to the end of the release cycle, so I\u0027m busy making some final changes. Please forgive me if I continue to respond slowly in the next few weeks.\n\nIf I understand your problem correctly, I think the fundamental problem is that the build system incorrectly picks those arm64 assembly files when building the host libart while it really shouldn\u0027t, and that\u0027s why it asks for those arm64 assembly files to support host.\n\nTo solve this problem, you can tell the build system to use the x86_64 assembly files building the host libart.\n\nSo, instead of the current select statement:\n\n```\nselect(soong_config_variable(\"art_module\", \"art_use_simulator\"), {\n    true: [\u003cuse arm64 assembly\u003e],\n    default: [\u003cuse x86_64 assembly\u003e],\n})\n```\n\nTry this:\n\n```\nselect((soong_config_variable(\"art_module\", \"art_use_simulator\"), os()), {\n  (true, \"android\"): [\u003cuse arm64 assembly\u003e],\n  (default, default): [\u003cuse x86_64 assembly\u003e],\n})\n```",
+      "parentUuid": "853357e8_6c48f2ca",
+      "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
