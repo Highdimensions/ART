@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae2d689d_5682cc51",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-27T11:01:18Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "7b27288ae95005ab3eadef1b87bac8974fd467a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "213ffed1_e41da64b",
+        "filename": "runtime/interpreter/mterp/nterp.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-27T11:01:18Z",
+      "side": 1,
+      "message": "Maybe mention about this in the CL description?",
+      "range": {
+        "startLine": 446,
+        "startChar": 4,
+        "endLine": 447,
+        "endChar": 26
+      },
+      "revId": "7b27288ae95005ab3eadef1b87bac8974fd467a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec470681_fecb0aa7",
+        "filename": "runtime/interpreter/mterp/nterp.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-27T11:01:18Z",
+      "side": 1,
+      "message": "What is the advantage of resolving the type for volatile fields if it isn\u0027t requested and we also don\u0027t want to put it in the cache?",
+      "range": {
+        "startLine": 467,
+        "startChar": 45,
+        "endLine": 467,
+        "endChar": 73
+      },
+      "revId": "7b27288ae95005ab3eadef1b87bac8974fd467a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
