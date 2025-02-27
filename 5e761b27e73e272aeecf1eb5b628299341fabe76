@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc0e6012_64119432",
+        "filename": "compiler/optimizing/codegen_test_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-27T16:55:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5baca939_a9e4853b",
+      "range": {
+        "startLine": 191,
+        "startChar": 6,
+        "endLine": 191,
+        "endChar": 64
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "926dc0d6_b31deb23",
@@ -54,6 +78,30 @@
       "writtenOn": "2025-02-18T17:20:57Z",
       "side": 1,
       "message": "I believe we should bump the oat version if there is a change to the entrypoints.",
+      "range": {
+        "startLine": 114,
+        "startChar": 2,
+        "endLine": 121,
+        "endChar": 38
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b5def7b_9b603965",
+        "filename": "runtime/entrypoints/quick/runtime_entrypoints_list.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-27T16:55:55Z",
+      "side": 1,
+      "message": "Done.\n\nFor future reference, is there some documentation for when the oat version should be bumped?",
+      "parentUuid": "926dc0d6_b31deb23",
       "range": {
         "startLine": 114,
         "startChar": 2,
@@ -87,6 +135,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "185d44d4_a5b31e55",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-27T16:55:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "496565b8_206d827a",
+      "range": {
+        "startLine": 37,
+        "startChar": 29,
+        "endLine": 37,
+        "endChar": 38
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "28070118_7c8bbb0a",
@@ -100,6 +172,30 @@
       "writtenOn": "2025-02-18T17:20:57Z",
       "side": 1,
       "message": "I was thinking of a different name for this, but couldn\u0027t come up with anything nice. Something that says this understands art runtime. If there\u0027s no nice name CustomSimulator is okay",
+      "range": {
+        "startLine": 98,
+        "startChar": 6,
+        "endLine": 98,
+        "endChar": 21
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "220136ee_6689dde1",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-27T16:55:55Z",
+      "side": 1,
+      "message": "How about `ARTSimulator`? I think it\u0027s more descriptive than CustomSimulator.",
+      "parentUuid": "28070118_7c8bbb0a",
       "range": {
         "startLine": 98,
         "startChar": 6,
@@ -133,6 +229,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6cda527d_a4c39ef9",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-27T16:55:55Z",
+      "side": 1,
+      "message": "This list will only include functions which transition from quick -\u003e runtime, not the other way around. Transitions from runtime -\u003e quick will be handled by `CodeSimulatorArm64::Invoke` in the [stage 1 patch](https://android-review.googlesource.com/c/platform/art/+/2680028/7/simulator/code_simulator_arm64.cc#217) which is called instead of [`art_quick_invoke*_stub`](https://android-review.googlesource.com/c/platform/art/+/2680028/7/runtime/art_method.cc#426).\n\nThese are essentially the smallest possible set of entrypoints to start the runtime and run `2237-checker-simulator` for the [stage 1 setup patch](https://android-review.googlesource.com/c/platform/art/+/2680028/7). This list will be expanded in future patches that expand the amount of code that we can simulate (e.g.: [stage 2.1](https://android-review.googlesource.com/c/platform/art/+/2901291/5)).\n\nI\u0027ve expanded the comment to make this clearer.",
+      "parentUuid": "3d1ee62d_fd625d4d",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 102,
+        "endChar": 60
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c2f5425f_09795502",
@@ -156,6 +276,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cc7bc9a_2658a339",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-27T16:55:55Z",
+      "side": 1,
+      "message": "This list was made empirically by running the tests and seeing which entrypoint methods were being called from quick code. `artMethodExitHook` looks to be called by several tests in the stage 1 setup (687-deopt64, 2240-tracing-non-invokable-method64, 597-deopt-new-string64, etc...). I\u0027m not an expert on these particular tests or the entry/exit hooks so is this unexpected behaviour?",
+      "parentUuid": "c2f5425f_09795502",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 111,
+        "endChar": 50
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec580838_7090925f",
@@ -169,6 +313,30 @@
       "writtenOn": "2025-02-18T17:20:57Z",
       "side": 1,
       "message": "CodeSimulatorArm64()?",
+      "range": {
+        "startLine": 181,
+        "startChar": 40,
+        "endLine": 181,
+        "endChar": 58
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5cae1e5_ca04868b",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-27T16:55:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec580838_7090925f",
       "range": {
         "startLine": 181,
         "startChar": 40,
@@ -216,6 +384,30 @@
           ]
         }
       ],
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf5e5cf8_954ce274",
+        "filename": "simulator/code_simulator_container.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-27T16:55:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "368b2371_e6dfa87c",
+      "range": {
+        "startLine": 38,
+        "startChar": 22,
+        "endLine": 38,
+        "endChar": 41
+      },
       "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
