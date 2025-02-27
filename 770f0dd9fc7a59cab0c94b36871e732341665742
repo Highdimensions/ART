@@ -85,6 +85,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8936d357_ca4a5109",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-27T07:21:30Z",
+      "side": 1,
+      "message": "Thanks for verifying the dex2oat started from odrefresh. I realized that dex2oat and the runtime shares the same code around `core_platform_api_policy_` in runtime.cc, so my concern doesn\u0027t really exist.\n\nSo since dex2oat also has hidden api enforcement enabled, I assume it will emit code that triggers a runtime exception at runtime on hidden api access, so there won\u0027t be any access slipping by, right? Otherwise, I think this will need more discussion, because for framework jars and system server jars, the oat files are never supposed to be invalid, because odrefresh refreshes their oat files whenever they get outdated.\n\n\u003e Build time checks on host (covering dexpreopt artifacts, if dexpreopting is enabled) are a different matter, and the plan is to address them by running veridex.\n\nInteresting. That\u0027s the first time I heard of this tool. Does that run on build host? If that works, why do we still need the runtime check? Are you worried about the build-time check can be easily bypassed by OEMs?",
+      "parentUuid": "87480900_bb744e42",
+      "revId": "770f0dd9fc7a59cab0c94b36871e732341665742",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "81bab41b_c3ecc25b",
         "filename": "runtime/runtime.cc",
         "patchSetId": 6
@@ -120,6 +138,30 @@
       "side": 1,
       "message": "I prefer to do that first when we do indeed use it in more than one place. I doubt that will happen, considering the deadlines.",
       "parentUuid": "81bab41b_c3ecc25b",
+      "range": {
+        "startLine": 1735,
+        "startChar": 0,
+        "endLine": 1742,
+        "endChar": 5
+      },
+      "revId": "770f0dd9fc7a59cab0c94b36871e732341665742",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc2df977_a39fd43f",
+        "filename": "runtime/runtime.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 1742,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-27T07:21:30Z",
+      "side": 1,
+      "message": "What I mean is that we\u0027ll probably have \"IsAtLeastC\", \"IsAtLeastD\", ... in the future, so it will be cleaner if we have a common place for them in the first place.",
+      "parentUuid": "a42ffc49_0c598a76",
       "range": {
         "startLine": 1735,
         "startChar": 0,
