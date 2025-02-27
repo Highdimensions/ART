@@ -16,6 +16,23 @@
       "message": "Thanks a lot for doing this!",
       "revId": "03457af070f0146700aaa23122aec9fadb4ee474",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61eaa145_ac1fef86",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-27T09:44:46Z",
+      "side": 1,
+      "message": "Sorry, I missed that we are in a stabilization period. I will discuss with release team and see if we can land this. This is low risk but I will check with them anyway.",
+      "revId": "03457af070f0146700aaa23122aec9fadb4ee474",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
