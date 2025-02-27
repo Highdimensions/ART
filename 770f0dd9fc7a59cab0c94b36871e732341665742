@@ -119,6 +119,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5730b9b9_c81a56b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-27T18:59:32Z",
+      "side": 1,
+      "message": "To clarify, my worry was that AOT compilation becoming a way to bypass the runtime check (e.g., the compiler compiles a hidden API call into a `blr`/`call` instruction, which doesn\u0027t involve any check). Given the discussion we had here, my understanding is that that\u0027s not the case, so LGTM.\n\n\u003e Static checks are never 100% - there can e.g. be reflection (although I\u0027m told that veridex makes some effort to detect trivial cases of that too). I see them as no more than a complement to runtime checks.\n\nMakes sense!",
+      "parentUuid": "5e2e7f79_eccef938",
+      "revId": "770f0dd9fc7a59cab0c94b36871e732341665742",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "81bab41b_c3ecc25b",
