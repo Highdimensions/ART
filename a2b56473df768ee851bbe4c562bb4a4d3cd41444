@@ -16,6 +16,52 @@
       "message": "Thanks both.",
       "revId": "a2b56473df768ee851bbe4c562bb4a4d3cd41444",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e67dac6_e20fc594",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1095,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-27T10:50:56Z",
+      "side": 1,
+      "message": "Do we need to call this even for the unimplemented cases? e.g. for the `CompareWithZeroOnStackSlot` case. We might leave it here for ease of implementation if the performance hit is not too big when unnecessarily doing it.",
+      "range": {
+        "startLine": 1095,
+        "startChar": 4,
+        "endLine": 1095,
+        "endChar": 31
+      },
+      "revId": "a2b56473df768ee851bbe4c562bb4a4d3cd41444",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6a05ecf_2da155c0",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1136,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-02-27T10:50:56Z",
+      "side": 1,
+      "message": "Related to the comment above: Do we need to call MoveConstantsToRegisters when the locations are in constants too? e.g. for the `location.IsConstant() \u0026\u0026 other_location.IsConstant()` case. If not, please move after the `if` in line 1137 to avoid those moves",
+      "range": {
+        "startLine": 1136,
+        "startChar": 0,
+        "endLine": 1136,
+        "endChar": 29
+      },
+      "revId": "a2b56473df768ee851bbe4c562bb4a4d3cd41444",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
