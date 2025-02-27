@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fe0a2ab_e8b75b9f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-27T10:18:57Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "63aa2ad3e5d747a0762b19a5c3b1e9e30a278289",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf2c5797_8547d6d5",
+        "filename": "runtime/entrypoints/entrypoint_utils-inl.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-27T10:18:57Z",
+      "side": 1,
+      "message": "If this flag isn\u0027t set then we are sure the resolved_field would have a resolved type is it? Should we add a DCHECK for this?",
+      "range": {
+        "startLine": 419,
+        "startChar": 34,
+        "endLine": 419,
+        "endChar": 85
+      },
+      "revId": "63aa2ad3e5d747a0762b19a5c3b1e9e30a278289",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "711d4746_b1c164c5",
+        "filename": "runtime/interpreter/mterp/nterp.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-27T10:18:57Z",
+      "side": 1,
+      "message": "I am not sure I understand this. If a class has type check failures during verification then isn\u0027t it possible for it to have resolved types later on (maybe as other classes are loaded)? If it is possible, then shouldn\u0027t we give it a chance to resolve types here and also update the cache?\n\nIf it isn\u0027t possible to have a resolved type if it fails in verification, then why do we treat it as a soft failure? Is it that we only need to throw if the field was actually used?",
+      "range": {
+        "startLine": 438,
+        "startChar": 8,
+        "endLine": 438,
+        "endChar": 59
+      },
+      "revId": "63aa2ad3e5d747a0762b19a5c3b1e9e30a278289",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
