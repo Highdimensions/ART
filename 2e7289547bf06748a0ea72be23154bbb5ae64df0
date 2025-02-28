@@ -34,6 +34,24 @@
       "parentUuid": "853357e8_6c48f2ca",
       "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41fc130e_8ec5974d",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-02-28T17:55:18Z",
+      "side": 1,
+      "message": "\u003e the build system incorrectly picks those arm64 assembly files when building the host libart \n\nThis isn\u0027t quite right because we **do** want to build the host libart with the Arm64 assembly files (`quick_entrypoints_arm64_to_x86_64`) so that we can simulate them. Because we run both the target and host builds separately we want to build the following files on each:\n\n- `buildbot-build.sh --target` - builds the target tests and boot image. To do this it will need to build a host dex2oat using the entrypoints. Currently this also uses the Arm64 entrypoints but I don\u0027t think it matters which entrypoints we use as we aren\u0027t starting a full runtime, just compiling with dex2oat.\n- `buildbot-build.sh --host` - builds the host runtime. We need this libart to contain the Arm64 entrypoints so that we can simulate them.\n\nUsing the above suggestion will cause `buildbot-build.sh --host` to also use the x86_64 entrypoints which is not what we want.",
+      "parentUuid": "2cde6f50_5480bcd5",
+      "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
