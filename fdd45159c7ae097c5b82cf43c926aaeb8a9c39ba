@@ -118,6 +118,30 @@
       },
       "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "703d7114_61440087",
+        "filename": "runtime/vdex_file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-28T02:39:24Z",
+      "side": 1,
+      "message": "Done in https://r.android.com/3515450.",
+      "parentUuid": "6d92d623_f22a32b7",
+      "range": {
+        "startLine": 126,
+        "startChar": 57,
+        "endLine": 126,
+        "endChar": 60
+      },
+      "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
