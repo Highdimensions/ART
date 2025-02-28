@@ -1,5 +1,92 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "922154ca_6d39e724",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-28T11:03:42Z",
+      "side": 1,
+      "message": "Late review prompted by https://android-review.googlesource.com/3512456 .\n\n(This is not a full review of the changes here. It\u0027s just a few odd things I noticed while comparing the riscv64 CL with this one.)",
+      "revId": "44436be34f4dccfb42146cf487b10664f4d9e58b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afa0febd_76e2d8ae",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 6046,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-28T11:03:42Z",
+      "side": 1,
+      "message": "Missing unpoisoning.",
+      "range": {
+        "startLine": 6046,
+        "startChar": 4,
+        "endLine": 6046,
+        "endChar": 98
+      },
+      "revId": "44436be34f4dccfb42146cf487b10664f4d9e58b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a151e48_1f59fd97",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 6048,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-28T11:03:42Z",
+      "side": 1,
+      "message": "We\u0027re not emitting the read barrier for the `receiver_class`, so we should add a comment that false negatives just go through the virtual dispath below.",
+      "range": {
+        "startLine": 6047,
+        "startChar": 4,
+        "endLine": 6048,
+        "endChar": 37
+      },
+      "revId": "44436be34f4dccfb42146cf487b10664f4d9e58b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c31e6cb_21c0877f",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 6055,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-28T11:03:42Z",
+      "side": 1,
+      "message": "Reloading a value already loaded above.",
+      "range": {
+        "startLine": 6055,
+        "startChar": 4,
+        "endLine": 6055,
+        "endChar": 81
+      },
+      "revId": "44436be34f4dccfb42146cf487b10664f4d9e58b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
