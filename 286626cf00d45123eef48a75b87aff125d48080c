@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "def6a202_55114a09",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-28T15:44:07Z",
+      "side": 1,
+      "message": "I\u0027m planning to add some gtests but the CL is otherwise ready for review.\n\n(I won\u0027t bother with any more run-tests as they are difficult to get right and deficiencies in other passes require very delicate crafting of the test code.)",
+      "range": {
+        "startLine": 2250,
+        "startChar": 10,
+        "endLine": 2250,
+        "endChar": 53
+      },
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
