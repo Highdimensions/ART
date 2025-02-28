@@ -172,6 +172,30 @@
       },
       "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d46ba7f1_88d09efc",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-28T04:56:47Z",
+      "side": 1,
+      "message": "One way to test this is through `OatFileAssistant`, in `OatFileAssistantTest`. An example can be found [here](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat_file_assistant_test.cc;l\u003d762;drc\u003da7d85a831f0a330ce9914c57ae146fc03193451c). The test uses a helper function `GenerateOdexForTest` that calls dex2oat, with a compressed dex file as an input, to generate an authentic vdex file that contains a dex file.\n\nThe challenge is that `--compact-dex-level` is ignored by dex2oat. Otherwise, it would be easy to generate a vdex containing cdex by passing `--compact-dex-level\u003dfast` as the `extra_args` argument.",
+      "parentUuid": "b9189f79_6060a57c",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 3
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
