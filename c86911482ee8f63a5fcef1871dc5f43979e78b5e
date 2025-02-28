@@ -22,6 +22,30 @@
       },
       "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbf5a193_8f2be027",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-28T01:17:15Z",
+      "side": 1,
+      "message": "Not that I know of, I think you\u0027d need to craft the vdex for stressing this and ensuring we hit the return false.",
+      "parentUuid": "822e9670_3dfafaa7",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 3
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
