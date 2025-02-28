@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b835d2a_e50a1f71",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5018,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-02-28T23:54:43Z",
+      "side": 1,
+      "message": "Move this into obj_visitor to avoid the capture?",
+      "range": {
+        "startLine": 5013,
+        "startChar": 0,
+        "endLine": 5018,
+        "endChar": 15
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "f6ac2f1a_068bca80",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 5012,
+                "startChar": 0,
+                "endLine": 5020,
+                "endChar": 0
+              },
+              "replacement": "        auto obj_visitor \u003d [card_table \u003d heap_-\u003eGetCardTable(),\n                             begin \u003d old_gen_end_,\n                             end \u003d mid_gen_end_](mirror::Object* obj) {\n          bool found \u003d false;\n          VisitReferencesVisitor visitor(\n              [\u0026found](mirror::Object* ref) {\n                found |\u003d ref \u003e\u003d reinterpret_cast\u003cmirror::Object*\u003e(begin) \u0026\u0026\n                         ref \u003c reinterpret_cast\u003cmirror::Object*\u003e(end);\n              });\n"
+            }
+          ]
+        }
+      ],
+      "revId": "50163529b3b144a12af99c976c502fae7e71225c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
