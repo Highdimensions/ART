@@ -33,7 +33,7 @@ class CFREVisitor final : public HGraphVisitor {
       : HGraphVisitor(graph),
         scoped_allocator_(graph->GetArenaStack()),
         candidate_fences_(scoped_allocator_.Adapter(kArenaAllocCFRE)),
-        candidate_fence_targets_(),
+        candidate_fence_targets_(std::nullopt),
         stats_(stats) {}
 
   void VisitBasicBlock(HBasicBlock* block) override {
@@ -48,17 +48,14 @@ class CFREVisitor final : public HGraphVisitor {
   void VisitConstructorFence(HConstructorFence* constructor_fence) override {
     candidate_fences_.push_back(constructor_fence);
 
-    if (candidate_fence_targets_.SizeInBits() == 0u) {
+    if (!candidate_fence_targets_.has_value()) {
       size_t number_of_instructions = GetGraph()->GetCurrentInstructionId();
-      candidate_fence_targets_ = ArenaBitVector::CreateFixedSize(
-          &scoped_allocator_, number_of_instructions, kArenaAllocCFRE);
-    } else {
-      DCHECK_EQ(candidate_fence_targets_.SizeInBits(),
-                static_cast<size_t>(GetGraph()->GetCurrentInstructionId()));
+      candidate_fence_targets_.emplace(
+          &scoped_allocator_, number_of_instructions, /*expandable=*/ false, kArenaAllocCFRE);
     }
 
     for (HInstruction* input : constructor_fence->GetInputs()) {
-      candidate_fence_targets_.SetBit(input->GetId());
+      candidate_fence_targets_->SetBit(input->GetId());
     }
   }
 
@@ -165,7 +162,8 @@ class CFREVisitor final : public HGraphVisitor {
   void VisitSetLocation([[maybe_unused]] HInstruction* inst, HInstruction* store_input) {
     if (candidate_fences_.empty()) {
       // There is no need to look at inputs if there are no candidate fence targets.
-      DCHECK(!candidate_fence_targets_.IsAnyBitSet());
+      DCHECK_IMPLIES(candidate_fence_targets_.has_value(),
+                     !candidate_fence_targets_->IsAnyBitSet());
       return;
     }
     // An object is considered "published" if it's stored onto the heap.
@@ -181,7 +179,8 @@ class CFREVisitor final : public HGraphVisitor {
   bool HasInterestingPublishTargetAsInput(HInstruction* inst) {
     if (candidate_fences_.empty()) {
       // There is no need to look at inputs if there are no candidate fence targets.
-      DCHECK(!candidate_fence_targets_.IsAnyBitSet());
+      DCHECK_IMPLIES(candidate_fence_targets_.has_value(),
+                     !candidate_fence_targets_->IsAnyBitSet());
       return false;
     }
     for (HInstruction* input : inst->GetInputs()) {
@@ -222,17 +221,15 @@ class CFREVisitor final : public HGraphVisitor {
     // there is no benefit to this extra complexity unless we also reordered
     // the stores to come later.
     candidate_fences_.clear();
-    DCHECK_EQ(candidate_fence_targets_.SizeInBits(),
-              static_cast<size_t>(GetGraph()->GetCurrentInstructionId()));
-    candidate_fence_targets_.ClearAllBits();
+    DCHECK(candidate_fence_targets_.has_value());
+    candidate_fence_targets_->ClearAllBits();
   }
 
   // A publishing 'store' is only interesting if the value being stored
   // is one of the fence `targets` in `candidate_fences`.
   bool IsInterestingPublishTarget(HInstruction* store_input) const {
-    DCHECK_EQ(candidate_fence_targets_.SizeInBits(),
-              static_cast<size_t>(GetGraph()->GetCurrentInstructionId()));
-    return candidate_fence_targets_.IsBitSet(store_input->GetId());
+    DCHECK(candidate_fence_targets_.has_value());
+    return candidate_fence_targets_->IsBitSet(store_input->GetId());
   }
 
   // Phase-local heap memory allocator for CFRE optimizer.
@@ -248,7 +245,7 @@ class CFREVisitor final : public HGraphVisitor {
 
   // Stores a set of the fence targets, to allow faster lookup of whether
   // a detected publish is a target of one of the candidate fences.
-  BitVectorView<size_t> candidate_fence_targets_;
+  std::optional<ArenaBitVector> candidate_fence_targets_;
 
   // Used to record stats about the optimization.
   OptimizingCompilerStats* const stats_;
