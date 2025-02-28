@@ -46,6 +46,30 @@
       },
       "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a37da09e_d7c8e7d4",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-28T02:02:57Z",
+      "side": 1,
+      "message": "@dsrbecky@google.com, would you be able to show me a piece of code that creates a `VdexFile` instance with a `DexFile` entry that\u0027s authentic enough to go from `VdexFile::Open` into this function? Thanks.",
+      "parentUuid": "dbf5a193_8f2be027",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 3
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
