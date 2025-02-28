@@ -45,13 +45,18 @@ class ObjectsHandler implements AhatHandler {
    * @param subclass if true, include instances of subclasses of the named class.
    * @param heapName name of the heap to restrict instances to. May be null to
    *                 allow instances on any heap.
+   * @param stringHash if non-null, include instances of java.lang.String with
+   * the given hash of the string content.
    * @return list of matching instances
    */
   public static List<AhatInstance> getObjects(
-      Site site, String className, boolean subclass, String heapName) {
+      Site site, String className, boolean subclass, String heapName, String stringHash) {
     Predicate<AhatInstance> predicate = (x) -> {
       return (heapName == null || x.getHeap().getName().equals(heapName))
-        && (subclass ? x.isInstanceOfClass(className) : className.equals(x.getClassName()));
+          && (subclass ? x.isInstanceOfClass(className) : className.equals(x.getClassName()))
+          && (stringHash == null || (x.getClassName().equals("java.lang.String")
+                                        && Integer.parseInt(stringHash) == x.asString().hashCode()
+                                        && !x.isUnreachable()));
     };
 
     List<AhatInstance> insts = new ArrayList<AhatInstance>();
@@ -65,9 +70,10 @@ class ObjectsHandler implements AhatHandler {
     String className = query.get("class", "java.lang.Object");
     String heapName = query.get("heap", null);
     boolean subclass = (query.getInt("subclass", 0) != 0);
+    String stringHash = query.get("stringHash", null);
     Site site = mSnapshot.getSite(id);
 
-    List<AhatInstance> insts = getObjects(site, className, subclass, heapName);
+    List<AhatInstance> insts = getObjects(site, className, subclass, heapName, stringHash);
     Collections.sort(insts, Sort.defaultInstanceCompare(mSnapshot));
 
     doc.title("Instances");
@@ -82,6 +88,7 @@ class ObjectsHandler implements AhatHandler {
     doc.descriptions();
     doc.description(DocString.text("Site"), Summarizer.summarize(site));
     doc.description(DocString.text("Class"), DocString.text(className));
+    doc.description(DocString.text("stringHash"), DocString.text(stringHash));
 
     DocString subclassChoice = DocString.text(subclass ? "included" : "excluded");
     subclassChoice.append(" (switch to ");
