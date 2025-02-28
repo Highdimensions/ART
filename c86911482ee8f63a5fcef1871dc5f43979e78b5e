@@ -86,6 +86,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53ead325_d68460b0",
+        "filename": "libdexfile/dex/code_item_accessors_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-28T05:56:11Z",
+      "side": 1,
+      "message": "Very cool!",
+      "parentUuid": "3f9042e1_a779ba04",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 38
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a4134024_3cce91b9",
@@ -278,6 +302,30 @@
       "side": 1,
       "message": "Ah, didn\u0027t see the last reply from Jiakai. Yes, it sounds a bit complicated to make dex2oat output cdex, or do a full integration test. I\u0027m hoping it\u0027s relatively trivial to construct a test fixture directly in memory, for someone familiar with this code.",
       "parentUuid": "ad2ce464_faaaeef2",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 3
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f03aef6_fa5b62d4",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-28T05:56:11Z",
+      "side": 1,
+      "message": "It looks inconsistant that so many checks on the dex file are on the VdexFile user side, while only one of them is duplicated on the VdexFile side. I think this inconsitancy hurts maintainability. Anyway, let\u0027s wait for others\u0027 inputs.\n\nIn terms of testing, if it\u0027s complicated to make dex2oat output cdex, what about\noverwriting the magic with \"cdex001\\0\" (through `pwrite` or something like that) after calling dex2oat? `oat_file_assistant_test.cc` may not be the best place to test this because it\u0027s not trivial to get the rejection reason from OatFileAssistant. `oat_file_test.cc` looks like a better place. The helper function `GenerateOdexForTest` is also available there, and you can check the `error_msg` returned from `OatFile::Open`/`OatFile::OpenFromVdex`, to make sure you hit [this line](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat_file.cc;l\u003d945;drc\u003d98797c2e6739910998c05a4ec0bc835690dcc76f) and [this line](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat_file.cc;l\u003d1785;drc\u003da7d85a831f0a330ce9914c57ae146fc03193451c).",
+      "parentUuid": "a4379b68_0004473f",
       "range": {
         "startLine": 215,
         "startChar": 0,
