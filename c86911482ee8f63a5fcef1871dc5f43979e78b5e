@@ -62,6 +62,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f9042e1_a779ba04",
+        "filename": "libdexfile/dex/code_item_accessors_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-28T05:04:49Z",
+      "side": 1,
+      "message": "Thanks, but it\u0027s part of the full cleanup in https://r.android.com/3119943. I opted to only do the bare minimum to make tests pass here.",
+      "parentUuid": "cfecb644_06cf4493",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 38
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a4134024_3cce91b9",
@@ -75,6 +99,24 @@
       "writtenOn": "2025-02-28T04:47:43Z",
       "side": 1,
       "message": "Do we still need this test?",
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "668b6603_6cefcebe",
+        "filename": "libdexfile/dex/compact_dex_file_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-28T05:04:49Z",
+      "side": 1,
+      "message": "Same here - this whole file is getting deleted in https://r.android.com/3119943 anyway.",
+      "parentUuid": "a4134024_3cce91b9",
       "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -187,6 +229,30 @@
       "writtenOn": "2025-02-28T04:56:47Z",
       "side": 1,
       "message": "One way to test this is through `OatFileAssistant`, in `OatFileAssistantTest`. An example can be found [here](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat_file_assistant_test.cc;l\u003d762;drc\u003da7d85a831f0a330ce9914c57ae146fc03193451c). The test uses a helper function `GenerateOdexForTest` that calls dex2oat, with a compressed dex file as an input, to generate an authentic vdex file that contains a dex file.\n\nThe challenge is that `--compact-dex-level` is ignored by dex2oat. Otherwise, it would be easy to generate a vdex containing cdex by passing `--compact-dex-level\u003dfast` as the `extra_args` argument.",
+      "parentUuid": "b9189f79_6060a57c",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 3
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad2ce464_faaaeef2",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-28T05:04:49Z",
+      "side": 1,
+      "message": "It looks fragile to me to rely on VdexFile users to do the checks and leave VdexFile itself behaving wrong, but if others think that\u0027s ok then I\u0027ll delete this.\n\nI\u0027d still appreciate guidance on the test.",
       "parentUuid": "b9189f79_6060a57c",
       "range": {
         "startLine": 215,
