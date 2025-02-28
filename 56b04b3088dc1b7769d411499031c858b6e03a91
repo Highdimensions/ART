@@ -89,6 +89,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c2c2726b_c9e00f05",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5848,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-28T14:53:43Z",
+      "side": 1,
+      "message": "The follow-up CL for arm64 has been uploaded and should be submitted shortly: https://android-review.googlesource.com/3517172 .",
+      "parentUuid": "f0ff393b_948fb0fa",
+      "range": {
+        "startLine": 5848,
+        "startChar": 4,
+        "endLine": 5848,
+        "endChar": 75
+      },
+      "revId": "56b04b3088dc1b7769d411499031c858b6e03a91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "37f8f448_06de59f9",
         "filename": "compiler/optimizing/intrinsics_riscv64.cc",
         "patchSetId": 1
