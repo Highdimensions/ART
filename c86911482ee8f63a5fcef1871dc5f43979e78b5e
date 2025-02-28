@@ -262,6 +262,30 @@
       },
       "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4379b68_0004473f",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-28T05:10:28Z",
+      "side": 1,
+      "message": "Ah, didn\u0027t see the last reply from Jiakai. Yes, it sounds a bit complicated to make dex2oat output cdex, or do a full integration test. I\u0027m hoping it\u0027s relatively trivial to construct a test fixture directly in memory, for someone familiar with this code.",
+      "parentUuid": "ad2ce464_faaaeef2",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 3
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
