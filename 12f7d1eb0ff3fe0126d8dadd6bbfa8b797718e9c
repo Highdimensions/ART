@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a183e70_e4379f8c",
+        "filename": "runtime/interpreter/mterp/nterp.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-02-28T08:49:43Z",
+      "side": 1,
+      "message": "This is fetching the declaring class twice, first without read barrier, then with read barrier.\n\nReorder the two lines and use the declaring class to get the dex file.",
+      "range": {
+        "startLine": 401,
+        "startChar": 2,
+        "endLine": 402,
+        "endChar": 58
+      },
+      "revId": "12f7d1eb0ff3fe0126d8dadd6bbfa8b797718e9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
