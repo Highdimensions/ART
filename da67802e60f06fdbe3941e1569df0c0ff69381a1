@@ -39,6 +39,30 @@
       },
       "revId": "da67802e60f06fdbe3941e1569df0c0ff69381a1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3fb5542_a105314e",
+        "filename": "test/utils/regen-test-files",
+        "patchSetId": 1
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-02-28T16:45:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b75e2ca3_51ae16c7",
+      "range": {
+        "startLine": 233,
+        "startChar": 0,
+        "endLine": 234,
+        "endChar": 25
+      },
+      "revId": "da67802e60f06fdbe3941e1569df0c0ff69381a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
