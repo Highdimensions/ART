@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "75299bd1_c738fd1d",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-02-28T16:28:42Z",
+      "side": 1,
+      "message": "I\u0027m referring to the table that is printed at the top of the page (which this appears to be populating), not the contents of the URL.",
+      "parentUuid": "144b0a12_c0369a9b",
+      "revId": "b0ca254fd8b15a4e24604e062ecd1f88ea924d40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "531c1a7f_3452dd37",
         "filename": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
         "patchSetId": 1
@@ -120,6 +138,24 @@
       "side": 1,
       "message": "Would comparing the strings of two heaps be a useful feature to add?\n\nAlso what would that look like, e.g. a sorted table of the duplicated strings with the largest difference in counts?",
       "parentUuid": "531c1a7f_3452dd37",
+      "revId": "b0ca254fd8b15a4e24604e062ecd1f88ea924d40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ddc71f0d_286899bb",
+        "filename": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-02-28T16:28:42Z",
+      "side": 1,
+      "message": "I was thinking that it would sort them by the largest count in the current heap dump and then it would just show the diff in size and count compared with the baseline, what do you think?",
+      "parentUuid": "46203bf9_1720eeb2",
       "revId": "b0ca254fd8b15a4e24604e062ecd1f88ea924d40",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
