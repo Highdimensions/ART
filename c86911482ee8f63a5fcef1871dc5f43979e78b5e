@@ -334,6 +334,30 @@
       },
       "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ea11b49_dec92ab6",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-28T23:04:52Z",
+      "side": 1,
+      "message": "Re the dex validity check, there\u0027s also the aspect that a vdex with invalid dex\u0027es will get partially used, instead of discarded directly at the start. That may open less trodden code paths, and Nicolas seemed less keen on it when I mentioned it on https://r.android.com/3482652.\n\nRe testing, thanks for the tips. That could be one option but in the interest of time I\u0027ll submit this and leave that for later.",
+      "parentUuid": "5f03aef6_fa5b62d4",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 3
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
