@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e351484f_9e4f17df",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-02-28T14:49:11Z",
+      "side": 1,
+      "message": "Thank you for reviewing. Fixes are in aosp/3517172.",
+      "parentUuid": "922154ca_6d39e724",
+      "revId": "44436be34f4dccfb42146cf487b10664f4d9e58b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "afa0febd_76e2d8ae",
@@ -31,6 +49,30 @@
       "writtenOn": "2025-02-28T11:03:42Z",
       "side": 1,
       "message": "Missing unpoisoning.",
+      "range": {
+        "startLine": 6046,
+        "startChar": 4,
+        "endLine": 6046,
+        "endChar": 98
+      },
+      "revId": "44436be34f4dccfb42146cf487b10664f4d9e58b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0994b7b5_4d8ca83b",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 6046,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-02-28T14:49:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "afa0febd_76e2d8ae",
       "range": {
         "startLine": 6046,
         "startChar": 4,
@@ -64,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d394d615_84e5f899",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 6048,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-02-28T14:49:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a151e48_1f59fd97",
+      "range": {
+        "startLine": 6047,
+        "startChar": 4,
+        "endLine": 6048,
+        "endChar": 37
+      },
+      "revId": "44436be34f4dccfb42146cf487b10664f4d9e58b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3c31e6cb_21c0877f",
@@ -77,6 +143,30 @@
       "writtenOn": "2025-02-28T11:03:42Z",
       "side": 1,
       "message": "Reloading a value already loaded above.",
+      "range": {
+        "startLine": 6055,
+        "startChar": 4,
+        "endLine": 6055,
+        "endChar": 81
+      },
+      "revId": "44436be34f4dccfb42146cf487b10664f4d9e58b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4222bf2e_bd517c16",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 6055,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-02-28T14:49:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c31e6cb_21c0877f",
       "range": {
         "startLine": 6055,
         "startChar": 4,
