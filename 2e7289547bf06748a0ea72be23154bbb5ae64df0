@@ -52,6 +52,24 @@
       "parentUuid": "2cde6f50_5480bcd5",
       "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1fc1697_35e912a4",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-28T19:08:14Z",
+      "side": 1,
+      "message": "Oh, now I see what\u0027s going on! Thanks for explaining the whole flow.\n\nSo those genrules don\u0027t have the arm64 entrypoints as dependencies. Rather, they assume that the files are there and search for them. I think this is quite fragile. It\u0027s true that you are trying to make the search rule vague, to make it robust against future changes, but it\u0027s still fragile in a few ways:\n\n1. It assumes that `TMPDIR` points to a child of `out/soong`, and the paths to the object files contain `cc_object_*`. These may change soon as the build system team is working on sandboxing everything.\n\n2. It assumes that there is only one match of the glob, being the object file that is newly built. These may also change during the ongoing sandboxing work, as there can be multiple sandboxes in `out/soong` created at different times for building the same thing.\n\nI\u0027d still like to see a proper way to fix your initial problem. Have you tried adding `host_supported: true` with `cflags: [\"-march\u003darmv8-a\"]` to those object files?",
+      "parentUuid": "41fc130e_8ec5974d",
+      "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
