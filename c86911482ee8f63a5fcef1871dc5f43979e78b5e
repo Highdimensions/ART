@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "822e9670_3dfafaa7",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-02-28T00:34:22Z",
+      "side": 1,
+      "message": "I\u0027d like to add a test for this, but I\u0027m not familiar with these APIs and would need to spend time to figure out how to create a suitable vdex test fixture. There\u0027s also not much to go on in vdex_file_test.cc - is this file covered by tests somewhere else?",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 3
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
