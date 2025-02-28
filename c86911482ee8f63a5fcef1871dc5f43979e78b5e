@@ -1,6 +1,84 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "cfecb644_06cf4493",
+        "filename": "libdexfile/dex/code_item_accessors_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-28T04:47:43Z",
+      "side": 1,
+      "message": "Remove these lines and the `compact_dex` parameter?",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 38
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1ae128af_1ac1d515",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libdexfile/dex/code_item_accessors_test.cc",
+              "range": {
+                "startLine": 31,
+                "startChar": 0,
+                "endLine": 32,
+                "endChar": 0
+              },
+              "replacement": "std::unique_ptr\u003cconst DexFile\u003e CreateFakeDex(std::vector\u003cuint8_t\u003e* data) {\n"
+            },
+            {
+              "path": "libdexfile/dex/code_item_accessors_test.cc",
+              "range": {
+                "startLine": 33,
+                "startChar": 0,
+                "endLine": 48,
+                "endChar": 0
+              },
+              "replacement": "  auto* header \u003d reinterpret_cast\u003cDexFile::Header*\u003e(data-\u003edata());\n  StandardDexFile::WriteMagic(data-\u003edata());\n  StandardDexFile::WriteCurrentVersion(data-\u003edata());\n  header-\u003eheader_size_ \u003d sizeof(*header);\n  header-\u003efile_size_ \u003d data-\u003esize();\n"
+            },
+            {
+              "path": "libdexfile/dex/code_item_accessors_test.cc",
+              "range": {
+                "startLine": 61,
+                "startChar": 0,
+                "endLine": 63,
+                "endChar": 0
+              },
+              "replacement": "  std::unique_ptr\u003cconst DexFile\u003e standard_dex(CreateFakeDex(\u0026standard_dex_data));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4134024_3cce91b9",
+        "filename": "libdexfile/dex/compact_dex_file_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-28T04:47:43Z",
+      "side": 1,
+      "message": "Do we still need this test?",
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "822e9670_3dfafaa7",
@@ -62,6 +140,30 @@
       "side": 1,
       "message": "@dsrbecky@google.com, would you be able to show me a piece of code that creates a `VdexFile` instance with a `DexFile` entry that\u0027s authentic enough to go from `VdexFile::Open` into this function? Thanks.",
       "parentUuid": "dbf5a193_8f2be027",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 3
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9189f79_6060a57c",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-02-28T04:47:43Z",
+      "side": 1,
+      "message": "Do you really need this check? A vdex file is loaded in one of the two ways:\n\n1. Loaded together with the oat file. In this case, the dex magic is checked [here](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat_file.cc;l\u003d943;drc\u003d98797c2e6739910998c05a4ec0bc835690dcc76f).\n\n2. Loaded alone. In this case, the dex magic is checked [here](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat_file.cc;l\u003d1784;drc\u003da7d85a831f0a330ce9914c57ae146fc03193451c).\n\nSince you have changed the magic check logic in this CL, cdex will fail the check in both cases.\n\nI suggest to leave this Vdex::IsValid unchanged and just add a test.",
+      "parentUuid": "a37da09e_d7c8e7d4",
       "range": {
         "startLine": 215,
         "startChar": 0,
