@@ -22,6 +22,30 @@
       },
       "revId": "bcec5e63f33a8db783c12a3d7b3ce4e3153c2b20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbeda1fa_c27c4e18",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 4789,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-01T02:02:31Z",
+      "side": 1,
+      "message": "I\u0027ll give it a try in a subsequent CL. Thanks for pointing out.",
+      "parentUuid": "f54638e4_46fcc870",
+      "range": {
+        "startLine": 4789,
+        "startChar": 10,
+        "endLine": 4789,
+        "endChar": 19
+      },
+      "revId": "bcec5e63f33a8db783c12a3d7b3ce4e3153c2b20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
