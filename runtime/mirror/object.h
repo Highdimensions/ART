@@ -690,9 +690,6 @@ class EXPORT MANAGED LOCKABLE Object {
   std::string PrettyTypeOf()
       REQUIRES_SHARED(Locks::mutator_lock_);
 
-  // Dump non-null references and their type.
-  template <bool kDumpNativeRoots>
-  void DumpReferences(std::ostream& os);
   // A utility function that does a raw copy of `src`'s data into the buffer `dst_bytes`.
   // Skips the object header.
   static void CopyRawObjectData(uint8_t* dst_bytes,
@@ -804,8 +801,6 @@ class EXPORT MANAGED LOCKABLE Object {
   HeapReference<Class> klass_;
   // Monitor and hash code information.
   uint32_t monitor_;
-
-  class DumpRefsVisitor;
 
   friend class art::Monitor;
   friend struct art::ObjectOffsets;  // for verifying offset information
