@@ -199,6 +199,7 @@
    ldr     r1, [sp]
    mov     r2, rPC
    mov     r3, #0
+   mov     r4, rFP
    EXPORT_PC
    bl      nterp_get_instance_field_offset
    cmp     r0, #0
@@ -286,6 +287,7 @@
    .else
    mov     r3, #0
    .endif
+   mov     r4, rFP
    EXPORT_PC
    bl      nterp_get_instance_field_offset
    .if $is_object
