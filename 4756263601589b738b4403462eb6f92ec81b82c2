@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3838a3f_4e869941",
+        "filename": "runtime/gc_configuration.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-01T00:19:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e409b8f2_9fe9712b",
+      "range": {
+        "startLine": 12,
+        "startChar": 46,
+        "endLine": 12,
+        "endChar": 67
+      },
+      "revId": "4756263601589b738b4403462eb6f92ec81b82c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "13386c01_851d893e",
@@ -54,6 +78,30 @@
       "writtenOn": "2024-10-22T18:25:59Z",
       "side": 1,
       "message": "I\u0027m not sure I follow the argument from the preceding discussion in this paragraph to this conclusion. Iiuc the argument is that the cost is constant regardless of GC frequency, and `HeapTargetUtilization` lets us tune that cost, also regardless of GC frequency. But I\u0027m not sure.",
+      "range": {
+        "startLine": 26,
+        "startChar": 11,
+        "endLine": 27,
+        "endChar": 22
+      },
+      "revId": "4756263601589b738b4403462eb6f92ec81b82c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22a57bf1_818d0bf0",
+        "filename": "runtime/gc_configuration.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-01T00:19:22Z",
+      "side": 1,
+      "message": "I rewrote that, and added some more details to this file. Please let me know if it still isn\u0027t clear.",
+      "parentUuid": "13386c01_851d893e",
       "range": {
         "startLine": 26,
         "startChar": 11,
@@ -101,6 +149,30 @@
           ]
         }
       ],
+      "revId": "4756263601589b738b4403462eb6f92ec81b82c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67dfd8ec_620143da",
+        "filename": "runtime/gc_configuration.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-01T00:19:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63aefc55_793f4499",
+      "range": {
+        "startLine": 42,
+        "startChar": 40,
+        "endLine": 42,
+        "endChar": 54
+      },
       "revId": "4756263601589b738b4403462eb6f92ec81b82c2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
