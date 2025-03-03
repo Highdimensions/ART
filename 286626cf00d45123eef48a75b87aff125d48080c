@@ -3,6 +3,184 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c035803e_44b7c6fb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-03T15:19:10Z",
+      "side": 1,
+      "message": "For future reference, can you add a paragraph explaining how we track them?",
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1114eaba_91583d9e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-03T15:19:10Z",
+      "side": 1,
+      "message": "There\u0027s a bloatbuster warning. Was that regression expected?",
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ca2ef0c_ce306161",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-03T15:19:10Z",
+      "side": 1,
+      "message": "Do we need to update this method / uses? Could we be losing information about converted phis when merging predecessors (https://cs.android.com/android/platform/superproject/main/+/main:art/compiler/optimizing/load_store_elimination.cc;l\u003d1398-1399;drc\u003d074876edf2d0329ab7772f851e321ce8264a5c2a) otherwise?",
+      "range": {
+        "startLine": 349,
+        "startChar": 0,
+        "endLine": 352,
+        "endChar": 5
+      },
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89fb0bd4_7984f45e",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-03T15:19:10Z",
+      "side": 1,
+      "message": "Why the special case for IntConstant? Should we special case other constants too?",
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0107e741_280026cf",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-03T15:19:10Z",
+      "side": 1,
+      "message": "Naming suggestion: WDYT about `HuntForOriginalValue` similar to the existing `HuntForOriginalReference`?",
+      "range": {
+        "startLine": 500,
+        "startChar": 8,
+        "endLine": 500,
+        "endChar": 27
+      },
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd1f742e_10cee696",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-03T15:19:10Z",
+      "side": 1,
+      "message": "nit: This can be two nested `if`s (AI got it right!)",
+      "range": {
+        "startLine": 589,
+        "startChar": 0,
+        "endLine": 603,
+        "endChar": 5
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "38ae77f7_cf4b51df",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/load_store_elimination.cc",
+              "range": {
+                "startLine": 589,
+                "startChar": 0,
+                "endLine": 603,
+                "endChar": 0
+              },
+              "replacement": "    if (kIsDebugBuild) {\n      if (load-\u003eIsVecLoad()) {\n        // For vector operations, the load type is always `Float64` and therefore the store size is\n        // never higher and we do not record any conversions below. This is OK because we currently\n        // do not vectorize any loops with widening operations.\n        CHECK_EQ(load_size, DataType::Size(DataType::Type::kFloat64));\n        CHECK_LE(store_size, load_size);\n        CHECK(!loaded_value.NeedsConvertedLoopPhi());\n      } else {\n        // There are no implicit conversions between 64-bit types and smaller types.\n        // We shall not record any conversions for 64-bit types.\n        CHECK_EQ(load_size \u003d\u003d DataType::Size(DataType::Type::kInt64),\n                 store_size \u003d\u003d DataType::Size(DataType::Type::kInt64));\n        CHECK_IMPLIES(load_size \u003d\u003d DataType::Size(DataType::Type::kInt64),\n                      !loaded_value.NeedsConvertedLoopPhi());\n      }\n"
+            }
+          ]
+        }
+      ],
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c0a6055_7e365100",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-03T15:19:10Z",
+      "side": 1,
+      "message": "Is this DCHECK needed? We did `Value value \u003d loaded_value;` a couple of lines above",
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22f15d6f_60c3e206",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-03T15:19:10Z",
+      "side": 1,
+      "message": "non-blocking: This is doing a similar thing to `SkipTypeConversions`. Maybe we can make it generic and add a predicate parameter",
+      "range": {
+        "startLine": 623,
+        "startChar": 0,
+        "endLine": 631,
+        "endChar": 7
+      },
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "def6a202_55114a09",
         "filename": "compiler/optimizing/load_store_elimination.cc",
         "patchSetId": 5
@@ -20,6 +198,57 @@
         "endLine": 2250,
         "endChar": 53
       },
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f82bdd98_09294b2a",
+        "filename": "test/530-checker-lse/src/TypeConversions.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-03T15:19:10Z",
+      "side": 1,
+      "message": "I think these comments is obsolete now that the method is generic",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 62
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "e2e620e9_5ed8cd62",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/530-checker-lse/src/TypeConversions.java",
+              "range": {
+                "startLine": 47,
+                "startChar": 0,
+                "endLine": 48,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "test/530-checker-lse/src/TypeConversions.java",
+              "range": {
+                "startLine": 76,
+                "startChar": 0,
+                "endLine": 77,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
       "revId": "286626cf00d45123eef48a75b87aff125d48080c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
