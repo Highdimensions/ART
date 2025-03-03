@@ -358,6 +358,30 @@
       },
       "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04ffce6f_4d2cb90f",
+        "filename": "runtime/vdex_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-03T22:09:10Z",
+      "side": 1,
+      "message": "Re the dex validity check:\n\nTo give you some background, currently, the runtime uses a vdex file through the `OatFile` class. Even if there is only the vdex file (no oat file), the vdex file is still used through `OatFileBackedByVdex`, a subclass of `OatFile`. The `VdexFile` class is never used alone. Therefore, the only two code paths that load a vdex file in production code are those I linked above. (There\u0027s also [this function](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/vdex_file.cc;l\u003d226-234;drc\u003d01df4b3a9bb31f21f451452f0ce47632dd8916ad) that you brought up, but I\u0027ll get to that in Appendix.)\n\nAFAIK, there isn\u0027t any code path that uses a partially valid vdex, at least not in production code. Are you proposing to allow a partially valid vdex? If so, I can see why people (including me) are not keen on it, as it adds complexity.\n\nTo me, dex validity check means a series of checks, not only on the magic, but also on various header sections, etc. We already have a robust dex validity check in `OatFile` that checks everything (and you can imagine we must do, or things would already be broken), and your change to `DexFileLoader::IsVersionAndMagicValid` should natrually make that check fail on cdex. On the other hand, if someone starts to use the `VdexFile` class alone (which they shouldn\u0027t) rather than through the `OatFile` class, then the check here is insufficient anyway, as it doesn\u0027t check dex headers and many other things. Therefore, I think it\u0027s unnecessary to duplicate one of the checks here.\n\nThis duplicate check adds additional cognitive load: a vdex containing a cdex will be rejected here, while a vdex containing a normal dex with an invalid header will be rejected in `OatFile`.\n\nI still suggest to remove this duplicate check.\n\nI\u0027m familiar with the runtime code that loads oat, vdex, art, and dex files. If you are unsure about anything, I\u0027m happy to help!\n\nAppendix:\n\n[This function](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/vdex_file.cc;l\u003d226-234;drc\u003d01df4b3a9bb31f21f451452f0ce47632dd8916ad) is only used in oatdump, when `--export-dex-to\u003d` is specified. It was added 8 years ago. It loads the vdex file after the `OatFile` object is there, which is unnecessary today because the vdex file must be loaded during the creating of the `OatFile` object and can be accessed through [a method](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat_file.h;l\u003d401;drc\u003d5bcb526ba52f9bef4b85fcc27c497428425be683) in the `OatFile` class. Maybe the `OatFile` object could be created without a vdex file 8 years ago, but it\u0027s no longer the case. Since you brought up the function, I\u0027m going to delete it.",
+      "parentUuid": "6ea11b49_dec92ab6",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 3
+      },
+      "revId": "c86911482ee8f63a5fcef1871dc5f43979e78b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
