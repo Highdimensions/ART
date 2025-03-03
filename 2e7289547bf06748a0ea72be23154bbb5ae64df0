@@ -70,6 +70,24 @@
       "parentUuid": "41fc130e_8ec5974d",
       "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44e70b38_b5a7a328",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-03-03T15:40:21Z",
+      "side": 1,
+      "message": "Yes I agree that this is fragile and isn\u0027t an ideal solution so I\u0027d love to find something better.\n\nAdding `host_supported: true` and `asflags: [\"-march\u003darmv8-a\"]` gives an error for armv8-a being an unknown target CPU because `-target x86_64-linux-gnu` is in the compile flags. It feels like it should be possible to provide `asflags: [\"-target x86_64-linux-gnu\"]` however that gives `asflags: Bad flag: \u0027-target\u003darmv8a\u0027, use the correct target soong rule.`. As I understand it this is referencing the `target` property however this won\u0027t work as we want to build for Arm64 for both the `android` and `linux` builds and `-target x86_64-linux-gnu` is always provided for the linux/host build.\n\nI think the best solution here might be support in soong for this kind of building with a `target_only: true` or `no_target: true` property which would prevent `-target x86_64-linux-gnu` from being added to the compile flags. I can\u0027t find anything like this in the existing module reference for soong so I don\u0027t know another way that currently exists to support this kind of building hence the current workaround as a solution.\n\nWhat do you think about this? If you agree that support in soong would be the best way forward, do you have any ideas as to how this could be implemented?",
+      "parentUuid": "b1fc1697_35e912a4",
+      "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
