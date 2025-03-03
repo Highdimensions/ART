@@ -192,12 +192,15 @@ bool ProcessTraceEntries(std::unique_ptr<File>& file,
     prev_method_value = curr_method_value;
     uint8_t event_type = curr_method_value & 0x3;
     uint64_t method_id = (curr_method_value >> kTraceActionBits) << kTraceActionBits;
-    if (method_map.find(method_id) == method_map.end()) {
-      LOG(FATAL) << "No entry for method " << std::hex << method_id;
+    std::string method_name;
+    if (method_map.find(method_id) != method_map.end()) {
+      method_name = method_map[method_id];
+    } else {
+      LOG(ERROR) << "No entry for method " << std::hex << method_id;
     }
     if (print_thread_events) {
       PrintTraceEntry(thread_name,
-                      method_map[method_id],
+                      method_name,
                       event_type,
                       &current_depth,
                       ignored_method,
