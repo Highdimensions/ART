@@ -16,6 +16,47 @@
       "message": "I now suggest that kBlackDenseRegionThreshold and kEvacuateLivePercentThreshold really should not be compile-time constants. Lokesh - do you agree with the last section?",
       "revId": "a357adb3bb1fb1705a8ded26fe7aa850ccdfb442",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83225dc1_9cb37556",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-03T19:32:25Z",
+      "side": 1,
+      "message": "We should definitely consider not keeping them constants.\n\nI added a comment, which I believe is worth mentioning.",
+      "parentUuid": "cad05062_e918f432",
+      "revId": "a357adb3bb1fb1705a8ded26fe7aa850ccdfb442",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4826f7d2_57f6764f",
+        "filename": "runtime/gc_configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-03T19:32:25Z",
+      "side": 1,
+      "message": "Transition collections are exhaustive and hence don\u0027t leave any holes. Maybe that should be mentioned here.",
+      "range": {
+        "startLine": 79,
+        "startChar": 54,
+        "endLine": 80,
+        "endChar": 46
+      },
+      "revId": "a357adb3bb1fb1705a8ded26fe7aa850ccdfb442",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
