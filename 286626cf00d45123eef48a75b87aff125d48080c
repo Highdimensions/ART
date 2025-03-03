@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ae24973_1d7473be",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T16:59:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c035803e_44b7c6fb",
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1114eaba_91583d9e",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-03-03T15:19:10Z",
       "side": 1,
       "message": "There\u0027s a bloatbuster warning. Was that regression expected?",
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b97dea9_768408ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T16:59:37Z",
+      "side": 1,
+      "message": "That\u0027s bloatbuster going mad. This CL cannot affect the size of an APK.",
+      "parentUuid": "1114eaba_91583d9e",
       "revId": "286626cf00d45123eef48a75b87aff125d48080c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -58,6 +94,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c592b61_804f4304",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T16:59:37Z",
+      "side": 1,
+      "message": "The only issue here is that the `ForLoopPhiPlaceholder()` needs to be renamed to `ForPlainLoopPhiPlaceholder()`. Done.",
+      "parentUuid": "3ca2ef0c_ce306161",
+      "range": {
+        "startLine": 349,
+        "startChar": 0,
+        "endLine": 352,
+        "endChar": 5
+      },
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "89fb0bd4_7984f45e",
@@ -75,6 +135,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9090ae66_eccea63a",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T16:59:37Z",
+      "side": 1,
+      "message": "We\u0027re dealing only with conversions to small integral types here and all constants that can be present are typed as `HIntConstant`. (We don\u0027t have any `H{Short,Char,Byte}Constant` or `H{Int,Uint}{8,16}Constant` classes.)",
+      "parentUuid": "89fb0bd4_7984f45e",
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0107e741_280026cf",
@@ -88,6 +166,30 @@
       "writtenOn": "2025-03-03T15:19:10Z",
       "side": 1,
       "message": "Naming suggestion: WDYT about `HuntForOriginalValue` similar to the existing `HuntForOriginalReference`?",
+      "range": {
+        "startLine": 500,
+        "startChar": 8,
+        "endLine": 500,
+        "endChar": 27
+      },
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4aadc3f2_a7650446",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T16:59:37Z",
+      "side": 1,
+      "message": "I\u0027m not too fond of the \"hunt\" naming.",
+      "parentUuid": "0107e741_280026cf",
       "range": {
         "startLine": 500,
         "startChar": 8,
@@ -139,6 +241,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3510787e_67345b38",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T16:59:37Z",
+      "side": 1,
+      "message": "I did think about that possibility but decided to use less whitespace.",
+      "parentUuid": "dd1f742e_10cee696",
+      "range": {
+        "startLine": 589,
+        "startChar": 0,
+        "endLine": 603,
+        "endChar": 5
+      },
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c0a6055_7e365100",
@@ -152,6 +278,24 @@
       "writtenOn": "2025-03-03T15:19:10Z",
       "side": 1,
       "message": "Is this DCHECK needed? We did `Value value \u003d loaded_value;` a couple of lines above",
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7423a5f7_c9914606",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T16:59:37Z",
+      "side": 1,
+      "message": "I consider it documentation - rather than doing explicit `value \u003d loaded_value`, just `DCHECK()` that it\u0027s already holding that value.",
+      "parentUuid": "7c0a6055_7e365100",
       "revId": "286626cf00d45123eef48a75b87aff125d48080c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -179,6 +323,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "06a47421_09c6fc70",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T16:59:37Z",
+      "side": 1,
+      "message": "Or I could add a `size_t min_store_size \u003d 0` parameter to `SkipTypeConversions()` but I don\u0027t find that particularly nice either - it clashes with the `type_conversions` parameter. I\u0027ll leave this as is for now.",
+      "parentUuid": "22f15d6f_60c3e206",
+      "range": {
+        "startLine": 623,
+        "startChar": 0,
+        "endLine": 631,
+        "endChar": 7
+      },
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "def6a202_55114a09",
@@ -192,6 +360,30 @@
       "writtenOn": "2025-02-28T15:44:07Z",
       "side": 1,
       "message": "I\u0027m planning to add some gtests but the CL is otherwise ready for review.\n\n(I won\u0027t bother with any more run-tests as they are difficult to get right and deficiencies in other passes require very delicate crafting of the test code.)",
+      "range": {
+        "startLine": 2250,
+        "startChar": 10,
+        "endLine": 2250,
+        "endChar": 53
+      },
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4519a3e_e2240040",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T16:59:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "def6a202_55114a09",
       "range": {
         "startLine": 2250,
         "startChar": 10,
@@ -249,6 +441,30 @@
           ]
         }
       ],
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38f93767_3516c1a8",
+        "filename": "test/530-checker-lse/src/TypeConversions.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T16:59:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f82bdd98_09294b2a",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 62
+      },
       "revId": "286626cf00d45123eef48a75b87aff125d48080c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
