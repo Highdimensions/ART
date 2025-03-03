@@ -88,6 +88,24 @@
       "parentUuid": "b1fc1697_35e912a4",
       "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47fbd411_2ad21f58",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-03-03T15:56:25Z",
+      "side": 1,
+      "message": "Note: a previous version of this patch (https://android-review.googlesource.com/c/platform/art/+/2680026/6/runtime/Android.bp) did have something similar supported in Android.bp where `host_supported: false` caused the assembly files to be built as Arm64 during both host and target builds. The reason this changed was during a rebase from January 2024 -\u003e November 2024 when this broke and gave an unmet dependency error.",
+      "parentUuid": "44e70b38_b5a7a328",
+      "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
