@@ -124,6 +124,24 @@
       "parentUuid": "44e70b38_b5a7a328",
       "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61861796_31d4dc10",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-03T16:09:56Z",
+      "side": 1,
+      "message": "Re note: Not sure what has changed, but I think the dependency error is the expected behavior, as you are building for host with a dependency with `host_supported: false`.",
+      "parentUuid": "15b42fdb_4da68b94",
+      "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
