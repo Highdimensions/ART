@@ -16,6 +16,24 @@
       "message": "+2ed. The cause seems to be trivial, but Martin is OOO until 8 March. Are we looking for re-landing the change for 25Q2?",
       "revId": "fc1909c530e354754c92ee556a6294de2265c922",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "feeea2a3_f1af73ce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-03T12:56:25Z",
+      "side": 1,
+      "message": "I hope we can, but it depends on how soon the root cause (b/400366502) is fixed, and I\u0027d like Martin to decide whether we want to reland. For now, I\u0027m reverting the CL to fix the immediate problem, as suggested by Nicolas (b/400041178#comment4).",
+      "parentUuid": "6c7d03d5_aca9d33e",
+      "revId": "fc1909c530e354754c92ee556a6294de2265c922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
