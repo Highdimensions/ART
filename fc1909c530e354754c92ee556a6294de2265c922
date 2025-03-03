@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c7d03d5_aca9d33e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2025-03-03T12:32:50Z",
+      "side": 1,
+      "message": "+2ed. The cause seems to be trivial, but Martin is OOO until 8 March. Are we looking for re-landing the change for 25Q2?",
+      "revId": "fc1909c530e354754c92ee556a6294de2265c922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
