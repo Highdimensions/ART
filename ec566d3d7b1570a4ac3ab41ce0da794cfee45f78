@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ad181ae_2cf5b041",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-03T17:59:53Z",
+      "side": 1,
+      "message": "LGTM other than the small comment. That I added. Thanks so much",
+      "revId": "ec566d3d7b1570a4ac3ab41ce0da794cfee45f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f26024f_e401df55",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-03T17:59:53Z",
+      "side": 1,
+      "message": "Can you please move it after line 936 below. I\u0027m trying to keep frequently accesses fields together, and infrequent ones together.",
+      "range": {
+        "startLine": 834,
+        "startChar": 2,
+        "endLine": 834,
+        "endChar": 37
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "7f794e0e_fc117996",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 833,
+                "startChar": 0,
+                "endLine": 836,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 903,
+                "startChar": 0,
+                "endLine": 903,
+                "endChar": 0
+              },
+              "replacement": "  // Timestamp when the read-barrier is enabled\n  uint64_t app_slow_path_start_time_;\n\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ec566d3d7b1570a4ac3ab41ce0da794cfee45f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
