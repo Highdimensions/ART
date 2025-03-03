@@ -1656,7 +1656,8 @@ size_t TraceWriter::FlushEntriesFormatV2(uintptr_t* method_trace_entries,
     current_buffer_ptr = init_buffer_ptr + kEntryHeaderSizeV2;
     for (; curr_record_index < num_records; curr_record_index++) {
       // Don't process more entries if the buffer doesn't have sufficient space.
-      if (end_buffer_ptr - current_buffer_ptr < max_record_size) {
+      if ((end_buffer_ptr - current_buffer_ptr) < (max_record_size * 2)) {
+        LOG(ERROR) << "Overflow buffer ";
         break;
       }
 
@@ -1690,6 +1691,7 @@ size_t TraceWriter::FlushEntriesFormatV2(uintptr_t* method_trace_entries,
 
     if (trace_output_mode_ != TraceOutputMode::kStreaming) {
       if (curr_record_index < num_records) {
+        LOG(ERROR) << "Overflow in non-streaming";
         overflow_ = true;
       }
       // In non-streaming mode, we keep the data in the buffer and write to the
@@ -1778,6 +1780,12 @@ void Trace::LogMethodTraceEvent(Thread* thread,
   // Ensure we always use the non-obsolete version of the method so that entry/exit events have the
   // same pointer value.
   method = method->GetNonObsoleteMethod();
+  if ((action & kTraceMethodActionMask) != action) {
+    LOG(ERROR) << "Action exceeding two bits";
+  }
+  if ((reinterpret_cast<uint64_t>(method) & kMaskTraceAction) != reinterpret_cast<uint64_t>(method)) {
+    LOG(ERROR) << "method has lower two bits set";
+  }
   current_entry[entry_index++] = reinterpret_cast<uintptr_t>(method) | action;
   if (UseThreadCpuClock(clock_source_)) {
     if (art::kRuntimePointerSize == PointerSize::k32) {
