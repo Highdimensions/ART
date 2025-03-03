@@ -31,7 +31,8 @@ import java.util.NoSuchElementException;
 public class AhatClassInstance extends AhatInstance {
 
   /**
-   * Create an AhatClassInstance or AhatBitmapInstance if it's a subclass of
+   * Create an AhatClassInstance, AhatStringInstance if the class equals
+   * java.lang.String or AhatBitmapInstance if it's a subclass of
    * android.graphics.Bitmap
    *
    * @param classObj - the class of this object
@@ -39,9 +40,12 @@ public class AhatClassInstance extends AhatInstance {
    * @return an AhatClassInstance or AhatBitmapInstance
    */
   public static AhatClassInstance create(AhatClassObj classObj, long objectId) {
-    return classObj.isSubClassOf("android.graphics.Bitmap")
-        ? new AhatBitmapInstance(objectId)
-        : new AhatClassInstance(objectId);
+    if (classObj.isSubClassOf("android.graphics.Bitmap")) {
+      return new AhatBitmapInstance(objectId);
+    } else if (classObj.toString().equals("class java.lang.String")) {
+      return new AhatStringInstance(objectId);
+    }
+    return new AhatClassInstance(objectId);
   }
 
   // Instance fields of the object. These are stored in order of the instance

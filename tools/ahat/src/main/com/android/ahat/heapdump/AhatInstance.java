@@ -409,6 +409,25 @@ public abstract class AhatInstance implements Diffable<AhatInstance> {
     return null;
   }
 
+   /**
+   * Returns true if this instance is a string instance.
+   * @return true if this instance is a string instance
+   */
+  public boolean isDuplicatedStringInstance() {
+    return false;
+  }
+
+  /**
+   * Returns this as an AhatStringInstance if this is an AhatStringInstance.
+   * Returns null if this is not an AhatStringInstance.
+   *
+   * @return this instance as a bitmap instance
+   */
+  public AhatStringInstance asDuplicatedStringInstance() {
+    return null;
+  }
+
+
   /**
    * Returns the <code>referent</code> associated with this instance.
    * This is only relevant for instances of java.lang.ref.Reference or its
