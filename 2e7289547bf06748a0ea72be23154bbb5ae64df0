@@ -142,6 +142,24 @@
       "parentUuid": "15b42fdb_4da68b94",
       "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bcb26c1_292755f1",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-03-03T17:37:49Z",
+      "side": 1,
+      "message": "Yes I agree that the dependency error is expected which is why I was looking to find a better solution than trying to revert whichever patch caused this.\n\nIt looks like adding an ART_USE_SIMULATOR guard to `\nCheckBadCompilerFlags` might work so I\u0027ll look to make a patch for that as it does seem to be the simplest solution.\n\nThanks for the suggestions and help with this!",
+      "parentUuid": "61861796_31d4dc10",
+      "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
