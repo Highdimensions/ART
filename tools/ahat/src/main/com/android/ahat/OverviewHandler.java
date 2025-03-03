@@ -20,6 +20,7 @@ import com.android.ahat.heapdump.AhatHeap;
 import com.android.ahat.heapdump.AhatInstance;
 import com.android.ahat.heapdump.AhatBitmapInstance;
 import com.android.ahat.heapdump.AhatSnapshot;
+import com.android.ahat.heapdump.DuplicateStrings;
 import com.android.ahat.heapdump.Reachability;
 import com.android.ahat.heapdump.Size;
 import java.io.File;
@@ -63,6 +64,8 @@ class OverviewHandler implements AhatHandler {
 
     doc.section("Heap Analysis Result");
     printDuplicateBitmaps(doc);
+
+    printDuplicateStrings(doc);
   }
 
   private void printHeapSizes(Doc doc) {
@@ -104,6 +107,29 @@ class OverviewHandler implements AhatHandler {
           DocString.text("Total"),
           DocString.text("All duplicated bitmaps"));
       SizeTable.end(doc);
+    }
+  }
+
+  private void printDuplicateStrings(Doc doc) {
+    List<AhatStringInstance.DuplicatedStringData> duplicates = mSnapshot.findTopDuplicateStrings();
+    if (duplicates != null && duplicates.size() > 0) {
+        SizeTable.table(doc, mSnapshot.isDiffed(), new Column("Count"), new Column("Duplicated String"));
+        for(AhatStringInstance.DuplicatedStringData duplicatedString : duplicates) {
+            Size totalBaseSize = Size.ZERO;
+            Size totalInstSize= Size.ZERO;
+            for (AhatStringInstance inst : duplicatedString.getInstances()) {
+              AhatInstance base = inst.getBaseline();
+              totalBaseSize.plus(base.getSize());
+              totalInstSize.plus(inst.getSize());
+            }
+            String content = duplicatedString.getContent();
+            SizeTable.row(doc,
+                    totalInstSize,
+                    totalBaseSize,
+                    Summarizer.summarizeDuplicateString(Long.valueOf(duplicatedString.getCount()), content),
+                    DocString.text(content));
+        }
+        SizeTable.end(doc);
     }
   }
 }
