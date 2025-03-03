@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "336a7790_b9196901",
+        "filename": "runtime/interpreter/mterp/armng/main.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 1963,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T10:53:19Z",
+      "side": 1,
+      "message": "`INCREASE_FRAME 8`\n\n8 bytes is enough and we need the CFI directive.",
+      "range": {
+        "startLine": 1963,
+        "startChar": 2,
+        "endLine": 1963,
+        "endChar": 17
+      },
+      "revId": "6d2bb71872b697bcc6734c731b18fe9373a2e63b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f27a1582_a45f9f6d",
+        "filename": "runtime/interpreter/mterp/armng/main.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 1966,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T10:53:19Z",
+      "side": 1,
+      "message": "`DECREASE_FRAME`",
+      "range": {
+        "startLine": 1966,
+        "startChar": 2,
+        "endLine": 1966,
+        "endChar": 17
+      },
+      "revId": "6d2bb71872b697bcc6734c731b18fe9373a2e63b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39efd199_49d4f721",
+        "filename": "runtime/interpreter/mterp/nterp.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T10:53:19Z",
+      "side": 1,
+      "message": "`reinterpret_cast32`",
+      "range": {
+        "startLine": 413,
+        "startChar": 26,
+        "endLine": 413,
+        "endChar": 42
+      },
+      "revId": "6d2bb71872b697bcc6734c731b18fe9373a2e63b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
