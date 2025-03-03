@@ -106,6 +106,24 @@
       "parentUuid": "44e70b38_b5a7a328",
       "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15b42fdb_4da68b94",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-03T16:06:41Z",
+      "side": 1,
+      "message": "OK, so that problem is [this check](https://cs.android.com/android/platform/superproject/main/+/main:build/soong/cc/check.go;l\u003d52;drc\u003d50858a72e05fc7bb6c4d68bce51f265aa459746b) preventing you from overriding the target. What about adding `if !ctx.Config().IsEnvTrue(\"ART_USE_SIMULATOR\") {` to the check ([example](https://cs.android.com/android/platform/superproject/main/+/main:build/soong/cc/check.go;l\u003d48-51;drc\u003d50858a72e05fc7bb6c4d68bce51f265aa459746b))? I\u0027m not sure it\u0027s the best way forward, but it looks like the easiest way to me. You may send a CL to ccross to see if he\u0027s okay with this idea.",
+      "parentUuid": "44e70b38_b5a7a328",
+      "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
