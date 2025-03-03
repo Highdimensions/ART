@@ -77,6 +77,9 @@ bool ProcessThreadOrMethodInfo(std::unique_ptr<File>& file,
   if (str[str.length() - 1] == '\n') {
     str.erase(str.length() - 1);
   }
+  /*if (str.starts_with("Main")) {
+    LOG(ERROR) << "Method map " << std::hex << id << "  " << str;
+  }*/
   name_map.emplace(id, str);
   return true;
 }
@@ -155,10 +158,13 @@ bool ProcessTraceEntries(std::unique_ptr<File>& file,
   int offset = 4;
   int num_records = ReadNumber(3, header + offset);
   offset += 3;
-  int total_size = ReadNumber(4, header + offset);
+  uint32_t total_size = ReadNumber(4, header + offset);
   std::unique_ptr<uint8_t[]> buffer(new uint8_t[total_size]);
   if (!file->ReadFully(buffer.get(), total_size)) {
     return false;
+  }
+  if (is_dual_clock) {
+    LOG(ERROR) << "ThreadId " << thread_id << " " << num_records << " " << total_size;
   }
 
   int current_depth = 0;
@@ -189,21 +195,31 @@ bool ProcessTraceEntries(std::unique_ptr<File>& file,
     prev_method_value = curr_method_value;
     uint8_t event_type = curr_method_value & 0x3;
     uint64_t method_id = (curr_method_value >> kTraceActionBits) << kTraceActionBits;
-    if (method_map.find(method_id) == method_map.end()) {
-      LOG(FATAL) << "No entry for method " << std::hex << method_id;
+    std::string method_name;
+    if (method_map.find(method_id) != method_map.end()) {
+      method_name = method_map[method_id];
+    } else {
+      LOG(ERROR) << "No entry for method " << diff << " " << prev_method_value << " " << std::hex << method_id;
     }
     if (print_thread_events) {
       PrintTraceEntry(thread_name,
-                      method_map[method_id],
+                      method_name,
                       event_type,
                       &current_depth,
                       ignored_method,
                       &ignored_method_depth);
     }
     // Read timestamps
-    DecodeUnsignedLeb128(&current_buffer_ptr);
+    uint64_t ts_diff = DecodeUnsignedLeb128(&current_buffer_ptr);
     if (is_dual_clock) {
-      DecodeUnsignedLeb128(&current_buffer_ptr);
+      if (print_thread_events) {
+        LOG(ERROR) << "method_diff " << diff;
+        LOG(ERROR) << "ts_diffW " << ts_diff;
+      }
+      ts_diff = DecodeUnsignedLeb128(&current_buffer_ptr);
+      if (print_thread_events) {
+        LOG(ERROR) << "ts_diffT " << ts_diff;
+      }
     }
   }
   current_depth_map[thread_id] = current_depth;
@@ -264,14 +280,16 @@ extern "C" JNIEXPORT void JNICALL Java_Main_dumpTrace(JNIEnv* env,
         }
         break;
       case kTraceEntries:
-        ProcessTraceEntries(file,
+        if (!ProcessTraceEntries(file,
                             current_depth_map,
                             thread_map,
                             method_map,
                             is_dual_clock,
                             thread_name,
                             ignored_method_map,
-                            ignored_method_depth_map);
+                            ignored_method_depth_map)) {
+          has_entries = false;
+        }
         break;
       case kSummary:
         has_entries = false;
