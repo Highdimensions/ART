@@ -78,6 +78,9 @@ bool ProcessThreadOrMethodInfo(std::unique_ptr<File>& file,
   if (str[str.length() - 1] == '\n') {
     str.erase(str.length() - 1);
   }
+  /*if (str.starts_with("Main")) {
+    LOG(ERROR) << "Method map " << std::hex << id << "  " << str;
+  }*/
   name_map.emplace(id, str);
   delete[] name;
   return true;
@@ -158,9 +161,9 @@ bool ProcessTraceEntries(std::unique_ptr<File>& file,
   int num_records = ReadNumber(3, header + offset);
   offset += 3;
   int total_size = ReadNumber(4, header + offset);
-  uint8_t* buffer = new uint8_t[total_size];
+  std::unique_ptr<uint8_t> buffer1(new uint8_t[total_size]);
+  uint8_t* buffer = buffer1.get();
   if (!file->ReadFully(buffer, total_size)) {
-    delete[] buffer;
     return false;
   }
 
@@ -192,12 +195,15 @@ bool ProcessTraceEntries(std::unique_ptr<File>& file,
     prev_method_value = curr_method_value;
     uint8_t event_type = curr_method_value & 0x3;
     uint64_t method_id = (curr_method_value >> kTraceActionBits) << kTraceActionBits;
-    if (method_map.find(method_id) == method_map.end()) {
-      LOG(FATAL) << "No entry for method " << std::hex << method_id;
+    std::string method_name;
+    if (method_map.find(method_id) != method_map.end()) {
+      method_name = method_map[method_id];
+    } else {
+      LOG(ERROR) << "No entry for method " << diff << " " << prev_method_value << " " << std::hex << method_id;
     }
     if (print_thread_events) {
       PrintTraceEntry(thread_name,
-                      method_map[method_id],
+                      method_name,
                       event_type,
                       &current_depth,
                       ignored_method,
@@ -267,14 +273,16 @@ extern "C" JNIEXPORT void JNICALL Java_Main_dumpTrace(JNIEnv* env,
         }
         break;
       case kTraceEntries:
-        ProcessTraceEntries(file,
+        if (!ProcessTraceEntries(file,
                             current_depth_map,
                             thread_map,
                             method_map,
                             is_dual_clock,
                             thread_name,
                             ignored_method_map,
-                            ignored_method_depth_map);
+                            ignored_method_depth_map)) {
+          has_entries = false;
+        }
         break;
       case kSummary:
         has_entries = false;
