@@ -156,6 +156,30 @@
       },
       "revId": "56b04b3088dc1b7769d411499031c858b6e03a91",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f04417cc_f3daab6a",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5855,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-03T10:31:22Z",
+      "side": 1,
+      "message": "Almaz. please add a test where the receiver class check above fails. Use an instance of a subclass that does not override the target method.",
+      "parentUuid": "6c6ecd16_fb0d1b81",
+      "range": {
+        "startLine": 5855,
+        "startChar": 29,
+        "endLine": 5855,
+        "endChar": 33
+      },
+      "revId": "56b04b3088dc1b7769d411499031c858b6e03a91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
