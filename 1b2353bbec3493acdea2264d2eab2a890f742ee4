@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0ab3d6b_75932990",
+        "filename": "tools/jvmti-agents/field-null-percent/fieldnull.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-03-04T13:47:07Z",
+      "side": 1,
+      "message": "Would it be better to set `options_length` to `strlen(options)` and change all the other uses accordingly?",
+      "range": {
+        "startLine": 187,
+        "startChar": 11,
+        "endLine": 187,
+        "endChar": 25
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2ea49a88_f5d6effe",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/jvmti-agents/field-null-percent/fieldnull.cc",
+              "range": {
+                "startLine": 187,
+                "startChar": 0,
+                "endLine": 188,
+                "endChar": 0
+              },
+              "replacement": "    size_t options_length \u003d strlen(options);\n"
+            },
+            {
+              "path": "tools/jvmti-agents/field-null-percent/fieldnull.cc",
+              "range": {
+                "startLine": 189,
+                "startChar": 0,
+                "endLine": 191,
+                "endChar": 0
+              },
+              "replacement": "    strncpy(reinterpret_cast\u003cchar*\u003e(ptr), options, options_length);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1b2353bbec3493acdea2264d2eab2a890f742ee4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
