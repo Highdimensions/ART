@@ -361,8 +361,9 @@ class MANAGED DexCache final : public Object {
   ObjPtr<CallSite> SetResolvedCallSite(uint32_t call_site_idx, ObjPtr<CallSite> resolved)
       REQUIRES_SHARED(Locks::mutator_lock_) WARN_UNUSED;
 
+  template <VerifyObjectFlags kVerifyFlags = kDefaultVerifyFlags>
   const DexFile* GetDexFile() ALWAYS_INLINE REQUIRES_SHARED(Locks::mutator_lock_) {
-    return GetFieldPtr<const DexFile*>(OFFSET_OF_OBJECT_MEMBER(DexCache, dex_file_));
+    return GetFieldPtr<const DexFile*, kVerifyFlags>(OFFSET_OF_OBJECT_MEMBER(DexCache, dex_file_));
   }
 
   void SetDexFile(const DexFile* dex_file) REQUIRES_SHARED(Locks::mutator_lock_) {

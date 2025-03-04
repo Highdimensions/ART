@@ -6374,9 +6374,12 @@ bool ClassLinker::ValidateSuperClassDescriptors(Handle<mirror::Class> klass) {
   if (klass->HasSuperClass() &&
       klass->GetClassLoader() != klass->GetSuperClass()->GetClassLoader()) {
     super_klass.Assign(klass->GetSuperClass());
-    for (int i = klass->GetSuperClass()->GetVTableLength() - 1; i >= 0; --i) {
+    for (int i = super_klass->GetVTableLength() - 1; i >= 0; --i) {
       auto* m = klass->GetVTableEntry(i, image_pointer_size_);
-      auto* super_m = klass->GetSuperClass()->GetVTableEntry(i, image_pointer_size_);
+      CHECK(m != nullptr) << mirror::Class::SafePrettyDescriptor(klass.Get()) << " vtable @" << i;
+      auto* super_m = super_klass->GetVTableEntry(i, image_pointer_size_);
+      CHECK(super_m != nullptr) << mirror::Class::SafePrettyDescriptor(super_klass.Get())
+          << " vtable @" << i;
       if (m != super_m) {
         if (UNLIKELY(!HasSameSignatureWithDifferentClassLoaders(self,
                                                                 klass,
@@ -6396,7 +6399,11 @@ bool ClassLinker::ValidateSuperClassDescriptors(Handle<mirror::Class> klass) {
       for (uint32_t j = 0; j < num_methods; ++j) {
         auto* m = klass->GetIfTable()->GetMethodArray(i)->GetElementPtrSize<ArtMethod*>(
             j, image_pointer_size_);
+        CHECK(m != nullptr) << mirror::Class::SafePrettyDescriptor(klass.Get())
+            << " methods @" << i << " entry @" << j;
         auto* super_m = super_klass->GetVirtualMethod(j, image_pointer_size_);
+        CHECK(super_m != nullptr) << mirror::Class::SafePrettyDescriptor(super_klass.Get())
+            << " interface method @" << j;
         if (m != super_m) {
           if (UNLIKELY(!HasSameSignatureWithDifferentClassLoaders(self,
                                                                   klass,

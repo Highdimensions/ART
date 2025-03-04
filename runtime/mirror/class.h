@@ -1176,8 +1176,9 @@ class EXPORT MANAGED Class final : public Object {
   static ObjPtr<ClassExt> EnsureExtDataPresent(Handle<Class> h_this, Thread* self)
       REQUIRES_SHARED(Locks::mutator_lock_) REQUIRES(!Roles::uninterruptible_);
 
+  template<VerifyObjectFlags kVerifyFlags = kDefaultVerifyFlags>
   uint16_t GetDexClassDefIndex() REQUIRES_SHARED(Locks::mutator_lock_) {
-    return GetField32(OFFSET_OF_OBJECT_MEMBER(Class, dex_class_def_idx_));
+    return GetField32<kVerifyFlags>(OFFSET_OF_OBJECT_MEMBER(Class, dex_class_def_idx_));
   }
 
   void SetDexClassDefIndex(uint16_t class_def_idx) REQUIRES_SHARED(Locks::mutator_lock_) {
@@ -1347,6 +1348,8 @@ class EXPORT MANAGED Class final : public Object {
   ALWAYS_INLINE ArraySlice<ArtMethod> GetCopiedMethodsSliceUnchecked(PointerSize pointer_size)
       REQUIRES_SHARED(Locks::mutator_lock_);
 
+  static std::string SafePrettyDescriptor(ObjPtr<mirror::Class> klass)
+      REQUIRES_SHARED(Locks::mutator_lock_);
   static std::string PrettyDescriptor(ObjPtr<mirror::Class> klass)
       REQUIRES_SHARED(Locks::mutator_lock_);
   std::string PrettyDescriptor()

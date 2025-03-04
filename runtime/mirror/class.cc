@@ -54,6 +54,7 @@
 #include "object_lock.h"
 #include "string-inl.h"
 #include "runtime.h"
+#include "base/safe_copy.h"
 #include "thread.h"
 #include "throwable.h"
 #include "well_known_classes.h"
@@ -2085,6 +2086,146 @@ void Class::SetObjectSizeAllocFastPath(uint32_t new_object_size) {
     SetField32Volatile<false>(ObjectSizeAllocFastPathOffset(), new_object_size);
   }
 }
+
+#ifdef __linux__
+std::string Class::SafePrettyDescriptor(ObjPtr<mirror::Class> klass) {
+  const void* raw_class = reinterpret_cast<const uint8_t*>(klass.Ptr());
+  if (raw_class == nullptr) {
+    return "null";
+  }
+  alignas(Class) uint8_t class_copy_data[sizeof(Class)];
+  Class* class_copy = reinterpret_cast<Class*>(&class_copy_data);
+  std::string array_suffix;
+  const void* component_type;
+  do {
+    if (!IsAligned<kObjectAlignment>(raw_class)) {
+      return StringPrintf("UnalignedClass@%p%s", klass.Ptr(), array_suffix.c_str());
+    }
+    if (SafeCopy(class_copy, raw_class, sizeof(Class)) != sizeof(Class)) {
+      return StringPrintf("InaccessibleClass@%p%s", klass.Ptr(), array_suffix.c_str());
+    }
+    // Do not call GetPrimitiveType() to avoid DCHECK() for component size shift.
+    uint32_t primitive_type_v32 =
+        class_copy->GetField32<kVerifyNone>(OFFSET_OF_OBJECT_MEMBER(Class, primitive_type_));
+    Primitive::Type primitive_type =
+        static_cast<Primitive::Type>(primitive_type_v32 & kPrimitiveTypeMask);
+    if (primitive_type != Primitive::kPrimNot) {
+      if (primitive_type > Primitive::kPrimLast) {
+        return StringPrintf("BadPrimitiveType%d@%p%s",
+                            static_cast<int>(primitive_type),
+                            raw_class,
+                            array_suffix.c_str());
+      }
+      return art::PrettyDescriptor(Primitive::Descriptor(primitive_type)) + array_suffix;
+    }
+    component_type = class_copy->GetComponentType<kVerifyNone, kWithoutReadBarrier>().Ptr();
+    if (component_type != nullptr) {
+      // Add brackets to `array_suffix` and repeat the loop for component_type.
+      array_suffix += "[]";
+      raw_class = component_type;
+    }
+  } while (component_type != nullptr);
+
+  if (class_copy->IsProxyClass<kVerifyNone>()) {
+    // TODO: Make this safe.
+    std::string descriptor =
+        DotToDescriptor(class_copy->GetName<kVerifyNone, kWithoutReadBarrier>()->ToModifiedUtf8());
+    return art::PrettyDescriptor(descriptor.c_str()) + array_suffix;
+  }
+
+  SafeRawData<DexCache> dex_cache_data;
+  DexCache* dex_cache_copy =
+      dex_cache_data.Copy(class_copy->GetDexCache<kVerifyNone, kWithoutReadBarrier>().Ptr());
+  if (dex_cache_copy == nullptr) {
+    return StringPrintf("ClassWithBadDexCache@%p%s", klass.Ptr(), array_suffix.c_str());
+  }
+  SafeRawData<DexFile> dex_file_data;
+  const DexFile* dex_file_copy = dex_file_data.Copy(dex_cache_copy->GetDexFile<kVerifyNone>());
+  if (dex_file_copy == nullptr) {
+    return StringPrintf("ClassWithBadDexFile@%p%s", klass.Ptr(), array_suffix.c_str());
+  }
+  const uint8_t* dex_file_begin = dex_file_copy->Begin();
+  SafeRawData<DexFile::Header> dex_file_header_data;
+  const DexFile::Header* dex_file_header_copy = dex_file_header_data.Copy(dex_file_begin);
+  if (dex_file_header_copy == nullptr) {
+    return StringPrintf("ClassWithBadDexFileHeader@%p%s", klass.Ptr(), array_suffix.c_str());
+  }
+  uint16_t class_def_idx = class_copy->GetDexClassDefIndex<kVerifyNone>();
+  if (class_def_idx >= dex_file_header_copy->class_defs_size_) {
+    return StringPrintf("ClassWithBadClassDefIndex%d@%p%s",
+                        static_cast<int>(class_def_idx),
+                        klass.Ptr(),
+                        array_suffix.c_str());
+  }
+  SafeRawData<dex::ClassDef> class_def_data;
+  const dex::ClassDef* class_def_copy = class_def_data.CopyArrayElement(
+      dex_file_begin + dex_file_header_copy->class_defs_off_, class_def_idx);
+  if (class_def_copy == nullptr) {
+    return StringPrintf("ClassWithBadClassDef%d@%p%s",
+                        static_cast<int>(class_def_idx),
+                        klass.Ptr(),
+                        array_suffix.c_str());
+  }
+  dex::TypeIndex type_idx = class_def_copy->class_idx_;
+  if (type_idx.index_ >= dex_file_header_copy->type_ids_size_) {
+    return StringPrintf("ClassWithBadTypeIndex%d@%p%s",
+                        static_cast<int>(type_idx.index_),
+                        klass.Ptr(),
+                        array_suffix.c_str());
+  }
+  SafeRawData<dex::TypeId> tid_data;
+  const dex::TypeId* tid_copy = tid_data.CopyArrayElement(
+      dex_file_begin + dex_file_header_copy->field_ids_off_, type_idx.index_);
+  if (tid_copy == nullptr) {
+    return StringPrintf("ClassWithBadTypeId%d@%p%s",
+                        static_cast<int>(type_idx.index_),
+                        klass.Ptr(),
+                        array_suffix.c_str());
+  }
+
+  dex::StringIndex descriptor_idx = tid_copy->descriptor_idx_;
+  if (descriptor_idx.index_ >= dex_file_header_copy->string_ids_size_) {
+    return StringPrintf("ClassWithBadDescriptorIndex%d@%p%s",
+                        static_cast<int>(descriptor_idx.index_),
+                        klass.Ptr(),
+                        array_suffix.c_str());
+  }
+  SafeRawData<dex::StringId> sid_data;
+  const dex::StringId* sid_copy = sid_data.CopyArrayElement(
+      dex_file_begin + dex_file_header_copy->string_ids_off_, descriptor_idx.index_);
+  if (sid_copy == nullptr) {
+    return StringPrintf("ClassWithBadDescriptorId%d@%p%s",
+                        static_cast<int>(descriptor_idx.index_),
+                        klass.Ptr(),
+                        array_suffix.c_str());
+  }
+  constexpr size_t kMaxEncodedSizeBytes = 5u;
+  constexpr size_t kMaxDataBytes = 256u;
+  uint8_t buffer[kMaxEncodedSizeBytes + kMaxDataBytes];
+  size_t read_bytes =
+      SafeCopy(&buffer, dex_file_begin + sid_copy->string_data_off_, sizeof(buffer));
+  std::fill_n(buffer + read_bytes, sizeof(buffer) - read_bytes, 0);
+
+  const uint8_t* string_data = buffer;
+  /* size_t uft16_length = */ DecodeUnsignedLeb128(&string_data);
+  if (static_cast<size_t>(string_data - buffer) >= read_bytes) {
+    return StringPrintf("ClassWithBadDescriptorData%d@%p%s",
+                        static_cast<int>(descriptor_idx.index_),
+                        klass.Ptr(),
+                        array_suffix.c_str());
+  }
+  size_t max_string_length = read_bytes - (string_data - buffer);
+  std::string result = (memchr(string_data, 0, max_string_length) == nullptr)
+      ? std::string(reinterpret_cast<const char*>(string_data), max_string_length) + "<TRUNCATED>"
+      : std::string(reinterpret_cast<const char*>(string_data));
+  std::replace(result.begin(), result.end(), '/', '.');
+  return result + array_suffix;
+}
+#else
+std::string Class::SafePrettyDescriptor(ObjPtr<mirror::Class> klass) {
+  return PrettyDescriptor(klass);
+}
+#endif
 
 std::string Class::PrettyDescriptor(ObjPtr<mirror::Class> klass) {
   if (klass == nullptr) {
