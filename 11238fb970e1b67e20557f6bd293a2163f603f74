@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c14ee5ec_687c50ed",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-04T12:59:22Z",
+      "side": 1,
+      "message": "This is just the thread id -\u003e thread name mapping. Theoretically thread ids could be reused but usually they aren\u0027t. So while not accurate this information is usually okay to get it from stack dumps. Stack dumps have both the thread id and the thread name. Also having a thread name is not very important for ANRs.",
+      "parentUuid": "01f0ad81_58dc8dd6",
+      "range": {
+        "startLine": 11,
+        "startChar": 26,
+        "endLine": 11,
+        "endChar": 63
+      },
+      "revId": "11238fb970e1b67e20557f6bd293a2163f603f74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "5f43c8b5_f613d8d6",
