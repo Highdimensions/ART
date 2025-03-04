@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39b2b36b_231f31ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-04T10:50:09Z",
+      "side": 1,
+      "message": "See our comments in another CL. If you can manage to change the existing API, I\u0027m not sure how you can flag the change, so please put this CL on hold for now. If you end up having no choice but to add a new API and a new flag, please let us know.",
+      "revId": "4954b556854dbf95112536932b17fc1fbd8ae25e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f18d3236_dfddcf33",
+        "filename": "build/flags/art-flags.aconfig",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-04T10:50:09Z",
+      "side": 1,
+      "message": "I believe \"executable\" in \"executable_method_file_offsets\" means the method has native executable code (in oat file). The \"executable\" in this new name seems to mean something else (the Java executable?). This causes confusion.\n\nIf you really need a new flag, what about something like \"executable_method_file_offsets_v2\", to clearly draw the connection between the old flag and the new flag?",
+      "range": {
+        "startLine": 49,
+        "startChar": 9,
+        "endLine": 49,
+        "endChar": 27
+      },
+      "revId": "4954b556854dbf95112536932b17fc1fbd8ae25e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
