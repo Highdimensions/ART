@@ -216,6 +216,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5adc3ab3_6e74e160",
+        "filename": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-04T10:02:29Z",
+      "side": 1,
+      "message": "It seems that this is where the [diff](https://cs.android.com/android/platform/superproject/main/+/main:art/tools/ahat/src/main/com/android/ahat/Main.java;l\u003d177-182) logic comes from and then the [diff for heaps](https://cs.android.com/android/platform/superproject/main/+/main:art/tools/ahat/src/main/com/android/ahat/heapdump/Diff.java;l\u003d337) doesnt use `AhatInstance` oops...\n\nI can revert to the previous patch where `AhatInstance` wasnt used?",
+      "parentUuid": "565dac19_414c13e5",
+      "revId": "b0ca254fd8b15a4e24604e062ecd1f88ea924d40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4f86360b_8c637e3a",
         "filename": "tools/ahat/src/main/com/android/ahat/heapdump/AhatSnapshot.java",
         "patchSetId": 1
