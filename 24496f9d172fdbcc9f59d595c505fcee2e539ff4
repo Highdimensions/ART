@@ -63,6 +63,30 @@
       },
       "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84c8c96d_87bfb609",
+        "filename": "runtime/interpreter/interpreter_cache.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-04T10:44:00Z",
+      "side": 1,
+      "message": "Why does dex2oatd crash?",
+      "parentUuid": "8549c87c_218ef429",
+      "range": {
+        "startLine": 24,
+        "startChar": 47,
+        "endLine": 24,
+        "endChar": 99
+      },
+      "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
