@@ -1,0 +1,108 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fd559b6_998a3589",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-04T18:08:11Z",
+      "side": 1,
+      "message": "One thing that I just thought about is if the hash would be stable over time or is it possible the hash function changes (or different Java implementations could implement different hash functions), so then the link that brought you to a particular string may not work across all ahat instances. It would be nice if we could guarantee that the ID used for the string is stable across time so that a particular link will always work correctly. Perhaps it could be a standardized hash, like SHA256 (or maybe something more lightweight).",
+      "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "992e4c68_e602cedd",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-04T18:08:11Z",
+      "side": 1,
+      "message": "Does this comment need an update too?",
+      "fixSuggestions": [
+        {
+          "fixId": "89b530c8_2ddce7dc",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+              "range": {
+                "startLine": 85,
+                "startChar": 0,
+                "endLine": 86,
+                "endChar": 0
+              },
+              "replacement": "    //    String Hash:     null\n"
+            }
+          ]
+        }
+      ],
+      "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b507ea8_6533f4f1",
+        "filename": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-04T18:08:11Z",
+      "side": 1,
+      "message": "Could you maybe add a TODO about the diffing?",
+      "fixSuggestions": [
+        {
+          "fixId": "352ce88d_dac63847",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+              "range": {
+                "startLine": 123,
+                "startChar": 0,
+                "endLine": 123,
+                "endChar": 0
+              },
+              "replacement": "                // TODO: Add diffing support for duplicate strings.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51be7662_272d61ac",
+        "filename": "tools/ahat/src/test/com/android/ahat/ObjectsHandlerTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-04T18:08:11Z",
+      "side": 1,
+      "message": "Are you able to add tests for the case where you _do_ have a stringHash?",
+      "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
