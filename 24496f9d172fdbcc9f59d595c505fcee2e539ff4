@@ -87,6 +87,30 @@
       },
       "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ee18445_7bfcec7c",
+        "filename": "runtime/interpreter/interpreter_cache.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-04T16:45:57Z",
+      "side": 1,
+      "message": "`IsSuspended()` is true with the thread is not runnable and suspend-request flag is set. In CMC, we are calling Clear() during thread-flip. At that time, if gc-thread runs it for some mutator then mutator is guaranteed to be not runnable. But I believe it also doesn\u0027t have suspend-request flag set as we free all threads to be able to finish their flip-function and then become runnable.\n\nSo either IsSuspended() has to be updated or this DCHECK has to be adjusted. I believe something like what I suggested in my comment above makes sense.\n\ndex2oatd on boot-image is failing because that\u0027s the first thing during build that triggers GC. Otheriwse nothing special about it.",
+      "parentUuid": "84c8c96d_87bfb609",
+      "range": {
+        "startLine": 24,
+        "startChar": 47,
+        "endLine": 24,
+        "endChar": 99
+      },
+      "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
