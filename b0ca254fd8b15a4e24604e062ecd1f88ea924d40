@@ -234,6 +234,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dad1bbec_4e5a7a59",
+        "filename": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-04T10:40:43Z",
+      "side": 1,
+      "message": "Yeah, I think revert to the previous patch. I think you would need a new diff utility to compare the duplicated strings objects. As I said in the initial comment, I think you could make a new subroutine within `Diff.snapshots` to compute the duplicate string diff between two snapshots, like you would add a `duplicateStrings(a, b)` call [here](https://cs.android.com/android/platform/superproject/main/+/main:art/tools/ahat/src/main/com/android/ahat/heapdump/Diff.java;drc\u003db9e34802274e445b8040b93f122e508c9e4a181c;l\u003d346), and in that function do some kind of logic to iterate over all `DuplicatedString` instances and store in each the size/count/whatever from the baseline `DuplicatedString` instance for the same string.",
+      "parentUuid": "5adc3ab3_6e74e160",
+      "revId": "b0ca254fd8b15a4e24604e062ecd1f88ea924d40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4f86360b_8c637e3a",
         "filename": "tools/ahat/src/main/com/android/ahat/heapdump/AhatSnapshot.java",
         "patchSetId": 1
