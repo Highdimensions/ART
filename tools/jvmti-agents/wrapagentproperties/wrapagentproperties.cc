@@ -148,7 +148,8 @@ struct ExtraJvmtiInterface : public jvmtiInterface_1_ {
       if (res != JVMTI_ERROR_NONE) {
         return res;
       }
-      strcpy(*out, val.c_str());
+      strncpy(*out, val.c_str(), val.size());
+      (*out)[val.size()] = '\0';
       return JVMTI_ERROR_NONE;
     } else {
       return funcs->original_interface->GetSystemProperty(env, prop, out);
