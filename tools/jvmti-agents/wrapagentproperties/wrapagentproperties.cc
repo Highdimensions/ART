@@ -144,11 +144,11 @@ struct ExtraJvmtiInterface : public jvmtiInterface_1_ {
     if (it != funcs->proxy_vm->map->end()) {
       const std::string& val = it->second;
       std::string str_prop(prop);
-      jvmtiError res = env->Allocate(val.size() + 1, reinterpret_cast<unsigned char**>(out));
+      jvmtiError res = env->Allocate(val.size(), reinterpret_cast<unsigned char**>(out));
       if (res != JVMTI_ERROR_NONE) {
         return res;
       }
-      strcpy(*out, val.c_str());
+      memcpy(*out, val.c_str(), val.size());
       return JVMTI_ERROR_NONE;
     } else {
       return funcs->original_interface->GetSystemProperty(env, prop, out);
@@ -182,11 +182,11 @@ struct ExtraJvmtiInterface : public jvmtiInterface_1_ {
     char** out_prop_ptr = *prop_ptr;
     jint i = 0;
     for (const std::string& p : all_props) {
-      res = env->Allocate(p.size() + 1, reinterpret_cast<unsigned char**>(&out_prop_ptr[i]));
+      res = env->Allocate(p.size(), reinterpret_cast<unsigned char**>(&out_prop_ptr[i]));
       if (res != JVMTI_ERROR_NONE) {
         return res;
       }
-      memcpy(out_prop_ptr[i], p.c_str(), p.size() + 1);
+      memcpy(out_prop_ptr[i], p.c_str(), p.size());
       i++;
     }
     CHECK_EQ(i, *cnt);
