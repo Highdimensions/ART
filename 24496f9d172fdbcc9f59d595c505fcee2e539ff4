@@ -39,6 +39,30 @@
       },
       "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8549c87c_218ef429",
+        "filename": "runtime/interpreter/interpreter_cache.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-04T05:07:56Z",
+      "side": 1,
+      "message": "I had to change it as otherwise dex2oatd for boot image was failing.\n\nIn this particular case it\u0027s safe because it\u0027s done in the flip-function. So the owning_thread can\u0027t become runnable until gc-thread is done running its flip-function.\n\nIs it possible to update the DCHECK as `owning_thread-\u003eIsSuspended() || owning_thread-\u003eFlipFunctionPending()` or something to that effect?",
+      "parentUuid": "a7f70e93_2e0d39b4",
+      "range": {
+        "startLine": 24,
+        "startChar": 47,
+        "endLine": 24,
+        "endChar": 99
+      },
+      "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
