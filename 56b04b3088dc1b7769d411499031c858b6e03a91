@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0435816b_fdb3ef73",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5840,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-03-04T01:07:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25d46c56_6403bbf2",
+      "range": {
+        "startLine": 5840,
+        "startChar": 4,
+        "endLine": 5840,
+        "endChar": 83
+      },
+      "revId": "56b04b3088dc1b7769d411499031c858b6e03a91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d943b7ea_2fb78b30",
@@ -54,6 +78,30 @@
       "writtenOn": "2025-02-28T11:13:43Z",
       "side": 1,
       "message": "We\u0027re not emitting the read barrier for the receiver_class, so we should add a comment that false negatives just go through the virtual dispath below.",
+      "range": {
+        "startLine": 5841,
+        "startChar": 4,
+        "endLine": 5841,
+        "endChar": 57
+      },
+      "revId": "56b04b3088dc1b7769d411499031c858b6e03a91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e387850_99329d20",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5841,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-03-04T01:07:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d943b7ea_2fb78b30",
       "range": {
         "startLine": 5841,
         "startChar": 4,
@@ -101,6 +149,30 @@
       "side": 1,
       "message": "The follow-up CL for arm64 has been uploaded and should be submitted shortly: https://android-review.googlesource.com/3517172 .",
       "parentUuid": "f0ff393b_948fb0fa",
+      "range": {
+        "startLine": 5848,
+        "startChar": 4,
+        "endLine": 5848,
+        "endChar": 75
+      },
+      "revId": "56b04b3088dc1b7769d411499031c858b6e03a91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6cf1df04_607aaccd",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5848,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-03-04T01:07:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2c2726b_c9e00f05",
       "range": {
         "startLine": 5848,
         "startChar": 4,
@@ -196,6 +268,30 @@
       "side": 1,
       "message": "I think [1] does what you mean: `fooBarDefinedInAbstract()` targets `FooBar.definedInAbstract` and it is invoked on a `FooBarImpl` instance, which does not override `definedInAbstract` method.\n\n\n[1] https://source.corp.google.com/h/googleplex-android/platform/superproject/main/+/main:art/test/2277-methodhandle-invokeexact/src/AbstractInvokeExactTest.java;l\u003d265;drc\u003d54e83f149279965c171137cac0386741c32df6cf",
       "parentUuid": "f04417cc_f3daab6a",
+      "range": {
+        "startLine": 5855,
+        "startChar": 29,
+        "endLine": 5855,
+        "endChar": 33
+      },
+      "revId": "56b04b3088dc1b7769d411499031c858b6e03a91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "373f0829_985addcd",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5855,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-03-04T01:07:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1939098d_10ef72b6",
       "range": {
         "startLine": 5855,
         "startChar": 29,
