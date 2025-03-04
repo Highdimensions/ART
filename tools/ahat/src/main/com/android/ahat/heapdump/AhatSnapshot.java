@@ -19,6 +19,7 @@ package com.android.ahat.heapdump;
 import com.android.ahat.dominators.Dominators;
 import com.android.ahat.progress.Progress;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A parsed heap dump.
@@ -39,6 +40,8 @@ public class AhatSnapshot implements Diffable<AhatSnapshot> {
 
   private AhatBitmapInstance.BitmapDumpData mBitmapDumpData = null;
 
+  private Map<String, DuplicateStrings.DuplicatedString> mDuplicatedStrings = null;
+
   AhatSnapshot(SuperRoot root,
                Instances<AhatInstance> instances,
                List<AhatHeap> heaps,
@@ -53,6 +56,8 @@ public class AhatSnapshot implements Diffable<AhatSnapshot> {
     AhatInstance.computeReachability(mSuperRoot, progress, mInstances.size());
 
     mBitmapDumpData = AhatBitmapInstance.findBitmapDumpData(mSuperRoot, mInstances);
+
+    mDuplicatedStrings = DuplicateStrings.findDuplicatedStrings(mSuperRoot, mInstances);
 
     for (AhatInstance inst : mInstances) {
       // Add this instance to its site.
@@ -220,5 +225,14 @@ public class AhatSnapshot implements Diffable<AhatSnapshot> {
    */
   public List<List<AhatBitmapInstance>> findDuplicateBitmaps() {
     return AhatBitmapInstance.findDuplicates(mBitmapDumpData);
+  }
+
+  /**
+   * Returns duplicated strings in this snapshot
+   *
+   * @return list of duplicated strings
+   */
+  public List<DuplicateStrings.DuplicatedString> findTopDuplicateStrings() {
+    return DuplicateStrings.findMostDuplicatedStrings(mDuplicatedStrings, 50);
   }
 }
