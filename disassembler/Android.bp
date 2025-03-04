@@ -112,6 +112,13 @@ art_cc_library {
         "com.android.art",
         "com.android.art.debug",
     ],
+    arch: {
+        arm: {
+            lto: {
+                 never: true,
+            }
+        }
+    }
 }
 
 cc_defaults {
