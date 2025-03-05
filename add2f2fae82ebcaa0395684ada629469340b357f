@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc9fb202_e5ff77da",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-05T05:45:03Z",
+      "side": 1,
+      "message": "Some comments, but nothing critical.",
+      "revId": "add2f2fae82ebcaa0395684ada629469340b357f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1f4bd23_25114c02",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5085,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-05T05:45:03Z",
+      "side": 1,
+      "message": "Presumably newlines here work  correctly? I\u0027ve tended to avoid them, and not wrried about line length. Do you end up with a date in front of each line? I guess that doesn\u0027t matter too much.",
+      "range": {
+        "startLine": 5085,
+        "startChar": 23,
+        "endLine": 5085,
+        "endChar": 25
+      },
+      "revId": "add2f2fae82ebcaa0395684ada629469340b357f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8795a09_7d5152aa",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5118,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-05T05:45:03Z",
+      "side": 1,
+      "message": "redundant?",
+      "range": {
+        "startLine": 5118,
+        "startChar": 4,
+        "endLine": 5118,
+        "endChar": 31
+      },
+      "revId": "add2f2fae82ebcaa0395684ada629469340b357f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f24ae95_445c5f8c",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5119,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-05T05:45:03Z",
+      "side": 1,
+      "message": "have",
+      "range": {
+        "startLine": 5119,
+        "startChar": 41,
+        "endLine": 5119,
+        "endChar": 44
+      },
+      "revId": "add2f2fae82ebcaa0395684ada629469340b357f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00d7a81a_fc44b720",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5134,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-05T05:45:03Z",
+      "side": 1,
+      "message": "Why is that needed?",
+      "range": {
+        "startLine": 5134,
+        "startChar": 63,
+        "endLine": 5134,
+        "endChar": 89
+      },
+      "revId": "add2f2fae82ebcaa0395684ada629469340b357f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
