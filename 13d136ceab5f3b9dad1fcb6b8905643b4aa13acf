@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30c74205_de1a3af0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-05T16:40:20Z",
+      "side": 1,
+      "message": "Heavy presubmit with two of the failing tests on the release branch still underway: http://android-build/abtd/run/L60700030010094758/",
+      "range": {
+        "startLine": 16,
+        "startChar": 6,
+        "endLine": 16,
+        "endChar": 8
+      },
+      "revId": "13d136ceab5f3b9dad1fcb6b8905643b4aa13acf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
