@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "50aea37b_7b644a85",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5085,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-05T14:56:54Z",
+      "side": 1,
+      "message": "The output seemed fine and readable to me.\n\nI believe every line in the logcat has timestamp. And so was the case even with the newlines.",
+      "parentUuid": "c1f4bd23_25114c02",
+      "range": {
+        "startLine": 5085,
+        "startChar": 23,
+        "endLine": 5085,
+        "endChar": 25
+      },
+      "revId": "add2f2fae82ebcaa0395684ada629469340b357f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a8795a09_7d5152aa",
@@ -54,6 +78,30 @@
       "writtenOn": "2025-03-05T05:45:03Z",
       "side": 1,
       "message": "redundant?",
+      "range": {
+        "startLine": 5118,
+        "startChar": 4,
+        "endLine": 5118,
+        "endChar": 31
+      },
+      "revId": "add2f2fae82ebcaa0395684ada629469340b357f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7afffc5_508c06d1",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5118,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-05T14:56:54Z",
+      "side": 1,
+      "message": "Actually not. We need to clear the variable after non-moving-space is visited as we are using the same visitor.",
+      "parentUuid": "a8795a09_7d5152aa",
       "range": {
         "startLine": 5118,
         "startChar": 4,
@@ -87,6 +135,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a83843a8_66758e85",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5119,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-05T14:56:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f24ae95_445c5f8c",
+      "range": {
+        "startLine": 5119,
+        "startChar": 41,
+        "endLine": 5119,
+        "endChar": 44
+      },
+      "revId": "add2f2fae82ebcaa0395684ada629469340b357f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00d7a81a_fc44b720",
@@ -100,6 +172,30 @@
       "writtenOn": "2025-03-05T05:45:03Z",
       "side": 1,
       "message": "Why is that needed?",
+      "range": {
+        "startLine": 5134,
+        "startChar": 63,
+        "endLine": 5134,
+        "endChar": 89
+      },
+      "revId": "add2f2fae82ebcaa0395684ada629469340b357f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d778985e_a4b21d30",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5134,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-05T14:56:54Z",
+      "side": 1,
+      "message": "It\u0027s required because we could have zero\u0027ed memory towards the end of the last page. Please note that when we reach here, we have consumed young-gen into mid-gen. And young-gen\u0027s end \u003d\u003d post_compact_end, which is page-aligned",
+      "parentUuid": "00d7a81a_fc44b720",
       "range": {
         "startLine": 5134,
         "startChar": 63,
