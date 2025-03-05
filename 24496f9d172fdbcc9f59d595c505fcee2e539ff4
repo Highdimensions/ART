@@ -135,6 +135,30 @@
       },
       "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc835389_d5830a23",
+        "filename": "runtime/interpreter/interpreter_cache.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-05T15:05:36Z",
+      "side": 1,
+      "message": "Yes that\u0027s what I was thinking. But additionally, is it possible to assert that self is the thread running that flip-function on the owning-thread? Because otherwise, we could have thread1 running flip-function on owning-thread, and thread2 calling Clear() (we don\u0027t do that anywhere of course), and in that case also owning-thread can become runnable anytime, right?",
+      "parentUuid": "6ed95971_0e477c11",
+      "range": {
+        "startLine": 24,
+        "startChar": 47,
+        "endLine": 24,
+        "endChar": 99
+      },
+      "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
