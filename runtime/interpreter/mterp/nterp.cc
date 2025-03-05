@@ -464,9 +464,7 @@ extern "C" size_t NterpGetStaticField(Thread* self,
   // fail to resolve the type, we clear the exception to keep interpreter
   // semantics of not throwing when null is stored.
   bool update_cache = true;
-  if (opcode == Instruction::SPUT_OBJECT &&
-      caller->GetDeclaringClass()->HasTypeChecksFailure() &&
-      resolved_field->ResolveType() == nullptr) {
+  if (opcode == Instruction::SPUT_OBJECT && resolved_field->ResolveType() == nullptr) {
     DCHECK(self->IsExceptionPending());
     if (resolve_field_type) {
       return 0;
@@ -515,9 +513,7 @@ extern "C" uint32_t NterpGetInstanceFieldOffset(Thread* self,
   // fail to resolve the type, we clear the exception to keep interpreter
   // semantics of not throwing when null is stored.
   bool update_cache = true;
-  if (opcode == Instruction::IPUT_OBJECT &&
-      caller->GetDeclaringClass()->HasTypeChecksFailure() &&
-      resolved_field->ResolveType() == nullptr) {
+  if (opcode == Instruction::IPUT_OBJECT && resolved_field->ResolveType() == nullptr) {
     DCHECK(self->IsExceptionPending());
     if (resolve_field_type != 0u) {
       return 0;
