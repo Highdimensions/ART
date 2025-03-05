@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e08fb1bd_e434f529",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-05T12:33:01Z",
+      "side": 1,
+      "message": "What I\u0027m referring to is if you give someone a link, like http://localhost:7100/objects?class\u003djava.lang.String\u0026stringHash\u003d325967270\n\nToday, for all the links that you can send, the receiver of the link should be able to run their own copy of ahat with the same hprof file and see exactly what you see when you follow that link. If they run with a different Java implementation, then the link may send them to a different string (or there may be no matching string at all).",
+      "parentUuid": "fbdf73de_b238ea60",
+      "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "992e4c68_e602cedd",
         "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
         "patchSetId": 7
