@@ -159,6 +159,30 @@
       },
       "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90dbe6ea_34a25e09",
+        "filename": "runtime/interpreter/interpreter_cache.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-05T22:31:03Z",
+      "side": 1,
+      "message": "I don\u0027t think there\u0027s currently a way to tell that. But I expect scale will save us here. I think if that happened, we might miss those failures, but we will see others, where the flip-function just finished. You can make a similar argument about the current code, but it seems far less likely to me that we would consistently encounter the other thread running a flip-function than that we would consistently see it in a suspended state.",
+      "parentUuid": "fc835389_d5830a23",
+      "range": {
+        "startLine": 24,
+        "startChar": 47,
+        "endLine": 24,
+        "endChar": 99
+      },
+      "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
