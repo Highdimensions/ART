@@ -302,6 +302,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "06e9d50b_0ba4b2de",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-05T13:57:32Z",
+      "side": 1,
+      "message": "We are already doing `value \u003d loaded_value` in line 609 and that\u0027s why I think the DCHECK can be skipped altogether.\n\nWe could change it to\n```\n// Add a type conversion to a narrow type unless it\u0027s an implicit conversion\n// from an already converted value.\nif (!loaded_value.NeedsConvertedLoopPhi() ||\n    !DataType::IsTypeConversionImplicit(loaded_value.GetLoopPhiConversionLoad()-\u003eGetType(),load_type)) {\n    value \u003d Value::ForConvertedLoopPhiPlaceholder(load);\n}\n```\nWDYT?",
+      "parentUuid": "7423a5f7_c9914606",
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "22f15d6f_60c3e206",
         "filename": "compiler/optimizing/load_store_elimination.cc",
         "patchSetId": 5
