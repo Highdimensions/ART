@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfefed3f_72bc05d3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1065473
+      },
+      "writtenOn": "2025-03-05T12:01:22Z",
+      "side": 1,
+      "message": "Pre-emptively creating revert CL so we definitely don\u0027t forget about it",
+      "revId": "5a8b1333fb99cc0aa5e09357b3bdc6b8481a891d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
