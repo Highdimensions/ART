@@ -4871,11 +4871,10 @@ void MarkCompact::FinishPhase(bool performed_compaction) {
           DCHECK_GT(compacted_klass, compacted_obj);
         }
         // An object (and therefore its class as well) after mid-gen will be
-        // considered again during marking in next GC. So remove all entries
-        // from this point onwards.
+        // considered again during marking in next GC. So remove all such entries.
         if (reinterpret_cast<uint8_t*>(compacted_obj) >= mid_gen_end_) {
-          class_after_obj_map_.erase(iter, class_after_obj_map_.end());
-          break;
+          iter = class_after_obj_map_.erase(iter);
+          continue;
         } else if (mid_to_old_promo_bit_vec_.get() != nullptr) {
           if (reinterpret_cast<uint8_t*>(compacted_klass) >= old_gen_end_) {
             DCHECK(mid_to_old_promo_bit_vec_->IsBitSet(
@@ -4886,11 +4885,15 @@ void MarkCompact::FinishPhase(bool performed_compaction) {
                 (reinterpret_cast<uint8_t*>(compacted_klass) - old_gen_end_) / kAlignment));
           }
         }
-        auto nh = class_after_obj_map_.extract(iter++);
-        nh.key() = ObjReference::FromMirrorPtr(compacted_klass);
-        nh.mapped() = ObjReference::FromMirrorPtr(compacted_obj);
-        auto success = class_after_obj_map_.insert(iter, std::move(nh));
-        CHECK_EQ(success->first.AsMirrorPtr(), compacted_klass);
+        if (performed_compaction) {
+          auto nh = class_after_obj_map_.extract(iter++);
+          nh.key() = ObjReference::FromMirrorPtr(compacted_klass);
+          nh.mapped() = ObjReference::FromMirrorPtr(compacted_obj);
+          auto success = class_after_obj_map_.insert(iter, std::move(nh));
+          CHECK_EQ(success->first.AsMirrorPtr(), compacted_klass);
+        } else {
+          iter++;
+        }
       }
 
       // Dirty the cards for objects captured from native-roots during marking-phase.
@@ -4905,7 +4908,8 @@ void MarkCompact::FinishPhase(bool performed_compaction) {
           // 'mid_gen_end_' is post-compact boundary. So compare against
           // pist-compact object reference.
           mirror::Object* compacted_obj =
-              PostCompactAddress(obj, black_dense_end_, moving_space_end_);
+              performed_compaction ? PostCompactAddress(obj, black_dense_end_, moving_space_end_)
+                                   : obj;
           if (reinterpret_cast<uint8_t*>(compacted_obj) < mid_gen_end_) {
             card_table->MarkCard(compacted_obj);
           }
