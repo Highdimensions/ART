@@ -111,6 +111,30 @@
       },
       "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ed95971_0e477c11",
+        "filename": "runtime/interpreter/interpreter_cache.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-05T01:44:42Z",
+      "side": 1,
+      "message": "In the problematic case, I think kRunningFlipFunction should be set, and won\u0027t be cleared until we do so, right? So can we say owning_thread-\u003eIsSuspended() || owning_thread-\u003eReadFlag(ThreadFlag::kRunningFlipFunction, std::memory_order_relaxed) ?",
+      "parentUuid": "3ee18445_7bfcec7c",
+      "range": {
+        "startLine": 24,
+        "startChar": 47,
+        "endLine": 24,
+        "endChar": 99
+      },
+      "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
