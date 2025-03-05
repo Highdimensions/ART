@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fbdf73de_b238ea60",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-05T12:26:30Z",
+      "side": 1,
+      "message": "So I suppose I could do something like `SHA256` but I don\u0027t think it is necessary to change it.\n\nIIUC, because we use `.hashCode()` here and `.hashCode()` in the summarizer which provides the link, the hashing algorithm will always be the same as we are running it in the same execution ([doc](https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#hashCode()) ) so will always return the same value, regardless of if the algorithm itself changes.",
+      "parentUuid": "1fd559b6_998a3589",
+      "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "992e4c68_e602cedd",
         "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
         "patchSetId": 7
@@ -49,6 +67,24 @@
           ]
         }
       ],
+      "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b267a388_98a35dcd",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-05T12:26:30Z",
+      "side": 1,
+      "message": "Oops, yeah this should be changed - thanks!",
+      "parentUuid": "992e4c68_e602cedd",
       "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -88,6 +124,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ea58a2f_1a1748be",
+        "filename": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-05T12:26:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b507ea8_6533f4f1",
+      "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51be7662_272d61ac",
@@ -101,6 +155,24 @@
       "writtenOn": "2025-03-04T18:08:11Z",
       "side": 1,
       "message": "Are you able to add tests for the case where you _do_ have a stringHash?",
+      "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78fb203c_37c7fb28",
+        "filename": "tools/ahat/src/test/com/android/ahat/ObjectsHandlerTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-05T12:26:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51be7662_272d61ac",
       "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
