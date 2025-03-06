@@ -1,0 +1,75 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "694b4595_bf625361",
+        "filename": "runtime/trace_profile.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-06T16:26:52Z",
+      "side": 1,
+      "message": "drive-by comment: there\u0027s no need to define this as it is always equal to `event`, they only matter for the `!is_method_exit` case, and neither of them are modified.\n\nIf the explicit definition was done for readability, I\u0027m fine with keeping it as-is",
+      "range": {
+        "startLine": 527,
+        "startChar": 4,
+        "endLine": 527,
+        "endChar": 25
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0594da84_797c0eef",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 527,
+                "startChar": 0,
+                "endLine": 528,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 533,
+                "startChar": 0,
+                "endLine": 534,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 546,
+                "startChar": 0,
+                "endLine": 548,
+                "endChar": 0
+              },
+              "replacement": "      int64_t method_diff \u003d event - prev_method_ptr;\n      ArtMethod* method \u003d reinterpret_cast\u003cArtMethod*\u003e(event);\n"
+            },
+            {
+              "path": "runtime/trace_profile.cc",
+              "range": {
+                "startLine": 549,
+                "startChar": 0,
+                "endLine": 550,
+                "endChar": 0
+              },
+              "replacement": "      prev_method_ptr \u003d event;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "568ccec2e71d2a2af3601f16753d9b8dbb3a1587",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
