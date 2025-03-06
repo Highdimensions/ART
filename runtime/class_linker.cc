@@ -36,6 +36,7 @@
 #include "android-base/stringprintf.h"
 #include "android-base/strings.h"
 #include "art_field-inl.h"
+#include "art_field.h"
 #include "art_method-inl.h"
 #include "barrier.h"
 #include "base/arena_allocator.h"
@@ -1224,7 +1225,8 @@ void ClassLinker::RunRootClinits(Thread* self) {
   }
   ArtField* fields_of_classes_to_initialize[] = {
       // Ensure classes used by class loaders are initialized (avoid check at runtime).
-      WellKnownClasses::dalvik_system_DexFile_cookie,
+      WellKnownClasses::dalvik_system_DexFile_res,
+      WellKnownClasses::dalvik_system_DexFile_CleanableResource_cookie,
       WellKnownClasses::dalvik_system_DexPathList_dexElements,
       WellKnownClasses::dalvik_system_DexPathList__Element_dexFile,
       // Ensure `VMRuntime` is initialized (avoid check at runtime).
@@ -11009,8 +11011,10 @@ ObjPtr<mirror::ClassLoader> ClassLinker::CreateWellKnownClassLoader(
   ArtField* element_file_field = WellKnownClasses::dalvik_system_DexPathList__Element_dexFile;
   DCHECK_EQ(h_dex_element_class.Get(), element_file_field->GetDeclaringClass());
 
-  ArtField* cookie_field = WellKnownClasses::dalvik_system_DexFile_cookie;
-  DCHECK_EQ(cookie_field->GetDeclaringClass(), element_file_field->LookupResolvedType());
+  ArtField* res_field = WellKnownClasses::dalvik_system_DexFile_res;
+  DCHECK_EQ(res_field->GetDeclaringClass(), element_file_field->LookupResolvedType());
+
+  ArtField* cookie_field = WellKnownClasses::dalvik_system_DexFile_CleanableResource_cookie;
 
   ArtField* file_name_field = WellKnownClasses::dalvik_system_DexFile_fileName;
   DCHECK_EQ(file_name_field->GetDeclaringClass(), element_file_field->LookupResolvedType());
@@ -11018,7 +11022,7 @@ ObjPtr<mirror::ClassLoader> ClassLinker::CreateWellKnownClassLoader(
   // Fill the elements array.
   int32_t index = 0;
   for (const DexFile* dex_file : dex_files) {
-    StackHandleScope<4> hs2(self);
+    StackHandleScope<5> hs2(self);
 
     // CreateWellKnownClassLoader is only used by gtests and compiler.
     // Index 0 of h_long_array is supposed to be the oat file but we can leave it null.
@@ -11033,7 +11037,10 @@ ObjPtr<mirror::ClassLoader> ClassLinker::CreateWellKnownClassLoader(
     Handle<mirror::Object> h_dex_file = hs2.NewHandle(
         cookie_field->GetDeclaringClass()->AllocObject(self));
     DCHECK(h_dex_file != nullptr);
-    cookie_field->SetObject<false>(h_dex_file.Get(), h_long_array.Get());
+    Handle<mirror::Object> h_cleanable_res = hs2.NewHandle(
+        res_field->GetDeclaringClass()->AllocObject(self));
+    cookie_field->SetObject<false>(h_cleanable_res.Get(), h_long_array.Get());
+    res_field->SetObject<false>(h_dex_file.Get(), h_cleanable_res.Get());
 
     Handle<mirror::String> h_file_name = hs2.NewHandle(
         mirror::String::AllocFromModifiedUtf8(self, dex_file->GetLocation().c_str()));

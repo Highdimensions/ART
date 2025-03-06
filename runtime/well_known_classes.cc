@@ -120,8 +120,9 @@ ArtMethod* WellKnownClasses::org_apache_harmony_dalvik_ddmc_DdmServer_dispatch;
 ArtField* WellKnownClasses::dalvik_system_BaseDexClassLoader_pathList;
 ArtField* WellKnownClasses::dalvik_system_BaseDexClassLoader_sharedLibraryLoaders;
 ArtField* WellKnownClasses::dalvik_system_BaseDexClassLoader_sharedLibraryLoadersAfter;
-ArtField* WellKnownClasses::dalvik_system_DexFile_cookie;
 ArtField* WellKnownClasses::dalvik_system_DexFile_fileName;
+ArtField* WellKnownClasses::dalvik_system_DexFile_res;
+ArtField* WellKnownClasses::dalvik_system_DexFile_CleanableResource_cookie;
 ArtField* WellKnownClasses::dalvik_system_DexPathList_dexElements;
 ArtField* WellKnownClasses::dalvik_system_DexPathList__Element_dexFile;
 ArtField* WellKnownClasses::dalvik_system_VMRuntime_nonSdkApiUsageConsumer;
@@ -430,7 +431,7 @@ void WellKnownClasses::InitFieldsAndMethodsOnly(JNIEnv* env) {
   java_lang_Long_value = CacheValueInBoxField(
       class_linker, self, "Ljava/lang/Long;", "J");
 
-  StackHandleScope<45u> hs(self);
+  StackHandleScope<46u> hs(self);
   Handle<mirror::Class> d_s_bdcl =
       hs.NewHandle(FindSystemClass(class_linker, self, "Ldalvik/system/BaseDexClassLoader;"));
   Handle<mirror::Class> d_s_dlcl =
@@ -439,6 +440,8 @@ void WellKnownClasses::InitFieldsAndMethodsOnly(JNIEnv* env) {
       hs.NewHandle(FindSystemClass(class_linker, self, "Ldalvik/system/DexClassLoader;"));
   Handle<mirror::Class> d_s_df =
       hs.NewHandle(FindSystemClass(class_linker, self, "Ldalvik/system/DexFile;"));
+  Handle<mirror::Class> d_s_df_cr =
+      hs.NewHandle(FindSystemClass(class_linker, self, "Ldalvik/system/DexFile$CleanableResource;"));
   Handle<mirror::Class> d_s_dpl =
       hs.NewHandle(FindSystemClass(class_linker, self, "Ldalvik/system/DexPathList;"));
   Handle<mirror::Class> d_s_dpl_e =
@@ -768,10 +771,12 @@ void WellKnownClasses::InitFieldsAndMethodsOnly(JNIEnv* env) {
       /*is_static=*/ false,
       "sharedLibraryLoadersAfter",
       "[Ljava/lang/ClassLoader;");
-  dalvik_system_DexFile_cookie = CacheField(
-      d_s_df.Get(), /*is_static=*/ false, "mCookie", "Ljava/lang/Object;");
   dalvik_system_DexFile_fileName = CacheField(
       d_s_df.Get(), /*is_static=*/ false, "mFileName", "Ljava/lang/String;");
+  dalvik_system_DexFile_res = CacheField(
+      d_s_df.Get(), /*is_static=*/ false, "res", "Ldalvik/system/DexFile$CleanableResource;");
+  dalvik_system_DexFile_CleanableResource_cookie = CacheField(
+      d_s_df_cr.Get(), /*is_static=*/ false, "cookie", "Ljava/lang/Object;");
   dalvik_system_DexPathList_dexElements = CacheField(
       d_s_dpl.Get(), /*is_static=*/ false, "dexElements", "[Ldalvik/system/DexPathList$Element;");
   dalvik_system_DexPathList__Element_dexFile = CacheField(
@@ -976,8 +981,9 @@ void WellKnownClasses::Clear() {
   org_apache_harmony_dalvik_ddmc_DdmServer_dispatch = nullptr;
 
   dalvik_system_BaseDexClassLoader_pathList = nullptr;
-  dalvik_system_DexFile_cookie = nullptr;
   dalvik_system_DexFile_fileName = nullptr;
+  dalvik_system_DexFile_res = nullptr;
+  dalvik_system_DexFile_CleanableResource_cookie = nullptr;
   dalvik_system_DexPathList_dexElements = nullptr;
   dalvik_system_DexPathList__Element_dexFile = nullptr;
   dalvik_system_VMRuntime_nonSdkApiUsageConsumer = nullptr;

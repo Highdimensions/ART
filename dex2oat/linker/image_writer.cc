@@ -28,6 +28,7 @@
 
 #include "android-base/strings.h"
 #include "art_field-inl.h"
+#include "art_field.h"
 #include "art_method-inl.h"
 #include "base/callee_save_type.h"
 #include "base/globals.h"
@@ -70,6 +71,7 @@
 #include "mirror/method.h"
 #include "mirror/object-inl.h"
 #include "mirror/object-refvisitor-inl.h"
+#include "mirror/object.h"
 #include "mirror/object_array-alloc-inl.h"
 #include "mirror/object_array-inl.h"
 #include "mirror/string-inl.h"
@@ -82,13 +84,16 @@
 #include "oat/oat.h"
 #include "oat/oat_file.h"
 #include "oat/oat_file_manager.h"
+#include "obj_ptr.h"
 #include "optimizing/intrinsic_objects.h"
+#include "read_barrier_option.h"
 #include "runtime.h"
 #include "scoped_thread_state_change-inl.h"
 #include "subtype_check.h"
 #include "thread-current-inl.h"  // For AssertOnly1Thread.
 #include "thread_list.h"         // For AssertOnly1Thread.
 #include "well_known_classes-inl.h"
+#include "well_known_classes.h"
 
 using ::art::mirror::Class;
 using ::art::mirror::DexCache;
@@ -446,9 +451,12 @@ static void ClearDexFileCookies() REQUIRES_SHARED(Locks::mutator_lock_) {
     DCHECK(obj != nullptr);
     Class* klass = obj->GetClass();
     if (klass == WellKnownClasses::dalvik_system_DexFile) {
-      ArtField* field = WellKnownClasses::dalvik_system_DexFile_cookie;
+      ArtField* res_field = WellKnownClasses::dalvik_system_DexFile_res;
+      ArtField* cookie_field = WellKnownClasses::dalvik_system_DexFile_CleanableResource_cookie;
+
       // Null out the cookie to enable determinism. b/34090128
-      field->SetObject</*kTransactionActive*/false>(obj, nullptr);
+      ObjPtr<mirror::Object> cleanable_res = res_field->GetObject(obj);
+      cookie_field->SetObject</*kTransactionActive*/false>(obj, nullptr);
     }
   };
   Runtime::Current()->GetHeap()->VisitObjects(visitor);
@@ -2304,8 +2312,12 @@ void ImageWriter::LayoutHelper::VerifyImageBinSlotsAssigned() {
           // Note: The app class loader is used only for checking against the runtime
           // class loader, the dex file cookie is cleared and therefore we do not need
           // to run the finalizer even if we implement app image objects collection.
-          ArtField* field = WellKnownClasses::dalvik_system_DexFile_cookie;
-          CHECK(field->GetObject<kWithoutReadBarrier>(ref) == nullptr);
+          ArtField* cookie_field = WellKnownClasses::dalvik_system_DexFile_CleanableResource_cookie;
+          ArtField* res_field = WellKnownClasses::dalvik_system_DexFile_res;
+
+          ObjPtr<mirror::Object> cleanable_res = ref_field->GetObject<kWithoutReadBarrier>(ref);
+
+          CHECK(cookie_field->GetObject<kWithoutReadBarrier>(cleanable_res) == nullptr);
           return;
         }
         if (klass->IsStringClass()) {

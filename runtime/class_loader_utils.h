@@ -26,8 +26,10 @@
 #include "mirror/object-inl.h"
 #include "mirror/object.h"
 #include "native/dalvik_system_DexFile.h"
+#include "obj_ptr.h"
 #include "scoped_thread_state_change-inl.h"
 #include "well_known_classes-inl.h"
+#include "well_known_classes.h"
 
 namespace art HIDDEN {
 
@@ -110,9 +112,10 @@ inline RetType VisitClassLoaderDexFiles(Thread* self,
                                         Visitor fn,
                                         RetType defaultReturn)
     REQUIRES_SHARED(Locks::mutator_lock_) {
-  ArtField* const cookie_field = WellKnownClasses::dalvik_system_DexFile_cookie;
+  ArtField* const res_field = WellKnownClasses::dalvik_system_DexFile_res;
+  ArtField* const cookie_field = WellKnownClasses::dalvik_system_DexFile_CleanableResource_cookie;
   ArtField* const dex_file_field = WellKnownClasses::dalvik_system_DexPathList__Element_dexFile;
-  if (dex_file_field == nullptr || cookie_field == nullptr) {
+  if (dex_file_field == nullptr || cookie_field == nullptr || res_field == nullptr) {
     return defaultReturn;
   }
   auto visit_dex_files = [&](ObjPtr<mirror::Object> element, RetType* ret)
@@ -120,8 +123,9 @@ inline RetType VisitClassLoaderDexFiles(Thread* self,
     ObjPtr<mirror::Object> dex_file = dex_file_field->GetObject(element);
     if (dex_file != nullptr) {
       StackHandleScope<1> hs(self);
+      ObjPtr<mirror::Object> cleanable_resource = res_field->GetObject(dex_file);
       Handle<mirror::LongArray> long_array =
-          hs.NewHandle(cookie_field->GetObject(dex_file)->AsLongArray());
+          hs.NewHandle(cookie_field->GetObject(cleanable_resource)->AsLongArray());
       if (long_array == nullptr) {
         // This should never happen so log a warning.
         LOG(WARNING) << "Null DexFile::mCookie";

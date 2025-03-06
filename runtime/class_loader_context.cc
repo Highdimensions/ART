@@ -23,6 +23,7 @@
 #include "android-base/parseint.h"
 #include "android-base/strings.h"
 #include "art_field-inl.h"
+#include "art_field.h"
 #include "base/casts.h"
 #include "base/dchecked_vector.h"
 #include "base/file_utils.h"
@@ -46,6 +47,7 @@
 #include "scoped_thread_state_change-inl.h"
 #include "thread.h"
 #include "well_known_classes-inl.h"
+#include "well_known_classes.h"
 
 namespace art HIDDEN {
 
@@ -973,14 +975,17 @@ void ClassLoaderContext::CheckDexFilesOpened(const std::string& calling_method) 
 // Collects the dex files from the give Java dex_file object. Only the dex files with
 // at least 1 class are collected. If a null java_dex_file is passed this method does nothing.
 static bool CollectDexFilesFromJavaDexFile(ObjPtr<mirror::Object> java_dex_file,
+                                           ArtField* const res_field,
                                            ArtField* const cookie_field,
                                            std::vector<const DexFile*>* out_dex_files)
     REQUIRES_SHARED(Locks::mutator_lock_) {
   if (java_dex_file == nullptr) {
     return true;
   }
+  DCHECK_EQ(java_dex_file->GetClass(), res_field->GetDeclaringClass());
   // On the Java side, the dex files are stored in the cookie field.
-  ObjPtr<mirror::LongArray> long_array = cookie_field->GetObject(java_dex_file)->AsLongArray();
+  ObjPtr<mirror::Object> cleanable_res = res_field->GetObject(java_dex_file);
+  ObjPtr<mirror::LongArray> long_array = cookie_field->GetObject(cleanable_res)->AsLongArray();
   if (long_array == nullptr) {
     // This should never happen so log a warning.
     LOG(ERROR) << "Unexpected null cookie";
@@ -1011,11 +1016,13 @@ static bool CollectDexFilesFromSupportedClassLoader(Thread* self,
 
   // All supported class loaders inherit from BaseDexClassLoader.
   // We need to get the DexPathList and loop through it.
-  ArtField* const cookie_field = WellKnownClasses::dalvik_system_DexFile_cookie;
+  ArtField* const cookie_field = WellKnownClasses::dalvik_system_DexFile_CleanableResource_cookie;
+  ArtField* const res_field = WellKnownClasses::dalvik_system_DexFile_res;
   ArtField* const dex_file_field = WellKnownClasses::dalvik_system_DexPathList__Element_dexFile;
   ObjPtr<mirror::Object> dex_path_list =
       WellKnownClasses::dalvik_system_BaseDexClassLoader_pathList->GetObject(class_loader.Get());
   CHECK(cookie_field != nullptr);
+  CHECK(res_field != nullptr);
   CHECK(dex_file_field != nullptr);
   if (dex_path_list == nullptr) {
     // This may be null if the current class loader is under construction and it does not
@@ -1045,7 +1052,7 @@ static bool CollectDexFilesFromSupportedClassLoader(Thread* self,
         return false;
       }
       ObjPtr<mirror::Object> dex_file = dex_file_field->GetObject(element);
-      if (!CollectDexFilesFromJavaDexFile(dex_file, cookie_field, out_dex_files)) {
+      if (!CollectDexFilesFromJavaDexFile(dex_file, res_field, cookie_field, out_dex_files)) {
         return false;
       }
     }
@@ -1059,7 +1066,8 @@ static bool GetDexFilesFromDexElementsArray(
     std::vector<const DexFile*>* out_dex_files) REQUIRES_SHARED(Locks::mutator_lock_) {
   DCHECK(dex_elements != nullptr);
 
-  ArtField* const cookie_field = WellKnownClasses::dalvik_system_DexFile_cookie;
+  ArtField* const cookie_field = WellKnownClasses::dalvik_system_DexFile_CleanableResource_cookie;
+  ArtField* const res_field = WellKnownClasses::dalvik_system_DexFile_res;
   ArtField* const dex_file_field = WellKnownClasses::dalvik_system_DexPathList__Element_dexFile;
   const ObjPtr<mirror::Class> element_class =
       WellKnownClasses::dalvik_system_DexPathList__Element.Get();
@@ -1087,7 +1095,7 @@ static bool GetDexFilesFromDexElementsArray(
       return false;
     }
 
-    if (!CollectDexFilesFromJavaDexFile(dex_file, cookie_field, out_dex_files)) {
+    if (!CollectDexFilesFromJavaDexFile(dex_file, res_field, cookie_field, out_dex_files)) {
       return false;
     }
   }

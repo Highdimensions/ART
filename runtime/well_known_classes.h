@@ -166,8 +166,9 @@ struct EXPORT WellKnownClasses {
   static ArtField* dalvik_system_BaseDexClassLoader_pathList;
   static ArtField* dalvik_system_BaseDexClassLoader_sharedLibraryLoaders;
   static ArtField* dalvik_system_BaseDexClassLoader_sharedLibraryLoadersAfter;
-  static ArtField* dalvik_system_DexFile_cookie;
   static ArtField* dalvik_system_DexFile_fileName;
+  static ArtField* dalvik_system_DexFile_res;
+  static ArtField* dalvik_system_DexFile_CleanableResource_cookie;
   static ArtField* dalvik_system_DexPathList_dexElements;
   static ArtField* dalvik_system_DexPathList__Element_dexFile;
   static ArtField* dalvik_system_VMRuntime_nonSdkApiUsageConsumer;
@@ -236,7 +237,7 @@ struct EXPORT WellKnownClasses {
       dalvik_system_DelegateLastClassLoader;
   static constexpr ClassFromMethod<&dalvik_system_DexClassLoader_init>
       dalvik_system_DexClassLoader;
-  static constexpr ClassFromField<&dalvik_system_DexFile_cookie> dalvik_system_DexFile;
+  static constexpr ClassFromField<&dalvik_system_DexFile_res> dalvik_system_DexFile;
   static constexpr ClassFromField<&dalvik_system_DexPathList_dexElements> dalvik_system_DexPathList;
   static constexpr ClassFromField<&dalvik_system_DexPathList__Element_dexFile>
       dalvik_system_DexPathList__Element;

@@ -17,6 +17,7 @@
 #include "compiler_driver.h"
 
 #include <unistd.h>
+#include "well_known_classes.h"
 
 #ifndef __APPLE__
 #include <malloc.h>  // For mallinfo
@@ -1216,8 +1217,9 @@ static void VerifyClassLoaderClassesAreImageClasses(/* out */ HashSet<std::strin
       WellKnownClasses::dalvik_system_BaseDexClassLoader_pathList,
       WellKnownClasses::dalvik_system_BaseDexClassLoader_sharedLibraryLoaders,
       WellKnownClasses::dalvik_system_BaseDexClassLoader_sharedLibraryLoadersAfter,
-      WellKnownClasses::dalvik_system_DexFile_cookie,
       WellKnownClasses::dalvik_system_DexFile_fileName,
+      WellKnownClasses::dalvik_system_DexFile_res,
+      WellKnownClasses::dalvik_system_DexFile_CleanableResource_cookie,
       WellKnownClasses::dalvik_system_DexPathList_dexElements,
       WellKnownClasses::dalvik_system_DexPathList__Element_dexFile,
       WellKnownClasses::java_lang_ClassLoader_parent,
