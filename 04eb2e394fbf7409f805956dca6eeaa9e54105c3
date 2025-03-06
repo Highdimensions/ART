@@ -22,6 +22,30 @@
       },
       "revId": "04eb2e394fbf7409f805956dca6eeaa9e54105c3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66fe3e24_de076742",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 4858,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-06T00:01:31Z",
+      "side": 1,
+      "message": "It is actually still relevant. But I have updated the comment to explain better what\u0027s being done here.",
+      "parentUuid": "47c0a248_558b4436",
+      "range": {
+        "startLine": 4858,
+        "startChar": 6,
+        "endLine": 4858,
+        "endChar": 67
+      },
+      "revId": "04eb2e394fbf7409f805956dca6eeaa9e54105c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
