@@ -300,6 +300,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6907fb82_fa718a4c",
+        "filename": "simulator/code_simulator_arm64.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-06T12:16:57Z",
+      "side": 1,
+      "message": "Ah, right. I missed those tests. For those I think it is expected that only artMethodExitHook is called. Thanks!",
+      "parentUuid": "7cc7bc9a_2658a339",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 111,
+        "endChar": 50
+      },
+      "revId": "5e761b27e73e272aeecf1eb5b628299341fabe76",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec580838_7090925f",

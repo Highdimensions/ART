@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "312e4c9c_d879339a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-06T12:16:57Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "d8587a939a0bef6481b166c3ad74aa56c60636e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "521fcff2_f11bd316",
+        "filename": "runtime/arch/x86_64/native_entrypoints_x86_64.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-06T12:16:57Z",
+      "side": 1,
+      "message": "Don\u0027t we already have this in %rsi. I guess it\u0027s safer and cleaner to do this since it isn\u0027t performance critical. So just checking to see if I am missing something.",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 151,
+        "endChar": 23
+      },
+      "revId": "d8587a939a0bef6481b166c3ad74aa56c60636e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "149c2ebc_b5e363ee",
+        "filename": "runtime/arch/x86_64/native_entrypoints_x86_64.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-06T12:16:57Z",
+      "side": 1,
+      "message": "Why do we need this? Do we need those values on stack?",
+      "range": {
+        "startLine": 195,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 27
+      },
+      "revId": "d8587a939a0bef6481b166c3ad74aa56c60636e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd475add_cd2ffef6",
+        "filename": "runtime/arch/x86_64/native_entrypoints_x86_64.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-06T12:16:57Z",
+      "side": 1,
+      "message": "Don\u0027t we need to call the artQuickGenericJniEndTrampoline after the native call?",
+      "range": {
+        "startLine": 198,
+        "startChar": 3,
+        "endLine": 199,
+        "endChar": 14
+      },
+      "revId": "d8587a939a0bef6481b166c3ad74aa56c60636e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
