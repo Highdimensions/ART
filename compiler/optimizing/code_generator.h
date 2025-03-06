@@ -792,8 +792,10 @@ class CodeGenerator : public DeletableArenaObject<kArenaAllocCodeGenerator> {
   }
 
   virtual bool HasAllocatedCalleeSaveRegisters() const {
-    // We check the core registers against 1 because it always comprises the return PC.
-    return (POPCOUNT(allocated_registers_.GetCoreRegisters() & core_callee_save_mask_) != 1)
+    // The return PC register is always allocated, and on ARM64, the frame pointer is also always
+    // allocated.
+    const int count_always_spilled = (GetInstructionSet() == InstructionSet::kArm64) ? 2 : 1;
+    return (POPCOUNT(allocated_registers_.GetCoreRegisters() & core_callee_save_mask_) != count_always_spilled)
       || (POPCOUNT(allocated_registers_.GetFloatingPointRegisters() & fpu_callee_save_mask_) != 0);
   }
 

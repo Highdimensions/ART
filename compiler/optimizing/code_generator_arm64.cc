@@ -1091,6 +1091,8 @@ CodeGeneratorARM64::CodeGeneratorARM64(HGraph* graph,
                                          graph->GetAllocator()->Adapter(kArenaAllocCodeGenerator)) {
   // Save the link register (containing the return address) to mimic Quick.
   AddAllocatedRegister(LocationFrom(lr));
+  // Save the FP register too.
+  AddAllocatedRegister(LocationFrom(x29));
 
   bool use_sve = ShouldUseSVE();
   if (use_sve) {
@@ -1485,7 +1487,25 @@ void CodeGeneratorARM64::GenerateFrameEntry() {
     // Make sure the frame size isn't unreasonably large.
     DCHECK_LE(GetFrameSize(), GetMaximumFrameSize());
 
-    // Stack layout:
+    // What we want(?) if FP is being updated according to the example stack
+    // frame in the AArch64 PCS:
+    //      sp[frame_size - 8]        : preserved core registers (not lr, not fp).
+    //      ...                       : preserved fp registers.
+    //      ...                       : reserved frame space.
+    //      sp[16]                    : current method.
+    //      sp[8]                     : saved lr.
+    //      sp[0]                     : saved fp. (fp points here)
+
+    // This is much easier to accomplish, because a lot of code assumes that
+    // sp[0] is the current method, and that LR is on the top of the frame:
+    //      sp[frame_size - 8]        : saved lr.
+    //      sp[frame_size - 16]       : saved fp. (fp points here)
+    //      ...                       : other preserved core registers.
+    //      ...                       : preserved fp registers.
+    //      ...                       : reserved frame space.
+    //      sp[0]                     : current method.
+
+    // [OLD] Stack layout:
     //      sp[frame_size - 8]        : lr.
     //      ...                       : other preserved core registers.
     //      ...                       : other preserved fp registers.
@@ -1527,6 +1547,10 @@ void CodeGeneratorARM64::GenerateFrameEntry() {
       Register wzr = Register(VIXLRegCodeFromART(WZR), kWRegSize);
       __ Str(wzr, MemOperand(sp, GetStackOffsetOfShouldDeoptimizeFlag()));
     }
+
+    // Update the frame pointer. The top two words of the stack frame are FP
+    // followed by LR.
+    __ Add(x29, sp, Operand(frame_size - kXRegSizeInBytes * 2));
 
     MaybeRecordTraceEvent(/* is_method_entry= */ true);
   }
@@ -1670,6 +1694,7 @@ void CodeGeneratorARM64::CheckGCCardIsValid(Register object) {
 
 void CodeGeneratorARM64::SetupBlockedRegisters() const {
   // Blocked core registers:
+  //      fp        : Frame pointer for stack unwinding.
   //      lr        : Runtime reserved.
   //      tr        : Runtime reserved.
   //      mr        : Runtime reserved.
@@ -1684,6 +1709,7 @@ void CodeGeneratorARM64::SetupBlockedRegisters() const {
   while (!reserved_core_registers.IsEmpty()) {
     blocked_core_registers_[reserved_core_registers.PopLowestIndex().GetCode()] = true;
   }
+  blocked_core_registers_[FP] = true;
   blocked_core_registers_[X18] = true;
 
   CPURegList reserved_fp_registers = vixl_reserved_fp_registers;

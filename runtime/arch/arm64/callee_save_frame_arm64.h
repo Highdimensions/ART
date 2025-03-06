@@ -34,13 +34,12 @@ static constexpr uint32_t kArm64CalleeSaveAlwaysSpills =
     // Note: ArtMethod::GetReturnPcOffsetInBytes() rely on the assumption that
     // LR is always saved on the top of the frame for all targets.
     // That is, lr = *(sp + framesize - pointer_size).
-    (1 << art::arm64::LR);
+    (1 << art::arm64::LR) | (1 << art::arm64::X29);
 // Callee saved registers
 static constexpr uint32_t kArm64CalleeSaveRefSpills =
     (1 << art::arm64::X20) | (1 << art::arm64::X21) | (1 << art::arm64::X22) |
     (1 << art::arm64::X23) | (1 << art::arm64::X24) | (1 << art::arm64::X25) |
-    (1 << art::arm64::X26) | (1 << art::arm64::X27) | (1 << art::arm64::X28) |
-    (1 << art::arm64::X29);
+    (1 << art::arm64::X26) | (1 << art::arm64::X27) | (1 << art::arm64::X28);
 // X0 is the method pointer. Not saved.
 static constexpr uint32_t kArm64CalleeSaveArgSpills =
     (1 << art::arm64::X1) | (1 << art::arm64::X2) | (1 << art::arm64::X3) |

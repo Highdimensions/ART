@@ -69,7 +69,7 @@ static constexpr ManagedRegister kCalleeSaveRegisters[] = {
     Arm64ManagedRegister::FromXRegister(X26),
     Arm64ManagedRegister::FromXRegister(X27),
     Arm64ManagedRegister::FromXRegister(X28),
-    Arm64ManagedRegister::FromXRegister(X29),
+    //Arm64ManagedRegister::FromXRegister(X29), // TODO: This probably shouldn't be commented out?
     Arm64ManagedRegister::FromXRegister(LR),
     // Hard float registers.
     // Considering the case, java_method_1 --> jni method --> jni function --> java_method_2,
@@ -123,7 +123,7 @@ static constexpr ManagedRegister kAapcs64CalleeSaveRegisters[] = {
     Arm64ManagedRegister::FromXRegister(X26),
     Arm64ManagedRegister::FromXRegister(X27),
     Arm64ManagedRegister::FromXRegister(X28),
-    Arm64ManagedRegister::FromXRegister(X29),
+    //Arm64ManagedRegister::FromXRegister(X29), // TODO: This probably shouldn't be commented out?
     Arm64ManagedRegister::FromXRegister(LR),
     // Hard float registers.
     Arm64ManagedRegister::FromDRegister(D8),
@@ -241,13 +241,13 @@ uint32_t Arm64JniCallingConvention::FpSpillMask() const {
 
 ArrayRef<const ManagedRegister> Arm64JniCallingConvention::CalleeSaveScratchRegisters() const {
   DCHECK(!IsCriticalNative());
-  // Use X22-X29 from native callee saves.
+  // Use X22-X28 from native callee saves.
   constexpr size_t kStart = 3u;
-  constexpr size_t kLength = 8u;
+  constexpr size_t kLength = 7u;
   static_assert(kAapcs64CalleeSaveRegisters[kStart].Equals(
                     Arm64ManagedRegister::FromXRegister(X22)));
   static_assert(kAapcs64CalleeSaveRegisters[kStart + kLength - 1u].Equals(
-                    Arm64ManagedRegister::FromXRegister(X29)));
+                    Arm64ManagedRegister::FromXRegister(X28)));
   static_assert((kAapcs64CoreCalleeSpillMask & ~kCoreCalleeSpillMask) == 0u);
   return ArrayRef<const ManagedRegister>(kAapcs64CalleeSaveRegisters).SubArray(kStart, kLength);
 }
