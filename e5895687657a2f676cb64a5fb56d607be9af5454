@@ -1,0 +1,243 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb21b27f_3bfe7927",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-06T12:21:46Z",
+      "side": 1,
+      "message": "What if `stringId` is null here?",
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd8f6a5b_0a410ab5",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-06T12:21:46Z",
+      "side": 1,
+      "message": "How about convert to integer here? ID 0 can just be reserved for no ID specified.",
+      "fixSuggestions": [
+        {
+          "fixId": "79f5ffb6_76c6a50b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+              "range": {
+                "startLine": 48,
+                "startChar": 0,
+                "endLine": 49,
+                "endChar": 0
+              },
+              "replacement": "   * @param stringId if non-zero, include instances of java.lang.String with\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+              "range": {
+                "startLine": 53,
+                "startChar": 0,
+                "endLine": 55,
+                "endChar": 0
+              },
+              "replacement": "      Site site, String className, boolean subclass, String heapName, int stringId) {\n    String content \u003d DuplicateStrings.getStringFromId(stringId);\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+              "range": {
+                "startLine": 58,
+                "startChar": 0,
+                "endLine": 59,
+                "endChar": 0
+              },
+              "replacement": "        \u0026\u0026 (stringId \u003d\u003d 0 || (x.getClassName().equals(\"java.lang.String\") \u0026\u0026\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+              "range": {
+                "startLine": 73,
+                "startChar": 0,
+                "endLine": 74,
+                "endChar": 0
+              },
+              "replacement": "    int stringId \u003d query.getInt(\"stringId\", 0);\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+              "range": {
+                "startLine": 92,
+                "startChar": 0,
+                "endLine": 94,
+                "endChar": 0
+              },
+              "replacement": "    if (stringId !\u003d 0) {\n      doc.description(DocString.text(\"stringId\"), DocString.text(String.valueOf(stringId)));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9dd0b86f_70092dc0",
+        "filename": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-06T12:21:46Z",
+      "side": 1,
+      "message": "Could your `DuplicatedString` instance store the associated ID? That way you don\u0027t need to do this expensive String-to-ID conversion.",
+      "fixSuggestions": [
+        {
+          "fixId": "a10be6ca_8e607e7a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+              "range": {
+                "startLine": 122,
+                "startChar": 0,
+                "endLine": 124,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+              "range": {
+                "startLine": 127,
+                "startChar": 0,
+                "endLine": 128,
+                "endChar": 0
+              },
+              "replacement": "                Summarizer.summarizeDuplicateString(Long.valueOf(duplicate.getCount()), String.valueOf(duplicate.getId())),\n"
+            }
+          ]
+        }
+      ],
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cb1584f_def29e3e",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-06T12:21:46Z",
+      "side": 1,
+      "message": "Why use a `HashMap` if your key is just an integer from 1 to N? You could use an array instead.",
+      "fixSuggestions": [
+        {
+          "fixId": "ce4dbfd7_541dfe2d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+              "range": {
+                "startLine": 34,
+                "startChar": 0,
+                "endLine": 35,
+                "endChar": 0
+              },
+              "replacement": "    private static String[] mStringIds \u003d null;\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+              "range": {
+                "startLine": 42,
+                "startChar": 0,
+                "endLine": 43,
+                "endChar": 0
+              },
+              "replacement": "        if (mStringIds \u003d\u003d null || id \u003c 1 || id \u003e mStringIds.length) {\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+              "range": {
+                "startLine": 45,
+                "startChar": 0,
+                "endLine": 46,
+                "endChar": 0
+              },
+              "replacement": "        return mStringIds[id - 1];\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+              "range": {
+                "startLine": 54,
+                "startChar": 0,
+                "endLine": 58,
+                "endChar": 0
+              },
+              "replacement": "        if (mStringIds \u003d\u003d null) {\n            return -1;\n        }\n        for (int i \u003d 0; i \u003c mStringIds.length; i++) {\n            if (str !\u003d mStringIds[i]) {\n                continue;\n            }\n            return i + 1;\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+              "range": {
+                "startLine": 119,
+                "startChar": 0,
+                "endLine": 120,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+              "range": {
+                "startLine": 122,
+                "startChar": 0,
+                "endLine": 128,
+                "endChar": 0
+              },
+              "replacement": "        mStringIds \u003d sortedList.toArray(new String[sortedList.size()]);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64f14627_b7d338f2",
+        "filename": "tools/ahat/src/test/com/android/ahat/ObjectsHandlerTest.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-06T12:21:46Z",
+      "side": 1,
+      "message": "Are the IDs assigned by the time you run this test?",
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
