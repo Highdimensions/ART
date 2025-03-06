@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eb45e90b_bac43c9c",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-06T17:50:49Z",
+      "side": 1,
+      "message": "So if it is `null`, then we dont perform any other checks for the stringId and thus the returned page is just an unfiltered result.",
+      "parentUuid": "cb21b27f_3bfe7927",
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bd8f6a5b_0a410ab5",
         "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
         "patchSetId": 9
@@ -93,6 +111,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "49978c68_856afe16",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-06T17:50:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd8f6a5b_0a410ab5",
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9dd0b86f_70092dc0",
@@ -134,6 +170,24 @@
           ]
         }
       ],
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f441880_3c10cea3",
+        "filename": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-06T17:50:49Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "9dd0b86f_70092dc0",
       "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -223,6 +277,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "de4729c0_66f65f16",
+        "filename": "tools/ahat/src/main/com/android/ahat/heapdump/DuplicateStrings.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-06T17:50:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9cb1584f_def29e3e",
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "64f14627_b7d338f2",
@@ -236,6 +308,24 @@
       "writtenOn": "2025-03-06T12:21:46Z",
       "side": 1,
       "message": "Are the IDs assigned by the time you run this test?",
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4aa451a6_977fd2f5",
+        "filename": "tools/ahat/src/test/com/android/ahat/ObjectsHandlerTest.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-06T17:50:49Z",
+      "side": 1,
+      "message": "Yep, they are assigned in `AhatSnapshot` which is defined at the start of the test.",
+      "parentUuid": "64f14627_b7d338f2",
       "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
