@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ef6c188_3a47da07",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-06T11:27:39Z",
+      "side": 1,
+      "message": "PTAL. This is a revert, with minor changes to resolve merge conflicts.",
+      "revId": "ffd752762a88f158c2fd531c2923f98739daa5d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
