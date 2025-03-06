@@ -36,20 +36,36 @@ public class ObjectsHandlerTest {
 
     // We expect a single instance of DumpedStuff
     List<AhatInstance> dumped = ObjectsHandler.getObjects(
-        root, "DumpedStuff", /* subclass */ false, /* heapName */ null);
+        root, "DumpedStuff", /* subclass */ false, /* heapName */ null, /* stringId */ null);
     assertEquals(1, dumped.size());
     assertTrue(dumped.get(0).getClassName().equals("DumpedStuff"));
 
     // We expect no direct instances of SuperDumpedStuff
     List<AhatInstance> direct = ObjectsHandler.getObjects(
-        root, "SuperDumpedStuff", /* subclass */ false, /* heapName */ null);
+        root, "SuperDumpedStuff", /* subclass */ false, /* heapName */ null, /* stringId */ null);
     assertTrue(direct.isEmpty());
 
     // We expect one subclass instance of SuperDumpedStuff
     List<AhatInstance> subclass = ObjectsHandler.getObjects(
-        root, "SuperDumpedStuff", /* subclass */ true, /* heapName */ null);
+        root, "SuperDumpedStuff", /* subclass */ true, /* heapName */ null, /* stringId */ null);
     assertEquals(1, subclass.size());
     assertTrue(subclass.get(0).getClassName().equals("DumpedStuff"));
     assertEquals(dumped.get(0), subclass.get(0));
+
+    List<AhatInstance> invalidHash = ObjectsHandler.getObjects(
+        root, "java.lang.String", /* subclass */ false, /* heapName */ null, /* stringId */ "-1");
+    assertEquals(0, invalidHash.size());
+
+    List<AhatInstance> stringId = ObjectsHandler.getObjects(
+        root, "java.lang.String", /* subclass */ false, /* heapName */ null, /* stringId */ "1");
+    assertEquals(1, stringId.size());
+    assertTrue(stringId.get(0).getClassName().equals("java.lang.String"));
+    assertTrue(stringId.get(0).asString().equals("os.version"));
+
+    // We expect stringId to be null due to the wrong class name.
+    List<AhatInstance> wrongClass = ObjectsHandler.getObjects(
+        root, "DumpedStuff", /* subclass */ true, /* heapName */ null, /* stringId */ "1");
+    assertEquals(1, wrongClass.size());
+    assertTrue(wrongClass.get(0).getClassName().equals("DumpedStuff"));
   }
 }
