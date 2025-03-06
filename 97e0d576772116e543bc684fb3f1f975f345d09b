@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "754c55a1_950799d2",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-06T12:05:52Z",
+      "side": 1,
+      "message": "Ahh I see, yeah good point.\n\nI\u0027ve done the string ID approach, althoguh keeping the comment thread open due to the tests misbehaving.",
+      "parentUuid": "276528b8_c28c273a",
+      "revId": "97e0d576772116e543bc684fb3f1f975f345d09b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "992e4c68_e602cedd",
         "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
         "patchSetId": 7
