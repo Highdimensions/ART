@@ -150,6 +150,30 @@
       },
       "revId": "eddbe0a8916323d1c7a101b58906a6390069a32c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af87aad3_97a214cd",
+        "filename": "runtime/runtime.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-03-06T16:55:49Z",
+      "side": 1,
+      "message": "I\u0027m not 100% sure, but I think these (pushed) metrics are working because they don\u0027t require any permissions to start pushing atoms to StatsD, while pulled atoms require the `android.permission.REGISTER_STATS_PULL_ATOM` permission to work (see https://cs.android.com/android/platform/superproject/main/+/main:packages/modules/StatsD/statsd/src/StatsService.cpp;l\u003d1383-1388;drc\u003d64c4c0403e3bf8eccc843bce2afebf6b2ae5af87, which is the same error message found in the logcat attached in b/377774446).",
+      "parentUuid": "18ccd258_21d20750",
+      "range": {
+        "startLine": 1324,
+        "startChar": 0,
+        "endLine": 1328,
+        "endChar": 35
+      },
+      "revId": "eddbe0a8916323d1c7a101b58906a6390069a32c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
