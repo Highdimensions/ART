@@ -160,4 +160,16 @@ class Summarizer {
     URI uri = DocString.formattedUri("site?id=%d", site.getId());
     return DocString.link(uri, text);
   }
+
+  /**
+   * Creates a DocString summarizing duplicated strings.
+   */
+  public static DocString summarizeDuplicateString(long count, String stringValue) {
+    DocString formatted = new DocString();
+    // DocString.size(Long.valueOf(duplicate.getCount()), false),
+    DocString linkText = DocString.size(count, false);
+    URI objTarget = DocString.formattedUri(("objects?class=java.lang.String&stringId=" + stringValue));
+    formatted.appendLink(objTarget, linkText);
+    return formatted;
+  }
 }
