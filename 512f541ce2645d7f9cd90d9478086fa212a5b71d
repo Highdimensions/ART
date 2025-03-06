@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a170b650_f9a459bb",
+        "filename": "compiler/optimizing/load_store_analysis.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-06T14:05:57Z",
+      "side": 1,
+      "message": "Yes, it was intentional.\n\nThe order does not matter for correctness. However, it can allow clang++ to optimize the code better under some circumstances.\n\n(But, looking at the disassembly, it currently does not. However, that disassembly prompted me to add `final` to the class.)",
+      "parentUuid": "04f659e6_b1497eb9",
+      "range": {
+        "startLine": 490,
+        "startChar": 0,
+        "endLine": 493,
+        "endChar": 3
+      },
+      "revId": "512f541ce2645d7f9cd90d9478086fa212a5b71d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a5303b5c_3e0ad750",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-03-05T14:17:17Z",
       "side": 1,
       "message": "Are these `inputs_` ever used? They are initialized with `inputs_()` and I don\u0027t see anything modifying them. If they are not used we can remove them and remove the `N` parameter with it. This would also get rid of the explicit `N\u003d0` specialization\n\nFine to do it in a separate CL.",
+      "revId": "512f541ce2645d7f9cd90d9478086fa212a5b71d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "76704055_9948b678",
+        "filename": "compiler/optimizing/nodes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2880,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-06T14:05:57Z",
+      "side": 1,
+      "message": "`GetInputRecords()` is used for read/write access.",
+      "parentUuid": "a5303b5c_3e0ad750",
       "revId": "512f541ce2645d7f9cd90d9478086fa212a5b71d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
