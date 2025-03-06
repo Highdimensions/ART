@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac1b1f1f_d805fc9d",
+        "filename": "runtime/native/dalvik_system_VMRuntime.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-06T16:27:20Z",
+      "side": 1,
+      "message": "The include order looks messed up. Could you please change those \u003c\u003e to \"\" for android-base headers and rerun clang-format?",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 19
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "88420817_c3cfe3bb",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/native/dalvik_system_VMRuntime.cc",
+              "range": {
+                "startLine": 24,
+                "startChar": 0,
+                "endLine": 26,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/native/dalvik_system_VMRuntime.cc",
+              "range": {
+                "startLine": 31,
+                "startChar": 0,
+                "endLine": 31,
+                "endChar": 0
+              },
+              "replacement": "#include \"android-base/stringprintf.h\"\n#include \"android-base/strings.h\"\n"
+            }
+          ]
+        }
+      ],
+      "revId": "eddbe0a8916323d1c7a101b58906a6390069a32c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b634667_08a5f4c4",
+        "filename": "runtime/native/dalvik_system_VMRuntime.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-06T16:27:20Z",
+      "side": 1,
+      "message": "if (Runtime::Current()-\u003eIsSystemServer())",
+      "fixSuggestions": [
+        {
+          "fixId": "2c56fb1f_56907feb",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/native/dalvik_system_VMRuntime.cc",
+              "range": {
+                "startLine": 473,
+                "startChar": 0,
+                "endLine": 474,
+                "endChar": 0
+              },
+              "replacement": "  if (Runtime::Current()-\u003eIsSystemServer()) {\n    metrics::SetupCallbackForDeviceStatus();\n  }\n"
+            }
+          ]
+        }
+      ],
+      "revId": "eddbe0a8916323d1c7a101b58906a6390069a32c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18ccd258_21d20750",
+        "filename": "runtime/runtime.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-06T16:27:20Z",
+      "side": 1,
+      "message": "Why do these work?",
+      "range": {
+        "startLine": 1324,
+        "startChar": 0,
+        "endLine": 1328,
+        "endChar": 35
+      },
+      "revId": "eddbe0a8916323d1c7a101b58906a6390069a32c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
