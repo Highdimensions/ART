@@ -21,13 +21,12 @@
 #include <sys/time.h>
 extern "C" void android_set_application_target_sdk_version(uint32_t version);
 #endif
-#include <inttypes.h>
-#include <limits>
-#include <limits.h>
-#include "nativehelper/scoped_utf_chars.h"
-
 #include <android-base/stringprintf.h>
 #include <android-base/strings.h>
+#include <inttypes.h>
+#include <limits.h>
+
+#include <limits>
 
 #include "android-base/properties.h"
 #include "arch/instruction_set.h"
@@ -51,6 +50,7 @@ extern "C" void android_set_application_target_sdk_version(uint32_t version);
 #include "jit/jit.h"
 #include "jni/java_vm_ext.h"
 #include "jni/jni_internal.h"
+#include "metrics/statsd.h"
 #include "mirror/array-alloc-inl.h"
 #include "mirror/class-inl.h"
 #include "mirror/dex_cache-inl.h"
@@ -58,6 +58,7 @@ extern "C" void android_set_application_target_sdk_version(uint32_t version);
 #include "native_util.h"
 #include "nativehelper/jni_macros.h"
 #include "nativehelper/scoped_local_ref.h"
+#include "nativehelper/scoped_utf_chars.h"
 #include "runtime.h"
 #include "scoped_fast_native_object_access-inl.h"
 #include "scoped_thread_state_change-inl.h"
@@ -468,6 +469,8 @@ static void VMRuntime_bootCompleted([[maybe_unused]] JNIEnv* env, [[maybe_unused
   if (jit != nullptr) {
     jit->BootCompleted();
   }
+
+  metrics::SetupCallbackForDeviceStatus();
 }
 
 class ClearJitCountersVisitor : public ClassVisitor {
