@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fcdfd7a_7488b5b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-07T23:48:51Z",
+      "side": 1,
+      "message": "I have taken care of the SemiSpace one also. But the jvmti usage seems to be better off with a sweep.",
+      "parentUuid": "6de01365_aaa0622c",
+      "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a7f70e93_2e0d39b4",
@@ -199,6 +217,30 @@
       "side": 1,
       "message": "Sounds good. I\u0027ll update the CL and upload new patchset. Thanks.",
       "parentUuid": "90dbe6ea_34a25e09",
+      "range": {
+        "startLine": 24,
+        "startChar": 47,
+        "endLine": 24,
+        "endChar": 99
+      },
+      "revId": "24496f9d172fdbcc9f59d595c505fcee2e539ff4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d819146_4968a9d4",
+        "filename": "runtime/interpreter/interpreter_cache.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-07T23:48:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbbc1a95_8363370f",
       "range": {
         "startLine": 24,
         "startChar": 47,
