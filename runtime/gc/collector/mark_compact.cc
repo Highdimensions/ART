@@ -4343,9 +4343,8 @@ void MarkCompact::ScanDirtyObjects(bool paused, uint8_t minimum_age) {
       break;
     }
     TimingLogger::ScopedTiming t(name, GetTimings());
-    if (paused && use_generational_ &&
+    if (paused && young_gen_ &&
         space->GetGcRetentionPolicy() == space::kGcRetentionPolicyAlwaysCollect) {
-      DCHECK_EQ(minimum_age, accounting::CardTable::kCardDirty);
       auto mod_visitor = [](uint8_t* card, uint8_t cur_val) {
         DCHECK_EQ(cur_val, accounting::CardTable::kCardDirty);
         *card = accounting::CardTable::kCardAged;
