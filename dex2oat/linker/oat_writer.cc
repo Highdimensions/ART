@@ -2766,10 +2766,7 @@ bool OatWriter::WriteHeader(OutputStream* out) {
 
   // Update checksum with header data.
   DCHECK_EQ(oat_header_->GetChecksum(), 0u);  // For checksum calculation.
-  const uint8_t* header_begin = reinterpret_cast<const uint8_t*>(oat_header_);
-  const uint8_t* header_end = oat_header_->GetKeyValueStore() + oat_header_->GetKeyValueStoreSize();
-  uint32_t old_checksum = oat_checksum_;
-  oat_checksum_ = adler32(old_checksum, header_begin, header_end - header_begin);
+  oat_header_->ComputeChecksum(&oat_checksum_);
   oat_header_->SetChecksum(oat_checksum_);
 
   const size_t file_offset = oat_data_offset_;
