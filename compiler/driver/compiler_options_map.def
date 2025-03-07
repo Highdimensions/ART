@@ -61,6 +61,8 @@ COMPILER_OPTIONS_KEY (Unit,                        CountHotnessInCompiledCode)
 COMPILER_OPTIONS_KEY (ProfileMethodsCheck,         CheckProfiledMethods)
 COMPILER_OPTIONS_KEY (Unit,                        DumpTimings)
 COMPILER_OPTIONS_KEY (Unit,                        DumpPassTimings)
+COMPILER_OPTIONS_KEY (Unit,                        DumpInlines)
+COMPILER_OPTIONS_KEY (Unit,                        UseHints)
 COMPILER_OPTIONS_KEY (Unit,                        DumpStats)
 COMPILER_OPTIONS_KEY (unsigned int,                MaxImageBlockSize)
 

@@ -207,6 +207,7 @@ class HGraph : public ArenaObject<kArenaAllocGraph> {
          ArenaStack* arena_stack,
          VariableSizedHandleScope* handles,
          const DexFile& dex_file,
+         uint32_t dex_index,
          uint32_t method_idx,
          InstructionSet instruction_set,
          InvokeType invoke_type = kInvalidInvokeType,
@@ -238,6 +239,7 @@ class HGraph : public ArenaObject<kArenaAllocGraph> {
         debuggable_(debuggable),
         current_instruction_id_(start_instruction_id),
         dex_file_(dex_file),
+        dex_index_(dex_index),
         method_idx_(method_idx),
         invoke_type_(invoke_type),
         in_ssa_form_(false),
@@ -458,6 +460,10 @@ class HGraph : public ArenaObject<kArenaAllocGraph> {
     return dex_file_;
   }
 
+  uint32_t GetDexIndex() const {
+    return dex_index_;
+  }
+
   uint32_t GetMethodIdx() const {
     return method_idx_;
   }
@@ -638,6 +644,8 @@ class HGraph : public ArenaObject<kArenaAllocGraph> {
 
   // The dex file from which the method is from.
   const DexFile& dex_file_;
+
+  uint32_t dex_index_;
 
   // The method index in the dex file.
   const uint32_t method_idx_;

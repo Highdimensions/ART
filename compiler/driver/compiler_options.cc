@@ -61,6 +61,10 @@ CompilerOptions::CompilerOptions()
       compile_pic_(false),
       dump_timings_(false),
       dump_pass_timings_(false),
+      use_hints_(false),
+      dump_inlines_(false),
+      inlines_negative(),
+      inlines_positive(),
       dump_stats_(false),
       profile_branches_(false),
       profile_compilation_info_(nullptr),
@@ -85,6 +89,54 @@ CompilerOptions::CompilerOptions()
 CompilerOptions::~CompilerOptions() {
   // Everything done by member destructors.
   // The definitions of classes forward-declared in the header have now been #included.
+
+  if (dump_inlines_) {
+    std::ofstream f;
+
+    auto wr64 = [&](uint64_t v) {
+      f.write(reinterpret_cast<char*>(&v), sizeof(uint64_t));
+    };
+    auto wr32 = [&](uint32_t v) {
+      f.write(reinterpret_cast<char*>(&v), sizeof(uint32_t));
+    };
+
+    // Filter-out negative inline lists by positive inline lists.
+    for (auto& [method, denylist]: inlines_negative) {
+      auto it = inlines_positive.find(method);
+      if (it != inlines_positive.end()) {
+        for (uint32_t m : it->second) {
+          denylist.erase(m);
+        }
+      }
+    }
+
+    f.open("hints", std::ios::out | std::ios::binary);
+    for (const auto& [method, denylist]: inlines_negative) {
+      if (denylist.empty()) {
+        continue;
+      }
+      wr64(method);
+      wr32(denylist.size());
+      for (uint32_t m : denylist) {
+         wr32(m);
+      }
+      wr32(0xF1F2f3f4); // marker to check that we read what we write
+    }
+    f.close();
+  }
+}
+
+uint32_t CompilerOptions::GetDexIndex(const DexFile& dex) const {
+  auto it = std::find_if(
+      dex_files_for_oat_file_.begin(),
+      dex_files_for_oat_file_.end(),
+      [&](const DexFile* f){ return f->GetHeader().checksum_ == dex.GetHeader().checksum_; }
+  );
+  if (it != dex_files_for_oat_file_.end()) {
+    return it - dex_files_for_oat_file_.begin();
+  } else {
+    return ~0u;
+  }
 }
 
 namespace {
@@ -125,6 +177,74 @@ bool CompilerOptions::ParseCompilerOptions(const std::vector<std::string>& optio
 
   SimpleParseArgumentMap args = parser.ReleaseArgumentsMap();
   return ReadCompilerOptions(args, this, error_msg);
+}
+
+void CompilerOptions::LoadHints() {
+  if (use_hints_) {
+    std::ifstream f;
+
+    auto r64 = [&]() -> uint64_t {
+      uint64_t m64;
+      uint8_t arr[sizeof(uint64_t)];
+      f.read(reinterpret_cast<char*>(arr), sizeof(uint64_t));
+      m64 = (static_cast<uint64_t>(arr[7]) << 56lu)
+        + (static_cast<uint64_t>(arr[6]) << 48lu)
+        + (static_cast<uint64_t>(arr[5]) << 40lu)
+        + (static_cast<uint64_t>(arr[4]) << 32lu)
+        + (static_cast<uint64_t>(arr[3]) << 24lu)
+        + (static_cast<uint64_t>(arr[2]) << 16lu)
+        + (static_cast<uint64_t>(arr[1]) << 8lu)
+        + arr[0];
+      //LOG(ERROR) << "reading64 " << std::hex << m64;
+      //LOG(ERROR) << "reading64 " << std::hex << ((m64 & 0xFFFFffff00000000lu) >> 32) << ", " << std::hex << (m64 & 0xFFFFfffflu);
+      //LOG(ERROR) << "reading64 arr[0] " << std::hex << arr[0]
+      //    << ", arr[1] " << std::hex << static_cast<uint32_t>(arr[1])
+      //    << ", arr[2] " << std::hex << static_cast<uint32_t>(arr[2])
+      //    << ", arr[3] " << std::hex << static_cast<uint32_t>(arr[3])
+      //    << ", arr[4] " << std::hex << static_cast<uint32_t>(arr[4])
+      //    << ", arr[5] " << std::hex << static_cast<uint32_t>(arr[5])
+      //    << ", arr[6] " << std::hex << static_cast<uint32_t>(arr[6])
+      //    << ", arr[7] " << std::hex << static_cast<uint32_t>(arr[7]);
+      return m64;
+    };
+
+    auto r32 = [&]() -> uint32_t {
+      uint64_t m32;
+      uint8_t arr[sizeof(uint32_t)];
+      f.read(reinterpret_cast<char*>(arr), sizeof(uint32_t));
+      m32 = (static_cast<uint32_t>(arr[3]) << 24u)
+        + (static_cast<uint32_t>(arr[2]) << 16u)
+        + (static_cast<uint32_t>(arr[1]) << 8u)
+        + arr[0];
+      return m32;
+    };
+
+    f.open("hints", std::ios::binary);
+
+    while (true) {
+      uint64_t m64 = r64();
+      if (f.eof()) {
+        break;
+      }
+      CHECK(!f.fail()) << "fail 1 " << std::hex << m64;
+      CHECK(!f.eof()) << "eof 1";
+
+      uint32_t count = r32(), marker;
+      CHECK(!f.fail()) << "fail 2";
+      CHECK(!f.eof()) << "eof 2";
+
+      std::unordered_set<uint32_t>& denylist = inlines_negative[m64];
+      for (uint32_t i = 0; i < count; ++i) {
+        uint32_t m = r32();
+        denylist.insert(m);
+      }
+
+      marker = r32();
+      CHECK(marker = 0xF1F2f3f4) << "fail 3";
+    }
+
+    f.close();
+  }
 }
 
 bool CompilerOptions::IsImageClass(const char* descriptor) const {

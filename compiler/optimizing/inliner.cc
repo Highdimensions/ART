@@ -136,6 +136,41 @@ void HInliner::UpdateInliningBudget() {
   }
 }
 
+HInliner::HInliner(HGraph* outer_graph,
+           HGraph* outermost_graph,
+           CodeGenerator* codegen,
+           const DexCompilationUnit& outer_compilation_unit,
+           const DexCompilationUnit& caller_compilation_unit,
+           OptimizingCompilerStats* stats,
+           size_t total_number_of_dex_registers,
+           size_t total_number_of_instructions,
+           HInliner* parent,
+           HEnvironment* caller_environment,
+           size_t depth,
+           bool try_catch_inlining_allowed,
+           const char* name)
+      : HOptimization(outer_graph, name, stats),
+        outermost_graph_(outermost_graph),
+        outer_compilation_unit_(outer_compilation_unit),
+        caller_compilation_unit_(caller_compilation_unit),
+        codegen_(codegen),
+        total_number_of_dex_registers_(total_number_of_dex_registers),
+        total_number_of_instructions_(total_number_of_instructions),
+        parent_(parent),
+        caller_environment_(caller_environment),
+        depth_(depth),
+        inlining_budget_(0),
+        try_catch_inlining_allowed_(try_catch_inlining_allowed),
+        run_extra_type_propagation_(false),
+        inline_stats_(nullptr),
+        denylist(),
+        // HACK HACK HACK cast away const so we can modify these things from the inliner (mod happens under mutex)
+        denymap(const_cast<std::unordered_map<uint64_t, std::unordered_set<uint32_t>>&>(codegen->GetCompilerOptions().GetInlinesNegative())),
+        allowmap(const_cast<std::unordered_map<uint64_t, std::unordered_set<uint32_t>>&>(codegen->GetCompilerOptions().GetInlinesPositive())) {
+}
+
+std::mutex hints_mutex;
+
 bool HInliner::Run() {
   if (codegen_->GetCompilerOptions().GetInlineMaxCodeUnits() == 0) {
     // Inlining effectively disabled.
@@ -461,6 +496,74 @@ static bool AlwaysThrows(ArtMethod* method)
 }
 
 bool HInliner::TryInline(HInvoke* invoke_instruction) {
+  const std::vector<const DexFile*>& dex_files =
+      codegen_->GetCompilerOptions().GetDexFilesForOatFile();
+
+  const DexFile& dex_outer = outermost_graph_->GetDexFile();
+  const DexFile& dex_inner = graph_->GetDexFile();
+  const DexFile* dex = invoke_instruction->GetMethodReference().dex_file;
+
+  // TODO: move it out of the hot path
+  auto it_method = std::find_if(
+      dex_files.begin(),
+      dex_files.end(),
+      [&](const DexFile* f){ return f->GetHeader().checksum_ == dex->GetHeader().checksum_; });
+  uint16_t dm = it_method - dex_files.begin();
+  uint32_t method_idx =
+    (static_cast<uint32_t>(dm) << 8u * 2u) +
+    invoke_instruction->GetMethodReference().index;
+
+  uint16_t d1 = outermost_graph_->GetDexIndex();
+  uint16_t m1 = outermost_graph_->GetMethodIdx();
+  uint16_t d2 = graph_->GetDexIndex();
+  uint16_t m2 = graph_->GetMethodIdx();
+  uint64_t m64 =
+    (static_cast<uint64_t>(d1) << 8u*6u) +
+    (static_cast<uint64_t>(m1) << 8u*4u) +
+    (static_cast<uint64_t>(d2) << 8u*2u) +
+    m2;
+
+  bool within_oat_file =
+      codegen_->GetCompilerOptions().WithinOatFile(&dex_outer) &&
+          codegen_->GetCompilerOptions().WithinOatFile(&dex_inner) &&
+          codegen_->GetCompilerOptions().WithinOatFile(dex);
+
+//  CHECK(d1 != 0xffff || !codegen_->GetCompilerOptions().WithinOatFile(&dex_outer));
+//  CHECK(d2 != 0xffff || !codegen_->GetCompilerOptions().WithinOatFile(&dex_inner));
+//  CHECK(it_method != dex_files.end() || !codegen_->GetCompilerOptions().WithinOatFile(dex));
+
+  bool forbidden = false;
+  if (codegen_->GetCompilerOptions().GetUseHints() &&  within_oat_file) {
+    auto it = denymap.find(m64);
+    if (it != denymap.end()) {
+      const std::unordered_set<uint32_t>& dl = it->second;
+      if (dl.find(method_idx) != dl.end()) {
+        forbidden = true;
+        return false;
+      }
+    }
+  }
+
+  bool result = DoTryInline(invoke_instruction);
+  if (codegen_->GetCompilerOptions().GetUseHints()) {
+    if (result) {
+      CHECK(!forbidden);
+    }
+  }
+
+  if (codegen_->GetCompilerOptions().GetDumpInlines() && within_oat_file) {
+    std::lock_guard<std::mutex> guard(hints_mutex);
+    if (!result) {
+      denymap[m64].insert(method_idx);
+    } else {
+      allowmap[m64].insert(method_idx);
+    }
+  }
+
+  return result;
+}
+
+bool HInliner::DoTryInline(HInvoke* invoke_instruction) {
   MaybeRecordStat(stats_, MethodCompilationStat::kTryInline);
 
   // Don't bother to move further if we know the method is unresolved or the invocation is
@@ -2234,6 +2337,7 @@ bool HInliner::TryBuildAndInlineHelper(HInvoke* invoke_instruction,
       graph_->GetArenaStack(),
       graph_->GetHandleCache()->GetHandles(),
       callee_dex_file,
+      codegen_->GetCompilerOptions().GetDexIndex(callee_dex_file),
       method_index,
       codegen_->GetCompilerOptions().GetInstructionSet(),
       invoke_type,

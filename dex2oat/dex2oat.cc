@@ -1243,6 +1243,7 @@ class Dex2Oat final {
     AssignTrueIfExists(args, M::ForcePaletteCompilationHooks, &should_report_dex2oat_compilation_);
 
     ProcessOptions(parser_options.get());
+    compiler_options_->LoadHints();
   }
 
   // Check whether the oat output files are writable, and open them for later. Also open a swap
