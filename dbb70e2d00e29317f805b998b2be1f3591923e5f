@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80c4e6c7_1fed1df9",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-07T13:47:15Z",
+      "side": 1,
+      "message": "if non-zero",
+      "fixSuggestions": [
+        {
+          "fixId": "62c3c0e3_bb743617",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+              "range": {
+                "startLine": 48,
+                "startChar": 0,
+                "endLine": 49,
+                "endChar": 0
+              },
+              "replacement": "   * @param stringId if non-zero, include instances of java.lang.String with\n"
+            }
+          ]
+        }
+      ],
+      "revId": "dbb70e2d00e29317f805b998b2be1f3591923e5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9afa392a_e3059baf",
+        "filename": "tools/ahat/src/main/com/android/ahat/Summarizer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-07T13:47:15Z",
+      "side": 1,
+      "message": "I suggest just passing the string as an integer and then converting it to string within this function.\n\nHowever, I also don\u0027t see why we need this as a function in this file. Can we just do the operation in-line where it is used?",
+      "range": {
+        "startLine": 167,
+        "startChar": 63,
+        "endLine": 167,
+        "endChar": 81
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1a992d95_0ed9918c",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/Summarizer.java",
+              "range": {
+                "startLine": 167,
+                "startChar": 0,
+                "endLine": 168,
+                "endChar": 0
+              },
+              "replacement": "  public static DocString summarizeDuplicateString(long count, int stringId) {\n"
+            },
+            {
+              "path": "tools/ahat/src/main/com/android/ahat/Summarizer.java",
+              "range": {
+                "startLine": 171,
+                "startChar": 0,
+                "endLine": 172,
+                "endChar": 0
+              },
+              "replacement": "    URI objTarget \u003d DocString.formattedUri((\"objects?class\u003djava.lang.String\u0026stringId\u003d\" + stringId));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "dbb70e2d00e29317f805b998b2be1f3591923e5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

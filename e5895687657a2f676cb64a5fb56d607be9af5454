@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1cb2f1d2_5fa3f8ab",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-07T13:47:15Z",
+      "side": 1,
+      "message": "My concern was more that you were passing a maybe-null value to parseInt, but you\u0027ve since removed that code.",
+      "parentUuid": "eb45e90b_bac43c9c",
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd8f6a5b_0a410ab5",
@@ -192,6 +210,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbae328a_c4a29385",
+        "filename": "tools/ahat/src/main/com/android/ahat/OverviewHandler.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-07T13:47:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f441880_3c10cea3",
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9cb1584f_def29e3e",
@@ -326,6 +362,24 @@
       "side": 1,
       "message": "Yep, they are assigned in `AhatSnapshot` which is defined at the start of the test.",
       "parentUuid": "64f14627_b7d338f2",
+      "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d038c4b_19843a88",
+        "filename": "tools/ahat/src/test/com/android/ahat/ObjectsHandlerTest.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1565050
+      },
+      "writtenOn": "2025-03-07T13:47:15Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "4aa451a6_977fd2f5",
       "revId": "e5895687657a2f676cb64a5fb56d607be9af5454",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
