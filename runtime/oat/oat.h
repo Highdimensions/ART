@@ -18,6 +18,8 @@
 #define ART_RUNTIME_OAT_OAT_H_
 
 #include <array>
+#include <cstddef>
+#include <cstdint>
 #include <vector>
 
 #include "base/compiler_filter.h"
@@ -47,6 +49,8 @@ class EXPORT PACKED(4) OatHeader {
   // Last oat version changed reason: Restore to 16 KB ELF alignment.
   static constexpr std::array<uint8_t, 4> kOatVersion{{'2', '5', '8', '\0'}};
 
+  static constexpr size_t kMaxSize = 16384;
+
   static constexpr const char* kDex2OatCmdLineKey = "dex2oat-cmdline";
   static constexpr const char* kDebuggableKey = "debuggable";
   static constexpr const char* kNativeDebuggableKey = "native-debuggable";
@@ -62,12 +66,26 @@ class EXPORT PACKED(4) OatHeader {
   static constexpr const char kTrueValue[] = "true";
   static constexpr const char kFalseValue[] = "false";
 
+  static OatHeader* Create(InstructionSet instruction_set,
+                           const InstructionSetFeatures* instruction_set_features,
+                           uint32_t dex_file_count,
+                           const SafeMap<std::string, std::string>* variable_data,
+                           std::string* error_msg) {
+    return Create(instruction_set,
+                  instruction_set_features,
+                  dex_file_count,
+                  variable_data,
+                  /*base_oat_offset=*/0,
+                  error_msg);
+  }
 
   static OatHeader* Create(InstructionSet instruction_set,
                            const InstructionSetFeatures* instruction_set_features,
                            uint32_t dex_file_count,
                            const SafeMap<std::string, std::string>* variable_data,
-                           uint32_t base_oat_offset = 0u);
+                           uint32_t base_oat_offset,
+                           std::string* error_msg);
+
   static void Delete(OatHeader* header);
 
   bool IsValid() const;

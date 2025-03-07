@@ -1731,9 +1731,12 @@ class OatFileBackedByVdex final : public OatFileBase {
     std::unique_ptr<OatFileBackedByVdex> oat_file(new OatFileBackedByVdex(location));
     // SetVdex will take ownership of the VdexFile.
     oat_file->SetVdex(vdex_file.release());
-    oat_file->SetupHeader(dex_files.size(), context);
-    // Initialize OatDexFiles.
     std::string error_msg;
+    if (!oat_file->SetupHeader(dex_files.size(), context, &error_msg)) {
+      LOG(WARNING) << "Could not create in-memory vdex file: " << error_msg;
+      return nullptr;
+    }
+    // Initialize OatDexFiles.
     if (!oat_file->Setup(dex_files, &error_msg)) {
       LOG(WARNING) << "Could not create in-memory vdex file: " << error_msg;
       return nullptr;
@@ -1818,7 +1821,9 @@ class OatFileBackedByVdex final : public OatFileBase {
           oat_file->oat_dex_files_.Put(canonical_key, oat_dex_file);
         }
       }
-      oat_file->SetupHeader(oat_file->oat_dex_files_storage_.size(), context);
+      if (!oat_file->SetupHeader(oat_file->oat_dex_files_storage_.size(), context, error_msg)) {
+        return nullptr;
+      }
     } else {
       // No need for any verification when loading dex files as we already have
       // a vdex file.
@@ -1840,7 +1845,9 @@ class OatFileBackedByVdex final : public OatFileBase {
       if (!loaded) {
         return nullptr;
       }
-      oat_file->SetupHeader(oat_file->external_dex_files_.size(), context);
+      if (!oat_file->SetupHeader(oat_file->external_dex_files_.size(), context, error_msg)) {
+        return nullptr;
+      }
       if (!oat_file->Setup(MakeNonOwningPointerVector(oat_file->external_dex_files_), error_msg)) {
         return nullptr;
       }
@@ -1849,7 +1856,9 @@ class OatFileBackedByVdex final : public OatFileBase {
     return oat_file.release();
   }
 
-  void SetupHeader(size_t number_of_dex_files, ClassLoaderContext* context) {
+  bool SetupHeader(size_t number_of_dex_files,
+                   ClassLoaderContext* context,
+                   std::string* error_msg) {
     DCHECK(!IsExecutable());
 
     // Create a fake OatHeader with a key store to help debugging.
@@ -1864,13 +1873,15 @@ class OatFileBackedByVdex final : public OatFileBase {
       store.Put(OatHeader::kClassPathKey, context->EncodeContextForOatFile(""));
     }
 
-    oat_header_ = OatHeader::Create(kRuntimeQuickCodeISA,
-                                    isa_features.get(),
-                                    number_of_dex_files,
-                                    &store);
+    oat_header_ = OatHeader::Create(
+        kRuntimeQuickCodeISA, isa_features.get(), number_of_dex_files, &store, error_msg);
+    if (oat_header_ == nullptr) {
+      return false;
+    }
     const uint8_t* begin = reinterpret_cast<const uint8_t*>(oat_header_);
     SetBegin(begin);
     SetEnd(begin + oat_header_->GetHeaderSize());
+    return true;
   }
 
  protected:

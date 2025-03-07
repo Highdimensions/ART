@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-#include "android-base/stringprintf.h"
+#include "oat_writer.h"
 
+#include "android-base/stringprintf.h"
 #include "arch/instruction_set_features.h"
 #include "art_method-inl.h"
 #include "base/file_utils.h"
@@ -43,7 +44,6 @@
 #include "mirror/object_array-inl.h"
 #include "oat/oat.h"
 #include "oat/oat_file-inl.h"
-#include "oat_writer.h"
 #include "profile/profile_compilation_info.h"
 #include "scoped_thread_state_change-inl.h"
 #include "stream/buffered_output_stream.h"
@@ -508,13 +508,11 @@ TEST_F(OatTest, OatHeaderIsValid) {
   InstructionSet insn_set = InstructionSet::kX86;
   std::string error_msg;
   std::unique_ptr<const InstructionSetFeatures> insn_features(
-    InstructionSetFeatures::FromVariant(insn_set, "default", &error_msg));
+      InstructionSetFeatures::FromVariant(insn_set, "default", &error_msg));
   ASSERT_TRUE(insn_features.get() != nullptr) << error_msg;
-  std::unique_ptr<OatHeader> oat_header(OatHeader::Create(insn_set,
-                                                          insn_features.get(),
-                                                          0u,
-                                                          nullptr));
-  ASSERT_NE(oat_header.get(), nullptr);
+  std::unique_ptr<OatHeader> oat_header(
+      OatHeader::Create(insn_set, insn_features.get(), 0u, nullptr, &error_msg));
+  ASSERT_NE(oat_header.get(), nullptr) << error_msg;
   ASSERT_TRUE(oat_header->IsValid());
 
   char* magic = const_cast<char*>(oat_header->GetMagic());

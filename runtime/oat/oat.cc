@@ -46,9 +46,14 @@ OatHeader* OatHeader::Create(InstructionSet instruction_set,
                              const InstructionSetFeatures* instruction_set_features,
                              uint32_t dex_file_count,
                              const SafeMap<std::string, std::string>* variable_data,
-                             uint32_t base_oat_offset) {
+                             uint32_t base_oat_offset,
+                             std::string* error_msg) {
   // Estimate size of optional data.
   size_t needed_size = ComputeOatHeaderSize(variable_data);
+  if (needed_size > kMaxSize) {
+    *error_msg = ART_FORMAT("Oat header size exceeds the limit {}, got {}", kMaxSize, needed_size);
+    return nullptr;
+  }
 
   // Reserve enough memory.
   void* memory = operator new (needed_size);
