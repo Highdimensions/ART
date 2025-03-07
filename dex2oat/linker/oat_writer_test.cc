@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-#include "android-base/stringprintf.h"
+#include "oat_writer.h"
 
+#include <cstdint>
+
+#include "android-base/stringprintf.h"
 #include "arch/instruction_set_features.h"
 #include "art_method-inl.h"
 #include "base/file_utils.h"
@@ -35,6 +38,7 @@
 #include "driver/compiler_driver.h"
 #include "driver/compiler_options.h"
 #include "entrypoints/quick/quick_entrypoints.h"
+#include "gtest/gtest.h"
 #include "linker/elf_writer.h"
 #include "linker/elf_writer_quick.h"
 #include "linker/multi_oat_relative_patcher.h"
@@ -43,7 +47,6 @@
 #include "mirror/object_array-inl.h"
 #include "oat/oat.h"
 #include "oat/oat_file-inl.h"
-#include "oat_writer.h"
 #include "profile/profile_compilation_info.h"
 #include "scoped_thread_state_change-inl.h"
 #include "stream/buffered_output_stream.h"
@@ -494,6 +497,56 @@ TEST_F(OatTest, WriteRead) {
   }
 }
 
+TEST_F(OatTest, ChecksumDeterminism) {
+  ClassLinker* class_linker = Runtime::Current()->GetClassLinker();
+  SetupCompiler(/*compiler_options=*/{});
+
+  if (kCompile) {
+    TimingLogger timings("OatTest::ChecksumDeterminism", /*precise=*/false, /*verbose=*/false);
+    CompileAll(/*class_loader=*/nullptr, class_linker->GetBootClassPath(), &timings);
+  }
+
+  SafeMap<std::string, std::string> key_value_store;
+  key_value_store.Put(OatHeader::kBootClassPathChecksumsKey, "testkey");
+
+  auto write_elf_and_get_checksum = [&](/*out*/ uint32_t* checksum) {
+    ScratchFile tmp_base, tmp_oat(tmp_base, ".oat"), tmp_vdex(tmp_base, ".vdex");
+
+    bool success = WriteElf(tmp_vdex.GetFile(),
+                            tmp_oat.GetFile(),
+                            class_linker->GetBootClassPath(),
+                            key_value_store,
+                            /*verify=*/false);
+    ASSERT_TRUE(success);
+
+    std::string error_msg;
+    std::unique_ptr<OatFile> oat_file(OatFile::Open(/*zip_fd=*/-1,
+                                                    tmp_oat.GetFilename(),
+                                                    tmp_oat.GetFilename(),
+                                                    /*executable=*/false,
+                                                    /*low_4gb=*/true,
+                                                    &error_msg));
+    ASSERT_TRUE(oat_file.get() != nullptr) << error_msg;
+    const OatHeader& oat_header = oat_file->GetOatHeader();
+    ASSERT_TRUE(oat_header.IsValid());
+    *checksum = oat_header.GetChecksum();
+  };
+
+  uint32_t checksum_1, checksum_2, checksum_3;
+  ASSERT_NO_FATAL_FAILURE(write_elf_and_get_checksum(&checksum_1));
+
+  // Change blocklisted fields. This should not affect the checksum.
+  key_value_store.Put(OatHeader::kDex2OatCmdLineKey, "cmdline");
+  key_value_store.Put(OatHeader::kApexVersionsKey, "apex-versions");
+  ASSERT_NO_FATAL_FAILURE(write_elf_and_get_checksum(&checksum_2));
+  EXPECT_EQ(checksum_1, checksum_2);
+
+  // Change normal fields. This should affect the checksum.
+  key_value_store.Put(OatHeader::kClassPathKey, "classpath");
+  ASSERT_NO_FATAL_FAILURE(write_elf_and_get_checksum(&checksum_3));
+  EXPECT_NE(checksum_1, checksum_3);
+}
+
 TEST_F(OatTest, OatHeaderSizeCheck) {
   // If this test is failing and you have to update these constants,
   // it is time to update OatHeader::kOatVersion
@@ -510,11 +563,9 @@ TEST_F(OatTest, OatHeaderIsValid) {
   std::unique_ptr<const InstructionSetFeatures> insn_features(
     InstructionSetFeatures::FromVariant(insn_set, "default", &error_msg));
   ASSERT_TRUE(insn_features.get() != nullptr) << error_msg;
-  std::unique_ptr<OatHeader> oat_header(OatHeader::Create(insn_set,
-                                                          insn_features.get(),
-                                                          0u,
-                                                          nullptr));
-  ASSERT_NE(oat_header.get(), nullptr);
+  std::unique_ptr<OatHeader> oat_header(
+      OatHeader::Create(insn_set, insn_features.get(), 0u, nullptr, &error_msg));
+  ASSERT_NE(oat_header.get(), nullptr) << error_msg;
   ASSERT_TRUE(oat_header->IsValid());
 
   char* magic = const_cast<char*>(oat_header->GetMagic());

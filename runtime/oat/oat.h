@@ -18,6 +18,8 @@
 #define ART_RUNTIME_OAT_OAT_H_
 
 #include <array>
+#include <cstddef>
+#include <cstdint>
 #include <vector>
 
 #include "base/compiler_filter.h"
@@ -47,6 +49,8 @@ class EXPORT PACKED(4) OatHeader {
   // Last oat version changed reason: Restore to 16 KB ELF alignment.
   static constexpr std::array<uint8_t, 4> kOatVersion{{'2', '5', '8', '\0'}};
 
+  static constexpr size_t kMaxSize = 16384;
+
   static constexpr const char* kDex2OatCmdLineKey = "dex2oat-cmdline";
   static constexpr const char* kDebuggableKey = "debuggable";
   static constexpr const char* kNativeDebuggableKey = "native-debuggable";
@@ -59,15 +63,34 @@ class EXPORT PACKED(4) OatHeader {
   static constexpr const char* kCompilationReasonKey = "compilation-reason";
   static constexpr const char* kRequiresImage = "requires-image";
 
+  // To make the oat checksum deterministic across hosts and devices, we need to exclude the fields
+  // that may differ.
+  static constexpr std::array<std::string_view, 2> kChecksumBlocklist{kDex2OatCmdLineKey,
+                                                                      kApexVersionsKey};
+
   static constexpr const char kTrueValue[] = "true";
   static constexpr const char kFalseValue[] = "false";
-
 
   static OatHeader* Create(InstructionSet instruction_set,
                            const InstructionSetFeatures* instruction_set_features,
                            uint32_t dex_file_count,
                            const SafeMap<std::string, std::string>* variable_data,
-                           uint32_t base_oat_offset = 0u);
+                           std::string* error_msg) {
+    return Create(instruction_set,
+                  instruction_set_features,
+                  dex_file_count,
+                  variable_data,
+                  /*base_oat_offset=*/0,
+                  error_msg);
+  }
+
+  static OatHeader* Create(InstructionSet instruction_set,
+                           const InstructionSetFeatures* instruction_set_features,
+                           uint32_t dex_file_count,
+                           const SafeMap<std::string, std::string>* variable_data,
+                           uint32_t base_oat_offset,
+                           std::string* error_msg);
+
   static void Delete(OatHeader* header);
 
   bool IsValid() const;
@@ -116,7 +139,13 @@ class EXPORT PACKED(4) OatHeader {
   uint32_t GetKeyValueStoreSize() const;
   const uint8_t* GetKeyValueStore() const;
   const char* GetStoreValueByKey(const char* key) const;
-  bool GetStoreKeyValuePairByIndex(size_t index, const char** key, const char** value) const;
+
+  // Returns the next key-value pair, at the given offset. On success, updates `offset`.
+  // The expected use case is to start the iteration with an offset initialized to zero and
+  // repeatedly call this function with the same offset pointer, until the function returns false.
+  bool GetNextStoreKeyValuePair(/*inout*/ uint32_t* offset,
+                                /*out*/ const char** key,
+                                /*out*/ const char** value) const;
 
   size_t GetHeaderSize() const;
   bool IsDebuggable() const;
@@ -126,6 +155,8 @@ class EXPORT PACKED(4) OatHeader {
   bool RequiresImage() const;
 
   const uint8_t* GetOatAddress(StubType type) const;
+
+  void ComputeChecksum(/*inout*/ uint32_t* checksum) const;
 
  private:
   bool KeyHasValue(const char* key, const char* value, size_t value_size) const;

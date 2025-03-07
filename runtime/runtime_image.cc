@@ -1142,8 +1142,12 @@ class RuntimeImageHelper {
         OatHeader::Create(kRuntimeQuickCodeISA,
                           isa_features.get(),
                           number_of_dex_files,
-                          &key_value_store),
+                          &key_value_store,
+                          error_msg),
         &OatHeader::Delete);
+    if (oat_header == nullptr) {
+      return false;
+    }
 
     // Create the byte array containing the oat header and dex checksums.
     uint32_t checksums_size = checksums.size() * sizeof(uint32_t);

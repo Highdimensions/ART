@@ -539,6 +539,7 @@ class OatWriter {
   uint32_t size_executable_offset_alignment_ = 0;
   uint32_t size_oat_header_ = 0;
   uint32_t size_oat_header_key_value_store_ = 0;
+  uint32_t size_oat_header_end_padding_ = 0;
   uint32_t size_dex_file_ = 0;
   uint32_t size_verifier_deps_ = 0;
   uint32_t size_verifier_deps_alignment_ = 0;

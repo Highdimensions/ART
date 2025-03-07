@@ -17,12 +17,13 @@
 #include "oat.h"
 
 #include <string.h>
+#include <zlib.h>
 
 #include "android-base/stringprintf.h"
-
 #include "arch/instruction_set.h"
 #include "arch/instruction_set_features.h"
 #include "base/bit_utils.h"
+#include "base/stl_util.h"
 #include "base/strlcpy.h"
 
 namespace art HIDDEN {
@@ -46,9 +47,14 @@ OatHeader* OatHeader::Create(InstructionSet instruction_set,
                              const InstructionSetFeatures* instruction_set_features,
                              uint32_t dex_file_count,
                              const SafeMap<std::string, std::string>* variable_data,
-                             uint32_t base_oat_offset) {
+                             uint32_t base_oat_offset,
+                             std::string* error_msg) {
   // Estimate size of optional data.
   size_t needed_size = ComputeOatHeaderSize(variable_data);
+  if (needed_size > kMaxSize) {
+    *error_msg = ART_FORMAT("Oat header size exceeds the limit {}, got {}", kMaxSize, needed_size);
+    return nullptr;
+  }
 
   // Reserve enough memory.
   void* memory = operator new (needed_size);
@@ -367,67 +373,69 @@ const uint8_t* OatHeader::GetKeyValueStore() const {
 
 const char* OatHeader::GetStoreValueByKey(const char* key) const {
   std::string_view key_view(key);
-  const char* ptr = reinterpret_cast<const char*>(&key_value_store_);
-  const char* end = ptr + key_value_store_size_;
 
-  while (ptr < end) {
-    // Scan for a closing zero.
-    const char* str_end = reinterpret_cast<const char*>(memchr(ptr, 0, end - ptr));
-    if (UNLIKELY(str_end == nullptr)) {
-      LOG(WARNING) << "OatHeader: Unterminated key in key value store.";
-      return nullptr;
-    }
-    const char* value_start = str_end + 1;
-    const char* value_end =
-        reinterpret_cast<const char*>(memchr(value_start, 0, end - value_start));
-    if (UNLIKELY(value_end == nullptr)) {
-      LOG(WARNING) << "OatHeader: Unterminated value in key value store.";
-      return nullptr;
-    }
-    if (key_view == std::string_view(ptr, str_end - ptr)) {
+  uint32_t offset = 0;
+  const char* current_key;
+  const char* value;
+  while (GetNextStoreKeyValuePair(&offset, &current_key, &value)) {
+    if (key_view == current_key) {
       // Same as key.
-      return value_start;
+      return value;
     }
-    // Different from key. Advance over the value.
-    ptr = value_end + 1;
   }
+
   // Not found.
   return nullptr;
 }
 
-bool OatHeader::GetStoreKeyValuePairByIndex(size_t index,
-                                            const char** key,
-                                            const char** value) const {
-  const char* ptr = reinterpret_cast<const char*>(&key_value_store_);
-  const char* end = ptr + key_value_store_size_;
-  size_t counter = index;
-
-  while (ptr < end) {
-    // Scan for a closing zero.
-    const char* str_end = reinterpret_cast<const char*>(memchr(ptr, 0, end - ptr));
-    if (UNLIKELY(str_end == nullptr)) {
-      LOG(WARNING) << "OatHeader: Unterminated key in key value store.";
-      return false;
-    }
-    const char* value_start = str_end + 1;
-    const char* value_end =
-        reinterpret_cast<const char*>(memchr(value_start, 0, end - value_start));
-    if (UNLIKELY(value_end == nullptr)) {
-      LOG(WARNING) << "OatHeader: Unterminated value in key value store.";
-      return false;
-    }
-    if (counter == 0) {
-      *key = ptr;
-      *value = value_start;
-      return true;
-    } else {
-      --counter;
-    }
-    // Advance over the value.
-    ptr = value_end + 1;
+bool OatHeader::GetNextStoreKeyValuePair(/*inout*/ uint32_t* offset,
+                                         /*out*/ const char** key,
+                                         /*out*/ const char** value) const {
+  if (*offset >= key_value_store_size_) {
+    return false;
   }
-  // Not found.
-  return false;
+
+  const char* start = reinterpret_cast<const char*>(&key_value_store_);
+  const char* ptr = start + *offset;
+  const char* end = start + key_value_store_size_;
+
+  // Scan for a closing zero.
+  const char* str_end = reinterpret_cast<const char*>(memchr(ptr, 0, end - ptr));
+  if (UNLIKELY(str_end == nullptr)) {
+    LOG(WARNING) << "OatHeader: Unterminated key in key value store.";
+    return false;
+  }
+  const char* value_start = str_end + 1;
+  const char* value_end = reinterpret_cast<const char*>(memchr(value_start, 0, end - value_start));
+  if (UNLIKELY(value_end == nullptr)) {
+    LOG(WARNING) << "OatHeader: Unterminated value in key value store.";
+    return false;
+  }
+
+  *key = ptr;
+  *value = value_start;
+  // Advance over the value.
+  *offset = (value_end + 1) - start;
+  return true;
+}
+
+void OatHeader::ComputeChecksum(/*inout*/ uint32_t* checksum) const {
+  // To make the oat checksum deterministic across hosts and devices, we need to exclude the
+  // `key_value_store_size_` field because it may differ.
+  *checksum = adler32(*checksum,
+                      reinterpret_cast<const uint8_t*>(this),
+                      sizeof(OatHeader) - sizeof(key_value_store_size_));
+
+  uint32_t offset = 0;
+  const char* key;
+  const char* value;
+  while (GetNextStoreKeyValuePair(&offset, &key, &value)) {
+    if (!ContainsElement(kChecksumBlocklist, key)) {
+      // Update the checksum.
+      *checksum = adler32(*checksum, reinterpret_cast<const uint8_t*>(key), strlen(key) + 1);
+      *checksum = adler32(*checksum, reinterpret_cast<const uint8_t*>(value), strlen(value) + 1);
+    }
+  }
 }
 
 size_t OatHeader::GetHeaderSize() const {
