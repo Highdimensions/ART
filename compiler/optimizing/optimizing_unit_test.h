@@ -256,6 +256,7 @@ class OptimizingUnitTestHelper {
         pool_and_allocator_->GetArenaStack(),
         handles,
         *dex_files_.back(),
+        dex_files_.size() - 1,
         /*method_idx*/-1,
         kRuntimeISA);
     return graph_;

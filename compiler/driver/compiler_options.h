@@ -20,6 +20,8 @@
 #include <memory>
 #include <ostream>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "base/compiler_filter.h"
@@ -290,6 +292,8 @@ class CompilerOptions final {
     return dex_files_for_oat_file_;
   }
 
+  uint32_t GetDexIndex(const DexFile& dex) const;
+
   const HashSet<std::string>& GetImageClasses() const {
     return image_classes_;
   }
@@ -303,6 +307,8 @@ class CompilerOptions final {
   bool ParseCompilerOptions(const std::vector<std::string>& options,
                             bool ignore_unrecognized,
                             std::string* error_msg);
+  EXPORT void LoadHints();
+
 
   void SetNonPic() {
     compile_pic_ = false;
@@ -342,6 +348,19 @@ class CompilerOptions final {
 
   bool GetDumpPassTimings() const {
     return dump_pass_timings_;
+  }
+
+  bool GetUseHints() const {
+    return use_hints_;
+  }
+  bool GetDumpInlines() const {
+    return dump_inlines_;
+  }
+  const std::unordered_map<uint64_t, std::unordered_set<uint32_t>>& GetInlinesNegative() const {
+    return inlines_negative;
+  }
+  const std::unordered_map<uint64_t, std::unordered_set<uint32_t>>& GetInlinesPositive() const {
+    return inlines_positive;
   }
 
   bool GetDumpStats() const {
@@ -425,6 +444,10 @@ class CompilerOptions final {
   bool compile_pic_;
   bool dump_timings_;
   bool dump_pass_timings_;
+  bool use_hints_;
+  bool dump_inlines_;
+  std::unordered_map<uint64_t, std::unordered_set<uint32_t>> inlines_negative;
+  std::unordered_map<uint64_t, std::unordered_set<uint32_t>> inlines_positive;
   bool dump_stats_;
   bool profile_branches_;
 
