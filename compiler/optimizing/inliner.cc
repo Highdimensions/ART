@@ -135,6 +135,38 @@ void HInliner::UpdateInliningBudget() {
   }
 }
 
+HInliner::HInliner(HGraph* outer_graph,
+           HGraph* outermost_graph,
+           CodeGenerator* codegen,
+           const DexCompilationUnit& outer_compilation_unit,
+           const DexCompilationUnit& caller_compilation_unit,
+           OptimizingCompilerStats* stats,
+           size_t total_number_of_dex_registers,
+           size_t total_number_of_instructions,
+           HInliner* parent,
+           HEnvironment* caller_environment,
+           size_t depth,
+           bool try_catch_inlining_allowed,
+           const char* name)
+      : HOptimization(outer_graph, name, stats),
+        outermost_graph_(outermost_graph),
+        outer_compilation_unit_(outer_compilation_unit),
+        caller_compilation_unit_(caller_compilation_unit),
+        codegen_(codegen),
+        total_number_of_dex_registers_(total_number_of_dex_registers),
+        total_number_of_instructions_(total_number_of_instructions),
+        parent_(parent),
+        caller_environment_(caller_environment),
+        depth_(depth),
+        inlining_budget_(0),
+        try_catch_inlining_allowed_(try_catch_inlining_allowed),
+        run_extra_type_propagation_(false),
+        inline_stats_(nullptr),
+        denylist(),
+        denymap(const_cast<std::unordered_map<uint64_t, std::unordered_set<uint32_t>>&>(codegen->GetCompilerOptions().GetInlinesAllowlist())) {
+}
+
+std::mutex g_pages_mutex;
 bool HInliner::Run() {
   if (codegen_->GetCompilerOptions().GetInlineMaxCodeUnits() == 0) {
     // Inlining effectively disabled.
@@ -202,6 +234,9 @@ bool HInliner::Run() {
             did_inline = true;
           }
         }
+        if (!did_inline && codegen_->GetCompilerOptions().GetDumpInlines()) {
+          denylist.insert(call->GetMethodReference().index);
+        }
       }
       instruction = next;
     }
@@ -212,6 +247,17 @@ bool HInliner::Run() {
                                        outer_compilation_unit_.GetDexCache(),
                                        /* is_first_run= */ false);
     rtp_fixup.Run();
+  }
+
+  if (codegen_->GetCompilerOptions().GetDumpInlines()) {
+    uint32_t m1 = outermost_graph_->GetMethodIdx();
+    uint32_t m2 = graph_->GetMethodIdx();
+    uint64_t m64 = (static_cast<uint64_t>(m1) << 32) + m2;
+//LOG(ERROR) << ">>>>> " << m1 << "," << m2;
+
+std::lock_guard<std::mutex> guard(g_pages_mutex);
+
+    denymap[m64] = std::move(denylist);
   }
 
   // We return true if we either inlined at least one method, or we marked one of our methods as
@@ -455,6 +501,37 @@ static bool AlwaysThrows(ArtMethod* method)
 }
 
 bool HInliner::TryInline(HInvoke* invoke_instruction) {
+  uint32_t method_idx = invoke_instruction->GetMethodReference().index;
+
+  if (codegen_->GetCompilerOptions().GetUseHints()) {
+    uint32_t m1 = outermost_graph_->GetMethodIdx();
+    uint32_t m2 = graph_->GetMethodIdx();
+    uint64_t m64 = (static_cast<uint64_t>(m1) << 32) + m2;
+//LOG(ERROR) << "find " << m64;
+    auto it = denymap.find(m64);
+//    CHECK(it != denymap.end());
+    if (it != denymap.end()) {
+      CHECK(false);
+      const std::unordered_set<uint32_t>& dl = it->second;
+      if (denylist.find(method_idx) != denylist.end()) {
+        return false;
+      }
+    }
+  }
+
+  bool result = DoTryInline(invoke_instruction);
+////  CHECK(result);
+/*
+  if (codegen_->GetCompilerOptions().GetDumpInlines()) {
+    if (result) {
+      allowlist.insert(mname);
+    }
+  }
+*/
+  return result;
+}
+
+bool HInliner::DoTryInline(HInvoke* invoke_instruction) {
   MaybeRecordStat(stats_, MethodCompilationStat::kTryInline);
 
   // Don't bother to move further if we know the method is unresolved or the invocation is

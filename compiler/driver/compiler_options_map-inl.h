@@ -101,6 +101,14 @@ inline bool ReadCompilerOptions(Base& map, CompilerOptions* options, std::string
     options->dump_pass_timings_ = true;
   }
 
+  if (map.Exists(Base::DumpInlines)) {
+    options->dump_inlines_ = true;
+  }
+
+  if (map.Exists(Base::UseHints)) {
+    options->use_hints_ = true;
+  }
+
   if (map.Exists(Base::DumpStats)) {
     options->dump_stats_ = true;
   }
@@ -182,6 +190,14 @@ NO_INLINE void AddCompilerOptionsArgumentParserOptions(Builder& b) {
       .Define({"--dump-stats"})
           .WithHelp("Display overall compilation statistics.")
           .IntoKey(Map::DumpStats)
+
+      .Define({"--use-hints"})
+          .WithHelp("Use profile hints.")
+          .IntoKey(Map::UseHints)
+
+      .Define({"--dump-inlines"})
+          .WithHelp("Inline allowlist.")
+          .IntoKey(Map::DumpInlines)
 
       .Define("--debuggable")
           .WithHelp("Produce code debuggable with a java-debugger.")

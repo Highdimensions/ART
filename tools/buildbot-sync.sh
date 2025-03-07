@@ -150,6 +150,8 @@ for b in {32,64}; do
       $ART_SSH_CMD \
         "$ART_CHROOT_CMD $bin_on_device --output-dir=$output_dir --compiler-filter=speed-profile"
     else
+      echo adb shell chroot "$ART_TEST_CHROOT" \
+        "$bin_on_device" --output-dir=$output_dir --compiler-filter=speed-profile
       adb shell chroot "$ART_TEST_CHROOT" \
         "$bin_on_device" --output-dir=$output_dir --compiler-filter=speed-profile
     fi

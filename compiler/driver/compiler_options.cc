@@ -61,6 +61,9 @@ CompilerOptions::CompilerOptions()
       compile_pic_(false),
       dump_timings_(false),
       dump_pass_timings_(false),
+      use_hints_(false),
+      dump_inlines_(false),
+      inlines_allowlist(),
       dump_stats_(false),
       profile_branches_(false),
       profile_compilation_info_(nullptr),
@@ -80,11 +83,56 @@ CompilerOptions::CompilerOptions()
       check_profiled_methods_(ProfileMethodsCheck::kNone),
       max_image_block_size_(std::numeric_limits<uint32_t>::max()),
       passes_to_run_(nullptr) {
+
+/*
+LOG(ERROR) << "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz";
+
+//  if (use_hints_) {
+    std::ifstream f;
+    f.open("xxx", std::ios::binary);
+if (!f.fail()) {
+LOG(ERROR) << "loading...";
+    uint64_t m64;
+    while (f >> m64) {
+      uint32_t count, marker;
+      f >> count;
+      std::unordered_set<uint32_t> denylist;
+      for (uint32_t i = 0; i < count; ++i) {
+        uint32_t m;
+        f >> m;
+        denylist.insert(m);
+      }
+      f >> marker;
+      CHECK(marker = 0xFFFFffff);
+      inlines_allowlist[m64] = std::move(denylist);
+LOG(ERROR) << "load " << m64;
+    }
+    f.close();
+} else {
+LOG(ERROR) << "failed to load";
+}
+//  }
+*/
 }
 
 CompilerOptions::~CompilerOptions() {
   // Everything done by member destructors.
   // The definitions of classes forward-declared in the header have now been #included.
+
+  if (dump_inlines_) {
+LOG(ERROR) << "dumping inlines...";
+    std::ofstream f;
+    f.open("xxx", std::ios::out | std::ios::binary);
+    for (const auto& [method, denylist]: inlines_allowlist) {
+LOG(ERROR) << "dumping inlines... -  " << method;
+      f << static_cast<uint64_t>(method) << static_cast<uint32_t>(denylist.size());
+      for (uint32_t m : denylist) {
+         f << m;
+      }
+      f << 0xFFFFffffu;
+    }
+    f.close();
+  }
 }
 
 namespace {
@@ -125,6 +173,39 @@ bool CompilerOptions::ParseCompilerOptions(const std::vector<std::string>& optio
 
   SimpleParseArgumentMap args = parser.ReleaseArgumentsMap();
   return ReadCompilerOptions(args, this, error_msg);
+}
+
+void CompilerOptions::LoadXXX() {
+  if (use_hints_) {
+    std::ifstream f;
+    f.open("xxx", std::ios::binary);
+if (!f.fail()) {
+// It gets here, but not to loadd - why??
+//LOG(ERROR) << "loading...";
+    while (!f.eof() && !f.fail()) {
+      uint64_t m64;
+      f >> m64;
+CHECK(!f.fail()) << "fail 1";
+CHECK(!f.eof()) << "eof 1";
+      uint32_t count, marker;
+      f >> count;
+CHECK(!f.fail()) << "fail 2";
+CHECK(!f.eof()) << "eof 2";
+      std::unordered_set<uint32_t> denylist;
+      for (uint32_t i = 0; i < count; ++i) {
+CHECK(false);
+        uint32_t m;
+        f >> m;
+        denylist.insert(m);
+      }
+      f >> marker;
+      CHECK(marker = 0xFFFFffff);
+      inlines_allowlist[m64] = std::move(denylist);
+//LOG(ERROR) << "loadd " << m64;
+    }
+    f.close();
+}
+  }
 }
 
 bool CompilerOptions::IsImageClass(const char* descriptor) const {

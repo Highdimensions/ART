@@ -46,21 +46,7 @@ class HInliner : public HOptimization {
            HEnvironment* caller_environment,
            size_t depth,
            bool try_catch_inlining_allowed,
-           const char* name = kInlinerPassName)
-      : HOptimization(outer_graph, name, stats),
-        outermost_graph_(outermost_graph),
-        outer_compilation_unit_(outer_compilation_unit),
-        caller_compilation_unit_(caller_compilation_unit),
-        codegen_(codegen),
-        total_number_of_dex_registers_(total_number_of_dex_registers),
-        total_number_of_instructions_(total_number_of_instructions),
-        parent_(parent),
-        caller_environment_(caller_environment),
-        depth_(depth),
-        inlining_budget_(0),
-        try_catch_inlining_allowed_(try_catch_inlining_allowed),
-        run_extra_type_propagation_(false),
-        inline_stats_(nullptr) {}
+           const char* name = kInlinerPassName);
 
   bool Run() override;
 
@@ -83,6 +69,7 @@ class HInliner : public HOptimization {
   };
 
   bool TryInline(HInvoke* invoke_instruction);
+  bool DoTryInline(HInvoke* invoke_instruction);
 
   // Try to inline `resolved_method` in place of `invoke_instruction`. `do_rtp` is whether
   // reference type propagation can run after the inlining. If the inlining is successful, this
@@ -347,6 +334,9 @@ class HInliner : public HOptimization {
   // Used to record stats about optimizations on the inlined graph.
   // If the inlining is successful, these stats are merged to the caller graph's stats.
   OptimizingCompilerStats* inline_stats_;
+
+  std::unordered_set<uint32_t> denylist;
+  std::unordered_map<uint64_t, std::unordered_set<uint32_t>>& denymap;
 
   DISALLOW_COPY_AND_ASSIGN(HInliner);
 };
