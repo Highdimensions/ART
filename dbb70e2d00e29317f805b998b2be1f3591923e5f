@@ -36,6 +36,60 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "67be3b1a_77dadc62",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-08T11:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "80c4e6c7_1fed1df9",
+      "revId": "dbb70e2d00e29317f805b998b2be1f3591923e5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa38fae5_2677124b",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-08T11:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "80c4e6c7_1fed1df9",
+      "revId": "dbb70e2d00e29317f805b998b2be1f3591923e5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "566c7790_09e40619",
+        "filename": "tools/ahat/src/main/com/android/ahat/ObjectsHandler.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-08T11:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "80c4e6c7_1fed1df9",
+      "revId": "dbb70e2d00e29317f805b998b2be1f3591923e5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9afa392a_e3059baf",
@@ -83,6 +137,30 @@
           ]
         }
       ],
+      "revId": "dbb70e2d00e29317f805b998b2be1f3591923e5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0280a18f_9b7113f6",
+        "filename": "tools/ahat/src/main/com/android/ahat/Summarizer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 2058033
+      },
+      "writtenOn": "2025-03-08T11:20:55Z",
+      "side": 1,
+      "message": "Passed as an integer.\n\nSo I made this a new method for a few reasons:\n\n1. Matches the style for `printDuplicateBitmaps` as they also use a summarizer method.\n2. Avoid importing URI into `OverviewHandler`.\n3. IMO it is more readable.\n\nBut I am happy to move if you feel it is better :)",
+      "parentUuid": "9afa392a_e3059baf",
+      "range": {
+        "startLine": 167,
+        "startChar": 63,
+        "endLine": 167,
+        "endChar": 81
+      },
       "revId": "dbb70e2d00e29317f805b998b2be1f3591923e5f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
