@@ -22,6 +22,7 @@ import com.android.ahat.heapdump.Reachability;
 import com.android.ahat.heapdump.Site;
 import com.android.ahat.heapdump.Value;
 import java.net.URI;
+import kotlin.Int;
 
 /**
  * Class for generating a DocString summary of an instance or value.
@@ -159,5 +160,16 @@ class Summarizer {
     }
     URI uri = DocString.formattedUri("site?id=%d", site.getId());
     return DocString.link(uri, text);
+  }
+
+  /**
+   * Creates a DocString summarizing duplicated strings.
+   */
+  public static DocString summarizeDuplicateString(long count, Int stringId) {
+    DocString formatted = new DocString();
+    DocString linkText = DocString.size(count, false);
+    URI objTarget = DocString.formattedUri(("objects?class=java.lang.String&stringId=" + String.valueOf(stringId)));
+    formatted.appendLink(objTarget, linkText);
+    return formatted;
   }
 }

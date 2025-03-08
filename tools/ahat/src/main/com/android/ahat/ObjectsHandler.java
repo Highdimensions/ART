@@ -45,13 +45,19 @@ class ObjectsHandler implements AhatHandler {
    * @param subclass if true, include instances of subclasses of the named class.
    * @param heapName name of the heap to restrict instances to. May be null to
    *                 allow instances on any heap.
+   * @param stringId if non-zero, include instances of java.lang.String with
+   *                 the given id of the string content.
    * @return list of matching instances
    */
-  public static List<AhatInstance> getObjects(
-      Site site, String className, boolean subclass, String heapName) {
+ public static List<AhatInstance> getObjects(
+      Site site, String className, boolean subclass, String heapName, int stringId) {
     Predicate<AhatInstance> predicate = (x) -> {
       return (heapName == null || x.getHeap().getName().equals(heapName))
-        && (subclass ? x.isInstanceOfClass(className) : className.equals(x.getClassName()));
+        && (subclass ? x.isInstanceOfClass(className) : className.equals(x.getClassName())
+        && (stringId == 0 || (x.getClassName().equals("java.lang.String")
+        && DuplicateStrings.getStringFromId(stringId - 1) != null
+        && DuplicateStrings.getStringFromId(stringId - 1).equals(x.asString())
+        && !x.isUnreachable())));
     };
 
     List<AhatInstance> insts = new ArrayList<AhatInstance>();
@@ -65,9 +71,10 @@ class ObjectsHandler implements AhatHandler {
     String className = query.get("class", "java.lang.Object");
     String heapName = query.get("heap", null);
     boolean subclass = (query.getInt("subclass", 0) != 0);
+    int stringId = query.getInt("stringId", 0);
     Site site = mSnapshot.getSite(id);
 
-    List<AhatInstance> insts = getObjects(site, className, subclass, heapName);
+    List<AhatInstance> insts = getObjects(site, className, subclass, heapName, stringId);
     Collections.sort(insts, Sort.defaultInstanceCompare(mSnapshot));
 
     doc.title("Instances");
@@ -78,10 +85,14 @@ class ObjectsHandler implements AhatHandler {
     //    Class:          android.os.Binder
     //    Subclasses:     excluded (switch to included)
     //    Heap:           any (switch to app, image, zygote)
+    //    stringId:       null (string id, e.g. 123456789)
     //    Count:          17,424
     doc.descriptions();
     doc.description(DocString.text("Site"), Summarizer.summarize(site));
     doc.description(DocString.text("Class"), DocString.text(className));
+    if (stringId != 0) {
+      doc.description(DocString.text("stringId"), DocString.text(stringId));
+    }
 
     DocString subclassChoice = DocString.text(subclass ? "included" : "excluded");
     subclassChoice.append(" (switch to ");
