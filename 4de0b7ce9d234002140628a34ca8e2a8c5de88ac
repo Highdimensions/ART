@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf0f9bab_2b71bb38",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:59:31Z",
+      "side": 1,
+      "message": "Thanks Vladimir and Mythri, PTAL.",
+      "revId": "4de0b7ce9d234002140628a34ca8e2a8c5de88ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
