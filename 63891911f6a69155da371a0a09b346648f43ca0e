@@ -16,6 +16,521 @@
       "message": "PTAL. Thanks!",
       "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9a508ee_d342a8d1",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "Add a comment where in the ART sources those constants are also defined (and must match).",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 33
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "8175b36f_c827e248",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 28,
+                "startChar": 0,
+                "endLine": 28,
+                "endChar": 0
+              },
+              "replacement": "// These constants are defined in the ART sources in the following files:\n//\n// - art/runtime/trace.h\n// - art/runtime/trace_writer.cc\n"
+            }
+          ]
+        }
+      ],
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "803d1755_d701c844",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "Make it top level. Same comment about where is this matched in ART Sources.",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 42
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0094e960_88247b1a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 33,
+                "startChar": 0,
+                "endLine": 33,
+                "endChar": 0
+              },
+              "replacement": "static constexpr int kMethodInfoHeaderLength \u003d 10;\nstatic constexpr int kTraceEntriesHeaderLength \u003d 11;\n"
+            },
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 44,
+                "startChar": 0,
+                "endLine": 47,
+                "endChar": 0
+              },
+              "replacement": "  uint8_t header[kMethodInfoHeaderLength];\n  if (!file-\u003eReadFully(\u0026header, kMethodInfoHeaderLength)) {\n"
+            },
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 92,
+                "startChar": 0,
+                "endLine": 94,
+                "endChar": 0
+              },
+              "replacement": "  uint8_t header[kTraceEntriesHeaderLength];\n  if (!file-\u003eReadFully(header, kTraceEntriesHeaderLength)) {\n"
+            },
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 114,
+                "startChar": 0,
+                "endLine": 116,
+                "endChar": 0
+              },
+              "replacement": "  uint8_t header[kTraceEntriesHeaderLength];\n  if (!file-\u003eReadFully(header, kTraceEntriesHeaderLength)) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b124d4f6_448bf11d",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "char[]",
+      "range": {
+        "startLine": 53,
+        "startChar": 18,
+        "endLine": 53,
+        "endChar": 22
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "3aabfbf3_7615ea37",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 53,
+                "startChar": 0,
+                "endLine": 54,
+                "endChar": 0
+              },
+              "replacement": "  std::unique_ptr\u003cchar[]\u003e name(new char[length]);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "143ae9c0_eea214a7",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "Add a constant. Same comment about where these match with ART sources.",
+      "range": {
+        "startLine": 92,
+        "startChar": 17,
+        "endLine": 92,
+        "endChar": 19
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "9e5ba93e_c61cc0fd",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 33,
+                "startChar": 0,
+                "endLine": 33,
+                "endChar": 0
+              },
+              "replacement": "static const int kTraceEntryHeaderSize \u003d 11;\n"
+            },
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 92,
+                "startChar": 0,
+                "endLine": 94,
+                "endChar": 0
+              },
+              "replacement": "  uint8_t header[kTraceEntryHeaderSize];\n  if (!file-\u003eReadFully(header, kTraceEntryHeaderSize)) {\n"
+            },
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 114,
+                "startChar": 0,
+                "endLine": 116,
+                "endChar": 0
+              },
+              "replacement": "  uint8_t header[kTraceEntryHeaderSize];\n  if (!file-\u003eReadFully(header, kTraceEntryHeaderSize)) {\n"
+            },
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 199,
+                "startChar": 0,
+                "endLine": 200,
+                "endChar": 0
+              },
+              "replacement": "    if (!file-\u003eReadFully(\u0026entry_header, 1)) {\n"
+            },
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 219,
+                "startChar": 0,
+                "endLine": 220,
+                "endChar": 0
+              },
+              "replacement": "    if (!file-\u003eReadFully(\u0026entry_header, 1)) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "743daa8e_c9d30c19",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 114,
+        "startChar": 17,
+        "endLine": 114,
+        "endChar": 19
+      },
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da64ac32_d42bd9dc",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "have",
+      "range": {
+        "startLine": 136,
+        "startChar": 30,
+        "endLine": 136,
+        "endChar": 35
+      },
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "559cd4e0_a1dea8d3",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "-\u003e `, and we` ... ?",
+      "range": {
+        "startLine": 136,
+        "startChar": 45,
+        "endLine": 136,
+        "endChar": 47
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "13f24cc6_43e8742f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 136,
+                "startChar": 0,
+                "endLine": 137,
+                "endChar": 0
+              },
+              "replacement": "    // then this map wouldn\u0027t haven an entry, and we start with the depth of 0.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16a3ce5e_8d82e9be",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "Make it more explicit. (AI seems to give a good suggestion)",
+      "range": {
+        "startLine": 148,
+        "startChar": 20,
+        "endLine": 148,
+        "endChar": 48
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2b401073_7b7f22bc",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 148,
+                "startChar": 0,
+                "endLine": 149,
+                "endChar": 0
+              },
+              "replacement": "      LOG(FATAL) \u003c\u003c \"Reading past the buffer when decoding timestamp\";\n"
+            },
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 159,
+                "startChar": 0,
+                "endLine": 160,
+                "endChar": 0
+              },
+              "replacement": "        LOG(FATAL) \u003c\u003c \"Reading past the buffer when decoding method id\";\n"
+            }
+          ]
+        }
+      ],
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "563337d8_d5d6a093",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 159,
+        "startChar": 0,
+        "endLine": 159,
+        "endChar": 51
+      },
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b761b0b_1e5c82c0",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "Map",
+      "range": {
+        "startLine": 185,
+        "startChar": 5,
+        "endLine": 185,
+        "endChar": 9
+      },
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33e4c72c_78751e67",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "Consistency: `Map to maintain` or change line 185 to `Maintain`...",
+      "range": {
+        "startLine": 188,
+        "startChar": 5,
+        "endLine": 188,
+        "endChar": 14
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "d5be1401_e2988b31",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 185,
+                "startChar": 0,
+                "endLine": 186,
+                "endChar": 0
+              },
+              "replacement": "  // Map to maintain information about threads and methods\n"
+            },
+            {
+              "path": "tools/trace_parser/long_running_method_trace_parser.cc",
+              "range": {
+                "startLine": 188,
+                "startChar": 0,
+                "endLine": 189,
+                "endChar": 0
+              },
+              "replacement": "  // Map to maintain the current depth of the method in the call stack. Used to\n"
+            }
+          ]
+        }
+      ],
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adfb0dff_b90e2161",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "parse",
+      "range": {
+        "startLine": 192,
+        "startChar": 11,
+        "endLine": 192,
+        "endChar": 16
+      },
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06a5db4c_27b69e9d",
+        "filename": "tools/trace_parser/long_running_method_trace_parser.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-10T14:34:08Z",
+      "side": 1,
+      "message": "the",
+      "range": {
+        "startLine": 193,
+        "startChar": 33,
+        "endLine": 193,
+        "endChar": 34
+      },
+      "revId": "63891911f6a69155da371a0a09b346648f43ca0e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
