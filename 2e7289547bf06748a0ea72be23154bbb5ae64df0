@@ -160,6 +160,24 @@
       "parentUuid": "61861796_31d4dc10",
       "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0e99b98_0053502a",
+        "filename": "tools/buildbot-build.sh",
+        "patchSetId": 9
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-03-10T15:45:22Z",
+      "side": 1,
+      "message": "Patch for soong available at: https://android-review.googlesource.com/c/platform/build/soong/+/3530161/1.\n\nI\u0027ve also refactored the build rules into default modules to share the additional rules between modules.",
+      "parentUuid": "7bcb26c1_292755f1",
+      "revId": "2e7289547bf06748a0ea72be23154bbb5ae64df0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
