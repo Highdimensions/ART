@@ -22,6 +22,7 @@ import com.android.ahat.heapdump.Reachability;
 import com.android.ahat.heapdump.Site;
 import com.android.ahat.heapdump.Value;
 import java.net.URI;
+import kotlin.Int;
 
 /**
  * Class for generating a DocString summary of an instance or value.

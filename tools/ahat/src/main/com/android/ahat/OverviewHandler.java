@@ -20,6 +20,7 @@ import com.android.ahat.heapdump.AhatHeap;
 import com.android.ahat.heapdump.AhatInstance;
 import com.android.ahat.heapdump.AhatBitmapInstance;
 import com.android.ahat.heapdump.AhatSnapshot;
+import com.android.ahat.heapdump.DuplicateStrings;
 import com.android.ahat.heapdump.Reachability;
 import com.android.ahat.heapdump.Size;
 import java.io.File;
@@ -63,6 +64,8 @@ class OverviewHandler implements AhatHandler {
 
     doc.section("Heap Analysis Result");
     printDuplicateBitmaps(doc);
+
+    printDuplicateStrings(doc);
   }
 
   private void printHeapSizes(Doc doc) {
@@ -104,6 +107,30 @@ class OverviewHandler implements AhatHandler {
           DocString.text("Total"),
           DocString.text("All duplicated bitmaps"));
       SizeTable.end(doc);
+    }
+  }
+
+  private void printDuplicateStrings(Doc doc) {
+    // TODO: Add support for diffing duplicated strings.
+    List<DuplicateStrings.DuplicatedString> duplicates = mSnapshot.findTopDuplicateStrings();
+    if (duplicates != null && duplicates.size() > 0) {
+        SizeTable.table(doc, mSnapshot.isDiffed(),
+                new Column("Count"),
+                new Column("Duplicated String"));
+        for (DuplicateStrings.DuplicatedString duplicate : duplicates) {
+            String content = duplicate.getContent();
+            int stringId = DuplicateStrings.getIdFromString(content);
+            if (stringId == -1) continue;
+            SizeTable.row(doc,
+                duplicate.getSize(),
+                Size.ZERO,
+                DocString.link(
+                  DocString.formattedUri("objects?class=%s&stringId=%d",
+                      "java.lang.String", stringId),
+                  DocString.size(duplicate.getCount(), false)),
+                DocString.text(content));
+        }
+        SizeTable.end(doc);
     }
   }
 }
