@@ -16,6 +16,23 @@
       "message": "Thanks Vladimir and Mythri, PTAL.",
       "revId": "4de0b7ce9d234002140628a34ca8e2a8c5de88ac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7495d787_8f205e13",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-10T15:07:43Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "4de0b7ce9d234002140628a34ca8e2a8c5de88ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
