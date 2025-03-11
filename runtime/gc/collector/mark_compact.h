@@ -330,7 +330,8 @@ class MarkCompact final : public GarbageCollector {
   // mirror::Class.
   bool IsValidObject(mirror::Object* obj) const REQUIRES_SHARED(Locks::mutator_lock_);
   void InitializePhase();
-  void FinishPhase() REQUIRES(!Locks::mutator_lock_, !Locks::heap_bitmap_lock_, !lock_);
+  void FinishPhase(bool performed_compaction)
+      REQUIRES(!Locks::mutator_lock_, !Locks::heap_bitmap_lock_, !lock_);
   void MarkingPhase() REQUIRES_SHARED(Locks::mutator_lock_) REQUIRES(!Locks::heap_bitmap_lock_);
   void CompactionPhase() REQUIRES_SHARED(Locks::mutator_lock_);
 
@@ -681,6 +682,16 @@ class MarkCompact final : public GarbageCollector {
   // the card-table corresponding to moving and non-moving spaces.
   void ScanOldGenObjects() REQUIRES(Locks::heap_bitmap_lock_) REQUIRES_SHARED(Locks::mutator_lock_);
 
+  // Verify that cards corresponding to objects containing references to
+  // young-gen are dirty.
+  void VerifyNoMissingCardMarks() REQUIRES(Locks::heap_bitmap_lock_, Locks::mutator_lock_);
+  // Verify that post-GC objects (all objects except the ones allocated after
+  // marking pause) are valid with valid references in them. Bitmap corresponding
+  // to [moving_space_begin_, mark_bitmap_clear_end) was retained. This is used in
+  // case compaction is skipped.
+  void VerifyPostGCObjects(bool performed_compaction, uint8_t* mark_bitmap_clear_end)
+      REQUIRES(Locks::heap_bitmap_lock_) REQUIRES_SHARED(Locks::mutator_lock_);
+
   // For checkpoints
   Barrier gc_barrier_;
   // Required only when mark-stack is accessed in shared mode, which happens
@@ -930,6 +941,14 @@ class MarkCompact final : public GarbageCollector {
   // is incorporated.
   void* stack_high_addr_;
   void* stack_low_addr_;
+  // Following values for logging purposes
+  void* prev_post_compact_end_;
+  void* prev_black_dense_end_;
+  void* prev_black_allocations_begin_;
+  bool prev_gc_young_;
+  bool prev_gc_performed_compaction_;
+  // Timestamp when the read-barrier is enabled
+  uint64_t app_slow_path_start_time_;
 
   class FlipCallback;
   class ThreadFlipVisitor;
@@ -945,6 +964,8 @@ class MarkCompact final : public GarbageCollector {
   class ClassLoaderRootsUpdater;
   class LinearAllocPageUpdater;
   class ImmuneSpaceUpdateObjVisitor;
+  template <typename Visitor>
+  class VisitReferencesVisitor;
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(MarkCompact);
 };

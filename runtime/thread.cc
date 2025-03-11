@@ -1485,21 +1485,12 @@ void Thread::GetThreadName(std::string& name) const {
 
 uint64_t Thread::GetCpuMicroTime() const {
 #if defined(__linux__)
-  return Thread::GetCpuNanoTime() / 1000;
-#else  // __APPLE__
-  UNIMPLEMENTED(WARNING);
-  return -1;
-#endif
-}
-
-uint64_t Thread::GetCpuNanoTime() const {
-#if defined(__linux__)
   clockid_t cpu_clock_id;
   pthread_getcpuclockid(tlsPtr_.pthread_self, &cpu_clock_id);
   timespec now;
   clock_gettime(cpu_clock_id, &now);
-  return static_cast<uint64_t>(now.tv_sec) * UINT64_C(1000000000) +
-         static_cast<uint64_t>(now.tv_nsec);
+  return static_cast<uint64_t>(now.tv_sec) * UINT64_C(1000000) +
+         static_cast<uint64_t>(now.tv_nsec) / UINT64_C(1000);
 #else  // __APPLE__
   UNIMPLEMENTED(WARNING);
   return -1;
@@ -2439,7 +2430,7 @@ Thread::DumpOrder Thread::DumpStack(std::ostream& os,
                                /*check_suspended=*/ !force_dump_stack,
                                /*dump_locks=*/ !force_dump_stack);
     Runtime* runtime = Runtime::Current();
-    std::optional<uint64_t> start = runtime != nullptr ? runtime->SiqQuitNanoTime() : std::nullopt;
+    std::optional<uint64_t> start = runtime != nullptr ? runtime->SigQuitNanoTime() : std::nullopt;
     if (start.has_value()) {
       os << "DumpLatencyMs: " << static_cast<float>(nanotime - start.value()) / 1000000.0 << "\n";
     }

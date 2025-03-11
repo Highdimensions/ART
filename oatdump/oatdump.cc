@@ -490,12 +490,11 @@ class OatDumper {
     // Print the key-value store.
     {
       os << "KEY VALUE STORE:\n";
-      size_t index = 0;
+      uint32_t offset = 0;
       const char* key;
       const char* value;
-      while (oat_header.GetStoreKeyValuePairByIndex(index, &key, &value)) {
+      while (oat_header.GetNextStoreKeyValuePair(&offset, &key, &value)) {
         os << key << " = " << value << "\n";
-        index++;
       }
       os << "\n";
     }
@@ -3553,8 +3552,7 @@ struct OatdumpMain : public CmdlineMain<OatdumpArgs> {
                                         /*only_load_trusted_executable=*/false,
                                         ofa_context.get());
 
-    if (!oat_file_assistant.ValidateBootClassPathChecksums(*oat_file)) {
-      *error_msg = "BCP checksum check failed";
+    if (!oat_file_assistant.ValidateBootClassPathChecksums(*oat_file, error_msg)) {
       return false;
     }
 
