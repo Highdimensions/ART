@@ -1,0 +1,65 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6353e113_fa204b47",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-11T19:16:08Z",
+      "side": 1,
+      "message": "I\u0027d recommend using ObjectArray allocations here. That will significantly help as GC has a lot more work to do when there are references to visit, rather than primitive arrays or strings.\n\n\nYou can just refactor the code above at line 79 and use that here as well.\n\n```\n constexpr const size_t kNumObj \u003d 32768;\n ScopedObjectAccess soa(Thread::Current());\n Handle\u003cmirror::Class\u003e c(\n        hs.NewHandle(class_linker_-\u003eFindSystemClass(soa.Self(), \"[Ljava/lang/Object;\")));\n StackHandleScope\u003ckNumObj\u003e hs(soa.Self());\n for (size_t i \u003d 0; i \u003c kNumObj; i++) {\n   Handle\u003cmirror::ObjectArray\u003cmirror::Object\u003e\u003e array(hs.NewHandle(\n          mirror::ObjectArray\u003cmirror::Object\u003e::Alloc(soa.Self(), c.Get(), 4)));\n   for (size_t j \u003d 0; j \u003c 4; j++) {\n     array-\u003eSet\u003cfalse\u003e(j, array.Get());\n   }\n }\n```\n\nKeep `kNumObj \u003d 32768` because references are anyways bigger than string chars, so it\u0027ll be taken care of that way.",
+      "range": {
+        "startLine": 122,
+        "startChar": 39,
+        "endLine": 122,
+        "endChar": 60
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "55d2eaa1_7faa1e51",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 112,
+                "startChar": 0,
+                "endLine": 115,
+                "endChar": 0
+              },
+              "replacement": "  // Allocate a lot of objects to be collected (to ensure the garbage collection is long enough for\n  // the timing metrics to be non-zero), then trigger garbage collection, and check that GC metrics are\n  // updated (where applicable).\n"
+            },
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 120,
+                "startChar": 0,
+                "endLine": 120,
+                "endChar": 0
+              },
+              "replacement": "    Handle\u003cmirror::Class\u003e c(\n        hs.NewHandle(class_linker_-\u003eFindSystemClass(soa.Self(), \"[Ljava/lang/Object;\")));\n"
+            },
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 121,
+                "startChar": 0,
+                "endLine": 123,
+                "endChar": 0
+              },
+              "replacement": "      StackHandleScope\u003c1\u003e hs2(soa.Self());\n      Handle\u003cmirror::ObjectArray\u003cmirror::Object\u003e\u003e array(hs2.NewHandle(\n          mirror::ObjectArray\u003cmirror::Object\u003e::Alloc(soa.Self(), c.Get(), 2048)));\n      for (size_t j \u003d 0; j \u003c 2048; ++j) {\n        ObjPtr\u003cmirror::String\u003e string \u003d\n            mirror::String::AllocFromModifiedUtf8(soa.Self(), \"hello, world!\");\n        // handle scope operator -\u003e deferences the handle scope before running the method.\n        array-\u003eSet\u003cfalse\u003e(j, string);\n      }\n"
+            }
+          ]
+        }
+      ],
+      "revId": "bacd4e23bc3f9c4bd1b2526a7b95ef4c0b16d866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
