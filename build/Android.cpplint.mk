@@ -37,11 +37,6 @@ ART_CPPLINT_SRC := $(addprefix $(LOCAL_PATH)/, $(call all-subdir-named-files,*.h
 #  2) Prepends 'art/' to each of them to make the full name.
 ART_CPPLINT_CFG := $(addprefix $(LOCAL_PATH)/, $(call all-subdir-named-files,CPPLINT.cfg))
 
-# "mm cpplint-art" to verify we aren't regressing
-# - files not touched since the last build are skipped (quite fast).
-.PHONY: cpplint-art
-cpplint-art: cpplint-art-phony
-
 # "mm cpplint-art-all" to manually execute cpplint.py on all files (very slow).
 .PHONY: cpplint-art-all
 cpplint-art-all:
