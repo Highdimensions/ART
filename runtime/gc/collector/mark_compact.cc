@@ -4775,8 +4775,7 @@ mirror::Object* MarkCompact::IsMarked(mirror::Object* obj) {
   return marking_done_ && IsOnAllocStack(obj) ? obj : nullptr;
 }
 
-bool MarkCompact::IsNullOrMarkedHeapReference(mirror::HeapReference<mirror::Object>* obj,
-                                              [[maybe_unused]] bool do_atomic_update) {
+bool MarkCompact::IsNullOrMarkedHeapReference(mirror::HeapReference<mirror::Object>* obj) {
   mirror::Object* ref = obj->AsMirrorPtr();
   if (ref == nullptr) {
     return true;
