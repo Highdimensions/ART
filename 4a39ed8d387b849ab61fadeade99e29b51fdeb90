@@ -42,6 +42,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5630fa24_220d0555",
+        "filename": "dex2oat/linker/oat_writer.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 2005,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-11T10:35:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffeb3bee_1b8c86d1",
+      "range": {
+        "startLine": 2005,
+        "startChar": 0,
+        "endLine": 2005,
+        "endChar": 35
+      },
+      "revId": "4a39ed8d387b849ab61fadeade99e29b51fdeb90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "86591cc9_b181cd19",
@@ -153,6 +177,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ceec1ee5_e46e4f07",
+        "filename": "runtime/oat/oat.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-11T10:35:26Z",
+      "side": 1,
+      "message": "It\u0027s true that this check isn\u0027t cheap, but `ComputeChecksum` is only called at compile time, so I think it\u0027s fine. Yes, we do care about compile time cost, but optimizing this check doesn\u0027t really help much. Besides, reordering the fields also has a compile time cost, which may be the same or even higher.\n\nIMO, if we\u0027d like to optimize anything, I\u0027d start with optimizing `GetStoreValueByKey`, because it\u0027s not cheap either (it\u0027s a lookup in O(n) time) and it\u0027s called multiple times **at runtime**.\n\nFor now, I\u0027d suggest to leave `ComputeChecksum` as is.",
+      "parentUuid": "86591cc9_b181cd19",
+      "range": {
+        "startLine": 445,
+        "startChar": 0,
+        "endLine": 445,
+        "endChar": 36
+      },
+      "revId": "4a39ed8d387b849ab61fadeade99e29b51fdeb90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4435412e_d921a659",
@@ -166,6 +214,30 @@
       "writtenOn": "2025-03-11T09:34:15Z",
       "side": 1,
       "message": "and ?",
+      "range": {
+        "startLine": 67,
+        "startChar": 52,
+        "endLine": 67,
+        "endChar": 53
+      },
+      "revId": "4a39ed8d387b849ab61fadeade99e29b51fdeb90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "589dbdea_7fcc9777",
+        "filename": "runtime/oat/oat.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-11T10:35:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4435412e_d921a659",
       "range": {
         "startLine": 67,
         "startChar": 52,
