@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b132a5cf_2f222ce1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-11T22:59:12Z",
+      "side": 1,
+      "message": "It\u0027s unclear when this should be submitted. It might have significant jank impact, but it\u0027s not risk-free,",
+      "revId": "91d803036805962b4e00cf7060788de56813132b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
