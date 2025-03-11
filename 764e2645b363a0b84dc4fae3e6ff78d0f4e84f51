@@ -39,6 +39,30 @@
       },
       "revId": "764e2645b363a0b84dc4fae3e6ff78d0f4e84f51",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbd8caf9_feaf899f",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-11T17:13:09Z",
+      "side": 1,
+      "message": "We\u0027re at the branch target, so the update here is for the code that flows into the instruction.",
+      "parentUuid": "83c46db0_f056cd88",
+      "range": {
+        "startLine": 466,
+        "startChar": 6,
+        "endLine": 466,
+        "endChar": 32
+      },
+      "revId": "764e2645b363a0b84dc4fae3e6ff78d0f4e84f51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
