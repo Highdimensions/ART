@@ -29,7 +29,8 @@ class Main {
      * Number of iterations run to attempt to trigger JIT compilation. These tests run on ART and
      * the RI so they iterate rather than using the ART only native method ensureJitCompiled().
      */
-    private static final int ITERATIONS_FOR_JIT = 30000;
+    // FIXME: 10x increase for more reliable crashes.
+    private static final int ITERATIONS_FOR_JIT = 300000;
 
     /** A static field updated by method handle getters and setters. */
     private static String name = "default";
@@ -212,7 +213,7 @@ class Main {
         String[] values = {"A", "B", "C"};
         for (int i = 0; i < ITERATIONS_FOR_JIT; ++i) {
             String value = values[i % values.length];
-            setNameHandle().invoke(value);
+            setNameHandle().invokeExact(value);
             String actual = (String) getNameHandle().invokeExact();
             assertEquals(value, actual);
             assertEquals(value, name);
