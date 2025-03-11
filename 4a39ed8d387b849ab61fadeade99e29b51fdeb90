@@ -1,0 +1,179 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffeb3bee_1b8c86d1",
+        "filename": "dex2oat/linker/oat_writer.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 2005,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-11T09:34:15Z",
+      "side": 1,
+      "message": "Add a comment when `key_value_store` is null. Is that just in tests?",
+      "range": {
+        "startLine": 2005,
+        "startChar": 0,
+        "endLine": 2005,
+        "endChar": 35
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "20dd6c4b_abd200d8",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "dex2oat/linker/oat_writer.cc",
+              "range": {
+                "startLine": 2005,
+                "startChar": 0,
+                "endLine": 2005,
+                "endChar": 0
+              },
+              "replacement": "  // `key_value_store` is null when we are compiling the boot image.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "4a39ed8d387b849ab61fadeade99e29b51fdeb90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86591cc9_b181cd19",
+        "filename": "runtime/oat/oat.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-11T09:34:15Z",
+      "side": 1,
+      "message": "This check isn\u0027t cheap. Could we instead put the non-deterministic fields at the end and always ensure they are there? This way we can iterate until we know the given offset is the beginning of the non-deterministic fields.",
+      "range": {
+        "startLine": 445,
+        "startChar": 0,
+        "endLine": 445,
+        "endChar": 36
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "d716b168_221d57cc",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/oat.cc",
+              "range": {
+                "startLine": 33,
+                "startChar": 0,
+                "endLine": 34,
+                "endChar": 0
+              },
+              "replacement": "static size_t ComputeOatHeaderSize(const std::vector\u003cstd::pair\u003cstd::string, std::string\u003e\u003e\u0026 variable_data) {\n"
+            },
+            {
+              "path": "runtime/oat/oat.cc",
+              "range": {
+                "startLine": 35,
+                "startChar": 0,
+                "endLine": 41,
+                "endChar": 0
+              },
+              "replacement": "  for (const auto\u0026 it : variable_data) {\n    estimate +\u003d it.first.length() + 1;\n    estimate +\u003d it.second.length() + 1;\n"
+            },
+            {
+              "path": "runtime/oat/oat.cc",
+              "range": {
+                "startLine": 42,
+                "startChar": 0,
+                "endLine": 48,
+                "endChar": 0
+              },
+              "replacement": "    size_t non_deterministic_field_length \u003d OatHeader::GetNonDeterministicFieldLength(it.first);\n    if (non_deterministic_field_length \u003e 0u) {\n      DCHECK_LE(it.second.length(), non_deterministic_field_length);\n      size_t padding \u003d non_deterministic_field_length - it.second.length();\n      estimate +\u003d padding;\n"
+            },
+            {
+              "path": "runtime/oat/oat.cc",
+              "range": {
+                "startLine": 56,
+                "startChar": 0,
+                "endLine": 57,
+                "endChar": 0
+              },
+              "replacement": "                             const std::vector\u003cstd::pair\u003cstd::string, std::string\u003e\u003e\u0026 variable_data,\n"
+            },
+            {
+              "path": "runtime/oat/oat.cc",
+              "range": {
+                "startLine": 83,
+                "startChar": 0,
+                "endLine": 84,
+                "endChar": 0
+              },
+              "replacement": "                     const std::vector\u003cstd::pair\u003cstd::string, std::string\u003e\u003e\u0026 variable_data,\n"
+            },
+            {
+              "path": "runtime/oat/oat.cc",
+              "range": {
+                "startLine": 491,
+                "startChar": 0,
+                "endLine": 492,
+                "endChar": 0
+              },
+              "replacement": "void OatHeader::Flatten(const std::vector\u003cstd::pair\u003cstd::string, std::string\u003e\u003e\u0026 key_value_store) {\n"
+            },
+            {
+              "path": "runtime/oat/oat.cc",
+              "range": {
+                "startLine": 493,
+                "startChar": 0,
+                "endLine": 501,
+                "endChar": 0
+              },
+              "replacement": "  for (const auto\u0026 it : key_value_store) {\n    strlcpy(data_ptr, it.first.c_str(), it.first.length() + 1);\n    data_ptr +\u003d it.first.length() + 1;\n    strlcpy(data_ptr, it.second.c_str(), it.second.length() + 1);\n    data_ptr +\u003d it.second.length() + 1;\n"
+            },
+            {
+              "path": "runtime/oat/oat.cc",
+              "range": {
+                "startLine": 502,
+                "startChar": 0,
+                "endLine": 509,
+                "endChar": 0
+              },
+              "replacement": "    size_t non_deterministic_field_length \u003d GetNonDeterministicFieldLength(it.first);\n    if (non_deterministic_field_length \u003e 0u) {\n      DCHECK_LE(it.second.length(), non_deterministic_field_length);\n      size_t padding \u003d non_deterministic_field_length - it.second.length();\n      memset(data_ptr, 0, padding);\n      data_ptr +\u003d padding;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "4a39ed8d387b849ab61fadeade99e29b51fdeb90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4435412e_d921a659",
+        "filename": "runtime/oat/oat.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-11T09:34:15Z",
+      "side": 1,
+      "message": "and ?",
+      "range": {
+        "startLine": 67,
+        "startChar": 52,
+        "endLine": 67,
+        "endChar": 53
+      },
+      "revId": "4a39ed8d387b849ab61fadeade99e29b51fdeb90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
