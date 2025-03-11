@@ -114,7 +114,7 @@ TEST_F(HeapTest, GCMetrics) {
   // GC metrics are updated (where applicable).
   Heap* heap = Runtime::Current()->GetHeap();
   {
-    constexpr const size_t kNumObj = 32768;
+    constexpr const size_t kNumObj = 131072;
     ScopedObjectAccess soa(Thread::Current());
     StackHandleScope<kNumObj> hs(soa.Self());
     for (size_t i = 0u; i < kNumObj; ++i) {
