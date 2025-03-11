@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a977f715_7a4d5956",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-11T11:39:15Z",
+      "side": 1,
+      "message": "The previous attempt https://r.android.com/3496710 got rolled back in https://r.android.com/3528732, claiming some kind of problem with repohooks. It\u0027s not clear to me exactly what the problem was, but can you please elaborate on why this reland won\u0027t trigger it again (e.g. if the rollback was just wrong)?",
+      "revId": "35713b96705c73a84dcd231f72fda09b291aeb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
