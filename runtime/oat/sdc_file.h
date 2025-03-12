@@ -44,7 +44,7 @@ namespace art HIDDEN {
 //   key2=value2\n
 //   ...
 // Repeated keys are not allowed. This is an extensible format, so versioning is not needed.
-class SdcReader {
+class EXPORT SdcReader {
  public:
   static std::unique_ptr<SdcReader> Load(const std::string filename, std::string* error_msg);
 
