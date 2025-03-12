@@ -16,6 +16,23 @@
       "message": "David / Hans, PTAL. Thanks!",
       "revId": "8069fe9447d52a249f515685cb8f4544019e39b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "335a9602_4182fbbb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-12T18:33:10Z",
+      "side": 1,
+      "message": "LGTM, aside from the EAGAIN question.",
+      "revId": "8069fe9447d52a249f515685cb8f4544019e39b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

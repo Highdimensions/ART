@@ -22,6 +22,30 @@
       },
       "revId": "5d2793227471867cfe16789ed8b5a5782d7f6d34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77236336_9a9a0910",
+        "filename": "runtime/signal_set.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-12T18:33:10Z",
+      "side": 1,
+      "message": "IMO, we should not be checking for EAGAIN, and the bionic code shouldn\u0027t either. Sigwaitinfo is a Posix function, which specifies it the same way. Elliott?",
+      "parentUuid": "fee632c7_41149d42",
+      "range": {
+        "startLine": 66,
+        "startChar": 10,
+        "endLine": 66,
+        "endChar": 25
+      },
+      "revId": "5d2793227471867cfe16789ed8b5a5782d7f6d34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
