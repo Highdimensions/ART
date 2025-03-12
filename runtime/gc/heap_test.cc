@@ -15,6 +15,7 @@
  */
 
 #include <algorithm>
+#include <cstddef>
 
 #include "base/metrics/metrics.h"
 #include "class_linker-inl.h"
@@ -27,6 +28,7 @@
 #include "mirror/object_array-alloc-inl.h"
 #include "mirror/object_array-inl.h"
 #include "scoped_thread_state_change-inl.h"
+#include "scoped_thread_state_change.h"
 
 namespace art HIDDEN {
 namespace gc {
@@ -53,6 +55,20 @@ class HeapTest : public CommonRuntimeTest {
     CommonRuntimeTest::SetUp();
   }
 
+  template<size_t num_arrays, size_t num_elements>
+  constexpr void AllocateObjectArrays(ScopedObjectAccess& soa) {
+    StackHandleScope<num_arrays> hs(soa.Self());
+    Handle<mirror::Class> c(hs.NewHandle(
+        class_linker_->FindSystemClass(soa.Self(), "[Ljava/lang/Object;")));
+    for (size_t i = 0; i < num_arrays; i++) {
+      Handle<mirror::ObjectArray<mirror::Object>> array(hs.NewHandle(
+              mirror::ObjectArray<mirror::Object>::Alloc(soa.Self(), c.Get(), 4)));
+      for (size_t j = 0; j < num_elements; j++) {
+        array->Set<false>(j, array.Get());
+      }
+    }
+}
+
  private:
   MemMap reserved_;
 };
@@ -71,22 +87,10 @@ TEST_F(HeapTest, ClearGrowthLimit) {
 TEST_F(HeapTest, GarbageCollectClassLinkerInit) {
   {
     ScopedObjectAccess soa(Thread::Current());
-    // garbage is created during ClassLinker::Init
-
-    StackHandleScope<1> hs(soa.Self());
-    Handle<mirror::Class> c(
-        hs.NewHandle(class_linker_->FindSystemClass(soa.Self(), "[Ljava/lang/Object;")));
-    for (size_t i = 0; i < 1024; ++i) {
-      StackHandleScope<1> hs2(soa.Self());
-      Handle<mirror::ObjectArray<mirror::Object>> array(hs2.NewHandle(
-          mirror::ObjectArray<mirror::Object>::Alloc(soa.Self(), c.Get(), 2048)));
-      for (size_t j = 0; j < 2048; ++j) {
-        ObjPtr<mirror::String> string =
-            mirror::String::AllocFromModifiedUtf8(soa.Self(), "hello, world!");
-        // handle scope operator -> deferences the handle scope before running the method.
-        array->Set<false>(j, string);
-      }
-    }
+    // garbage is created during ClassLinker::Init()
+    constexpr size_t kNumArrays = 1024;
+    constexpr size_t kNumElements = 2048;
+    AllocateObjectArrays<kNumArrays, kNumElements>(soa);
   }
   Runtime::Current()->GetHeap()->CollectGarbage(/* clear_soft_references= */ false);
 }
@@ -108,19 +112,19 @@ TEST_F(HeapTest, DumpGCPerformanceOnShutdown) {
 
 bool AnyIsFalse(bool x, bool y) { return !x || !y; }
 
+
+
 TEST_F(HeapTest, GCMetrics) {
-  // Allocate a lot of string objects to be collected (to ensure the garbage collection is long
+  // Allocate a lot of object arrays to be collected (to ensure the garbage collection is long
   // enough for the timing metrics to be non-zero), then trigger garbage collection, and check that
   // GC metrics are updated (where applicable).
   Heap* heap = Runtime::Current()->GetHeap();
   {
-    constexpr const size_t kNumObj = 32768;
     ScopedObjectAccess soa(Thread::Current());
-    StackHandleScope<kNumObj> hs(soa.Self());
-    for (size_t i = 0u; i < kNumObj; ++i) {
-      Handle<mirror::String> string [[maybe_unused]] (
-          hs.NewHandle(mirror::String::AllocFromModifiedUtf8(soa.Self(), "test")));
-    }
+    constexpr size_t kNumArrays = 32768;
+    constexpr size_t kNumElements = 4;
+    AllocateObjectArrays<kNumArrays, kNumElements>(soa);
+
     // Do one GC while the temporary objects are reachable, forcing the GC to scan something.
     // The subsequent GC at line 127 may not scan anything but will certainly free some bytes.
     // Together the two GCs ensure success of the test.
