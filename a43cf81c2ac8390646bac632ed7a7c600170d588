@@ -92,6 +92,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "931641bb_75170aa0",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-03-12T17:40:15Z",
+      "side": 1,
+      "message": "Ah, I think I see what you\u0027re saying now - shall I change back the body of this particular test to allocate string, and keep the body of the GCMetrics test to allocate object arrays instead?",
+      "parentUuid": "3c97903d_579cce13",
+      "range": {
+        "startLine": 77,
+        "startChar": 21,
+        "endLine": 77,
+        "endChar": 31
+      },
+      "revId": "a43cf81c2ac8390646bac632ed7a7c600170d588",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b63e4bc1_c70a95db",
         "filename": "runtime/gc/heap_test.cc",
         "patchSetId": 6
