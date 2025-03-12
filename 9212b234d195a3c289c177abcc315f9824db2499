@@ -145,6 +145,30 @@
       },
       "revId": "9212b234d195a3c289c177abcc315f9824db2499",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4051318a_4f9e094d",
+        "filename": "tools/jvmti-agents/wrapagentproperties/wrapagentproperties.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1716487
+      },
+      "writtenOn": "2025-03-12T18:29:47Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "8bf3fd95_7d83c8fd",
+      "range": {
+        "startLine": 151,
+        "startChar": 31,
+        "endLine": 151,
+        "endChar": 43
+      },
+      "revId": "9212b234d195a3c289c177abcc315f9824db2499",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
