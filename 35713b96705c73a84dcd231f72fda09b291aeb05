@@ -16,6 +16,24 @@
       "message": "The previous attempt https://r.android.com/3496710 got rolled back in https://r.android.com/3528732, claiming some kind of problem with repohooks. It\u0027s not clear to me exactly what the problem was, but can you please elaborate on why this reland won\u0027t trigger it again (e.g. if the rollback was just wrong)?",
       "revId": "35713b96705c73a84dcd231f72fda09b291aeb05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b61ae9b_af938e30",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1307893
+      },
+      "writtenOn": "2025-03-12T01:32:21Z",
+      "side": 1,
+      "message": "Update the following comments in the description:\n\nNote2: The old branch `pie-cts-dev` incorrectly uses the `latest`\n`tools/repohooks` git branch instead of branching from a corresponding\nolder version. At the same time, the \"pie-cts-dev\" branch uses an\nolder \"build/soong\" git branch, and therefore does not support the newer Soong \"license\" properties. If a license is specified in Android.bp, the following error will occur (b/396308027):\n```\ntools/repohooks/tools/Android.bp:17:1: unrecognized module type \"license\"\n```\nTo avoid this error on the old \"pie-cts-dev\" branch, this change\nremoves the license declaration from `cpplint.py`.",
+      "parentUuid": "a977f715_7a4d5956",
+      "revId": "35713b96705c73a84dcd231f72fda09b291aeb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
