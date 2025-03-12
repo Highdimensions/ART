@@ -44,6 +44,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1176e962_227cfc24",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-03-12T17:06:17Z",
+      "side": 1,
+      "message": "Thanks for spotting this - I have reverted to the initial state and only changed the string allocation into an array allocation, does it look right now?",
+      "parentUuid": "6cb90fec_71fc16ac",
+      "range": {
+        "startLine": 77,
+        "startChar": 21,
+        "endLine": 77,
+        "endChar": 31
+      },
+      "revId": "a43cf81c2ac8390646bac632ed7a7c600170d588",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b63e4bc1_c70a95db",
         "filename": "runtime/gc/heap_test.cc",
         "patchSetId": 6
@@ -79,6 +103,30 @@
           ]
         }
       ],
+      "revId": "a43cf81c2ac8390646bac632ed7a7c600170d588",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e61f70a_17e2042f",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-03-12T17:06:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b63e4bc1_c70a95db",
+      "range": {
+        "startLine": 84,
+        "startChar": 87,
+        "endLine": 84,
+        "endChar": 88
+      },
       "revId": "a43cf81c2ac8390646bac632ed7a7c600170d588",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
