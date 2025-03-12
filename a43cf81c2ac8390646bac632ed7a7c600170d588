@@ -1,0 +1,86 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6cb90fec_71fc16ac",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-12T16:57:47Z",
+      "side": 1,
+      "message": "It\u0027s good that cleaned up with the constants. But in the change you have changed the amount of garbage quite a bit.\n\nI\u0027d say since this test has been working fine so far, let\u0027s keep it\u0027s behavior as it is.\n\nMy goal was to increase the length of GC metric test GCs, which I think we have sucessfully achieved by using object-arrays.",
+      "range": {
+        "startLine": 77,
+        "startChar": 21,
+        "endLine": 77,
+        "endChar": 31
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "44f5ea35_b53c0170",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 77,
+                "startChar": 0,
+                "endLine": 79,
+                "endChar": 0
+              },
+              "replacement": "    constexpr size_t kNumArrays \u003d 256;\n    constexpr size_t kNumElements \u003d 512;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "a43cf81c2ac8390646bac632ed7a7c600170d588",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b63e4bc1_c70a95db",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-12T16:57:47Z",
+      "side": 1,
+      "message": "This is going to cause out-of-bound exceptions. It should be `kNumElements`",
+      "range": {
+        "startLine": 84,
+        "startChar": 87,
+        "endLine": 84,
+        "endChar": 88
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2502e25c_dbbcfedf",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 84,
+                "startChar": 0,
+                "endLine": 85,
+                "endChar": 0
+              },
+              "replacement": "          hs.NewHandle(mirror::ObjectArray\u003cmirror::Object\u003e::Alloc(soa.Self(), c.Get(), kNumElements)));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "a43cf81c2ac8390646bac632ed7a7c600170d588",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
