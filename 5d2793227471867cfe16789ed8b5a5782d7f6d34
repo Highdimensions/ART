@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fee632c7_41149d42",
+        "filename": "runtime/signal_set.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-12T14:14:52Z",
+      "side": 1,
+      "message": "From the man pages we should see EAGAIN when the timeout has happened: https://man7.org/linux/man-pages/man2/sigwaitinfo.2.html. Since we don\u0027t pass a timer I think we should not get this error. Though I am allowing this because sigwait64 uses sigwaitinfo64 (in bionic) and that allows EAGAIN, so I did the same to match the behaviour: https://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/bionic/signal.cpp;l\u003d290?q\u003dsigwait64\u0026ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain",
+      "range": {
+        "startLine": 66,
+        "startChar": 10,
+        "endLine": 66,
+        "endChar": 25
+      },
+      "revId": "5d2793227471867cfe16789ed8b5a5782d7f6d34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
