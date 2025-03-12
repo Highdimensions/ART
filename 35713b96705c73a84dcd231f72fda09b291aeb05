@@ -34,6 +34,24 @@
       "parentUuid": "a977f715_7a4d5956",
       "revId": "35713b96705c73a84dcd231f72fda09b291aeb05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a188445_49e040cb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-12T16:16:23Z",
+      "side": 1,
+      "message": "Thanks. I see it\u0027s being discussed in the other CL in the topic.",
+      "parentUuid": "5b61ae9b_af938e30",
+      "revId": "35713b96705c73a84dcd231f72fda09b291aeb05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
