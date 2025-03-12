@@ -33,6 +33,69 @@
       "message": "LGTM, aside from the EAGAIN question.",
       "revId": "8069fe9447d52a249f515685cb8f4544019e39b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e55b19d_6104c678",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-12T19:43:02Z",
+      "side": 1,
+      "message": "(i\u0027ve also sent out https://android-review.git.corp.google.com/c/platform/bionic/+/3539940 to simplify the equivalent code in bionic.)",
+      "revId": "8069fe9447d52a249f515685cb8f4544019e39b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01456a12_c886dc14",
+        "filename": "runtime/signal_set.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-12T19:43:02Z",
+      "side": 1,
+      "message": "stray tab?",
+      "range": {
+        "startLine": 32,
+        "startChar": 21,
+        "endLine": 32,
+        "endChar": 26
+      },
+      "revId": "8069fe9447d52a249f515685cb8f4544019e39b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ff2715a_799485e9",
+        "filename": "runtime/signal_set.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-12T19:43:02Z",
+      "side": 1,
+      "message": "you shouldn\u0027t need these two lines, since the only way out of the `while (true)` is by a `return`?",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 14
+      },
+      "revId": "8069fe9447d52a249f515685cb8f4544019e39b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

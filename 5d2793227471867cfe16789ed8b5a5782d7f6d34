@@ -46,6 +46,30 @@
       },
       "revId": "5d2793227471867cfe16789ed8b5a5782d7f6d34",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "525e9e35_151bb95a",
+        "filename": "runtime/signal_set.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-12T19:43:02Z",
+      "side": 1,
+      "message": "libc turns this into an rt_sigtimedwait(2) syscall.\n\nthat syscall will indeed return EINTR or EAGAIN if there\u0027s no signal to return:\n```\n        if (sig)\n                return sig;\n        return ret ? -EINTR : -EAGAIN;\n```\nbut for the specific case of an infinite timeout, well, the code above that in do_sigtimedwait() is a bit gnarly, but i think ret will always be non-zero (because schedule_hrtimeout_range() returns -EINTR in that case), so you should only see EINTR from the syscall.\n\nthat is: EAGAIN is specifically for \"timed out\".\n\nwhich, as hboehm implies, is what POSIX says: https://pubs.opengroup.org/onlinepubs/9799919799/functions/sigwaitinfo.html\n\ninterestingly, musl seems to have the equivalent of TEMP_FAILURE_RETRY() around its syscall, so you\u0027ll never get EINTR from musl\u0027s sigwaitinfo()[1]; glibc (like bionic) does not.\n\nTL;DR: i think i\u0027d just write\n```\n    while (true) {\n      int signal_number \u003d TEMP_FAILURE_RETRY(sigwaitinfo64(\u0026set_, info));\n      if (signal_number \u003e 0) {\n        return signal_number;\n      }\n      PLOG(FATAL) \u003c\u003c \"sigwaitinfo failed\";\n    }\n```\n(note that i changed the `\u003e\u003d 0` to `\u003e 0` too, because there is no signal zero.)\n\n____\n1. musl\u0027s rationale is\n\n  commit 0a949ebdf0b9fc054ea868bd049c8f2c7aed973e\n  Author: Rich Felker \u003cdalias@aerifal.cx\u003e\n  Date:   Thu Mar 10 10:43:09 2011 -0500\n\n    don\u0027t fail with EINTR in sigtimedwait\n    \n    POSIX allows either behavior, but sigwait is not allowed to fail with\n    EINTR, so the retry loop would have to be in one or the other anyway.\n    \n  bionic has the retries in sigwait() instead.",
+      "parentUuid": "77236336_9a9a0910",
+      "range": {
+        "startLine": 66,
+        "startChar": 10,
+        "endLine": 66,
+        "endChar": 25
+      },
+      "revId": "5d2793227471867cfe16789ed8b5a5782d7f6d34",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
