@@ -50,6 +50,77 @@
       "message": "Hii @scianciulli@google.com Could you ping anyone else for code review vote here \nThanks",
       "revId": "9212b234d195a3c289c177abcc315f9824db2499",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e88453b_67efe3c3",
+        "filename": "tools/jvmti-agents/wrapagentproperties/wrapagentproperties.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-12T16:55:50Z",
+      "side": 1,
+      "message": "Thanks for highlighting this. However this change is strictly speaking unnecessary. From http://go/cppref/cpp/string/basic_string/c_str:\n\n\u003e The pointer is such that the range [c_str(), c_str() + size()] is valid and the values in it correspond to the values stored in the string *with an additional null character after the last position*.\n\nI.e. `strcpy` will stop at or before `val.size()` chars, and if it copies the maximum `val.size()` chars then `(*out)[val.size()]` is guaranteed to be 0 already.\n\nHence I don\u0027t see any risk of a buffer overrun, but the code would indeed be better off not using `strcpy`. I suggest instead using `memcpy` to copy exactly `val.size()+1` chars (including the trailing NUL that\u0027s known to be there). It\u0027s also slightly more efficient since it doesn\u0027t check for NULs in the source string, and it will handle embedded NULs correctly.\n\nThe CL description should also be updated to not claim that there\u0027s a potential buffer overflow here.",
+      "range": {
+        "startLine": 151,
+        "startChar": 31,
+        "endLine": 151,
+        "endChar": 43
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "6322047d_d4b0f872",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/jvmti-agents/wrapagentproperties/wrapagentproperties.cc",
+              "range": {
+                "startLine": 147,
+                "startChar": 0,
+                "endLine": 148,
+                "endChar": 0
+              },
+              "replacement": "      jvmtiError res \u003d env-\u003eAllocate(val.size(), reinterpret_cast\u003cunsigned char**\u003e(out));\n"
+            },
+            {
+              "path": "tools/jvmti-agents/wrapagentproperties/wrapagentproperties.cc",
+              "range": {
+                "startLine": 151,
+                "startChar": 0,
+                "endLine": 153,
+                "endChar": 0
+              },
+              "replacement": "      memcpy(*out, val.c_str(), val.size());\n"
+            },
+            {
+              "path": "tools/jvmti-agents/wrapagentproperties/wrapagentproperties.cc",
+              "range": {
+                "startLine": 186,
+                "startChar": 0,
+                "endLine": 187,
+                "endChar": 0
+              },
+              "replacement": "      res \u003d env-\u003eAllocate(p.size(), reinterpret_cast\u003cunsigned char**\u003e(\u0026out_prop_ptr[i]));\n"
+            },
+            {
+              "path": "tools/jvmti-agents/wrapagentproperties/wrapagentproperties.cc",
+              "range": {
+                "startLine": 190,
+                "startChar": 0,
+                "endLine": 191,
+                "endChar": 0
+              },
+              "replacement": "      memcpy(out_prop_ptr[i], p.c_str(), p.size());\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9212b234d195a3c289c177abcc315f9824db2499",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
