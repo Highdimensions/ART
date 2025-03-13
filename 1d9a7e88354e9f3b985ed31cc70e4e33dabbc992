@@ -16,6 +16,23 @@
       "message": "PTAL 1..2",
       "revId": "1d9a7e88354e9f3b985ed31cc70e4e33dabbc992",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "93da99e9_65eabd9f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-13T09:32:33Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "1d9a7e88354e9f3b985ed31cc70e4e33dabbc992",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
