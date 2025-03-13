@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c8689bc_17c40e38",
+        "filename": "runtime/arch/x86_64/native_entrypoints_x86_64.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-03-13T22:24:32Z",
+      "side": 1,
+      "message": "Not missing anything here, it\u0027s done exactly as you\u0027ve said. The pointer is already in `rsi` so this is technically unnecessary however as we aren\u0027t worried about the performance of this, it\u0027s clearer and safer to load the value from the stack.",
+      "parentUuid": "521fcff2_f11bd316",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 151,
+        "endChar": 23
+      },
+      "revId": "d8587a939a0bef6481b166c3ad74aa56c60636e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "149c2ebc_b5e363ee",
@@ -64,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3594366a_1cf823ae",
+        "filename": "runtime/arch/x86_64/native_entrypoints_x86_64.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-03-13T22:24:32Z",
+      "side": 1,
+      "message": "This is needed because we previously calculated the delta (in r12) between the JNI stack args and the reserved area ptr with the registers still on the stack. Therefore, once we pop these registers off the stack this delta will be incorrect and need re-adjustment.\n\nI have now changed this to no longer pop the registers off the stack and instead just load the values. This makes the readjustment unnecessary and hopefully makes it clearer where all of this is loaded from.",
+      "parentUuid": "149c2ebc_b5e363ee",
+      "range": {
+        "startLine": 195,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 27
+      },
+      "revId": "d8587a939a0bef6481b166c3ad74aa56c60636e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd475add_cd2ffef6",
@@ -77,6 +125,30 @@
       "writtenOn": "2025-03-06T12:16:57Z",
       "side": 1,
       "message": "Don\u0027t we need to call the artQuickGenericJniEndTrampoline after the native call?",
+      "range": {
+        "startLine": 198,
+        "startChar": 3,
+        "endLine": 199,
+        "endChar": 14
+      },
+      "revId": "d8587a939a0bef6481b166c3ad74aa56c60636e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4822c0e_2ac6727f",
+        "filename": "runtime/arch/x86_64/native_entrypoints_x86_64.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-03-13T22:24:32Z",
+      "side": 1,
+      "message": "Yes it does need to be called however this is only the native part of the generic JNI trampoline. It will be called after this function returns by the interception in the simulator as shown in the following code flow.\n\n1. `art_quick_generic_jni_trampoline` (Arm64) is called as normal and is simulated until `artArm64SimulatorGenericJNIPlaceholder` is called and intercepted by the simulator.\n2. `artArm64SimulatorGenericJNIPlaceholder` is intercepted and instead calls `art_quick_generic_jni_trampoline_simulator` (x86_64) **and** `artQuickGenericJniEndTrampoline` -- see https://android-review.googlesource.com/c/platform/art/+/2680027/9/simulator/code_simulator_arm64.cc#120\n3. The result gets written to the correct registers and simulation is resumed in `art_quick_generic_jni_trampoline` (Arm64).",
+      "parentUuid": "dd475add_cd2ffef6",
       "range": {
         "startLine": 198,
         "startChar": 3,

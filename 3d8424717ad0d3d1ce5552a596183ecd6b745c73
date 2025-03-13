@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e69f2777_89b732e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-03-13T22:24:32Z",
+      "side": 1,
+      "message": "Thanks for the review!\n\nGeneric JNI can be a bit complicated and with the simulator, involves `art_quick_generic_jni_trampoline_simulator` which has to create a new frame on the native stack while the previous quick frame is on a completely different simulated stack. I\u0027ve tried to make this a bit clearer in the code by adding some more comments about this.",
+      "revId": "3d8424717ad0d3d1ce5552a596183ecd6b745c73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
