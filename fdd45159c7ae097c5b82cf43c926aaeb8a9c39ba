@@ -142,6 +142,30 @@
       },
       "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbca406f_e7f3b0f6",
+        "filename": "runtime/vdex_file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-13T16:04:48Z",
+      "side": 1,
+      "message": "This CL no longer changes the vdex version, so I\u0027ll disregard ngeoffray\u0027s CR-1.",
+      "parentUuid": "703d7114_61440087",
+      "range": {
+        "startLine": 126,
+        "startChar": 57,
+        "endLine": 126,
+        "endChar": 60
+      },
+      "revId": "fdd45159c7ae097c5b82cf43c926aaeb8a9c39ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
