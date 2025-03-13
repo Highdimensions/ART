@@ -75,6 +75,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "34d1e77f_ca46393c",
+        "filename": "runtime/signal_set.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-13T10:16:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01456a12_c886dc14",
+      "range": {
+        "startLine": 32,
+        "startChar": 21,
+        "endLine": 32,
+        "endChar": 26
+      },
+      "revId": "8069fe9447d52a249f515685cb8f4544019e39b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ff2715a_799485e9",
@@ -88,6 +112,30 @@
       "writtenOn": "2025-03-12T19:43:02Z",
       "side": 1,
       "message": "you shouldn\u0027t need these two lines, since the only way out of the `while (true)` is by a `return`?",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 14
+      },
+      "revId": "8069fe9447d52a249f515685cb8f4544019e39b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3514cf9_cc059269",
+        "filename": "runtime/signal_set.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-13T10:16:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ff2715a_799485e9",
       "range": {
         "startLine": 70,
         "startChar": 4,
