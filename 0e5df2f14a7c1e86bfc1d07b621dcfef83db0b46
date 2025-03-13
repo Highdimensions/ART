@@ -33,6 +33,24 @@
       "message": "Hans or Lokesh are better suited for reviewing this CL. Note that Hans made a comment in this CL already",
       "revId": "0e5df2f14a7c1e86bfc1d07b621dcfef83db0b46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83763061_306132a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2048357
+      },
+      "writtenOn": "2025-03-13T12:30:15Z",
+      "side": 1,
+      "message": "We tested five applications and found that the time consumption of ReleaseFreeRegions can be reduced by 90.55%. \n\nMost mobile phone companies in China are still using CC, so I think this CL is worth it.",
+      "parentUuid": "51b61ea4_81e0670a",
+      "revId": "0e5df2f14a7c1e86bfc1d07b621dcfef83db0b46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
