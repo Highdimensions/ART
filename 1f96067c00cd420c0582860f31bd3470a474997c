@@ -66,6 +66,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "be098fe6_37fb9b5f",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-13T15:52:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38771528_76a452ee",
+      "range": {
+        "startLine": 31,
+        "startChar": 10,
+        "endLine": 31,
+        "endChar": 36
+      },
+      "revId": "1f96067c00cd420c0582860f31bd3470a474997c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "215e3bb0_d7f4f67f",
@@ -121,6 +145,30 @@
       "side": 1,
       "message": "Thanks, I was just about to ask for help about this before finding your message - the segmentation fault is now resolved, but locally I can see the app slow path duration being null (less than 1 ms) again, what can I try next?",
       "parentUuid": "215e3bb0_d7f4f67f",
+      "range": {
+        "startLine": 125,
+        "startChar": 8,
+        "endLine": 125,
+        "endChar": 10
+      },
+      "revId": "1f96067c00cd420c0582860f31bd3470a474997c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a02b9dd8_cf1d34cb",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-13T15:52:45Z",
+      "side": 1,
+      "message": "Interesting! So the GC-duration is non-null but the newly added app-slow-patch-duration metric is null? That means that we are skipping compaction entirely since the heap is full (there is no garbage). So we will have to intentionally not only allocate but also create garbage.\n\nThe problem is that we cannot use the logic of `GarbageCollectClassLinkerInit` as it is because that one is making everything garbage. So with the loop we run the risk of gc-duration metric to be null.",
+      "parentUuid": "760c8858_d1d7a188",
       "range": {
         "startLine": 125,
         "startChar": 8,

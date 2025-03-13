@@ -1,0 +1,86 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34c93cb3_c9e39c88",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-13T15:52:45Z",
+      "side": 1,
+      "message": "For the next comment suggestion to work, you will have to change this to `MutableHandle`.",
+      "range": {
+        "startLine": 125,
+        "startChar": 6,
+        "endLine": 125,
+        "endChar": 12
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "7b873c9a_f94f08fc",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 125,
+                "startChar": 0,
+                "endLine": 126,
+                "endChar": 0
+              },
+              "replacement": "      MutableHandle\u003cmirror::ObjectArray\u003cmirror::Object\u003e\u003e array(hs.NewHandle(\n"
+            }
+          ]
+        }
+      ],
+      "revId": "110aeee6917883243a307781c25b774da643a1c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d950d11c_2257ed2e",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-13T15:52:45Z",
+      "side": 1,
+      "message": "Can you try adding the following before this line:\n\n```\narray.Assign(mirror::ObjectArray\u003cmirror::Object\u003e::Alloc(soa.Self(), c.Get(), kNumElements)));\n```\n\nThis will immediately make the first allocation garbage. This should force compaction to take place.",
+      "range": {
+        "startLine": 127,
+        "startChar": 6,
+        "endLine": 127,
+        "endChar": 9
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "db806b3b_ef341c0a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 127,
+                "startChar": 0,
+                "endLine": 127,
+                "endChar": 0
+              },
+              "replacement": "      array.Assign(mirror::ObjectArray\u003cmirror::Object\u003e::Alloc(soa.Self(),\n                                                               c.Get(),\n                                                               kNumElements));\n"
+            }
+          ]
+        }
+      ],
+      "revId": "110aeee6917883243a307781c25b774da643a1c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
