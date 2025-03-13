@@ -298,6 +298,14 @@ func testMap(config android.Config) map[string][]string {
 }
 
 func testInstall(ctx android.InstallHookContext) {
+	installPath := ctx.Path().String()
+	if strings.Contains(installPath, "/testcases/") {
+		// Historically, make has installed the /testcases/ files. When converting to that soong,
+		// art starts seeing duplicate installed files in both the /nativetest64/ and /testcases/
+		// folders. Ignore the /testcases/ ones.
+		return
+	}
+
 	testMap := testMap(ctx.Config())
 
 	var name string
@@ -312,7 +320,7 @@ func testInstall(ctx android.InstallHookContext) {
 	defer artTestMutex.Unlock()
 
 	tests := testMap[name]
-	tests = append(tests, ctx.Path().String())
+	tests = append(tests, installPath)
 	testMap[name] = tests
 }
 
