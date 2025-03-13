@@ -1270,7 +1270,8 @@ class Dex2Oat final {
         if (!input_vdex_.empty()) {
           std::string error_msg;
           input_vdex_file_ = VdexFile::Open(input_vdex_,
-                                            /*low_4gb=*/false,
+                                            /* writable */ false,
+                                            /* low_4gb */ false,
                                             &error_msg);
         }
 
@@ -1320,7 +1321,8 @@ class Dex2Oat final {
           input_vdex_file_ = VdexFile::Open(input_vdex_fd_,
                                             s.st_size,
                                             "vdex",
-                                            /*low_4gb=*/false,
+                                            /* writable */ false,
+                                            /* low_4gb */ false,
                                             &error_msg);
           // If there's any problem with the passed vdex, just warn and proceed
           // without it.

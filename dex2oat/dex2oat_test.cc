@@ -1430,6 +1430,7 @@ TEST_F(Dex2oatTest, DontExtract) {
   {
     // Check the vdex doesn't have dex.
     std::unique_ptr<VdexFile> vdex(VdexFile::Open(vdex_location,
+                                                  /*writable=*/false,
                                                   /*low_4gb=*/false,
                                                   &error_msg));
     ASSERT_TRUE(vdex != nullptr);
@@ -1775,6 +1776,7 @@ TEST_F(Dex2oatTest, DontCopyPlainDex) {
 
   // Check that the vdex doesn't have dex code.
   std::unique_ptr<VdexFile> vdex(VdexFile::Open(vdex_location,
+                                                /*writable=*/false,
                                                 /*low_4gb=*/false,
                                                 &error_msg));
   ASSERT_TRUE(vdex != nullptr);
@@ -2029,6 +2031,8 @@ TEST_F(Dex2oatTest, LoadOutOfDateOatFile) {
     {
       std::string error_msg;
       std::unique_ptr<ElfFile> elf_file(ElfFile::Open(file.get(),
+                                                      /*writable=*/false,
+                                                      /*program_header_only=*/true,
                                                       /*low_4gb=*/false,
                                                       &error_msg));
       ASSERT_TRUE(elf_file != nullptr) << error_msg;
