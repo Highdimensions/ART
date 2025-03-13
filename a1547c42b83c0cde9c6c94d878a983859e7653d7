@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17da138d_afabdf5d",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-13T16:35:56Z",
+      "side": 1,
+      "message": "Forgot to mention earlier. Can you add a comment before this line to say why we are immediately overwriting with another allocation. You can say:\n`Allocate again so that previous object-array becomes garbage, thereby getting us a good mix of reachable and unreachable objects, forcing all components of the GC to work`",
+      "range": {
+        "startLine": 127,
+        "startChar": 6,
+        "endLine": 127,
+        "endChar": 11
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b42cbff0_4cadb1a4",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 127,
+                "startChar": 0,
+                "endLine": 127,
+                "endChar": 0
+              },
+              "replacement": "      // Allocate again so that previous object-array becomes unreachable.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "a1547c42b83c0cde9c6c94d878a983859e7653d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
