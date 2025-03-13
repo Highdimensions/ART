@@ -20,12 +20,10 @@
 #include <stdio.h>
 #if !defined(_WIN32)
 #include <fcntl.h>
+#include <sys/mman.h>
 #include <sys/syscall.h>
 #include <sys/utsname.h>
 #include <unistd.h>
-#endif
-#if defined(__BIONIC__)
-#include <linux/memfd.h>  // To access memfd flags.
 #endif
 
 #include <android-base/logging.h>
@@ -55,17 +53,6 @@ int memfd_create(const char* name, unsigned int flags) {
   return syscall(__NR_memfd_create, name, flags);
 }
 
-#else  // __NR_memfd_create
-
-int memfd_create([[maybe_unused]] const char* name, [[maybe_unused]] unsigned int flags) {
-  errno = ENOSYS;
-  return -1;
-}
-
-#endif  // __NR_memfd_create
-
-#if defined(__BIONIC__)
-
 static bool IsSealFutureWriteSupportedInternal() {
   android::base::unique_fd fd(art::memfd_create("test_android_memfd", MFD_ALLOW_SEALING));
   if (fd == -1) {
@@ -87,12 +74,17 @@ bool IsSealFutureWriteSupported() {
   return is_seal_future_write_supported;
 }
 
-#else
+#else  // __NR_memfd_create
+
+int memfd_create([[maybe_unused]] const char* name, [[maybe_unused]] unsigned int flags) {
+  errno = ENOSYS;
+  return -1;
+}
 
 bool IsSealFutureWriteSupported() {
   return false;
 }
 
-#endif
+#endif  // __NR_memfd_create
 
 }  // namespace art
