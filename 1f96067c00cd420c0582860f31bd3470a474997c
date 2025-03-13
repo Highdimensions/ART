@@ -44,6 +44,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "38771528_76a452ee",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-03-13T15:22:52Z",
+      "side": 1,
+      "message": "It was probably added automatically by my IDE - it\u0027s removed now.",
+      "parentUuid": "8fe2141d_0574e227",
+      "range": {
+        "startLine": 31,
+        "startChar": 10,
+        "endLine": 31,
+        "endChar": 36
+      },
+      "revId": "1f96067c00cd420c0582860f31bd3470a474997c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "215e3bb0_d7f4f67f",
         "filename": "runtime/gc/heap_test.cc",
         "patchSetId": 8
@@ -79,6 +103,30 @@
           ]
         }
       ],
+      "revId": "1f96067c00cd420c0582860f31bd3470a474997c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "760c8858_d1d7a188",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-03-13T15:22:52Z",
+      "side": 1,
+      "message": "Thanks, I was just about to ask for help about this before finding your message - the segmentation fault is now resolved, but locally I can see the app slow path duration being null (less than 1 ms) again, what can I try next?",
+      "parentUuid": "215e3bb0_d7f4f67f",
+      "range": {
+        "startLine": 125,
+        "startChar": 8,
+        "endLine": 125,
+        "endChar": 10
+      },
       "revId": "1f96067c00cd420c0582860f31bd3470a474997c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
