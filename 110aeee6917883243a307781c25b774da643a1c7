@@ -42,6 +42,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "211f31b6_a2d82882",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-03-13T16:08:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34c93cb3_c9e39c88",
+      "range": {
+        "startLine": 125,
+        "startChar": 6,
+        "endLine": 125,
+        "endChar": 12
+      },
+      "revId": "110aeee6917883243a307781c25b774da643a1c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d950d11c_2257ed2e",
@@ -79,6 +103,30 @@
           ]
         }
       ],
+      "revId": "110aeee6917883243a307781c25b774da643a1c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1aa69f43_f097b0ba",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1948615
+      },
+      "writtenOn": "2025-03-13T16:08:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d950d11c_2257ed2e",
+      "range": {
+        "startLine": 127,
+        "startChar": 6,
+        "endLine": 127,
+        "endChar": 9
+      },
       "revId": "110aeee6917883243a307781c25b774da643a1c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
