@@ -1,0 +1,86 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fe2141d_0574e227",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-13T15:03:01Z",
+      "side": 1,
+      "message": "Why do you need to include this file? The `scoped_thread_state_change-inl.h` already has it included.",
+      "range": {
+        "startLine": 31,
+        "startChar": 10,
+        "endLine": 31,
+        "endChar": 36
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c9fc90f3_752825f7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 31,
+                "startChar": 0,
+                "endLine": 32,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "1f96067c00cd420c0582860f31bd3470a474997c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "215e3bb0_d7f4f67f",
+        "filename": "runtime/gc/heap_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-13T15:03:01Z",
+      "side": 1,
+      "message": "Sorry, I didn\u0027t catch it before. You\u0027ll either need to have `kNumArrays + 1` in `hs` stack-handles, or create another one just for this one, say `hs2`, and keep `hs` as it is.\n\nIt\u0027s quite possible that the treehugger failures are related to this only.",
+      "range": {
+        "startLine": 125,
+        "startChar": 8,
+        "endLine": 125,
+        "endChar": 10
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c60a0c8d_b84f5e1f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/heap_test.cc",
+              "range": {
+                "startLine": 123,
+                "startChar": 0,
+                "endLine": 124,
+                "endChar": 0
+              },
+              "replacement": "    StackHandleScope\u003ckNumArrays + 1\u003e hs(soa.Self());\n"
+            }
+          ]
+        }
+      ],
+      "revId": "1f96067c00cd420c0582860f31bd3470a474997c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
