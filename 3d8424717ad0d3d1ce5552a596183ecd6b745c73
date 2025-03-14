@@ -16,6 +16,23 @@
       "message": "Thanks for the review!\n\nGeneric JNI can be a bit complicated and with the simulator, involves `art_quick_generic_jni_trampoline_simulator` which has to create a new frame on the native stack while the previous quick frame is on a completely different simulated stack. I\u0027ve tried to make this a bit clearer in the code by adding some more comments about this.",
       "revId": "3d8424717ad0d3d1ce5552a596183ecd6b745c73",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cc1e509_5909cc2d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-14T14:13:44Z",
+      "side": 1,
+      "message": "Thanks! lgtm. Happy to CR+2 once rebased and presubmit runs pass.\n\nAlso adding vladimir for changes in runtime/arch/x86_64/native_entrypoints_x86_64.S related to jni trampoline.",
+      "revId": "3d8424717ad0d3d1ce5552a596183ecd6b745c73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
