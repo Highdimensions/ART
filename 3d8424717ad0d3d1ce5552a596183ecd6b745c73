@@ -33,6 +33,23 @@
       "message": "Thanks! lgtm. Happy to CR+2 once rebased and presubmit runs pass.\n\nAlso adding vladimir for changes in runtime/arch/x86_64/native_entrypoints_x86_64.S related to jni trampoline.",
       "revId": "3d8424717ad0d3d1ce5552a596183ecd6b745c73",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86789208_2e83fd92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-14T14:14:19Z",
+      "side": 1,
+      "message": "Adding Vladimir for changes in runtime/arch/x86_64/native_entrypoints_x86_64.S.",
+      "revId": "3d8424717ad0d3d1ce5552a596183ecd6b745c73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
