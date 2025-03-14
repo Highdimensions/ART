@@ -34,6 +34,24 @@
       "parentUuid": "fbab8218_458ebb9d",
       "revId": "0a11ad77686699cea60998de572bd03ddd79f37c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9335c143_907a91fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-14T17:58:23Z",
+      "side": 1,
+      "message": "there might be a _performance_ test that notices? (but that\u0027ll be postsubmit.)\n\ni\u0027d say it\u0027s a good sign that the tests still passed in the unexpected configuration --- the no-membarrier code hasn\u0027t bitrotted!\n\n(4.14 seems new enough that you probably do still have devices in the field relying on that. if you have a dashboard of what kernel versions you find yourself running on in the field, i\u0027d be fascinated to see it for bionic etc!)",
+      "parentUuid": "ed5b0823_42a2f252",
+      "revId": "0a11ad77686699cea60998de572bd03ddd79f37c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
