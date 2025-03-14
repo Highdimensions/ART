@@ -1164,6 +1164,11 @@ bool Runtime::Start() {
                  0);
   }
 
+  uint64_t ms_to_ns = 1000 * 1000;
+  uint64_t trace_time_ms = 60 * 1000;
+  uint64_t trace_time_ns = trace_time_ms * ms_to_ns;
+  TraceProfiler::StartTraceLongRunningMethods(trace_time_ns);
+
   // In case we have a profile path passed as a command line argument,
   // register the current class path for profiling now. Note that we cannot do
   // this before we create the JIT and having it here is the most convenient way.
