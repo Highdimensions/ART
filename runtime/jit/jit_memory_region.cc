@@ -501,12 +501,6 @@ void JitMemoryRegion::FreeWritableData(uint8_t* writable_data) REQUIRES(Locks::j
 // The code below only works on bionic on target.
 
 int JitMemoryRegion::CreateZygoteMemory(size_t capacity, std::string* error_msg) {
-  if (CacheOperationsMaySegFault()) {
-    // Zygote JIT requires dual code mappings by design. We can only do this if the cache flush
-    // and invalidate instructions work without raising faults.
-    *error_msg = "Zygote memory only works with dual mappings";
-    return -1;
-  }
   /* Check if kernel support exists, otherwise fall back to ashmem */
   static const char* kRegionName = "jit-zygote-cache";
   if (art::IsSealFutureWriteSupported()) {

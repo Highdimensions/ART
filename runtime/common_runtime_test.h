@@ -307,11 +307,6 @@ class CheckJniAbortCatcher {
         << "WARNING: TEST DISABLED FOR MEMORY TOOL WITH HEAP POISONING WITHOUT READ BARRIERS"; \
   }
 
-#define TEST_DISABLED_FOR_KERNELS_WITH_CACHE_SEGFAULT()                                   \
-  if (CacheOperationsMaySegFault()) {                                                     \
-    GTEST_SKIP() << "WARNING: TEST DISABLED ON KERNEL THAT SEGFAULT ON CACHE OPERATIONS"; \
-  }
-
 #define TEST_DISABLED_ON_VM() \
   if (RunningOnVM()) {        \
     GTEST_SKIP();             \

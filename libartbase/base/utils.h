@@ -126,9 +126,6 @@ WARN_UNUSED bool FlushCpuCaches(void* begin, void* end);
 bool IsKernelVersionAtLeast(int reqd_major, int reqd_minor);
 #endif
 
-// On some old kernels, a cache operation may segfault.
-WARN_UNUSED bool CacheOperationsMaySegFault();
-
 // Is the execution environment on a virtual machine? See ART_TEST_ON_VM.
 WARN_UNUSED bool RunningOnVM();
 
