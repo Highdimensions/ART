@@ -628,6 +628,8 @@ public abstract class Dexopter<DexInfoType extends DetailedDexInfo> {
                 return VdexPath.artifactsPath(AidlUtils.buildArtifactsPathAsInput(
                         dexPath, isa, false /* isInDalvikCache */));
             case ArtifactsLocation.DM:
+            case ArtifactsLocation.SDM_DALVIK_CACHE:
+            case ArtifactsLocation.SDM_NEXT_TO_DEX:
                 // The DM file is passed to dex2oat as a separate flag whenever it exists.
                 return null;
             default:
