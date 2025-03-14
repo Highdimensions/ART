@@ -27,6 +27,9 @@
 #include "base/os.h"
 
 namespace art {
+
+void GetRootContainingLibartbaseLog();
+
 namespace testing {
 
 std::string GetAndroidBuildTop() {
@@ -185,6 +188,46 @@ std::vector<std::string> GetLibCoreDexLocations(const std::vector<std::string>& 
   if (IsHost()) {
     std::string android_root = GetAndroidRoot();
     std::string build_top = GetAndroidBuildTop();
+#if !defined(_WIN32) && !defined(__APPLE__)
+    LOG(WARNING) << "MAST GetAndroidRoot: " << android_root;
+    LOG(WARNING) << "MAST GetAndroidBuildTop: " << build_top;
+    LOG(WARNING) << "MAST ANDROID_BUILD_TOP: " << getenv("ANDROID_BUILD_TOP");
+    {
+      std::string argv;
+      if (android::base::ReadFileToString("/proc/self/cmdline", &argv)) {
+        // /proc/self/cmdline is the programs 'argv' with elements delimited by '\0'.
+        std::filesystem::path path(argv.substr(0, argv.find('\0')));
+        path = std::filesystem::absolute(path);
+        LOG(WARNING) << "MAST path first: " << path;
+        // Walk up until we find the one of the well-known directories.
+        for (; path.parent_path() != path; path = path.parent_path()) {
+          // We are running tests from out/host/linux-x86 on developer machine.
+          if (path.filename() == std::filesystem::path("linux-x86")) {
+            LOG(WARNING) << "MAST path linux-x86: " << path;
+            // android_build_top = path.parent_path().parent_path().parent_path();
+            break;
+          }
+          // We are running tests from testcases (extracted from zip) on tradefed.
+          // The first path is for remote runs and the second path for local runs.
+          if (path.filename() == std::filesystem::path("testcases") ||
+              path.filename().string().starts_with("host_testcases")) {
+            LOG(WARNING) << "MAST path testcases: " << path;
+            // android_build_top = path.append("art_common");
+            break;
+          }
+          LOG(WARNING) << "MAST path other: " << path;
+        }
+      }
+      LOG(WARNING) << "MAST GetAndroidHostOut: " << GetAndroidHostOut();
+      std::string build_install_root =
+          GetAndroidHostOut() + "/testcases/art_common/out/host/linux-x86";
+      LOG(WARNING) << "MAST has apex 1: "
+                   << OS::DirectoryExists((build_install_root + "/apex").c_str());
+      LOG(WARNING) << "MAST has apex 2: "
+                   << OS::DirectoryExists((GetAndroidRoot() + "/apex").c_str());
+      GetRootContainingLibartbaseLog();
+    }
+#endif
     CHECK(android_root.starts_with(build_top))
         << " android_root=" << android_root << " build_top=" << build_top;
     prefix = android_root.substr(build_top.size());

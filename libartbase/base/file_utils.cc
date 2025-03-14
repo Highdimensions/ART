@@ -119,6 +119,24 @@ static std::string GetRootContainingLibartbase() {
   return "";
 }
 
+void GetRootContainingLibartbaseLog() {
+#if !defined(_WIN32) && !defined(__APPLE__)
+  LOG(WARNING) << "MAST GetRootContainingLibartbase: " << GetRootContainingLibartbase();
+  {
+    Dl_info info;
+    if (dladdr(reinterpret_cast<const void*>(&GetRootContainingLibartbase), /* out */ &info) != 0) {
+      LOG(WARNING) << "MAST dli_fname: " << info.dli_fname;
+      // Make a duplicate of the fname so dirname can modify it.
+      UniqueCPtr<char> fname(strdup(info.dli_fname));
+
+      char* dir1 = dirname(fname.get());  // This is the lib directory.
+      char* dir2 = dirname(dir1);         // This is the "root" directory.
+      LOG(WARNING) << "MAST dir2 " << dir2 << " exists " << OS::DirectoryExists(dir2);
+    }
+  }
+#endif
+}
+
 static const char* GetAndroidDirSafe(const char* env_var,
                                      const char* default_dir,
                                      bool must_exist,
