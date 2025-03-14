@@ -169,6 +169,30 @@
       },
       "revId": "9212b234d195a3c289c177abcc315f9824db2499",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbbfafe5_2e129f38",
+        "filename": "tools/jvmti-agents/wrapagentproperties/wrapagentproperties.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-14T14:27:57Z",
+      "side": 1,
+      "message": "I see an updated description but no fix.",
+      "parentUuid": "4051318a_4f9e094d",
+      "range": {
+        "startLine": 151,
+        "startChar": 31,
+        "endLine": 151,
+        "endChar": 43
+      },
+      "revId": "9212b234d195a3c289c177abcc315f9824db2499",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
