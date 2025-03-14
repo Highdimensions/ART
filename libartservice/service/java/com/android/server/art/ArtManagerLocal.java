@@ -232,6 +232,9 @@ public final class ArtManagerLocal {
             for (RuntimeArtifactsPath runtimeArtifacts : list.runtimeArtifacts()) {
                 freedBytes += mInjector.getArtd().deleteRuntimeArtifacts(runtimeArtifacts);
             }
+            for (SecureDexMetadataWithCompanionPaths sdmSdcFiles : list.sdmFiles()) {
+                freedBytes += mInjector.getArtd().deleteSdmSdcFiles(sdmSdcFiles);
+            }
             return DeleteResult.create(freedBytes);
         } catch (RemoteException e) {
             Utils.logArtdException(e);
