@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ea1fb39_4835c2ea",
+        "filename": "libartbase/base/memfd.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-14T17:06:08Z",
+      "side": 1,
+      "message": "Is this always defined when __NR_memfd_create is? Or should this also be checked for on line 36?",
+      "range": {
+        "startLine": 57,
+        "startChar": 70,
+        "endLine": 57,
+        "endChar": 87
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "9f355353_e1b517eb",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartbase/base/memfd.cc",
+              "range": {
+                "startLine": 39,
+                "startChar": 0,
+                "endLine": 41,
+                "endChar": 0
+              },
+              "replacement": "  // Check kernel version supports memfd_create() and MFD_ALLOW_SEALING. Some older\n  // kernels segfault executing memfd_create() rather than returning ENOSYS (b/116769556).\n"
+            },
+            {
+              "path": "libartbase/base/memfd.cc",
+              "range": {
+                "startLine": 48,
+                "startChar": 0,
+                "endLine": 49,
+                "endChar": 0
+              },
+              "replacement": "      (major \u003c kRequiredMajor || (major \u003d\u003d kRequiredMajor \u0026\u0026 minor \u003c kRequiredMinor)) ||\n      !MFD_ALLOW_SEALING) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "90e50fe3986accf0b49db1dedc92d7f2f46aa460",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
