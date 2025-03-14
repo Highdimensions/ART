@@ -2628,6 +2628,7 @@ ENTRY art_quick_record_long_running_exit_trace_event
     // previous event's timestamp.
     mrs xIP0, cntvct_el0
     sub xIP1, xIP0, xIP1
+    lsr xIP1, xIP1, #2
     cmp xIP1, #LONG_RUNNING_METHOD_THRESHOLD
     bhs .Lrecord_exit_event
     // This wasn't a long running method. Erase the previously recorded method entry event. We
