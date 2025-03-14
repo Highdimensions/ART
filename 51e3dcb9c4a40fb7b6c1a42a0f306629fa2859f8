@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8dcbac6_54e25c4c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-14T17:35:15Z",
+      "side": 1,
+      "message": "(actually, this isn\u0027t even in upstream glibc 2.41 ... i\u0027ve mailed their mailing list about it.)",
+      "revId": "51e3dcb9c4a40fb7b6c1a42a0f306629fa2859f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
