@@ -50,6 +50,30 @@
       ],
       "revId": "90e50fe3986accf0b49db1dedc92d7f2f46aa460",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cfa69fe_bcbf288a",
+        "filename": "libartbase/base/memfd.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-14T17:17:31Z",
+      "side": 1,
+      "message": "yes, but you\u0027re making me think i shouldn\u0027t have been lazy and should have changed that to the much more obvious and intention-revealing `#if defined(__linux__)` instead...",
+      "parentUuid": "0ea1fb39_4835c2ea",
+      "range": {
+        "startLine": 57,
+        "startChar": 70,
+        "endLine": 57,
+        "endChar": 87
+      },
+      "revId": "90e50fe3986accf0b49db1dedc92d7f2f46aa460",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
