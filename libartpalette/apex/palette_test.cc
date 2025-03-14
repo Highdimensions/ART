@@ -23,8 +23,9 @@
 
 #include <cstring>
 
-#include "base/common_art_test.h"
+#include "base/testing.h"
 #include "gtest/gtest.h"
+#include "nativehelper/JniInvocation.h"
 
 #ifdef ART_TARGET_ANDROID
 #include "android-modules-utils/sdk_level.h"
@@ -92,16 +93,17 @@ TEST_F(PaletteClientTest, Ashmem) {
 #endif
 }
 
-class PaletteClientJniTest : public art::CommonArtTest {};
-
-TEST_F(PaletteClientJniTest, JniInvocation) {
+TEST_F(PaletteClientTest, JniInvocation) {
   bool enabled;
   EXPECT_EQ(PALETTE_STATUS_OK, PaletteShouldReportJniInvocations(&enabled));
 
+  JniInvocation jni_invocation;
+  ASSERT_TRUE(jni_invocation.Init(nullptr));
+
   std::string boot_class_path_string =
-      GetClassPathOption("-Xbootclasspath:", GetLibCoreDexFileNames());
-  std::string boot_class_path_locations_string =
-      GetClassPathOption("-Xbootclasspath-locations:", GetLibCoreDexLocations());
+      art::testing::GetClassPathOption("-Xbootclasspath:", art::testing::GetLibCoreDexFileNames());
+  std::string boot_class_path_locations_string = art::testing::GetClassPathOption(
+      "-Xbootclasspath-locations:", art::testing::GetLibCoreDexLocations());
 
   JavaVMOption options[] = {
       {.optionString = boot_class_path_string.c_str(), .extraInfo = nullptr},
