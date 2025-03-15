@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16c615a0_fd056891",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3931911
+      },
+      "writtenOn": "2025-03-15T02:11:31Z",
+      "side": 1,
+      "message": "2411974: Reland \"Use bitmap to maintain which signal is being handled\" | https://android-review.googlesource.com/c/platform/art/+/2411974",
+      "revId": "11a5a12936f15c3624de71184d3a2b1b7531fa46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
