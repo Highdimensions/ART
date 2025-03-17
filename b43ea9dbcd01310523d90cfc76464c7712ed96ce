@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e0ef3c0_fe4c6e26",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 3341,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-17T18:56:51Z",
+      "side": 1,
+      "message": "Add a GetProtoId to `ArtMethod` and call this here.",
+      "range": {
+        "startLine": 3341,
+        "startChar": 0,
+        "endLine": 3341,
+        "endChar": 91
+      },
+      "revId": "b43ea9dbcd01310523d90cfc76464c7712ed96ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
