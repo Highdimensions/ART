@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "156a4357_b338adbc",
+        "filename": "test/testing/art_fake_com.android.os.statsd/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1787007
+      },
+      "writtenOn": "2025-03-17T14:22:47Z",
+      "side": 0,
+      "message": "I compared s and r defaults.\n\nS includes `compressible: true` so we no longer have that. I suspect it doesn\u0027t matter for ART but want to make that more explicit.\n\n@jiakaiz@google.com",
+      "revId": "49189d0836f45cc2115ca57c0cf2a471706ed231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
