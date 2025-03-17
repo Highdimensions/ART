@@ -16,6 +16,24 @@
       "message": "I compared s and r defaults.\n\nS includes `compressible: true` so we no longer have that. I suspect it doesn\u0027t matter for ART but want to make that more explicit.\n\n@jiakaiz@google.com",
       "revId": "49189d0836f45cc2115ca57c0cf2a471706ed231",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7bc50cb_f87652c9",
+        "filename": "test/testing/art_fake_com.android.os.statsd/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-17T14:54:32Z",
+      "side": 0,
+      "message": "Thank for bringing this up. This doesn\u0027t matter because `art_fake_com.android.os.statsd` is just a fake of `com.android.os.statsd` for [ART\u0027s chroot testing](https://cs.android.com/android/platform/superproject/main/+/main:art/test/README.chroot.md).\n\nPlease just mention this change in the CL description to make it more explicit.",
+      "parentUuid": "156a4357_b338adbc",
+      "revId": "49189d0836f45cc2115ca57c0cf2a471706ed231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
