@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d10c5782_8a96589d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1930744
+      },
+      "writtenOn": "2025-03-17T13:39:32Z",
+      "side": 1,
+      "message": "ag/32221725 - made this change in AOSP.",
+      "revId": "4caa2e0f51065be1ff2327e39a5dfa68a687099e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
