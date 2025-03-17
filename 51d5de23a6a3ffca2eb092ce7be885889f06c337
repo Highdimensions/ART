@@ -3,6 +3,212 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b8c61d3d_dbc628a3",
+        "filename": "build/flags/art-flags.aconfig",
+        "patchSetId": 21
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-17T23:18:29Z",
+      "side": 1,
+      "message": "Seems too verbose to me, but that mostly seems to be the existing convention. We already know it\u0027s a flag. Just delete \"or not\"? Or maybe try to redirect this and also delete \"Flag to \"? Or just change it to a question: \"Should userfaultfd\u0027s move ioctl be used?\"",
+      "range": {
+        "startLine": 22,
+        "startChar": 16,
+        "endLine": 22,
+        "endChar": 86
+      },
+      "revId": "51d5de23a6a3ffca2eb092ce7be885889f06c337",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65fd6bc7_913a1f22",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-17T23:18:29Z",
+      "side": 1,
+      "message": "Since documentation for these seems hard to come by, and especially `move` seems to have interesting semantics, can you summarize here? Or add a stable URL with documentation.",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 15
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "76f0d2f3_98229db6",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 78,
+                "startChar": 0,
+                "endLine": 79,
+                "endChar": 0
+              },
+              "replacement": "// Values picked from linux kernel source.\n// See https://source.corp.google.com/h/android/kernel/common/+/android-mainline:include/uapi/linux/userfaultfd.h;l\u003d100;drc\u003d8999999999999999999999999999999999999999\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 81,
+                "startChar": 0,
+                "endLine": 81,
+                "endChar": 0
+              },
+              "replacement": "  // Destination address.\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 82,
+                "startChar": 0,
+                "endLine": 82,
+                "endChar": 0
+              },
+              "replacement": "  // Source address.\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 83,
+                "startChar": 0,
+                "endLine": 83,
+                "endChar": 0
+              },
+              "replacement": "  // Length of the memory region to be moved.\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 84,
+                "startChar": 0,
+                "endLine": 84,
+                "endChar": 0
+              },
+              "replacement": "  // Mode of the move operation.\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 85,
+                "startChar": 0,
+                "endLine": 85,
+                "endChar": 0
+              },
+              "replacement": "  // Number of bytes moved.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "51d5de23a6a3ffca2eb092ce7be885889f06c337",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ccd416d_4ec74e12",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-17T23:18:29Z",
+      "side": 1,
+      "message": "The relationship between this and the use_move_ioctl_ field wasn\u0027t immediately clear. I think it needs either renaming (gMoveIoctlRequested?) or a comment explaining that this is true when requested, independent of whether it is actually supported by the kernel.",
+      "range": {
+        "startLine": 362,
+        "startChar": 18,
+        "endLine": 362,
+        "endChar": 31
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "bbefcdd2_9ae03d9b",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 362,
+                "startChar": 0,
+                "endLine": 362,
+                "endChar": 0
+              },
+              "replacement": "// This is a global variable to ensure that the value of this variable is\n// initialized only once. This is important as the value of this variable\n// depends on the value of gUseUserfaultfd, which is initialized only once.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "51d5de23a6a3ffca2eb092ce7be885889f06c337",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37a55588_76046b9b",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-17T23:18:29Z",
+      "side": 1,
+      "message": "Please separate CHECK from side-effect.",
+      "range": {
+        "startLine": 1328,
+        "startChar": 8,
+        "endLine": 1328,
+        "endChar": 60
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "17bfbca9_7da8662a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1328,
+                "startChar": 0,
+                "endLine": 1329,
+                "endChar": 0
+              },
+              "replacement": "        int ret \u003d madvise(buf, gPageSize, MADV_DONTNEED);\n        CHECK_EQ(ret, 0) \u003c\u003c strerror(errno);\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1336,
+                "startChar": 0,
+                "endLine": 1337,
+                "endChar": 0
+              },
+              "replacement": "        ret \u003d ioctl(uffd_, UFFDIO_MOVE, \u0026move_buf);\n        use_move_ioctl_ \u003d ret \u003d\u003d 0;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "51d5de23a6a3ffca2eb092ce7be885889f06c337",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "03b50293_696f9072",
         "filename": "runtime/gc/collector/mark_compact.cc",
         "patchSetId": 21
@@ -34,6 +240,170 @@
                 "endChar": 0
               },
               "replacement": "        use_move_ioctl_ \u003d (ioctl(uffd_, UFFDIO_MOVE, \u0026move_buf) \u003d\u003d 0);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "51d5de23a6a3ffca2eb092ce7be885889f06c337",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21b05b21_a9ca41d7",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 2524,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-17T23:18:29Z",
+      "side": 1,
+      "message": "Can we also separate out the CHECK here?",
+      "range": {
+        "startLine": 2524,
+        "startChar": 8,
+        "endLine": 2524,
+        "endChar": 80
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "d23f293f_3794e10f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2524,
+                "startChar": 0,
+                "endLine": 2526,
+                "endChar": 0
+              },
+              "replacement": "        int ret \u003d madvise(addr + from_space_slide_diff_, size, MADV_DONTNEED);\n        CHECK_EQ(ret, 0) \u003c\u003c \"madvise of from-space failed: \" \u003c\u003c strerror(errno);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "51d5de23a6a3ffca2eb092ce7be885889f06c337",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d048e133_2b9b1181",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 2551,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-17T23:18:29Z",
+      "side": 1,
+      "message": "Why not fetch_sub?\nThe extra `atomic` parameter doesn\u0027t really seem worth it. I would just always use fetch_sub in an inline function, especially since in the final state this will always be true, right?",
+      "range": {
+        "startLine": 2545,
+        "startChar": 4,
+        "endLine": 2551,
+        "endChar": 7
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c72de44b_1a8beb4f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 2545,
+                "startChar": 0,
+                "endLine": 2552,
+                "endChar": 0
+              },
+              "replacement": "    uint8_t* desired \u003d expected - size;\n    if (cur_reclaimable_page_.compare_exchange_strong(\n            expected, desired, std::memory_order_relaxed)) {\n      return desired;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "51d5de23a6a3ffca2eb092ce7be885889f06c337",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0499f8ca_4c722c40",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-17T23:18:29Z",
+      "side": 1,
+      "message": "Both name and description suggests this gets a single page, but then it expects a size?",
+      "range": {
+        "startLine": 688,
+        "startChar": 2,
+        "endLine": 691,
+        "endChar": 59
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "d484b119_e90d98f4",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 688,
+                "startChar": 0,
+                "endLine": 690,
+                "endChar": 0
+              },
+              "replacement": "  // Returns a free page from \u0027from-space\u0027 that can be used to copy objects into\n  // and then passed onto userfaultfd ioctls. Returns nullptr if no page is\n"
+            }
+          ]
+        }
+      ],
+      "revId": "51d5de23a6a3ffca2eb092ce7be885889f06c337",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f163a886_e6d8d0e3",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-17T23:18:29Z",
+      "side": 1,
+      "message": "why? Any use of volatile in ART probably deserves a comment.\nIf the issue is signal handler use, it should be atomic instead. Only volatile sig_atomic_t has special signal handler privileges, and that\u0027s really semi-obsolete.",
+      "range": {
+        "startLine": 801,
+        "startChar": 2,
+        "endLine": 801,
+        "endChar": 10
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "965f2b02_d14a968c",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 801,
+                "startChar": 0,
+                "endLine": 802,
+                "endChar": 0
+              },
+              "replacement": "  uint8_t* last_reclaimable_page_;\n"
             }
           ]
         }
