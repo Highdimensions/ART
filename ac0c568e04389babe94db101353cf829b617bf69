@@ -1,0 +1,177 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "504e7042_f9f4e986",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-17T22:22:34Z",
+      "side": 1,
+      "message": "Judging from [this code](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/runtime.cc;l\u003d1515-1521;drc\u003dfc2f6b36c4d23dc70e1b7c2122890bb8ecc9c834), this \"APEX version\" is either a millisecond timestamp or an actual APEX version.\n\nSince a timestamp isn\u0027t an \"APEX version\", and what actually is is well established, I find this confusing, and I think it\u0027s unfortunate that the confusion gets finalised in the file format. I suggest making this `apex-timestamps` and have a TODO to refactor the internals to clean up the terminology.\n\n(Granted `apex-timestamps` isn\u0027t 100% correct either, but it\u0027s a different and largely unused term and hence much less confusing, and something like `apex-timestamps-or-versions` gets too clunky imo.)",
+      "range": {
+        "startLine": 51,
+        "startChar": 33,
+        "endLine": 51,
+        "endChar": 46
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83dfcd5e_d8c8e74f",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-17T22:22:34Z",
+      "side": 1,
+      "message": "Consider doing some vetting of the value here, so that later code doesn\u0027t have to worry about garbage.",
+      "range": {
+        "startLine": 55,
+        "startChar": 27,
+        "endLine": 55,
+        "endChar": 35
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3df0388_90582586",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-17T22:22:34Z",
+      "side": 1,
+      "message": "Since this is a persisted value, maybe do the same vetting of it here (or in `SetApexVersions`), to catch bugs with the value before it gets saved?",
+      "range": {
+        "startLine": 66,
+        "startChar": 56,
+        "endLine": 66,
+        "endChar": 70
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ddaad1a5_07d607b0",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-17T22:22:34Z",
+      "side": 1,
+      "message": "This seems like a good place to add a few words on the purpose of SDC files and how they work, including:\n\n1. There may be one SDC file accompanying each SDM file. An SDC file without a corresponding SDM file is garbage.\n2. They are always local on device.\n3. They are only read and written by the ART module, but may be read by a later version of it(?).\n\nIf #1 is correct then we should ensure that a newly written SDM file cannot pick up an older garbage SDC file. Somewhere in this CL stack that ought to pop up, but I don\u0027t know where yet. Just a note to self.\n\n#3 is important for file format stability considerations.",
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fd04ca1_f68a2656",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-17T22:22:34Z",
+      "side": 1,
+      "message": "Insert \"Repeated keys are not allowed.\" first.",
+      "range": {
+        "startLine": 38,
+        "startChar": 2,
+        "endLine": 38,
+        "endChar": 3
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "1ea5933a_02b0d49c",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/sdc_file.h",
+              "range": {
+                "startLine": 38,
+                "startChar": 0,
+                "endLine": 41,
+                "endChar": 0
+              },
+              "replacement": "// Repeated keys are not allowed. This is an extensible format, so versioning is not needed. Currently,\n// it\u0027s only supported to have exactly one key, which is \"apex-versions\", but the parsing logic can be\n// updated to support more keys.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5eeb43e_88b64e7c",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-17T22:22:34Z",
+      "side": 1,
+      "message": "Not that it\u0027s particularly important at this point, but why is it necessary to hang on to the whole content? Just drop this and make `apex_versions_` an `std::string` instead?",
+      "range": {
+        "startLine": 50,
+        "startChar": 2,
+        "endLine": 50,
+        "endChar": 23
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02f7e124_2303473f",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-17T22:22:34Z",
+      "side": 1,
+      "message": "It\u0027s helpful to see what this value is in the file without having to follow the whole call chain through to its source. Either document it here, or add a reference to the source class and function/variable where it is documented.",
+      "range": {
+        "startLine": 61,
+        "startChar": 40,
+        "endLine": 61,
+        "endChar": 45
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
