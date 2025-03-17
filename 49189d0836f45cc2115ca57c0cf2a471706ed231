@@ -34,6 +34,24 @@
       "parentUuid": "156a4357_b338adbc",
       "revId": "49189d0836f45cc2115ca57c0cf2a471706ed231",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1b6c55c_a373670f",
+        "filename": "test/testing/art_fake_com.android.os.statsd/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1930744
+      },
+      "writtenOn": "2025-03-17T16:26:09Z",
+      "side": 0,
+      "message": "Updated the commit message.",
+      "parentUuid": "b7bc50cb_f87652c9",
+      "revId": "49189d0836f45cc2115ca57c0cf2a471706ed231",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
