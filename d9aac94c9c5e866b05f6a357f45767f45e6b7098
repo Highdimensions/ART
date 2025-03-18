@@ -1,0 +1,62 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61c7caa0_4a83a3b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T17:19:31Z",
+      "side": 1,
+      "message": "I don\u0027t understand the code being moved by this CL, but since it has been there, I assume it works.",
+      "revId": "d9aac94c9c5e866b05f6a357f45767f45e6b7098",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e514ca10_ec76d297",
+        "filename": "libartbase/base/testing.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T17:19:31Z",
+      "side": 1,
+      "message": "Your change seems to break this function used by `generate-boot-image` on host for [golem](https://cs.android.com/android/platform/superproject/main/+/main:art/Android.mk;l\u003d508;drc\u003d50f41ab016288e44e70689d6ed60e38f749c59e2) and [local Compiler Explorer](https://cs.android.com/android/platform/superproject/main/+/main:art/tools/compiler-explorer/compiler-explorer.md;l\u003d100;drc\u003dbda11bd68212f6a03381a849b0ee44bebf3ca5ba).\n\nI suggest to remove this function and call `GetLibCoreDexFileNames` with `/*prefix\u003d*/\"\"` in `generate-boot-image` instead.",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 1
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "a70743e7_d9b6b4a6",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartbase/base/testing.cc",
+              "range": {
+                "startLine": 194,
+                "startChar": 0,
+                "endLine": 199,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "d9aac94c9c5e866b05f6a357f45767f45e6b7098",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
