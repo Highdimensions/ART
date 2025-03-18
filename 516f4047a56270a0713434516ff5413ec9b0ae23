@@ -42,6 +42,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c36b6b9_f700d4c4",
+        "filename": "artd/artd.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T13:53:51Z",
+      "side": 1,
+      "message": "See my comment in the other CL.",
+      "parentUuid": "5b4f3d72_0a39bd70",
+      "range": {
+        "startLine": 241,
+        "startChar": 0,
+        "endLine": 242,
+        "endChar": 49
+      },
+      "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4e39274_5b3e8c8b",
@@ -103,6 +127,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40eae18c_79d0e78d",
+        "filename": "runtime/dex2oat_environment_test.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T13:53:51Z",
+      "side": 1,
+      "message": "Right, I forgot about it.",
+      "parentUuid": "f4e39274_5b3e8c8b",
+      "range": {
+        "startLine": 273,
+        "startChar": 87,
+        "endLine": 273,
+        "endChar": 92
+      },
+      "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0f59f495_479a5bdf",
@@ -116,6 +164,30 @@
       "writtenOn": "2025-03-18T13:36:09Z",
       "side": 1,
       "message": "Add a comment here.",
+      "range": {
+        "startLine": 350,
+        "startChar": 0,
+        "endLine": 350,
+        "endChar": 63
+      },
+      "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2be2e906_a9d2b52e",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T13:53:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f59f495_479a5bdf",
       "range": {
         "startLine": 350,
         "startChar": 0,
@@ -167,6 +239,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38b121cf_cc566828",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T13:53:51Z",
+      "side": 1,
+      "message": "We check it inside VdexFile::OpenFromDm. https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/vdex_file.cc;l\u003d200-203;drc\u003d0f6a15bb17d2341106523b469743b659209a02b0",
+      "parentUuid": "8438d3db_6d154d7c",
+      "range": {
+        "startLine": 362,
+        "startChar": 0,
+        "endLine": 365,
+        "endChar": 3
+      },
+      "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cd86ebe1_5468a074",
@@ -214,6 +310,30 @@
           ]
         }
       ],
+      "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38b0a6de_e9962021",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T13:53:51Z",
+      "side": 1,
+      "message": "See my comment in the other CL.",
+      "parentUuid": "cd86ebe1_5468a074",
+      "range": {
+        "startLine": 128,
+        "startChar": 0,
+        "endLine": 129,
+        "endChar": 86
+      },
       "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
