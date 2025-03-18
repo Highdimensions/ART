@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10132ccd_a85c0e82",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-18T13:43:14Z",
+      "side": 1,
+      "message": "exactly and only ?",
+      "range": {
+        "startLine": 36,
+        "startChar": 18,
+        "endLine": 36,
+        "endChar": 19
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "84fd5b36_10fa7371",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/sdc_file.h",
+              "range": {
+                "startLine": 36,
+                "startChar": 0,
+                "endLine": 38,
+                "endChar": 0
+              },
+              "replacement": "// 1. There may be exactly one SDC file accompanying each SDM file. An SDC file without a\n//    corresponding SDM file is garbage.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "6125a050403f58a109336ab12e58d345a8e1eedb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ecc55a0_6f4bb8a2",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-18T13:43:14Z",
+      "side": 1,
+      "message": "Move this comment to the constructor?",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 31
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b82fbbd1_37c290fc",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/sdc_file.h",
+              "range": {
+                "startLine": 68,
+                "startChar": 0,
+                "endLine": 70,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/oat/sdc_file.h",
+              "range": {
+                "startLine": 72,
+                "startChar": 0,
+                "endLine": 72,
+                "endChar": 0
+              },
+              "replacement": "  // Takes ownership of the file.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "6125a050403f58a109336ab12e58d345a8e1eedb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
