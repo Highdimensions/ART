@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fdc99dc9_703d4901",
+        "filename": "runtime/native_gc_triggering.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-18T13:37:18Z",
+      "side": 1,
+      "message": "NativeAllocationRegistry",
+      "range": {
+        "startLine": 55,
+        "startChar": 18,
+        "endLine": 55,
+        "endChar": 42
+      },
+      "revId": "76d4111105ec64a9c84daff524d86e93baa901a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
