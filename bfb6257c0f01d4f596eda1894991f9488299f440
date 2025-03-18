@@ -50,6 +50,30 @@
       ],
       "revId": "bfb6257c0f01d4f596eda1894991f9488299f440",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d33df64_c9153b8f",
+        "filename": "runtime/oat/oat.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T13:59:56Z",
+      "side": 1,
+      "message": "I need it to be public so that I can access it from `OatFile` and `ClassLinker`.",
+      "parentUuid": "2bc7df32_de568f57",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 62
+      },
+      "revId": "bfb6257c0f01d4f596eda1894991f9488299f440",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
