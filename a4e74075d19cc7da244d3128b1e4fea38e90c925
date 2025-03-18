@@ -16,6 +16,23 @@
       "message": "I don\u0027t think I have the context to do a meaningful review here.",
       "revId": "a4e74075d19cc7da244d3128b1e4fea38e90c925",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc1cd3bc_22d9cd9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-18T12:10:09Z",
+      "side": 1,
+      "message": "Chatted with Victor offline. This bugfix is fine during the stabilisation period.",
+      "revId": "a4e74075d19cc7da244d3128b1e4fea38e90c925",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
