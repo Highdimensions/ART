@@ -42,6 +42,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "797b11d3_4aee162c",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T13:59:47Z",
+      "side": 1,
+      "message": "Added \"exactly\". I think \"exactly\" implies \"only\".",
+      "parentUuid": "10132ccd_a85c0e82",
+      "range": {
+        "startLine": 36,
+        "startChar": 18,
+        "endLine": 36,
+        "endChar": 19
+      },
+      "revId": "6125a050403f58a109336ab12e58d345a8e1eedb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5ecc55a0_6f4bb8a2",
@@ -89,6 +113,30 @@
           ]
         }
       ],
+      "revId": "6125a050403f58a109336ab12e58d345a8e1eedb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c23b6d41_77f32663",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T13:59:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ecc55a0_6f4bb8a2",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 31
+      },
       "revId": "6125a050403f58a109336ab12e58d345a8e1eedb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
