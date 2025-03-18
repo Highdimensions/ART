@@ -40,6 +40,30 @@
       ],
       "revId": "2c0dfe5c2e683c2832c9dbac816cc75452a91436",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b9a191a_70576058",
+        "filename": "libartbase/base/membarrier.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-03-18T13:25:33Z",
+      "side": 1,
+      "message": "Yeah. Was fixed in aosp/3544328.",
+      "parentUuid": "9a835d87_7ecea0ff",
+      "range": {
+        "startLine": 56,
+        "startChar": 6,
+        "endLine": 56,
+        "endChar": 28
+      },
+      "revId": "2c0dfe5c2e683c2832c9dbac816cc75452a91436",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
