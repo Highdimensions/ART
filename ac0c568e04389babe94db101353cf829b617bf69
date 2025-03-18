@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4b9ea71_3f6d9689",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T12:05:02Z",
+      "side": 1,
+      "message": "I\u0027m mirroring [this key](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/oat/oat.h;l\u003d60;drc\u003dd7acd7d5623f67aa959ae23a362c337288e96d69) in the OAT header, which is exactly what the SDC file is overriding. If we\u0027d like to change the name, we need to change the OAT header as well. Two difference names for the same thing can only add more confusion.\n\nHowever, I\u0027m only adding helper classes for the SDC file in this CL, so changing the name is out of scope.",
+      "parentUuid": "504e7042_f9f4e986",
+      "range": {
+        "startLine": 51,
+        "startChar": 33,
+        "endLine": 51,
+        "endChar": 46
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "83dfcd5e_d8c8e74f",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-03-17T22:22:34Z",
       "side": 1,
       "message": "Consider doing some vetting of the value here, so that later code doesn\u0027t have to worry about garbage.",
+      "range": {
+        "startLine": 55,
+        "startChar": 27,
+        "endLine": 55,
+        "endChar": 35
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "512ab3ee_5c5120c6",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T12:05:02Z",
+      "side": 1,
+      "message": "I\u0027m basically following [what the runtime does](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/gc/space/image_space.cc;l\u003d3427;drc\u003dd7acd7d5623f67aa959ae23a362c337288e96d69) when loading the OAT file. It doesn\u0027t looks like the runtime is vetting the value. AFAIK, this value can even be an empty string, in testing environments, so there isn\u0027t much we can verify here.",
+      "parentUuid": "83dfcd5e_d8c8e74f",
       "range": {
         "startLine": 55,
         "startChar": 27,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "71896841_3fc366cd",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T12:05:02Z",
+      "side": 1,
+      "message": "I\u0027m basically following [what dex2oat does](https://cs.android.com/android/platform/superproject/main/+/main:art/dex2oat/dex2oat.cc;l\u003d1689-1694;drc\u003d4370b86853f0fdf16f0e957365c6b600e5b32fe2) when preparing the OAT header. It doesn\u0027t looks like dex2oat is vetting the value. AFAIK, this value can even be an empty string, in testing environments, so there isn\u0027t much we can verify here.",
+      "parentUuid": "e3df0388_90582586",
+      "range": {
+        "startLine": 66,
+        "startChar": 56,
+        "endLine": 66,
+        "endChar": 70
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ddaad1a5_07d607b0",
@@ -83,6 +155,24 @@
       "writtenOn": "2025-03-17T22:22:34Z",
       "side": 1,
       "message": "This seems like a good place to add a few words on the purpose of SDC files and how they work, including:\n\n1. There may be one SDC file accompanying each SDM file. An SDC file without a corresponding SDM file is garbage.\n2. They are always local on device.\n3. They are only read and written by the ART module, but may be read by a later version of it(?).\n\nIf #1 is correct then we should ensure that a newly written SDM file cannot pick up an older garbage SDC file. Somewhere in this CL stack that ought to pop up, but I don\u0027t know where yet. Just a note to self.\n\n#3 is important for file format stability considerations.",
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75113726_419d94c6",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T12:05:02Z",
+      "side": 1,
+      "message": "Thanks. Added them.\n\n\u003e If #1 is correct then we should ensure that a newly written SDM file cannot pick up an older garbage SDC file.\n\nGood point! I actually missed it! I added a timestamp of the SDM file for this.",
+      "parentUuid": "ddaad1a5_07d607b0",
       "revId": "ac0c568e04389babe94db101353cf829b617bf69",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -128,6 +218,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d3c1769_f56579a1",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T12:05:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3fd04ca1_f68a2656",
+      "range": {
+        "startLine": 38,
+        "startChar": 2,
+        "endLine": 38,
+        "endChar": 3
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5eeb43e_88b64e7c",
@@ -151,6 +265,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f55c8547_cf00e222",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T12:05:02Z",
+      "side": 1,
+      "message": "I don\u0027t feel strongly about it. I just think this avoids additional copying. At the end of the day, the whole SdcReader object is supposed to be short-lived (the apex-versions field will be copied to the OatFile object), so what it holds doesn\u0027t matter.",
+      "parentUuid": "f5eeb43e_88b64e7c",
+      "range": {
+        "startLine": 50,
+        "startChar": 2,
+        "endLine": 50,
+        "endChar": 23
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "02f7e124_2303473f",
@@ -164,6 +302,30 @@
       "writtenOn": "2025-03-17T22:22:34Z",
       "side": 1,
       "message": "It\u0027s helpful to see what this value is in the file without having to follow the whole call chain through to its source. Either document it here, or add a reference to the source class and function/variable where it is documented.",
+      "range": {
+        "startLine": 61,
+        "startChar": 40,
+        "endLine": 61,
+        "endChar": 45
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d53b0c03_d46f4d94",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T12:05:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02f7e124_2303473f",
       "range": {
         "startLine": 61,
         "startChar": 40,
