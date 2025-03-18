@@ -64,6 +64,30 @@
       },
       "revId": "2c0dfe5c2e683c2832c9dbac816cc75452a91436",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6069e647_e526d141",
+        "filename": "libartbase/base/membarrier.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-18T13:40:05Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "4b9a191a_70576058",
+      "range": {
+        "startLine": 56,
+        "startChar": 6,
+        "endLine": 56,
+        "endChar": 28
+      },
+      "revId": "2c0dfe5c2e683c2832c9dbac816cc75452a91436",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
