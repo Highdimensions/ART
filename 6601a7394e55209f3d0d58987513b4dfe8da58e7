@@ -16,6 +16,57 @@
       "message": "Hans and Elliott, PTAL. Thanks!",
       "revId": "6601a7394e55209f3d0d58987513b4dfe8da58e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ba98b32_d31b4b24",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2458,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-18T22:33:11Z",
+      "side": 1,
+      "message": "Can somebody explain this? ThreadExitCallback is the detructor pthread_key_self_ IIUC, the \"lifetime\" of the key on this thread has ended. Why are we setting it again? Why is that safe? What am I missing?",
+      "range": {
+        "startLine": 2458,
+        "startChar": 4,
+        "endLine": 2458,
+        "endChar": 96
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "250b2df7_da2de67d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/thread.cc",
+              "range": {
+                "startLine": 2445,
+                "startChar": 0,
+                "endLine": 2446,
+                "endChar": 0
+              },
+              "replacement": "void Thread::ThreadExitDestructor(void* arg) {\n"
+            },
+            {
+              "path": "runtime/thread.cc",
+              "range": {
+                "startLine": 2481,
+                "startChar": 0,
+                "endLine": 2482,
+                "endChar": 0
+              },
+              "replacement": "  CHECK_PTHREAD_CALL(pthread_key_create, (\u0026Thread::pthread_key_self_, Thread::ThreadExitDestructor),\n"
+            }
+          ]
+        }
+      ],
+      "revId": "6601a7394e55209f3d0d58987513b4dfe8da58e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
