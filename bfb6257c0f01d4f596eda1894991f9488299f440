@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bc7df32_de568f57",
+        "filename": "runtime/oat/oat.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-18T13:38:46Z",
+      "side": 1,
+      "message": "Move this to the private section?",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 62
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ea056df8_7b3e99e8",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/oat.h",
+              "range": {
+                "startLine": 167,
+                "startChar": 0,
+                "endLine": 168,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/oat/oat.h",
+              "range": {
+                "startLine": 195,
+                "startChar": 0,
+                "endLine": 195,
+                "endChar": 0
+              },
+              "replacement": "  const char* GetStoreValueByKeyUnsafe(const char* key) const;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "bfb6257c0f01d4f596eda1894991f9488299f440",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
