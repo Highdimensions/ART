@@ -22,6 +22,30 @@
       },
       "revId": "76d4111105ec64a9c84daff524d86e93baa901a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4ef79e5_58a6b0cf",
+        "filename": "runtime/native_gc_triggering.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-18T17:32:16Z",
+      "side": 1,
+      "message": "Fixed in aosp/3545829",
+      "parentUuid": "fdc99dc9_703d4901",
+      "range": {
+        "startLine": 55,
+        "startChar": 18,
+        "endLine": 55,
+        "endChar": 42
+      },
+      "revId": "76d4111105ec64a9c84daff524d86e93baa901a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
