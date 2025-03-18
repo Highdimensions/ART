@@ -22,6 +22,30 @@
       },
       "revId": "bffe82887a5b5ba5640f0d042f837b04cd9a2a4c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fa5e859_320ff462",
+        "filename": "artd/binder/com/android/server/art/ArtifactsLocation.aidl",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-18T13:39:24Z",
+      "side": 1,
+      "message": "This is for incremental apps. We can\u0027t create the SDC file in incremental-fs.",
+      "parentUuid": "30b7a82e_bb119f9d",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 25
+      },
+      "revId": "bffe82887a5b5ba5640f0d042f837b04cd9a2a4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
