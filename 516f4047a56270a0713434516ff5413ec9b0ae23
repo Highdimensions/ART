@@ -1,0 +1,221 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b4f3d72_0a39bd70",
+        "filename": "artd/artd.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-18T13:36:09Z",
+      "side": 1,
+      "message": "See my comment in the other CL. Do we need this case?",
+      "range": {
+        "startLine": 241,
+        "startChar": 0,
+        "endLine": 242,
+        "endChar": 49
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "f46a7ac4_023ebb00",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "artd/artd.cc",
+              "range": {
+                "startLine": 241,
+                "startChar": 0,
+                "endLine": 243,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4e39274_5b3e8c8b",
+        "filename": "runtime/dex2oat_environment_test.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-18T13:36:09Z",
+      "side": 1,
+      "message": "Don\u0027t we have a kConstant or gConstant for this?",
+      "range": {
+        "startLine": 273,
+        "startChar": 87,
+        "endLine": 273,
+        "endChar": 92
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "4b38d476_76a83e68",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/dex2oat_environment_test.h",
+              "range": {
+                "startLine": 273,
+                "startChar": 0,
+                "endLine": 274,
+                "endChar": 0
+              },
+              "replacement": "    writer.StartAlignedEntry(\"primary.vdex\", /*flags\u003d*/0, /*alignment\u003d*/page_aligned ? kDexFileAlignment : 4);\n"
+            },
+            {
+              "path": "runtime/dex2oat_environment_test.h",
+              "range": {
+                "startLine": 291,
+                "startChar": 0,
+                "endLine": 292,
+                "endChar": 0
+              },
+              "replacement": "    writer.StartAlignedEntry(\"primary.odex\", /*flags\u003d*/0, /*alignment\u003d*/kDexFileAlignment);\n"
+            },
+            {
+              "path": "runtime/dex2oat_environment_test.h",
+              "range": {
+                "startLine": 298,
+                "startChar": 0,
+                "endLine": 299,
+                "endChar": 0
+              },
+              "replacement": "      writer.StartAlignedEntry(\"primary.art\", /*flags\u003d*/0, /*alignment\u003d*/kDexFileAlignment);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f59f495_479a5bdf",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-18T13:36:09Z",
+      "side": 1,
+      "message": "Add a comment here.",
+      "range": {
+        "startLine": 350,
+        "startChar": 0,
+        "endLine": 350,
+        "endChar": 63
+      },
+      "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8438d3db_6d154d7c",
+        "filename": "runtime/oat/oat_file.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-18T13:36:09Z",
+      "side": 1,
+      "message": "Is this the place where we should check the vdex doesn\u0027t contain dex code?",
+      "range": {
+        "startLine": 362,
+        "startChar": 0,
+        "endLine": 365,
+        "endChar": 3
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ff3b9f83_c6e99ef7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/oat_file.cc",
+              "range": {
+                "startLine": 362,
+                "startChar": 0,
+                "endLine": 363,
+                "endChar": 0
+              },
+              "replacement": "  ret-\u003evdex_ \u003d VdexFile::OpenFromDm(dm_filename,\n                                    ret-\u003evdex_begin_,\n                                    ret-\u003evdex_end_,\n                                    ret-\u003eoverride_apex_versions_,\n                                    error_msg);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd86ebe1_5468a074",
+        "filename": "runtime/oat/oat_file_assistant.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-18T13:36:09Z",
+      "side": 1,
+      "message": "Why would we have this dichotomy? (sdm next to dex, but sdc in dalvik-cache)",
+      "range": {
+        "startLine": 128,
+        "startChar": 0,
+        "endLine": 129,
+        "endChar": 86
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ecb7b2c8_14d34d94",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 128,
+                "startChar": 0,
+                "endLine": 134,
+                "endChar": 0
+              },
+              "replacement": "    // The oat and art files are in the sdm file next to the dex file. The vdex file is in the\n    // dm file next to the dex file.\n    kLocationSdm \u003d 4,\n"
+            },
+            {
+              "path": "runtime/oat/oat_file_assistant.h",
+              "range": {
+                "startLine": 558,
+                "startChar": 0,
+                "endLine": 559,
+                "endChar": 0
+              },
+              "replacement": "      return \"sdm\";\n"
+            }
+          ]
+        }
+      ],
+      "revId": "516f4047a56270a0713434516ff5413ec9b0ae23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
