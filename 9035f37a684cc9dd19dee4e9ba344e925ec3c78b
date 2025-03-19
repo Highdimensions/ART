@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c15fa2d0_91382f11",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-19T17:14:29Z",
+      "side": 1,
+      "message": "suggestion: add `which was fixed in aosp/3551420`",
+      "range": {
+        "startLine": 9,
+        "startChar": 45,
+        "endLine": 9,
+        "endChar": 46
+      },
+      "revId": "9035f37a684cc9dd19dee4e9ba344e925ec3c78b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0aa75e9_7096fbeb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-19T17:14:29Z",
+      "side": 1,
+      "message": "line too long. Maybe use `\\` and split into two lines?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 108
+      },
+      "revId": "9035f37a684cc9dd19dee4e9ba344e925ec3c78b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
