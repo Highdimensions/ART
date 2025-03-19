@@ -115,6 +115,30 @@
       },
       "revId": "6601a7394e55209f3d0d58987513b4dfe8da58e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6fa286d_4e8fa8ad",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2458,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-19T13:40:09Z",
+      "side": 1,
+      "message": "\"what she said\".\n\n\u003e We can have multiple destrctor callbacks associated with the key.\n\nyeah, the warning above is relevant:\n```\n    LOG(WARNING) \u003c\u003c \"Native thread exiting without having called DetachCurrentThread (maybe it\u0027s \"\n        \"going to use a pthread_key_create destructor?): \" \u003c\u003c *self;\n```\nbasically it\u0027s the usual destructor problem of \"you don\u0027t know when _yours_ is going to be called\". the idea of this code was to try to ensure that _ART\u0027s_ destructor gets called last.\n\nfwiw, this isn\u0027t how i remember leaving it (or inheriting it from fadden) --- i thought it actually took PTHREAD_DESTRUCTOR_ITERATIONS into account and complained if it hit that? but apparently my memory is nonsense, and this is exactly what i wrote: https://googleplex-android-review.git.corp.google.com/c/platform/art/+/207566\n\nthe dalvik code did have retries, but not in the way i [thought i] remembered: https://source.corp.google.com/h/android/platform/superproject/+/android-2.2.3_r1:dalvik/vm/Thread.c;l\u003d1136?q\u003dfile:dalvik%20DESTRUCTOR\n\n\u003e Just to clarify the last sentence in my comment, the callbacks are only called if the value isn\u0027t null, so we need to set the value to non-null here so other callbacks have a chance to run. If none of them has cleared the key (by detaching the thread) this will be called again.\n\nwell, \"any given key\u0027s callback is only called if _its_ value is non-null\". the other keys\u0027 destructors will still run.\n\ni think the point here is that _if_ the app calls DetachCurrentThread() from a key destructor for one of its _own_ keys, ART doesn\u0027t blow up because we already started tearing things down when _our_ key destructor ran [earlier than the app one]. apparently Quick Search Bar (the QSB in my ART change) did this. here\u0027s the \"explicit documentation\", btw: https://developer.android.com/training/articles/perf-jni#threads (the last paragraph)",
+      "parentUuid": "8bdf0636_b0846a15",
+      "range": {
+        "startLine": 2458,
+        "startChar": 4,
+        "endLine": 2458,
+        "endChar": 96
+      },
+      "revId": "6601a7394e55209f3d0d58987513b4dfe8da58e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
