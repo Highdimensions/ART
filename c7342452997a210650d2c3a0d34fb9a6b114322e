@@ -1,0 +1,62 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d207d7a5_bff4356a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T14:46:01Z",
+      "side": 1,
+      "message": "Presubmit shows plenty of build problems. I\u0027ll take a look once they\u0027re sorted.",
+      "revId": "c7342452997a210650d2c3a0d34fb9a6b114322e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7f8dee9_08a16a27",
+        "filename": "build/art.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T14:46:01Z",
+      "side": 1,
+      "message": "Nit: swap",
+      "range": {
+        "startLine": 303,
+        "startChar": 77,
+        "endLine": 303,
+        "endChar": 84
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b2005071_fe562b52",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "build/art.go",
+              "range": {
+                "startLine": 303,
+                "startChar": 0,
+                "endLine": 304,
+                "endChar": 0
+              },
+              "replacement": "\t\t// Historically, make has installed the /testcases/ files. When converting to soong,\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c7342452997a210650d2c3a0d34fb9a6b114322e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
