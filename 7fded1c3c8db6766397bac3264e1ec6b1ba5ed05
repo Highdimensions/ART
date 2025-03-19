@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5431c0cc_7e3ad725",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-19T13:51:13Z",
+      "side": 1,
+      "message": "Thanks Vladimir and Mythri.",
+      "revId": "7fded1c3c8db6766397bac3264e1ec6b1ba5ed05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
