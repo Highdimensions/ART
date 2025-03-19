@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb0be423_1ea6f98b",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T13:53:07Z",
+      "side": 1,
+      "message": "Nit: \"in\"",
+      "range": {
+        "startLine": 63,
+        "startChar": 57,
+        "endLine": 63,
+        "endChar": 61
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "7ce6e6f1_e7bfb89f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/sdc_file.cc",
+              "range": {
+                "startLine": 63,
+                "startChar": 0,
+                "endLine": 64,
+                "endChar": 0
+              },
+              "replacement": "    *error_msg \u003d ART_FORMAT(\"Missing key \u0027sdm-timestamp\u0027 in sdc file \u0027{}\u0027\", filename);\n"
+            },
+            {
+              "path": "runtime/oat/sdc_file.cc",
+              "range": {
+                "startLine": 72,
+                "startChar": 0,
+                "endLine": 73,
+                "endChar": 0
+              },
+              "replacement": "    *error_msg \u003d ART_FORMAT(\"Missing key \u0027apex-versions\u0027 in sdc file \u0027{}\u0027\", filename);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "646065824e25b537c7bf6977220c505c1d2f47c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95c47406_8956ddd2",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T13:53:07Z",
+      "side": 1,
+      "message": "What use is this, given that it\u0027s only done after errors?",
+      "range": {
+        "startLine": 86,
+        "startChar": 2,
+        "endLine": 86,
+        "endChar": 87
+      },
+      "revId": "646065824e25b537c7bf6977220c505c1d2f47c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4afb717_61894bd1",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T13:53:07Z",
+      "side": 1,
+      "message": "Is it really necessary to handle nonempty files as input? If not, I suggest replacing this with a `DCHECK` that the current file length is zero.",
+      "range": {
+        "startLine": 91,
+        "startChar": 6,
+        "endLine": 91,
+        "endChar": 27
+      },
+      "revId": "646065824e25b537c7bf6977220c505c1d2f47c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a67fd34_450af561",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T13:53:07Z",
+      "side": 1,
+      "message": "\", or with a mismatching SDM timestamp, \"",
+      "range": {
+        "startLine": 37,
+        "startChar": 28,
+        "endLine": 37,
+        "endChar": 29
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2e4a674b_921a0b7a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/sdc_file.h",
+              "range": {
+                "startLine": 37,
+                "startChar": 0,
+                "endLine": 38,
+                "endChar": 0
+              },
+              "replacement": "//    corresponding SDM file, or with a mismatching SDM timestamp, is garbage.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "646065824e25b537c7bf6977220c505c1d2f47c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4028fad3_a19c8146",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T13:53:07Z",
+      "side": 1,
+      "message": "This reference is enough, but since it\u0027s relevant to the file format, I think it\u0027d be good to add some details to the `apex_version_` docs [here](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/runtime.h;l\u003d1552-1557;drc\u003de1a8323d44dcc052e59da6e27494c56c63969cb7): Firstly, it\u0027s not up-to-date with the [actual logic](https://cs.android.com/android/platform/superproject/main/+/main:art/runtime/runtime.cc;l\u003d1515-1521;drc\u003dfc2f6b36c4d23dc70e1b7c2122890bb8ecc9c834) regarding timestamps. Secondly, it doesn\u0027t say how the order of APEX versions work.\n\nRegarding the latter, one corner case I\u0027m pondering is the theoretical situation that there\u0027s a change of order in the BCP, so that the timestamps no longer match up with the original APEXes. That seems incredibly unlikely, and if it happens it\u0027s even more unlikely that the timestamps match up incorrectly in such a way that an invalidation is missed. Probably not worth worrying about, unless there\u0027s a use case I\u0027m missing.\n\nIf the number of APEXes in the BCP doesn\u0027t agree with the length of the version list here then we invalidate, right?",
+      "range": {
+        "startLine": 55,
+        "startChar": 19,
+        "endLine": 55,
+        "endChar": 43
+      },
+      "revId": "646065824e25b537c7bf6977220c505c1d2f47c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbf07851_f07fe043",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T13:53:07Z",
+      "side": 1,
+      "message": "Can we use atomic writing here, e.g. `NewFile`? If nothing else it avoids spending effort on pondering concurrent read/write situations. (Apologies I didn\u0027t catch this earlier.)\n\nGiven the CL stack it\u0027s ok follow up with a separate CL. For now I\u0027m going to review them as if updates are atomic.",
+      "range": {
+        "startLine": 71,
+        "startChar": 21,
+        "endLine": 71,
+        "endChar": 25
+      },
+      "revId": "646065824e25b537c7bf6977220c505c1d2f47c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb722127_47f535e4",
+        "filename": "runtime/oat/sdc_file_test.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T13:53:07Z",
+      "side": 1,
+      "message": "Nit: For the sake of exposition this could be a \u0027/\u0027-separated sequence, like the real things.",
+      "range": {
+        "startLine": 57,
+        "startChar": 72,
+        "endLine": 57,
+        "endChar": 80
+      },
+      "revId": "646065824e25b537c7bf6977220c505c1d2f47c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

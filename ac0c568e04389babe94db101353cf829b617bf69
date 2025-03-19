@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e34a2016_09535c53",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T13:53:07Z",
+      "side": 1,
+      "message": "Ok, that\u0027s reasonable, iow it\u0027s already too late. :\\ In that case compensating with docs is the best we can do - discussed in another comment.",
+      "parentUuid": "b4b9ea71_3f6d9689",
+      "range": {
+        "startLine": 51,
+        "startChar": 33,
+        "endLine": 51,
+        "endChar": 46
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "83dfcd5e_d8c8e74f",
@@ -97,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "723281a9_989c07df",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T13:53:07Z",
+      "side": 1,
+      "message": "I\u0027m not convinced by justifying one weakness with another, sorry. ;)\n\nWhat I\u0027m thinking of is checking with a regexp, something like `[0-9./]*` (or use something simpler like `strspn`). There are several reasons why that\u0027s useful - one is that it puts to rest any worry that this can be used as a vector to inject gadgets.",
+      "parentUuid": "512ab3ee_5c5120c6",
+      "range": {
+        "startLine": 55,
+        "startChar": 27,
+        "endLine": 55,
+        "endChar": 35
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e3df0388_90582586",
         "filename": "runtime/oat/sdc_file.cc",
         "patchSetId": 4
@@ -132,6 +180,30 @@
       "side": 1,
       "message": "I\u0027m basically following [what dex2oat does](https://cs.android.com/android/platform/superproject/main/+/main:art/dex2oat/dex2oat.cc;l\u003d1689-1694;drc\u003d4370b86853f0fdf16f0e957365c6b600e5b32fe2) when preparing the OAT header. It doesn\u0027t looks like dex2oat is vetting the value. AFAIK, this value can even be an empty string, in testing environments, so there isn\u0027t much we can verify here.",
       "parentUuid": "e3df0388_90582586",
+      "range": {
+        "startLine": 66,
+        "startChar": 56,
+        "endLine": 66,
+        "endChar": 70
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8e50156_2f9b072b",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T13:53:07Z",
+      "side": 1,
+      "message": "In this case it\u0027s about discovering any bug closer to its source, but it\u0027s less important.",
+      "parentUuid": "71896841_3fc366cd",
       "range": {
         "startLine": 66,
         "startChar": 56,
