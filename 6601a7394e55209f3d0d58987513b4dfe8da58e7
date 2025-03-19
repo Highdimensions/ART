@@ -91,6 +91,30 @@
       },
       "revId": "6601a7394e55209f3d0d58987513b4dfe8da58e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8bdf0636_b0846a15",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2458,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-19T09:58:43Z",
+      "side": 1,
+      "message": "Just to clarify the last sentence in my comment, the callbacks are only called if the value isn\u0027t null, so we need to set the value to non-null here so other callbacks have a chance to run. If none of them has cleared the key (by detaching the thread) this will be called again.",
+      "parentUuid": "fe21ed10_6499420f",
+      "range": {
+        "startLine": 2458,
+        "startChar": 4,
+        "endLine": 2458,
+        "endChar": 96
+      },
+      "revId": "6601a7394e55209f3d0d58987513b4dfe8da58e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
