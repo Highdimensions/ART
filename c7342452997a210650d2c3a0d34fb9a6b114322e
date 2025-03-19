@@ -57,6 +57,30 @@
       ],
       "revId": "c7342452997a210650d2c3a0d34fb9a6b114322e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20093f4f_4e0639ba",
+        "filename": "build/art.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2025-03-19T17:10:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7f8dee9_08a16a27",
+      "range": {
+        "startLine": 303,
+        "startChar": 77,
+        "endLine": 303,
+        "endChar": 84
+      },
+      "revId": "c7342452997a210650d2c3a0d34fb9a6b114322e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
