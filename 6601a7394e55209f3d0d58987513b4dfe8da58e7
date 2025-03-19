@@ -67,6 +67,30 @@
       ],
       "revId": "6601a7394e55209f3d0d58987513b4dfe8da58e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe21ed10_6499420f",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2458,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-03-19T09:53:06Z",
+      "side": 1,
+      "message": "My understanding of the code is that, ThreadExitCallback is the destructor callback which is called when the thread is exiting if the value associated with the key is not null. We can have multiple destrctor callbacks associated with the key. We clear the value of the key when we detach the thread. So if this function is called it means that the thread is exiting and we haven\u0027t detached the thread yet. Since there can be multiple callbacks, we want to support the cases where the thread is detached in one of these destructor callbacks. My understanding is that we need to set the value to non-null here so that this callback is called again if the thread hasn\u0027t detached even after all destructor callbacks had a chance to run.",
+      "parentUuid": "7ba98b32_d31b4b24",
+      "range": {
+        "startLine": 2458,
+        "startChar": 4,
+        "endLine": 2458,
+        "endChar": 96
+      },
+      "revId": "6601a7394e55209f3d0d58987513b4dfe8da58e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
