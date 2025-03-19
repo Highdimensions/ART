@@ -143,6 +143,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ee05a0a_136a15a5",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-19T15:13:37Z",
+      "side": 1,
+      "message": "I can\u0027t say I agree.\n\nIMO, SDC is just a file format to persist the apex versions string produced and consumed by the runtime, so it shouldn\u0027t have much opinion on how the string should look like. If the string is in the wrong format, then it\u0027s the runtime\u0027s responsibility to reject it (by the code [here](https://android-review.git.corp.google.com/c/platform/art/+/3539980/7/runtime/gc/space/image_space.cc)). In fact, the runtime does a string match, so a string in the wrong format does get rejected, making a check here look redundant.\n\nMoreover, this is irrelevant to security. SDC files are only in the `oat` and `dalvik-cache` directories, with SELinux label `dalvikcache_data_file`, only writable by ART, meaning if an attacker can use SDC to hack the runtime, then they can already use ODEX files to do so, so this doesn\u0027t introduce a attack vector.\n\nAnyway, I don\u0027t feel my opinion on this is particularly strong, and your proposed check lookd lenient enough against potential future changes, so I added it.",
+      "parentUuid": "723281a9_989c07df",
+      "range": {
+        "startLine": 55,
+        "startChar": 27,
+        "endLine": 55,
+        "endChar": 35
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3df0388_90582586",
