@@ -3717,6 +3717,7 @@ void ConcurrentCopying::FinishPhase() {
       DCHECK(rb_mark_bit_stack_ != nullptr);
       const auto* limit = rb_mark_bit_stack_->End();
       for (StackReference<mirror::Object>* it = rb_mark_bit_stack_->Begin(); it != limit; ++it) {
+        CHECK(it->AsMirrorPtr() != reinterpret_cast<mirror::Object*>(0xebadbeef));
         CHECK(it->AsMirrorPtr()->AtomicSetMarkBit(1, 0))
             << "rb_mark_bit_stack_->Begin()" << rb_mark_bit_stack_->Begin() << '\n'
             << "rb_mark_bit_stack_->End()" << rb_mark_bit_stack_->End() << '\n'
@@ -3725,6 +3726,13 @@ void ConcurrentCopying::FinishPhase() {
             << DumpReferenceInfo(it->AsMirrorPtr(), "*it");
       }
       rb_mark_bit_stack_->Reset();
+      if (!kIsDebugBuild) {
+        auto* it = rb_mark_bit_stack_->Begin();
+        auto* end = it + rb_mark_bit_stack_->Capacity();
+        for (; it != end; ++it) {
+          it->Assign(reinterpret_cast<mirror::Object*>(0xebadbeef));
+        }
+      }
     }
   }
   if (measure_read_barrier_slow_path_) {
