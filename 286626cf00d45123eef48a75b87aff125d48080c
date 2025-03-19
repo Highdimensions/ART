@@ -318,6 +318,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1c694cf_8bd2a925",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-19T09:44:17Z",
+      "side": 1,
+      "message": "Reordered but kept the `DCHECK`. What code is close and what isn\u0027t is rather subjective and I\u0027d prefer to keep this `DCHECK` as a documentation, even if it\u0027s optimized away even in debug build.",
+      "parentUuid": "06e9d50b_0ba4b2de",
+      "revId": "286626cf00d45123eef48a75b87aff125d48080c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "22f15d6f_60c3e206",
