@@ -1,0 +1,245 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be34e9da_9d1cc4ce",
+        "filename": "artd/artd.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 999,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "Nit: This explanation could be better off in a comment to save a little bit of .ro segment.",
+      "range": {
+        "startLine": 999,
+        "startChar": 43,
+        "endLine": 999,
+        "endChar": 86
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c801a054_fa626090",
+        "filename": "artd/artd.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "A gotcha here is the comparatively low granularity of seconds - if there are code flows that, say, install and update a package back-to-back it\u0027s not certain that the mtime is different the second time around. To avoid worrying about that, can you please include `st_mtim.tv_nsec` in the value?",
+      "range": {
+        "startLine": 1017,
+        "startChar": 31,
+        "endLine": 1017,
+        "endChar": 85
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a8dee5f_ca082668",
+        "filename": "artd/artd.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "Sorry, but what is this?",
+      "range": {
+        "startLine": 1030,
+        "startChar": 50,
+        "endLine": 1030,
+        "endChar": 53
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "949c66f9_6b571374",
+        "filename": "artd/artd.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "As discussed offline, this is rather kludgy and it\u0027s a bit unclear what happens with the original fd still in NewFile (iow, I need to look at its implementation). A more principled approach would be to extend NewFile to be able to hand away its fd while still keep doing the renaming/unlinking. Anyway, this works too, I think.",
+      "range": {
+        "startLine": 1038,
+        "startChar": 24,
+        "endLine": 1038,
+        "endChar": 49
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09e9c969_761023d8",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "Please add a test for when the SDC file exists but has an invalid SDM timestamp.",
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d442b8ff_f76e30e2",
+        "filename": "artd/binder/com/android/server/art/IArtd.aidl",
+        "patchSetId": 9
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "(Here I\u0027d actually prefer to review the Java side of the code in the same CL to see all of the new code path, but nvm.)",
+      "range": {
+        "startLine": 162,
+        "startChar": 9,
+        "endLine": 162,
+        "endChar": 23
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7931e142_f0921f37",
+        "filename": "artd/binder/com/android/server/art/OutputSecureDexMetadataCompanion.aidl",
+        "patchSetId": 9
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "Discussed offline, but FTR another viable approach is to consider the SDM and SDC files artifacts that are covered by `ArtifactsPath` and hence reuse `OutputArtifacts` rather than adding these new types. That\u0027d also allow us to cut down some of the new `IArtd` methods in subsequent CLs.\n\nThe drawback is that it\u0027d mean adding another boolean flag in `ArtifactsPath` to specify whether the SDM/SDC files or the locally compiled artifacts are to be used. There\u0027s also little opportunity to reuse code in some places (i.e. the artd entry points would only mux on that flag), and `ArtifactPath`s with the flag set don\u0027t make sense in some functions like `dexopt`.",
+      "range": {
+        "startLine": 24,
+        "startChar": 11,
+        "endLine": 24,
+        "endChar": 43
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba0ae233_5a0c43bc",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "Nice catch, but this is stricter than before. Are you confident it\u0027s no problem? E.g. installing a 64-bit-only ART module on a multilib device is (at least technically) possible. Another thing I\u0027m not sure about is how native translated ISAs behave here.",
+      "range": {
+        "startLine": 162,
+        "startChar": 12,
+        "endLine": 162,
+        "endChar": 29
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e07d1abe_38770fb5",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "I think the old code is cleaner since it avoids a useless format string, but maybe there\u0027s some other reason for this?",
+      "range": {
+        "startLine": 186,
+        "startChar": 20,
+        "endLine": 186,
+        "endChar": 24
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "878c085f_450919c1",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "Even though it may be better to spell this out in the AIDL types for consistency, consider shortening to `Sdm` and `Sdc` in these functions, because that\u0027s how we normally refer to them and it\u0027s more likely to show up in code searches.\n\nThere\u0027s also precedent in other functions here with `Oat`, `Dm`, and `Vdex`. If anything, I\u0027d say `BuildDexMetadataPath` above is the odd one out which ought to become `BuildDmPath` instead.",
+      "range": {
+        "startLine": 319,
+        "startChar": 25,
+        "endLine": 319,
+        "endChar": 42
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da45bbe8_575c57af",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T21:59:08Z",
+      "side": 1,
+      "message": "What if `sdm_path.isInDalvikCache` is set? Handle or add assertion?",
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
