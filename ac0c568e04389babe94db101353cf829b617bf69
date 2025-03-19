@@ -167,6 +167,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a5cdb2f_f79feb4d",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T19:05:35Z",
+      "side": 1,
+      "message": "Thank you.\n\nIt\u0027s a matter of hygiene and division of concerns - just handle all the parsing when the file is read, and avoid long arguments about why it\u0027s fine anyway, in particular if they depend on the current state of the code in other parts of the code base and hence are fragile.",
+      "parentUuid": "6ee05a0a_136a15a5",
+      "range": {
+        "startLine": 55,
+        "startChar": 27,
+        "endLine": 55,
+        "endChar": 35
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3df0388_90582586",

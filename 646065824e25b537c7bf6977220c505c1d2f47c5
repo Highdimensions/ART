@@ -282,6 +282,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68420e3f_f734d72f",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T19:05:35Z",
+      "side": 1,
+      "message": "\u003e Issues with it, if any, should have already been addressed before or don\u0027t matter\n\nIf issues are worth addressing, that applies to new and old code alike, so the right conclusion then is to do it properly in new code and add a TODO in old code.",
+      "parentUuid": "c67cdf7b_583eca98",
+      "range": {
+        "startLine": 55,
+        "startChar": 19,
+        "endLine": 55,
+        "endChar": 43
+      },
+      "revId": "646065824e25b537c7bf6977220c505c1d2f47c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fbf07851_f07fe043",
@@ -319,6 +343,30 @@
       "side": 1,
       "message": "`NewFile` is used in aosp/3539979. It\u0027s fine to take a more general `File` object here.",
       "parentUuid": "fbf07851_f07fe043",
+      "range": {
+        "startLine": 71,
+        "startChar": 21,
+        "endLine": 71,
+        "endChar": 25
+      },
+      "revId": "646065824e25b537c7bf6977220c505c1d2f47c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51bd7291_d00c2569",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-19T19:05:35Z",
+      "side": 1,
+      "message": "Discussed offline, you actually meant `Artd::maybeCreateSdc` in aosp/3540979.\n\n(Ideally we\u0027d move `NewFile` into libartbase, or perhaps even integrate it in `FdFile`, but that\u0027s a fairly sizable refactoring.)",
+      "parentUuid": "4d9c2bf5_1dacc381",
       "range": {
         "startLine": 71,
         "startChar": 21,
