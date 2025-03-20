@@ -21,8 +21,7 @@ namespace art HIDDEN {
 
 void InterpreterCache::Clear(Thread* owning_thread) {
   DCHECK(owning_thread->GetInterpreterCache() == this);
-  DCHECK(owning_thread == Thread::Current() || owning_thread->IsSuspended() ||
-         owning_thread->ReadFlag(ThreadFlag::kRunningFlipFunction, std::memory_order_relaxed));
+  DCHECK(owning_thread == Thread::Current() || owning_thread->IsSuspended());
   // Avoid using std::fill (or its variant) as there could be a concurrent sweep
   // happening by the GC thread and these functions may clear partially.
   for (Entry& entry : data_) {
