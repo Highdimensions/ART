@@ -40,6 +40,30 @@
       ],
       "revId": "9a8089d585a4e66a51ea4f2915ddc5e528c240cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c5c0ebb_881a68b8",
+        "filename": "artd/binder/com/android/server/art/SecureDexMetadataWithCompanionPaths.aidl",
+        "patchSetId": 13
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T23:15:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc0f412a_74ed1450",
+      "range": {
+        "startLine": 35,
+        "startChar": 38,
+        "endLine": 35,
+        "endChar": 39
+      },
+      "revId": "9a8089d585a4e66a51ea4f2915ddc5e528c240cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
