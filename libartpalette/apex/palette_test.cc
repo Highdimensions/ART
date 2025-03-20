@@ -30,6 +30,8 @@
 #include "android-modules-utils/sdk_level.h"
 #include "android/api-level.h"
 #include "nativehelper/JniInvocation.h"
+#else
+#include "base/common_art_test.h"
 #endif
 
 namespace {
@@ -93,19 +95,20 @@ TEST_F(PaletteClientTest, Ashmem) {
 #endif
 }
 
-TEST_F(PaletteClientTest, JniInvocation) {
 #ifndef ART_TARGET_ANDROID
-  // On host we need to use the runtime linked into the test to start a VM (e.g.
-  // by inheriting CommonArtTest), while on device it needs to launch the
-  // runtime through libnativehelper. Let's not bother on host since this test
-  // is only for native API coverage on device.
-  GTEST_SKIP() << "Will only spin up a VM on Android";
+class PaletteClientJniTest : public art::CommonArtTest {};
+
+TEST_F(PaletteClientJniTest, JniInvocation) {
 #else
+TEST_F(PaletteClientTest, JniInvocation) {
+#endif
   bool enabled;
   EXPECT_EQ(PALETTE_STATUS_OK, PaletteShouldReportJniInvocations(&enabled));
 
+#ifdef ART_TARGET_ANDROID
   JniInvocation jni_invocation;
   ASSERT_TRUE(jni_invocation.Init(nullptr));
+#endif
 
   std::string boot_class_path_string =
       art::testing::GetClassPathOption("-Xbootclasspath:", art::testing::GetLibCoreDexFileNames());
@@ -132,7 +135,6 @@ TEST_F(PaletteClientTest, JniInvocation) {
   PaletteNotifyEndJniInvocation(env);
 
   EXPECT_EQ(JNI_OK, jvm->DestroyJavaVM());
-#endif
 }
 
 TEST_F(PaletteClientTest, SetTaskProfiles) {
