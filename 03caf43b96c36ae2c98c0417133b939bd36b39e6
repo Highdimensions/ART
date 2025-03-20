@@ -46,6 +46,30 @@
       },
       "revId": "03caf43b96c36ae2c98c0417133b939bd36b39e6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cea3ad3_2572a2af",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2433,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T22:09:28Z",
+      "side": 0,
+      "message": "(Sorry, missed this one.)\n\nThen isn\u0027t the no-op change here to keep this and use a valid but unmanaged isa, i.e. replace \"*\" with something like \"x86\"?",
+      "parentUuid": "cb5b35ce_0e84ff48",
+      "range": {
+        "startLine": 2433,
+        "startChar": 2,
+        "endLine": 2433,
+        "endChar": 92
+      },
+      "revId": "03caf43b96c36ae2c98c0417133b939bd36b39e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
