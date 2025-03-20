@@ -70,6 +70,24 @@
       "parentUuid": "2ca40909_67e1b4cd",
       "revId": "3f1c77092f3f52706542c0fafad51c3d25ef9d92",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3551ec4b_a68511bf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-20T20:33:02Z",
+      "side": 1,
+      "message": "yeah, that way code like this can \"opt out\" of the warning. (but we should opt out in this specific file, not for the whole of art.)\n\nwe should probably change my error message too, to say something more like \"human judgement required\", and probably explain in the doc comment that it\u0027s only cases where you\u0027re using the malloc_usable_size() information _to use more of the allocation than you originally asked for_ that\u0027s problematic. whereas simply keeping a sum of allocation/deallocation byte counts [the other common use] is fine.\n\nhave a go at wording something yourself, but if you can\u0027t come up with anything you\u0027re happy with, feel free to make that my problem (\"dude --- you wrote this shitty error message and not-detailed-enough doc comment JUST DAYS AGO ... how about YOU fix it?\" :-) )",
+      "parentUuid": "ece4abbd_b51813c5",
+      "revId": "3f1c77092f3f52706542c0fafad51c3d25ef9d92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
