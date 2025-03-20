@@ -1,0 +1,193 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac5c1579_d4fe4e91",
+        "filename": "runtime/Android.bp",
+        "patchSetId": 12
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-20T08:36:30Z",
+      "side": 1,
+      "message": "Why do we need `libartd-runtime_deps` and `libartd-runtime_deps`?",
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc8a5f99_a385de0c",
+        "filename": "runtime/arch/arm64/asm_support_arm64.S",
+        "patchSetId": 12
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-20T08:36:30Z",
+      "side": 1,
+      "message": "Do we need both `ART_USE_RESTRICTED_MODE` and `ART_USE_SIMULATOR`?\nIs there a use case where `ART_USE_RESTRICTED_MODE\u003dtrue` and `ART_USE_SIMULATOR\u003dfalse`?",
+      "range": {
+        "startLine": 45,
+        "startChar": 7,
+        "endLine": 45,
+        "endChar": 30
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41c90d93_a2fb0b01",
+        "filename": "runtime/arch/arm64/asm_support_arm64.S",
+        "patchSetId": 12
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-20T08:36:30Z",
+      "side": 1,
+      "message": "Remove (does not correspond to the code above).",
+      "range": {
+        "startLine": 314,
+        "startChar": 45,
+        "endLine": 314,
+        "endChar": 70
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d07b88d3_056646d0",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-20T08:36:30Z",
+      "side": 1,
+      "message": "We could move the `slice()` call to `get_elf_entry_tuple()` (and rename the latter to `get_elf_entry_slice()`.",
+      "range": {
+        "startLine": 65,
+        "startChar": 30,
+        "endLine": 65,
+        "endChar": 35
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd4b4d2f_bbe2b8c1",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-20T08:36:30Z",
+      "side": 1,
+      "message": "needs",
+      "range": {
+        "startLine": 129,
+        "startChar": 53,
+        "endLine": 129,
+        "endChar": 57
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb0db07d_d8473f41",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-20T08:36:30Z",
+      "side": 1,
+      "message": "We could remove this copy and work on the final file, changing this function to `update_relocations_in_place(inout_file)`. The copying would be the responsibility of the caller which can actually avoid the extra copy by passing the final file name to `objcopy`.",
+      "range": {
+        "startLine": 159,
+        "startChar": 2,
+        "endLine": 159,
+        "endChar": 68
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "415ea16b_9b0c5ec1",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-20T08:36:30Z",
+      "side": 1,
+      "message": "Remove one blank line.",
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa96680b_c36c5cb5",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-20T08:36:30Z",
+      "side": 1,
+      "message": "We\u0027re calling `objcopy` twice for stripping and changing arch. Is it possible to do this in a single `objcopy` invocation?",
+      "range": {
+        "startLine": 191,
+        "startChar": 20,
+        "endLine": 191,
+        "endChar": 32
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03d7a641_fabe8845",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-20T08:36:30Z",
+      "side": 1,
+      "message": "Should we delete the `{in_file}-copied` and `{in_file}-stripped` after this? (Moot if we can merge the two `objcopy` invocations to one and avoid the last copy with `update_relocations_in_place()`.)",
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
