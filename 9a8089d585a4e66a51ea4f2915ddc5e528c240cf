@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc0f412a_74ed1450",
+        "filename": "artd/binder/com/android/server/art/SecureDexMetadataWithCompanionPaths.aidl",
+        "patchSetId": 13
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T22:19:13Z",
+      "side": 1,
+      "message": "The pressing question here is \"Why not the SDM file?\", so to spell that out a bit more clearly:\n\n\", because the SDM file is still installed with the app in those cases\"",
+      "range": {
+        "startLine": 35,
+        "startChar": 38,
+        "endLine": 35,
+        "endChar": 39
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "54635e82_65f508c4",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "artd/binder/com/android/server/art/SecureDexMetadataWithCompanionPaths.aidl",
+              "range": {
+                "startLine": 35,
+                "startChar": 0,
+                "endLine": 36,
+                "endChar": 0
+              },
+              "replacement": "     * Only applicable to the SDC file, because the SDM file is still installed with the app in those\n     * cases.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9a8089d585a4e66a51ea4f2915ddc5e528c240cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
