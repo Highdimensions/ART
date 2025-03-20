@@ -70,6 +70,30 @@
       },
       "revId": "bffe82887a5b5ba5640f0d042f837b04cd9a2a4c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f49699c_e9f7c943",
+        "filename": "artd/binder/com/android/server/art/ArtifactsLocation.aidl",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T23:16:14Z",
+      "side": 1,
+      "message": "I did mention it in PS11. Is there anything I\u0027m still missing? Maybe the parentheses? Added the parentheses.",
+      "parentUuid": "515b0f58_0e945316",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 25
+      },
+      "revId": "bffe82887a5b5ba5640f0d042f837b04cd9a2a4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
