@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "97b63c49_2e266128",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-20T18:33:46Z",
+      "side": 1,
+      "message": "interestingly, this one looks like it would actually be safe, since it\u0027s only using it for heap size tracking. +gbiv for thoughts on that.",
+      "revId": "3f1c77092f3f52706542c0fafad51c3d25ef9d92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
