@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "071c6908_f30cb956",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T11:23:26Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s indeed an integer too.\n\nBTW, the fact that you had to check things like `ApexInfo.getVersionCode` is exactly the reason why I don\u0027t like such validation on the SDC side. This feels like something based on the implementation details of another thing based on the implementation details of yet another thing.\n\nAnyway...",
+      "parentUuid": "e624c472_5ac31402",
+      "range": {
+        "startLine": 76,
+        "startChar": 75,
+        "endLine": 76,
+        "endChar": 79
+      },
+      "revId": "b09fa7d184c0409e8196f575b8321ff32f621765",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a2cb3762_d01c2865",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-03-19T19:05:35Z",
       "side": 1,
       "message": "Please test an invalid `apex-versions` value too.",
+      "range": {
+        "startLine": 86,
+        "startChar": 22,
+        "endLine": 86,
+        "endChar": 29
+      },
+      "revId": "b09fa7d184c0409e8196f575b8321ff32f621765",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "45191c35_2dbca60b",
+        "filename": "runtime/oat/sdc_file_test.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T11:23:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2cb3762_d01c2865",
       "range": {
         "startLine": 86,
         "startChar": 22,

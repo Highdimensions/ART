@@ -191,6 +191,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a89598e_e3e63748",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T11:23:26Z",
+      "side": 1,
+      "message": "It\u0027s indeed a matter of division of concerns, and there where our opinions differ. I actually think the opposite, which is that let\u0027s handle all possible inputs in the runtime\u0027s verification logic, to avoid assumptions on how the inputs get sanitized before reaching the runtime, because I think such assumptions are also fragile. I can\u0027t say one way of division is obviously better than the other.\n\nAnyway, either way is fine.",
+      "parentUuid": "4a5cdb2f_f79feb4d",
+      "range": {
+        "startLine": 55,
+        "startChar": 27,
+        "endLine": 55,
+        "endChar": 35
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3df0388_90582586",
