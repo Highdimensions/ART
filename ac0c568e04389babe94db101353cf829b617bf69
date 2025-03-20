@@ -215,6 +215,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2a5f16c_315cf27a",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T15:32:46Z",
+      "side": 1,
+      "message": "Sure, if the internals have",
+      "parentUuid": "7a89598e_e3e63748",
+      "range": {
+        "startLine": 55,
+        "startChar": 27,
+        "endLine": 55,
+        "endChar": 35
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3df0388_90582586",
