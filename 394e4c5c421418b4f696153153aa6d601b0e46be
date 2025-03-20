@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05354957_388615a7",
+        "filename": "libartservice/service/java/com/android/server/art/Dexopter.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T22:23:27Z",
+      "side": 1,
+      "message": "```suggestion\n                // The vdex is in the DM file which is passed to dex2oat as a separate flag whenever it exists.\n```",
+      "range": {
+        "startLine": 633,
+        "startChar": 19,
+        "endLine": 633,
+        "endChar": 40
+      },
+      "revId": "394e4c5c421418b4f696153153aa6d601b0e46be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
