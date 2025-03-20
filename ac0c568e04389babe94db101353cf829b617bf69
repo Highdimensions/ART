@@ -239,6 +239,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a373fde3_7f5191d0",
+        "filename": "runtime/oat/sdc_file.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T15:34:38Z",
+      "side": 1,
+      "message": "Sorry, please disregard the unfinished comment. I had some more things to say about that, but don\u0027t have the time right now. Maybe take it offline.",
+      "parentUuid": "b2a5f16c_315cf27a",
+      "range": {
+        "startLine": 55,
+        "startChar": 27,
+        "endLine": 55,
+        "endChar": 35
+      },
+      "revId": "ac0c568e04389babe94db101353cf829b617bf69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3df0388_90582586",
