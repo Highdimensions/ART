@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbc778d4_349ef1d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T19:41:24Z",
+      "side": 1,
+      "message": "Yes, there are no changes in the moved functions so they should behave the same.",
+      "parentUuid": "61c7caa0_4a83a3b3",
+      "revId": "d9aac94c9c5e866b05f6a357f45767f45e6b7098",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e514ca10_ec76d297",
@@ -55,6 +73,54 @@
           ]
         }
       ],
+      "revId": "d9aac94c9c5e866b05f6a357f45767f45e6b7098",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4efbc296_750af991",
+        "filename": "libartbase/base/testing.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T19:41:24Z",
+      "side": 1,
+      "message": "Nice catch! I\u0027ve changed generate-boot-image.cc as you suggest, but I\u0027d like to keep this function for use in other tests - see the child CL. It\u0027s to achieve consistency with `GetLibCoreDexFileNames()` without args.\n\nHowever I could drop the `core_only` flag if you prefer - it\u0027s only there (again) for consistency with `GetLibCoreDexFileNames`, but I don\u0027t know useful it is in practice.",
+      "parentUuid": "e514ca10_ec76d297",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 1
+      },
+      "revId": "d9aac94c9c5e866b05f6a357f45767f45e6b7098",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2631d56d_c973a709",
+        "filename": "libartbase/base/testing.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T19:41:24Z",
+      "side": 1,
+      "message": "Nice catch, thanks.",
+      "parentUuid": "e514ca10_ec76d297",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 1
+      },
       "revId": "d9aac94c9c5e866b05f6a357f45767f45e6b7098",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
