@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dac07b7e_1245a84e",
+        "filename": "artd/artd.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 999,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T16:39:28Z",
+      "side": 1,
+      "message": "😛",
+      "parentUuid": "be34e9da_9d1cc4ce",
+      "range": {
+        "startLine": 999,
+        "startChar": 43,
+        "endLine": 999,
+        "endChar": 86
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c801a054_fa626090",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "944fc32c_a0916850",
+        "filename": "artd/artd.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T16:39:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c801a054_fa626090",
+      "range": {
+        "startLine": 1017,
+        "startChar": 31,
+        "endLine": 1017,
+        "endChar": 85
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2a8dee5f_ca082668",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-03-19T21:59:08Z",
       "side": 1,
       "message": "Sorry, but what is this?",
+      "range": {
+        "startLine": 1030,
+        "startChar": 50,
+        "endLine": 1030,
+        "endChar": 53
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92a4f2f8_afb18c38",
+        "filename": "artd/artd.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T16:39:28Z",
+      "side": 1,
+      "message": "See [this doc](https://source.android.com/docs/security/features/selinux/concepts#security_contexts). TL;DR, it\u0027s part of the SELinux label of a file, in addition to the file type, to indicate which app and human user own the file.\n\nThis comment aims to explain why we don\u0027t do a second-round restorecon like what we do in `dexopt`, so it should be looked at together with [the comment in `dexopt`](https://source.corp.google.com/h/googleplex-android/platform/superproject/main/+/main:art/artd/artd.cc;l\u003d1160-1165;drc\u003d9a36de50228fdff9ed53e1dd9545eb446ed09943).",
+      "parentUuid": "2a8dee5f_ca082668",
       "range": {
         "startLine": 1030,
         "startChar": 50,
@@ -106,6 +178,24 @@
       "writtenOn": "2025-03-19T21:59:08Z",
       "side": 1,
       "message": "Please add a test for when the SDC file exists but has an invalid SDM timestamp.",
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc8cbceb_4dccf8d6",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T16:39:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09e9c969_761023d8",
       "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -181,6 +271,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "895cc4ac_b8be3aad",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T16:39:28Z",
+      "side": 1,
+      "message": "`ValidateAndGetIsa` accepts any ISA in [this list](https://cs.android.com/android/platform/superproject/main/+/main:art/libartbase/arch/instruction_set.cc;l\u003d62-72;drc\u003d77c14d181dcec8cec240cf2a99a401397582c6d8) regardless of ISAs supported by the device, so we are not that strict.\n\nOn the other hand, long story short, the input string comes from [`getAllAbis`](https://cs.android.com/android/platform/superproject/main/+/main:art/libartservice/service/java/com/android/server/art/Utils.java;l\u003d111;drc\u003d118b0803594c21065509c5ae6802f629c9a9c1a5) or [`getAllAbisForNames`](https://cs.android.com/android/platform/superproject/main/+/main:art/libartservice/service/java/com/android/server/art/Utils.java;l\u003d137;drc\u003d118b0803594c21065509c5ae6802f629c9a9c1a5), both of which only returns native ISAs (after translation, if needed).",
+      "parentUuid": "ba0ae233_5a0c43bc",
+      "range": {
+        "startLine": 162,
+        "startChar": 12,
+        "endLine": 162,
+        "endChar": 29
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "e07d1abe_38770fb5",
         "filename": "artd/path_utils.cc",
         "patchSetId": 9
@@ -192,6 +306,30 @@
       "writtenOn": "2025-03-19T21:59:08Z",
       "side": 1,
       "message": "I think the old code is cleaner since it avoids a useless format string, but maybe there\u0027s some other reason for this?",
+      "range": {
+        "startLine": 186,
+        "startChar": 20,
+        "endLine": 186,
+        "endChar": 24
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b370d368_a9cc9075",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T16:39:28Z",
+      "side": 1,
+      "message": "The reason is code size. `Error()` constructs an error builder, which involves a stringstream and therefore adds a lot of code, while `Errorf()` constructs an error right away without an error builder.",
+      "parentUuid": "e07d1abe_38770fb5",
       "range": {
         "startLine": 186,
         "startChar": 20,
@@ -225,6 +363,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad7392b5_a579cc55",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T16:39:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "878c085f_450919c1",
+      "range": {
+        "startLine": 319,
+        "startChar": 25,
+        "endLine": 319,
+        "endChar": 42
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da45bbe8_575c57af",
@@ -238,6 +400,24 @@
       "writtenOn": "2025-03-19T21:59:08Z",
       "side": 1,
       "message": "What if `sdm_path.isInDalvikCache` is set? Handle or add assertion?",
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d7a5406_d4862133",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T16:39:28Z",
+      "side": 1,
+      "message": "We are using the struct `SecureDexMetadataWithCompanionPaths` to represent both the SDM and SDC files and get paths of both from the same object (see `artd/artd.cc` line 1002-1003), so, for SDM, `isInDalvikCache` doesn\u0027t apply and is possible to have either value. We do want to accept both `isInDalvikCache` being true and false and return the same result in both cases.",
+      "parentUuid": "da45bbe8_575c57af",
       "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

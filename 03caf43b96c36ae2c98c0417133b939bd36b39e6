@@ -22,6 +22,30 @@
       },
       "revId": "03caf43b96c36ae2c98c0417133b939bd36b39e6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb5b35ce_0e84ff48",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2433,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T16:39:28Z",
+      "side": 0,
+      "message": "Before this CL, `deleteRuntimeArtifacts` treats the \"\\*\" in the `isa` field as a normal string and deletes the runtime artifacts in the folder named \"\\*\". After this CL, `deleteRuntimeArtifacts` treats the \"\\*\" in the `isa` field as invalid input and does nothing, so a file like `/data/user/0/com.android.foo/cache/oat_primary/*/base.art` is not interesting for this test anymore.\n\nThis behavior change is fine as explained in the comment above the test case: since the caller is never supposed to use a wildcard, as long as `deleteRuntimeArtifacts` doesn\u0027t treat \"\\*\" as a wildcard, either behavior is acceptable.",
+      "parentUuid": "2591fc16_0f2a51b6",
+      "range": {
+        "startLine": 2433,
+        "startChar": 2,
+        "endLine": 2433,
+        "endChar": 92
+      },
+      "revId": "03caf43b96c36ae2c98c0417133b939bd36b39e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
