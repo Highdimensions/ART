@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e33dcc6_4c55d384",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 764,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T19:33:18Z",
+      "side": 1,
+      "message": "Good, this would typically fail with a whole second timestamp resolution.",
+      "range": {
+        "startLine": 763,
+        "startChar": 0,
+        "endLine": 764,
+        "endChar": 23
+      },
+      "revId": "b190ee3bc986c1b83484c90c3bd66b2d5926b2f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b01d0c22_5579c36f",
+        "filename": "runtime/oat/sdc_file_test.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T19:33:18Z",
+      "side": 1,
+      "message": "Please test a number that requires more than 32 bits.",
+      "range": {
+        "startLine": 57,
+        "startChar": 50,
+        "endLine": 57,
+        "endChar": 59
+      },
+      "revId": "b190ee3bc986c1b83484c90c3bd66b2d5926b2f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

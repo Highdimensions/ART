@@ -142,6 +142,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "a60c134e_e118c6e0",
+        "filename": "artd/artd.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T19:33:18Z",
+      "side": 1,
+      "message": "Ok, I was unused to the \"MLS\" term. Thanks for the offline explanation.\n\n\u003e so it should be looked at together with the comment in dexopt.\n\nI see, I didn\u0027t get that reference so may it\u0027s worth spelling it out a bit more explicitly, e.g: \"Unlike the two `restorecon_` calls in `dexopt()` ...\"",
+      "parentUuid": "92a4f2f8_afb18c38",
+      "range": {
+        "startLine": 1030,
+        "startChar": 50,
+        "endLine": 1030,
+        "endChar": 53
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "949c66f9_6b571374",
@@ -340,6 +364,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc61a8e7_b9de50a4",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T19:33:18Z",
+      "side": 1,
+      "message": "Interesting. I wonder how many places people miss that - sounds like something that could really use a linter check.",
+      "parentUuid": "b370d368_a9cc9075",
+      "range": {
+        "startLine": 186,
+        "startChar": 20,
+        "endLine": 186,
+        "endChar": 24
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "878c085f_450919c1",
@@ -418,6 +466,24 @@
       "side": 1,
       "message": "We are using the struct `SecureDexMetadataWithCompanionPaths` to represent both the SDM and SDC files and get paths of both from the same object (see `artd/artd.cc` line 1002-1003), so, for SDM, `isInDalvikCache` doesn\u0027t apply and is possible to have either value. We do want to accept both `isInDalvikCache` being true and false and return the same result in both cases.",
       "parentUuid": "da45bbe8_575c57af",
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c20ebc01_7b134ca2",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T19:33:18Z",
+      "side": 1,
+      "message": "Oh, tricky. As discussed offline, please:\n\n1) Add a comment to the `isInDalvikCache` field in the AIDL file explaining that it\u0027s not applicable to SDM files because they\u0027re next to the dex file even when dalvik-cache is used, and that can happen (at least) for incremental-fs (since it\u0027s easy to forget that dalvik-cache is used for more than just system partition apps).\n\n2) Add a comment here that it\u0027s intentional that `isInDalvikCache` is ignored, referring the comment above.",
+      "parentUuid": "2d7a5406_d4862133",
       "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
