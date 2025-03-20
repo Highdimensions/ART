@@ -1,0 +1,91 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e7b69e6_c687bd16",
+        "filename": "libartservice/service/java/com/android/server/art/PrimaryDexopter.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T17:49:34Z",
+      "side": 1,
+      "message": "Before this there\u0027s a state on disk where we have an SDM file without its corresponding SDC file. Please add some comments to runtime/oat/sdc_file.h to lay down what applies to that state, something like this:\n\n- The SDC file augments the OAT files in the corresponding SDM file, so without it the SDM file is incomplete. That means:\n  - The runtime ignores an SDM file without a corresponding SDC.\n  - ART Service generates the corresponding SDC on dexopt if it is missing or stale.\n  - Other processes like the file GC considers an SDM file without a corresponding SDC invalid and may clean it up. This may race with a package installation before the SDC is created, but it\u0027s rare and the effect is recoverable, so it\u0027s considered acceptable.",
+      "range": {
+        "startLine": 186,
+        "startChar": 16,
+        "endLine": 186,
+        "endChar": 30
+      },
+      "revId": "9248daf16df6069b2dd405dae595fa866575bbf1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd6ed247_edc1c700",
+        "filename": "libartservice/service/javatests/com/android/server/art/PrimaryDexopterTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 979,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T17:49:34Z",
+      "side": 1,
+      "message": "Typo.",
+      "range": {
+        "startLine": 979,
+        "startChar": 34,
+        "endLine": 979,
+        "endChar": 43
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "a12915be_5b45bf21",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/javatests/com/android/server/art/PrimaryDexopterTest.java",
+              "range": {
+                "startLine": 979,
+                "startChar": 0,
+                "endLine": 980,
+                "endChar": 0
+              },
+              "replacement": "    public void testMaybeCreateSdcCompilerFilterSkip() throws Exception {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9248daf16df6069b2dd405dae595fa866575bbf1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0eb96013_0fa15ca6",
+        "filename": "libartservice/service/javatests/com/android/server/art/PrimaryDexopterTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 979,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-20T17:49:34Z",
+      "side": 1,
+      "message": "Please also verify that the dexopt calls are skipped. (Even though there may already be a test for that I think it\u0027s appropriate to include here too, for the sake of completeness.)",
+      "range": {
+        "startLine": 979,
+        "startChar": 49,
+        "endLine": 979,
+        "endChar": 53
+      },
+      "revId": "9248daf16df6069b2dd405dae595fa866575bbf1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
