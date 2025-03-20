@@ -1,0 +1,65 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1887e586_72935136",
+        "filename": "test/default_run.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 926,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-20T13:05:23Z",
+      "side": 1,
+      "message": "We shouldn\u0027t have this anymore, I think you can safely remove it as a follow-up.",
+      "range": {
+        "startLine": 926,
+        "startChar": 17,
+        "endLine": 926,
+        "endChar": 41
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "d83b8d3b_0e50c7c3",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "test/default_run.py",
+              "range": {
+                "startLine": 923,
+                "startChar": 0,
+                "endLine": 931,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "test/default_run.py",
+              "range": {
+                "startLine": 932,
+                "startChar": 0,
+                "endLine": 933,
+                "endChar": 0
+              },
+              "replacement": "  dex2oat_cmdline \u003d re.sub(\" +\", \" \", dex2oat_cmdline)\n"
+            },
+            {
+              "path": "test/default_run.py",
+              "range": {
+                "startLine": 935,
+                "startChar": 0,
+                "endLine": 936,
+                "endChar": 0
+              },
+              "replacement": "  vdex_cmdline \u003d re.sub(\" +\", \" \", vdex_cmdline)\n"
+            }
+          ]
+        }
+      ],
+      "revId": "19c1b6bbf836050c5b31819f78a304a55dca8f82",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
