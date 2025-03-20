@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b0062a0_e469b2d3",
+        "filename": "libartservice/service/java/com/android/server/art/PrimaryDexopter.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T21:11:25Z",
+      "side": 1,
+      "message": "Sure, I\u0027ll add comments in a separate CL.",
+      "parentUuid": "4e7b69e6_c687bd16",
+      "range": {
+        "startLine": 186,
+        "startChar": 16,
+        "endLine": 186,
+        "endChar": 30
+      },
+      "revId": "9248daf16df6069b2dd405dae595fa866575bbf1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd6ed247_edc1c700",
@@ -78,6 +102,54 @@
       "writtenOn": "2025-03-20T17:49:34Z",
       "side": 1,
       "message": "Please also verify that the dexopt calls are skipped. (Even though there may already be a test for that I think it\u0027s appropriate to include here too, for the sake of completeness.)",
+      "range": {
+        "startLine": 979,
+        "startChar": 49,
+        "endLine": 979,
+        "endChar": 53
+      },
+      "revId": "9248daf16df6069b2dd405dae595fa866575bbf1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e96e52fa_06355a2a",
+        "filename": "libartservice/service/javatests/com/android/server/art/PrimaryDexopterTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 979,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T21:11:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd6ed247_edc1c700",
+      "range": {
+        "startLine": 979,
+        "startChar": 34,
+        "endLine": 979,
+        "endChar": 43
+      },
+      "revId": "9248daf16df6069b2dd405dae595fa866575bbf1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68dc8985_0181398e",
+        "filename": "libartservice/service/javatests/com/android/server/art/PrimaryDexopterTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 979,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T21:11:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0eb96013_0fa15ca6",
       "range": {
         "startLine": 979,
         "startChar": 49,
