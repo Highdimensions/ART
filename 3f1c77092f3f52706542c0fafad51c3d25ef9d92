@@ -16,6 +16,24 @@
       "message": "interestingly, this one looks like it would actually be safe, since it\u0027s only using it for heap size tracking. +gbiv for thoughts on that.",
       "revId": "3f1c77092f3f52706542c0fafad51c3d25ef9d92",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe7f4a07_ee8a50b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2025-03-20T18:49:46Z",
+      "side": 1,
+      "message": "yeah, should be totally safe. Maybe we can guard the addition of the check on something like `_BIONIC_ASSERT_MALLOC_USABLE_SIZE_IS_SAFE`?",
+      "parentUuid": "97b63c49_2e266128",
+      "revId": "3f1c77092f3f52706542c0fafad51c3d25ef9d92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
