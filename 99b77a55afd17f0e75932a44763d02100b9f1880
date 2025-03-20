@@ -34,6 +34,24 @@
       "parentUuid": "ab5699c5_b6a9829a",
       "revId": "99b77a55afd17f0e75932a44763d02100b9f1880",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9a135e7_16fe9146",
+        "filename": "test/run_test_build.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1065473
+      },
+      "writtenOn": "2025-03-20T10:02:38Z",
+      "side": 1,
+      "message": "Works for me as well\n\nIt intends to match dot (eg `3.14`)",
+      "parentUuid": "a52a03d7_1d8552d6",
+      "revId": "99b77a55afd17f0e75932a44763d02100b9f1880",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
