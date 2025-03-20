@@ -168,6 +168,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "531c78be_4e25d3c7",
+        "filename": "artd/artd.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T21:18:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a60c134e_e118c6e0",
+      "range": {
+        "startLine": 1030,
+        "startChar": 50,
+        "endLine": 1030,
+        "endChar": 53
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "949c66f9_6b571374",
         "filename": "artd/artd.cc",
         "patchSetId": 9
@@ -388,6 +412,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5da71798_3d255a41",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T21:18:09Z",
+      "side": 1,
+      "message": "I don\u0027t think people even know that. I only found this out when investigating b/334176674.",
+      "parentUuid": "cc61a8e7_b9de50a4",
+      "range": {
+        "startLine": 186,
+        "startChar": 20,
+        "endLine": 186,
+        "endChar": 24
+      },
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "878c085f_450919c1",
@@ -484,6 +532,24 @@
       "side": 1,
       "message": "Oh, tricky. As discussed offline, please:\n\n1) Add a comment to the `isInDalvikCache` field in the AIDL file explaining that it\u0027s not applicable to SDM files because they\u0027re next to the dex file even when dalvik-cache is used, and that can happen (at least) for incremental-fs (since it\u0027s easy to forget that dalvik-cache is used for more than just system partition apps).\n\n2) Add a comment here that it\u0027s intentional that `isInDalvikCache` is ignored, referring the comment above.",
       "parentUuid": "2d7a5406_d4862133",
+      "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5303a6b_745657b5",
+        "filename": "artd/path_utils.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T21:18:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c20ebc01_7b134ca2",
       "revId": "00b78c2ad4f44e11ffe5d588a01ec655c8a95616",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

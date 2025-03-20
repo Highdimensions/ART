@@ -45,6 +45,30 @@
       },
       "revId": "b190ee3bc986c1b83484c90c3bd66b2d5926b2f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4df3a3bc_e4af5d40",
+        "filename": "runtime/oat/sdc_file_test.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-20T21:18:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b01d0c22_5579c36f",
+      "range": {
+        "startLine": 57,
+        "startChar": 50,
+        "endLine": 57,
+        "endChar": 59
+      },
+      "revId": "b190ee3bc986c1b83484c90c3bd66b2d5926b2f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
