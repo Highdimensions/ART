@@ -52,6 +52,24 @@
       "parentUuid": "fe7f4a07_ee8a50b2",
       "revId": "3f1c77092f3f52706542c0fafad51c3d25ef9d92",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ece4abbd_b51813c5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2015671
+      },
+      "writtenOn": "2025-03-20T20:16:42Z",
+      "side": 1,
+      "message": "I just wanted to understand better but you mean to add this check to libc/include/malloc.h alongside #if defined(_FORTIFY_SOURCE)",
+      "parentUuid": "2ca40909_67e1b4cd",
+      "revId": "3f1c77092f3f52706542c0fafad51c3d25ef9d92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
