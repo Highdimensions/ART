@@ -16,6 +16,24 @@
       "message": "I uploaded aosp/3534221 which is pending review that solves this warning too. Locally the adding `r` didn\u0027t work for me and I had to use `\\\\` to just escape the `\\`. Can you run `art/test/testrunner/testrunner.py --host --64 --optimizing -b` and make sure it works with the `r` too?",
       "revId": "99b77a55afd17f0e75932a44763d02100b9f1880",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a52a03d7_1d8552d6",
+        "filename": "test/run_test_build.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-20T09:59:59Z",
+      "side": 1,
+      "message": "Works for me with `art/test/testrunner/testrunner.py -b --host --optimizing` (missing `--64` and therefore running twice as many tests as your command).\n\nTH run has started, so let\u0027s submit this now. We can reconsider later whether the `\\` in the expression is actually unintended. I think the `\\` inside `[]` does not actually act as an escape and I\u0027m not sure if we\u0027re actually expecting to match a backslash.",
+      "parentUuid": "ab5699c5_b6a9829a",
+      "revId": "99b77a55afd17f0e75932a44763d02100b9f1880",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
