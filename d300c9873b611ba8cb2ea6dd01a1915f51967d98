@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1bc6b9f9_e98645a7",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-21T11:21:40Z",
+      "side": 1,
+      "message": "Nit: Add argument comment.",
+      "range": {
+        "startLine": 108,
+        "startChar": 34,
+        "endLine": 108,
+        "endChar": 41
+      },
+      "revId": "d300c9873b611ba8cb2ea6dd01a1915f51967d98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f23ad07_bc821e20",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-21T11:21:40Z",
+      "side": 1,
+      "message": "It\u0027s not obvious to me what\u0027s the relationship between this code and the code below. I guess this is to \"find the JNI_CreateJavaVM implementation\", like documented [here](https://cs.android.com/android/platform/superproject/main/+/main:art/dalvikvm/dalvikvm.cc;l\u003d202;drc\u003d118b0803594c21065509c5ae6802f629c9a9c1a5), using libart on device?",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 44
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ad11938c_0101ef5d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartpalette/apex/palette_test.cc",
+              "range": {
+                "startLine": 107,
+                "startChar": 0,
+                "endLine": 107,
+                "endChar": 0
+              },
+              "replacement": "  // Find the JNI_CreateJavaVM implementation.\n"
+            },
+            {
+              "path": "libartpalette/apex/palette_test.cc",
+              "range": {
+                "startLine": 110,
+                "startChar": 0,
+                "endLine": 110,
+                "endChar": 0
+              },
+              "replacement": "  // Create a JavaVM with the same boot class path as the runtime.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "d300c9873b611ba8cb2ea6dd01a1915f51967d98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c887d9d9_9c9b581c",
+        "filename": "test/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-21T11:21:40Z",
+      "side": 1,
+      "message": "It\u0027s a bit hard to read the whole sentence. Maybe add commas around \"depending on test configuration\"?",
+      "range": {
+        "startLine": 368,
+        "startChar": 76,
+        "endLine": 369,
+        "endChar": 24
+      },
+      "revId": "d300c9873b611ba8cb2ea6dd01a1915f51967d98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
