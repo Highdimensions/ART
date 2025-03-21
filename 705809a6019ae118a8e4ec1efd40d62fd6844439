@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cb96f80_3134706b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Thanks Vladimir. All but one comment addressed here: aosp/3555546.",
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5136c1eb_8cad7a7e",
@@ -31,6 +48,30 @@
       "writtenOn": "2025-01-29T16:14:45Z",
       "side": 1,
       "message": "Remove this unnecessary argument. Define a local variable\n\n    vixl::aarch64::MacroAssembler* vixl_assembler \u003d assembler-\u003eGetVIXLAssembler();",
+      "range": {
+        "startLine": 1567,
+        "startChar": 44,
+        "endLine": 1567,
+        "endChar": 89
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb8e4996_03a4c3cd",
+        "filename": "compiler/optimizing/code_generator_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 1567,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5136c1eb_8cad7a7e",
       "range": {
         "startLine": 1567,
         "startChar": 44,
@@ -64,6 +105,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f75a7aa7_cf58c549",
+        "filename": "compiler/optimizing/code_generator_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 1569,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35dcacff_12a0a087",
+      "range": {
+        "startLine": 1569,
+        "startChar": 44,
+        "endLine": 1569,
+        "endChar": 68
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9dd89442_69f62576",
@@ -77,6 +142,30 @@
       "writtenOn": "2025-01-29T16:14:45Z",
       "side": 1,
       "message": "Likewise, this can be calculated from `preserved_core_registers` and `preserved_fp_registers`.\n\nAlternatively, pass `uint32_t core_spill_mask` and `uint32_t fp_spill_mask` instead of the four arguments.",
+      "range": {
+        "startLine": 1571,
+        "startChar": 44,
+        "endLine": 1571,
+        "endChar": 75
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a38c745_c46b104c",
+        "filename": "compiler/optimizing/code_generator_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 1571,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9dd89442_69f62576",
       "range": {
         "startLine": 1571,
         "startChar": 44,
@@ -110,6 +199,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d2b3927_1f3df702",
+        "filename": "compiler/optimizing/code_generator_arm64.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05a88a5d_84e298c7",
+      "range": {
+        "startLine": 663,
+        "startChar": 14,
+        "endLine": 663,
+        "endChar": 32
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "195dbcd0_6f23db12",
@@ -123,6 +236,30 @@
       "writtenOn": "2025-01-29T16:14:45Z",
       "side": 1,
       "message": "Rename to `BuildStackMaps()` to align with the normal codegen. The `Get` here is misleading you to a use-after-free coding pattern. (Luckily, that\u0027s `Arena` memory and therefore not a real security vulnerability as long as you\u0027re not destroying the `ScopedArenaAllocator`.)",
+      "range": {
+        "startLine": 73,
+        "startChar": 37,
+        "endLine": 73,
+        "endChar": 49
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce883f87_021dec2e",
+        "filename": "compiler/optimizing/fast_compiler.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "195dbcd0_6f23db12",
       "range": {
         "startLine": 73,
         "startChar": 37,
@@ -156,6 +293,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "49e62bc3_7e5c468f",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a739439_55c60426",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 41
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a1e5f978_05f658a6",
@@ -169,6 +330,30 @@
       "writtenOn": "2025-01-29T16:14:45Z",
       "side": 1,
       "message": "Avoid implicit conversion to bool, use `!\u003d 0`.",
+      "range": {
+        "startLine": 257,
+        "startChar": 11,
+        "endLine": 257,
+        "endChar": 12
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "436bafa9_87c87e99",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1e5f978_05f658a6",
       "range": {
         "startLine": 257,
         "startChar": 11,
@@ -202,6 +387,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e1124c6_12c9e1f6",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c28426f_06211587",
+      "range": {
+        "startLine": 324,
+        "startChar": 9,
+        "endLine": 324,
+        "endChar": 13
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "803d20e0_30c09257",
@@ -215,6 +424,30 @@
       "writtenOn": "2025-01-29T16:14:45Z",
       "side": 1,
       "message": "`previous_invoke_return_type_`",
+      "range": {
+        "startLine": 325,
+        "startChar": 17,
+        "endLine": 325,
+        "endChar": 38
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fed2629d_8018d3f4",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "803d20e0_30c09257",
       "range": {
         "startLine": 325,
         "startChar": 17,
@@ -248,6 +481,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "35f5ed4c_c26e5452",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7575b165_d96fb94a",
+      "range": {
+        "startLine": 328,
+        "startChar": 38,
+        "endLine": 328,
+        "endChar": 40
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3c76640b_16a1c831",
@@ -261,6 +518,30 @@
       "writtenOn": "2025-01-29T16:14:45Z",
       "side": 1,
       "message": "const Instruction* next \u003d (it !\u003d end) ? \u0026it-\u003eInst() : nullptr;",
+      "range": {
+        "startLine": 389,
+        "startChar": 4,
+        "endLine": 393,
+        "endChar": 5
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbebc0f7_d0fa7ff1",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Code has changed, I now need access to the pair.",
+      "parentUuid": "3c76640b_16a1c831",
       "range": {
         "startLine": 389,
         "startChar": 4,
@@ -294,6 +575,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c25f8fdf_525020de",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7b95411_c901a713",
+      "range": {
+        "startLine": 404,
+        "startChar": 4,
+        "endLine": 406,
+        "endChar": 5
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "635d4dfa_b9851ce8",
@@ -311,6 +616,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5817e8a_af3f137b",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "635d4dfa_b9851ce8",
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f034f880_b00c2061",
@@ -324,6 +647,30 @@
       "writtenOn": "2025-01-29T16:14:45Z",
       "side": 1,
       "message": "Can you refactor and reuse the code from `CodeGeneratorARM64::GenerateFrameEntry()`?",
+      "range": {
+        "startLine": 562,
+        "startChar": 2,
+        "endLine": 562,
+        "endChar": 18
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58bd5eef_e344b744",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Let me try that in a follow-up CL.",
+      "parentUuid": "f034f880_b00c2061",
       "range": {
         "startLine": 562,
         "startChar": 2,
@@ -357,6 +704,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "757fba86_73ac64cd",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34253f40_4c6a8266",
+      "range": {
+        "startLine": 619,
+        "startChar": 43,
+        "endLine": 619,
+        "endChar": 65
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f52b825a_cc742669",
@@ -370,6 +741,30 @@
       "writtenOn": "2025-01-29T16:14:45Z",
       "side": 1,
       "message": "`return type`",
+      "range": {
+        "startLine": 800,
+        "startChar": 21,
+        "endLine": 800,
+        "endChar": 25
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5b31b32_d2d025de",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 800,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f52b825a_cc742669",
       "range": {
         "startLine": 800,
         "startChar": 21,
@@ -403,6 +798,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "066d3eef_ac83191b",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "120a133b_1c7716c7",
+      "range": {
+        "startLine": 873,
+        "startChar": 4,
+        "endLine": 873,
+        "endChar": 5
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c805a0d_8e2db8dc",
@@ -416,6 +835,30 @@
       "writtenOn": "2025-01-29T16:14:45Z",
       "side": 1,
       "message": "`h_klass-\u003eIsClassClass()`",
+      "range": {
+        "startLine": 922,
+        "startChar": 6,
+        "endLine": 922,
+        "endChar": 42
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16a51373_cb526199",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c805a0d_8e2db8dc",
       "range": {
         "startLine": 922,
         "startChar": 6,
@@ -443,6 +886,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7ee3de4_b453072e",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 978,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77b885c8_0bf80052",
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "09d5a3ec_693c05e6",
@@ -466,6 +927,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed0f6635_07fff06b",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 1969,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09d5a3ec_693c05e6",
+      "range": {
+        "startLine": 1969,
+        "startChar": 6,
+        "endLine": 1969,
+        "endChar": 24
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0533c96f_5ea54bfe",
@@ -479,6 +964,30 @@
       "writtenOn": "2025-01-29T16:14:45Z",
       "side": 1,
       "message": "The `ScopedArenaVector\u003c\u003e` is destroyed at the end of the statement, leading to use-after-free.\n\nYou should call `GetStackMaps()` (preferrably renamed to `BuildStackMaps()`) only once and store it in a local variable for correctness (ASAN builds) and speed.",
+      "range": {
+        "startLine": 1441,
+        "startChar": 22,
+        "endLine": 1441,
+        "endChar": 58
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e3be552_a8b51ea4",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 1441,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-21T13:54:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0533c96f_5ea54bfe",
       "range": {
         "startLine": 1441,
         "startChar": 22,
