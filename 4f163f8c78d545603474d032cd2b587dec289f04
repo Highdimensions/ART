@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d88f46f_624926aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T14:44:21Z",
+      "side": 1,
+      "message": "I seem to recall there was a linter that caught this sort of thing, but maybe I\u0027ve only dreamed that..?",
+      "revId": "4f163f8c78d545603474d032cd2b587dec289f04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
