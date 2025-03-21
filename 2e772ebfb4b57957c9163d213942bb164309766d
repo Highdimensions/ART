@@ -46,6 +46,30 @@
       },
       "revId": "2e772ebfb4b57957c9163d213942bb164309766d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7fe26a0_cf54bda1",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtManagerLocalTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 1283,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T14:49:04Z",
+      "side": 1,
+      "message": "Thanks for the pointer, but I still wonder why \"the usable parts don\u0027t contain AOT-compiled code\" is necessary.",
+      "parentUuid": "f637f755_230aed1c",
+      "range": {
+        "startLine": 1283,
+        "startChar": 44,
+        "endLine": 1283,
+        "endChar": 62
+      },
+      "revId": "2e772ebfb4b57957c9163d213942bb164309766d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
