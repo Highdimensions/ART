@@ -22,6 +22,30 @@
       },
       "revId": "4be0254a650c80ec52f9a0f9e4e083cf8ffcca26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c517a6e1_6140b670",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 6106,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-03-21T13:48:38Z",
+      "side": 1,
+      "message": "Thanks, fix is in aosp/3555545.",
+      "parentUuid": "14a7c1d7_8837eb51",
+      "range": {
+        "startLine": 6106,
+        "startChar": 30,
+        "endLine": 6106,
+        "endChar": 54
+      },
+      "revId": "4be0254a650c80ec52f9a0f9e4e083cf8ffcca26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
