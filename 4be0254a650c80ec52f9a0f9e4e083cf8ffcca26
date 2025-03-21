@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14a7c1d7_8837eb51",
+        "filename": "compiler/optimizing/intrinsics_arm64.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 6106,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T12:59:13Z",
+      "side": 1,
+      "message": "`MaybeUnpoisonHeapReference`",
+      "range": {
+        "startLine": 6106,
+        "startChar": 30,
+        "endLine": 6106,
+        "endChar": 54
+      },
+      "revId": "4be0254a650c80ec52f9a0f9e4e083cf8ffcca26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
