@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8a38fed_826dc393",
+        "filename": "libartservice/service/java/com/android/server/art/PrimaryDexopter.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T12:03:45Z",
+      "side": 1,
+      "message": "Looks like this always gets called after every dexopt, regardless whether there are cloud files or not. Have you considered using the state before the dexopt to only do it if they were there before? If it\u0027s not too complicated it may be worth it to avoid an RPC roundtrip.",
+      "range": {
+        "startLine": 214,
+        "startChar": 32,
+        "endLine": 214,
+        "endChar": 49
+      },
+      "revId": "447aeaca2bb8c50663864aa827c9ec41c5e535eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
