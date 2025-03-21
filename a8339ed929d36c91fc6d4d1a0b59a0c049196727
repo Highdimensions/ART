@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0fc1e97_6c9c74bd",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T16:19:06Z",
+      "side": 1,
+      "message": "What about the disabling of `-Wshadow` and `-Wdeprecated-declarations`? We still have that for all other `vixl` includes.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 35
+      },
+      "revId": "a8339ed929d36c91fc6d4d1a0b59a0c049196727",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a5187e2_e0dca7b0",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T16:19:06Z",
+      "side": 1,
+      "message": "Unnecessary `std::string` construction. We can pass `const char*` directly.",
+      "range": {
+        "startLine": 479,
+        "startChar": 35,
+        "endLine": 479,
+        "endChar": 47
+      },
+      "revId": "a8339ed929d36c91fc6d4d1a0b59a0c049196727",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db4d7dbd_0d312920",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1488,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T16:19:06Z",
+      "side": 1,
+      "message": "The `ScopedArenaVector\u003c\u003e` is destroyed at the end of the statement. We really need to hold onto it and not just take an `ArrayRef\u003c\u003e` that immediately looks like a dangling reference.",
+      "range": {
+        "startLine": 1488,
+        "startChar": 41,
+        "endLine": 1488,
+        "endChar": 98
+      },
+      "revId": "a8339ed929d36c91fc6d4d1a0b59a0c049196727",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21488f5a_77b7d642",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1505,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T16:19:06Z",
+      "side": 1,
+      "message": "We should limit the lifetime of `method_debug_info` to this small scope to make sure the referenced data is not abandoned when the `stack_maps` goes out of scope. (For readability: A reader should not need to check that the `method_debug_info` with the dangling reference is not used later.)\n\nTo avoid duplicating the initialization code from lines 1348-1361, that part should be rewritten as a lambda functor and used to initialize local `method_debug_info` variables in the three scopes that call `GenerateJitDebugInfo()`.",
+      "range": {
+        "startLine": 1505,
+        "startChar": 6,
+        "endLine": 1505,
+        "endChar": 23
+      },
+      "revId": "a8339ed929d36c91fc6d4d1a0b59a0c049196727",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
