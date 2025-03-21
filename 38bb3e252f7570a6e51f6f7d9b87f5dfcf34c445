@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "363ef6cb_84298bf3",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 17
+      },
+      "lineNbr": 4933,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-21T00:26:52Z",
+      "side": 1,
+      "message": "That should be essentially impossible. We should really only iterate if another process mucked with our priority in the interim, and this should be done only once in each \"root\" zygote before system server gets started, so it\u0027s not clear who could do that.\n\nBut you\u0027re right that it\u0027s better to crash if we do this to often in case of misconfiguration or bugs. Done.",
+      "parentUuid": "f2def5e8_cf2475ed",
+      "range": {
+        "startLine": 4933,
+        "startChar": 16,
+        "endLine": 4933,
+        "endChar": 30
+      },
+      "revId": "38bb3e252f7570a6e51f6f7d9b87f5dfcf34c445",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "43ae04ac_e4fc6af0",
@@ -78,6 +102,30 @@
           ]
         }
       ],
+      "revId": "38bb3e252f7570a6e51f6f7d9b87f5dfcf34c445",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "904267b0_7757cbe1",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 17
+      },
+      "lineNbr": 4938,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-21T00:26:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43ae04ac_e4fc6af0",
+      "range": {
+        "startLine": 4938,
+        "startChar": 43,
+        "endLine": 4938,
+        "endChar": 46
+      },
       "revId": "38bb3e252f7570a6e51f6f7d9b87f5dfcf34c445",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
