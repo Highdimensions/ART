@@ -304,6 +304,15 @@ bool NeedsNativeBridge(const char* instruction_set) {
 
 #ifndef __APPLE__
 static bool MountCpuinfo(const char* cpuinfo_path) {
+
+#ifdef __ANDROID__
+  // Allow only paths that start with "/system"
+  if (strncmp(cpuinfo_path, "/system", 7) != 0) {
+    ALOGW("Mounting is only allowed for paths under /system: %s", cpuinfo_path);
+    return false;
+  }
+#endif
+
   // If the file does not exist, the mount command will fail,
   // so we save the extra file existence check.
   if (TEMP_FAILURE_RETRY(mount(cpuinfo_path,        // Source.
