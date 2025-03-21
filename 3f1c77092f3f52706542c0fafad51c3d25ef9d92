@@ -88,6 +88,24 @@
       "parentUuid": "ece4abbd_b51813c5",
       "revId": "3f1c77092f3f52706542c0fafad51c3d25ef9d92",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cee4523c_3b32abc5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2015671
+      },
+      "writtenOn": "2025-03-21T21:38:30Z",
+      "side": 1,
+      "message": "I added the check and changed this commit to just defining _BIONIC_ASSERT_MALLOC_USABLE_SIZE_IS_SAFE. Just let me know if this is correct or not.",
+      "parentUuid": "3551ec4b_a68511bf",
+      "revId": "3f1c77092f3f52706542c0fafad51c3d25ef9d92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
