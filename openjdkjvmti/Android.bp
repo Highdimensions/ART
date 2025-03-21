@@ -96,6 +96,11 @@ cc_defaults {
         "ti_timers.cc",
         "transform.cc",
     ],
+    cflags: [
+        // This code uses malloc_usable_size(),
+        // but it can be built with _FORTIFY_SOURCE=3.
+        "-D_BIONIC_ASSERT_MALLOC_USABLE_SIZE_IS_SAFE",
+    ],
     header_libs: [
         "art_cmdlineparser_headers",
         "libnativehelper_header_only",
