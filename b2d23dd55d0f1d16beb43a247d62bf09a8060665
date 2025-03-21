@@ -16,6 +16,24 @@
       "message": "It seems like we should take `filename` by const reference?  As it is, we\u0027re making a copy of `filename` when we call this method.\n\nSince we have the `const`, we might have intended const reference and just left off the `\u0026`.\n\nSuggested fix (in the .cc file too):\n\n```\n  static std::unique_ptr\u003cSdcReader\u003e Load(const std::string\u0026 filename, std::string* error_msg);\n```\n\nadding the `\u0026`.",
       "revId": "b2d23dd55d0f1d16beb43a247d62bf09a8060665",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92f24630_2d1dc242",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-21T13:33:30Z",
+      "side": 1,
+      "message": "Oops! Stupid mistake 😛 Thank you for pointing it out! Created aosp/3556516.",
+      "parentUuid": "452b110a_7586db04",
+      "revId": "b2d23dd55d0f1d16beb43a247d62bf09a8060665",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
