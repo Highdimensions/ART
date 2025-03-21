@@ -22,6 +22,30 @@
       },
       "revId": "447aeaca2bb8c50663864aa827c9ec41c5e535eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5285da1b_77cdfc61",
+        "filename": "libartservice/service/java/com/android/server/art/PrimaryDexopter.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-21T13:27:54Z",
+      "side": 1,
+      "message": "Thanks for the suggestion. I considered the following approaches:\n\n- I could maintain the state here, but then the state had to be shared between the two methods (`onDexoptStart` and `onDexoptTargetResult`) so it would have to be a class member of `PrimaryDexopter`, making the class stateful. Currently, none of `Dexopter` and its derived classes is stateful, so I don\u0027t want to make it stateful just for this.\n\n- `Dexopter` (the base class) only calls the hooks and doesn\u0027t know about SDM files, so I can\u0027t explicitly maintain the state there.\n\n- I could have `Dexopter` hold an opaque object to maintain the state and pass it among the hooks, and them have `PrimaryDexopter` mutate the object, but that sounds like overengineering for this problem.\n\nI suggest to leave it as is since dexopt is not performance critical.",
+      "parentUuid": "c8a38fed_826dc393",
+      "range": {
+        "startLine": 214,
+        "startChar": 32,
+        "endLine": 214,
+        "endChar": 49
+      },
+      "revId": "447aeaca2bb8c50663864aa827c9ec41c5e535eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
