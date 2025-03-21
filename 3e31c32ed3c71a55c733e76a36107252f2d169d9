@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2d0c5c7_863425bb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 16
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T13:28:26Z",
+      "side": 1,
+      "message": "I agree with the above. Another argument, at least for \"pm delete-dexopt\", is that it\u0027s used for testing to start with a non-dexopted state, so it shouldn\u0027t matter where the dexopt files come from.",
+      "revId": "3e31c32ed3c71a55c733e76a36107252f2d169d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7878387_5466bd6c",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagerLocal.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T13:28:26Z",
+      "side": 1,
+      "message": "Please mention SDM and SDC.",
+      "revId": "3e31c32ed3c71a55c733e76a36107252f2d169d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a8bb948_9803edad",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagerLocal.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T13:28:26Z",
+      "side": 1,
+      "message": "I suppose this method doesn\u0027t need any change, but please clarify how it deals with the cloud artifacts.",
+      "revId": "3e31c32ed3c71a55c733e76a36107252f2d169d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3dc770c8_9cbbb18b",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtManagerLocalTest.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T13:28:26Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this test cloud artifacts too?",
+      "range": {
+        "startLine": 558,
+        "startChar": 16,
+        "endLine": 558,
+        "endChar": 37
+      },
+      "revId": "3e31c32ed3c71a55c733e76a36107252f2d169d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
