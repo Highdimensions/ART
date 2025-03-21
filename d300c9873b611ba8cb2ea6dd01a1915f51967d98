@@ -75,6 +75,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3642272_533c7587",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T14:29:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bc6b9f9_e98645a7",
+      "range": {
+        "startLine": 108,
+        "startChar": 34,
+        "endLine": 108,
+        "endChar": 41
+      },
+      "revId": "d300c9873b611ba8cb2ea6dd01a1915f51967d98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1df576b_83d917e5",
+        "filename": "libartpalette/apex/palette_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T14:29:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f23ad07_bc821e20",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 44
+      },
+      "revId": "d300c9873b611ba8cb2ea6dd01a1915f51967d98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c887d9d9_9c9b581c",
@@ -88,6 +136,30 @@
       "writtenOn": "2025-03-21T11:21:40Z",
       "side": 1,
       "message": "It\u0027s a bit hard to read the whole sentence. Maybe add commas around \"depending on test configuration\"?",
+      "range": {
+        "startLine": 368,
+        "startChar": 76,
+        "endLine": 369,
+        "endChar": 24
+      },
+      "revId": "d300c9873b611ba8cb2ea6dd01a1915f51967d98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ef9be5b_03099cca",
+        "filename": "test/Android.bp",
+        "patchSetId": 9
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T14:29:42Z",
+      "side": 1,
+      "message": "I split it up.",
+      "parentUuid": "c887d9d9_9c9b581c",
       "range": {
         "startLine": 368,
         "startChar": 76,
