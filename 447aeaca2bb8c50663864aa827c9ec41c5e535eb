@@ -46,6 +46,30 @@
       },
       "revId": "447aeaca2bb8c50663864aa827c9ec41c5e535eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "372da8c0_34cd3624",
+        "filename": "libartservice/service/java/com/android/server/art/PrimaryDexopter.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T13:38:18Z",
+      "side": 1,
+      "message": "Fair enough. These calls can add up a bit, e.g. in all the background dexopts, but in comparison to the rest they may very well be insignificant.",
+      "parentUuid": "5285da1b_77cdfc61",
+      "range": {
+        "startLine": 214,
+        "startChar": 32,
+        "endLine": 214,
+        "endChar": 49
+      },
+      "revId": "447aeaca2bb8c50663864aa827c9ec41c5e535eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
