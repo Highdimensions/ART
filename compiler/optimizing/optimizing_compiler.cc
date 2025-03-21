@@ -1485,10 +1485,11 @@ bool OptimizingCompiler::JitCompile(Thread* self,
   if (fast_compiler != nullptr) {
     ArrayRef<const uint8_t> reserved_code;
     ArrayRef<const uint8_t> reserved_data;
+    ArrayRef<const uint8_t> stack_maps = ArrayRef<const uint8_t>(fast_compiler->BuildStackMaps());
     if (!code_cache->Reserve(self,
                              region,
                              fast_compiler->GetCode().size(),
-                             fast_compiler->GetStackMaps().size(),
+                             stack_maps.size(),
                              fast_compiler->GetNumberOfJitRoots(),
                              method,
                              /*out*/ &reserved_code,
@@ -1501,8 +1502,7 @@ bool OptimizingCompiler::JitCompile(Thread* self,
       method_debug_info.code_address = reinterpret_cast<uintptr_t>(code);
       method_debug_info.code_size = fast_compiler->GetCode().size();
       method_debug_info.frame_size_in_bytes = fast_compiler->GetFrameSize();
-      method_debug_info.code_info = fast_compiler->GetStackMaps().size() == 0
-          ? nullptr : fast_compiler->GetStackMaps().data();
+      method_debug_info.code_info = stack_maps.size() == 0 ? nullptr : stack_maps.data();
       method_debug_info.cfi = ArrayRef<const uint8_t>(fast_compiler->GetCfiData());
       debug_info = GenerateJitDebugInfo(method_debug_info);
     }
@@ -1526,7 +1526,7 @@ bool OptimizingCompiler::JitCompile(Thread* self,
                             fast_compiler->GetCode(),
                             reserved_data,
                             roots,
-                            ArrayRef<const uint8_t>(fast_compiler->GetStackMaps()),
+                            stack_maps,
                             debug_info,
                             /* is_full_debug_info= */ compiler_options.GetGenerateDebugInfo(),
                             compilation_kind,
