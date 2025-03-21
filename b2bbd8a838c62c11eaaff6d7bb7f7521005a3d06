@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cf5bbc8_e57a24bf",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5867,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T13:07:37Z",
+      "side": 1,
+      "message": "Missing initialization of the hidden argument `T0`. Compare with https://android-review.googlesource.com/3412578 . See also `LocationsBuilderRISCV64::VisitInvokeInterface()`.\n\nNote that we can delay the initialization until after `__ Bind(\u0026do_imt_dispatch)` but we need to do that before clobbering the current value in the `method` register.",
+      "revId": "b2bbd8a838c62c11eaaff6d7bb7f7521005a3d06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58a36baf_62da1d02",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5889,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T13:07:37Z",
+      "side": 1,
+      "message": "`MaybeUnpoisonHeapReference`",
+      "range": {
+        "startLine": 5889,
+        "startChar": 14,
+        "endLine": 5889,
+        "endChar": 38
+      },
+      "revId": "b2bbd8a838c62c11eaaff6d7bb7f7521005a3d06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
