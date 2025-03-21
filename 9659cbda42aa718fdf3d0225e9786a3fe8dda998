@@ -1,0 +1,126 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26acc74e_272121ca",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-21T03:39:17Z",
+      "side": 1,
+      "message": "I don\u0027t understand why this fully fixes the problem. You still grow the overflow stack, right? Can\u0027t this happen while another thread is adding entries to the old one?",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 0
+      },
+      "revId": "9659cbda42aa718fdf3d0225e9786a3fe8dda998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d16c1fd2_e3118d70",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-21T03:39:17Z",
+      "side": 1,
+      "message": "I think I\u0027m missing something, and this needs a bit more explanation.",
+      "revId": "9659cbda42aa718fdf3d0225e9786a3fe8dda998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3274285_94b6e8e2",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 4218,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-21T03:39:17Z",
+      "side": 1,
+      "message": "Can you describe the data structure at a high level? It looks to me like start_ and end_ always point into the current overflow_arr_? Push() always pushes onto the current overflow_arr_? In what sense is it an overflow? Shouldn\u0027t start_ be called something like top_ or current_?",
+      "range": {
+        "startLine": 4216,
+        "startChar": 0,
+        "endLine": 4218,
+        "endChar": 35
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "cffb8a5e_80ef69e5",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 4216,
+                "startChar": 0,
+                "endLine": 4216,
+                "endChar": 0
+              },
+              "replacement": "  // `start_` and `end_` are used to store the references collected from the\n  // thread stack. `overflow_arr_` is used to store the references that are\n  // collected from the thread stack when the `mark_stack_` is full.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9659cbda42aa718fdf3d0225e9786a3fe8dda998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c0d4c50_1a6a9051",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-21T03:39:17Z",
+      "side": 1,
+      "message": "and the number of entries they hold?",
+      "range": {
+        "startLine": 703,
+        "startChar": 29,
+        "endLine": 703,
+        "endChar": 35
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "887f27fe_b9cfe639",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 703,
+                "startChar": 0,
+                "endLine": 705,
+                "endChar": 0
+              },
+              "replacement": "  // Vector to hold overflow arrays of gc-roots and the number of entries they\n  // hold, found during mutator-stack scanning in marking phase.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9659cbda42aa718fdf3d0225e9786a3fe8dda998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
