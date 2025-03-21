@@ -22,6 +22,30 @@
       },
       "revId": "2e772ebfb4b57957c9163d213942bb164309766d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f637f755_230aed1c",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtManagerLocalTest.java",
+        "patchSetId": 12
+      },
+      "lineNbr": 1283,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-21T10:14:31Z",
+      "side": 1,
+      "message": "That\u0027s explained [here](https://cs.android.com/android/platform/superproject/main/+/main:art/libartservice/service/java/com/android/server/art/ArtManagerLocal.java;l\u003d1122-1125;drc\u003da6a75dba00303a88642a1c57ad2ed390797adf47).",
+      "parentUuid": "c257ce7e_eb0a807a",
+      "range": {
+        "startLine": 1283,
+        "startChar": 44,
+        "endLine": 1283,
+        "endChar": 62
+      },
+      "revId": "2e772ebfb4b57957c9163d213942bb164309766d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
