@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "a9e37af3_f7267ba1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-21T18:13:13Z",
+      "side": 1,
+      "message": "Re-worded a bit. But I think with added comments it shuld be easy to understand.",
+      "parentUuid": "26acc74e_272121ca",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 0
+      },
+      "revId": "9659cbda42aa718fdf3d0225e9786a3fe8dda998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "d16c1fd2_e3118d70",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 4
@@ -82,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cf18030_1bf12305",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 4218,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-21T18:13:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3274285_94b6e8e2",
+      "range": {
+        "startLine": 4216,
+        "startChar": 0,
+        "endLine": 4218,
+        "endChar": 35
+      },
+      "revId": "9659cbda42aa718fdf3d0225e9786a3fe8dda998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0c0d4c50_1a6a9051",
@@ -119,6 +167,30 @@
           ]
         }
       ],
+      "revId": "9659cbda42aa718fdf3d0225e9786a3fe8dda998",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8850a111_aeea2ad0",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-21T18:13:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c0d4c50_1a6a9051",
+      "range": {
+        "startLine": 703,
+        "startChar": 29,
+        "endLine": 703,
+        "endChar": 35
+      },
       "revId": "9659cbda42aa718fdf3d0225e9786a3fe8dda998",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
