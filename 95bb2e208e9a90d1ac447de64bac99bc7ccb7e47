@@ -16,6 +16,270 @@
       "message": "Added peephole optimizations to support the Zbs extension. Folks, please take a look.",
       "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2df09a8_e9cc7c50",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5485,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "For `int` left operand, this should be `kIntLongShiftDistance`.",
+      "range": {
+        "startLine": 5485,
+        "startChar": 27,
+        "endLine": 5485,
+        "endChar": 48
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ccbbf0f_16e8ea2c",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5496,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "For `int` left operand, we need to use only 5 bits from the right operand but these riscv64 instructions use 6 bits. And there is no `Bsetw`/`Bextw`/`Bclrw`/`Binvw` that would work on 32-bit values and take only 5 bits from the right operand.\n\nWe can get a scratch register and insert an explicit `ANDI scratch, rs2, 0x1f` but then the value of the optimization is questionable for three of these when we just replace two instructions with another two instructions. (The `Bclr` case is different as it replaces 3 instructions.)",
+      "range": {
+        "startLine": 5496,
+        "startChar": 4,
+        "endLine": 5496,
+        "endChar": 57
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e443f2a_5061d306",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 100,
+        "startChar": 15,
+        "endLine": 100,
+        "endChar": 16
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5519f7a_ba95d927",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "For `HOr` and `HXor`, we call `TryMergeNegatedInput()` first. Why is `HAnd` different?",
+      "range": {
+        "startLine": 282,
+        "startChar": 8,
+        "endLine": 282,
+        "endChar": 44
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "988d8c0c_2fa950e6",
+        "filename": "compiler/optimizing/nodes_riscv64.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "Add `\u0026 kMaxIntShiftDistance`.\n\nSimilar for the 64-bit evaluation (`\u0026 kMaxLongShiftDistance`) and other instructions below.\n\n(I guess this code is currently unreachable because there is no constant folding pass after the `kInstructionSimplifierRiscv64`, except when explicitly specified using the experimental `--run-passes` command line option.)",
+      "range": {
+        "startLine": 74,
+        "startChar": 42,
+        "endLine": 74,
+        "endChar": 55
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1d585c4_09ced56f",
+        "filename": "compiler/optimizing/nodes_riscv64.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "`UINT64_C(1)`\n\nSame for other instructions below.",
+      "range": {
+        "startLine": 79,
+        "startChar": 37,
+        "endLine": 79,
+        "endChar": 39
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed7ee045_d07662b8",
+        "filename": "test/458-checker-riscv64-bit-manipulations/info.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "Gerrit: `No newline at end of right file.`\n\nPlease add a newline.",
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4556291d_d172beff",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "2025",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0f9651d_64f1b0ee",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "No need to start again. The three `CHECK-NOT` statements can be under the same `CHECK-START-RISCV64` (as long as there are no `CHECK` and `CHECK-DAG` statements).\n\nSame below.",
+      "range": {
+        "startLine": 47,
+        "startChar": 2,
+        "endLine": 47,
+        "endChar": 117
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "900bb0d5_862a6d53",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "Missing checker statements. You don\u0027t verify that the optimization was actually used. Same below.",
+      "range": {
+        "startLine": 224,
+        "startChar": 2,
+        "endLine": 224,
+        "endChar": 59
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0aba0d50_d1b7191e",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "Fix indentation.",
+      "range": {
+        "startLine": 256,
+        "startChar": 2,
+        "endLine": 256,
+        "endChar": 4
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dda8c0ca_9837ca52",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-21T17:35:41Z",
+      "side": 1,
+      "message": "We should have more tests here.\n\nIn particular, add tests with `(b \u0026 0x20) !\u003d 0`. For the `int` cases, these shall expose a difference between interpreted and compiled code results that need to be fixed.\n\nYou should also cover some cases where `a \u003d\u003d (1 \u003c\u003c b)` or `a \u003d\u003d ~(1 \u003c\u003c b)`.",
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
