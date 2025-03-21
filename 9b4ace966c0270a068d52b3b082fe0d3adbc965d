@@ -1,0 +1,62 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a172312_b6456232",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T16:07:44Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "9b4ace966c0270a068d52b3b082fe0d3adbc965d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e82b530_ce12bd16",
+        "filename": "runtime/oat/sdc_file.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-21T16:07:44Z",
+      "side": 1,
+      "message": "Typo.",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 48,
+        "endChar": 16
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "be6420e8_3482afda",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/sdc_file.h",
+              "range": {
+                "startLine": 48,
+                "startChar": 0,
+                "endLine": 49,
+                "endChar": 0
+              },
+              "replacement": "// Specifically, during dexopt, which typically takes place during installation, if there is an SDM\n"
+            }
+          ]
+        }
+      ],
+      "revId": "9b4ace966c0270a068d52b3b082fe0d3adbc965d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
