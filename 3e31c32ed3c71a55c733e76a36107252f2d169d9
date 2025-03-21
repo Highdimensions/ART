@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1973ad5_b0b06cfd",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagerLocal.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-21T13:55:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7878387_5466bd6c",
+      "revId": "3e31c32ed3c71a55c733e76a36107252f2d169d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3a8bb948_9803edad",
@@ -52,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "afceb0be_568cb5c0",
+        "filename": "libartservice/service/java/com/android/server/art/ArtManagerLocal.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-21T13:55:28Z",
+      "side": 1,
+      "message": "Done.\n\nIt\u0027s unfortunate that we have such descriptions in two places that are easy to be out-of-sync. I\u0027m thinking about deleting the description in one place and pointing to the other instead. We should probably keep the one in the shell command help text and delete the comment here because that the help text is for app developers, who don\u0027t usually read Android platform\u0027s source code. Anyway, not in this CL.",
+      "parentUuid": "3a8bb948_9803edad",
+      "revId": "3e31c32ed3c71a55c733e76a36107252f2d169d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3dc770c8_9cbbb18b",
@@ -65,6 +101,30 @@
       "writtenOn": "2025-03-21T13:28:26Z",
       "side": 1,
       "message": "Shouldn\u0027t this test cloud artifacts too?",
+      "range": {
+        "startLine": 558,
+        "startChar": 16,
+        "endLine": 558,
+        "endChar": 37
+      },
+      "revId": "3e31c32ed3c71a55c733e76a36107252f2d169d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "322340de_89d176df",
+        "filename": "libartservice/service/javatests/com/android/server/art/ArtManagerLocalTest.java",
+        "patchSetId": 16
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-21T13:55:28Z",
+      "side": 1,
+      "message": "Good catch!",
+      "parentUuid": "3dc770c8_9cbbb18b",
       "range": {
         "startLine": 558,
         "startChar": 16,
