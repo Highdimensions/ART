@@ -231,16 +231,6 @@ interface IArtd {
     boolean isInDalvikCache(@utf8InCpp String dexFile);
 
     /**
-     * Deletes the SDM and SDC files and returns the released space, in bytes.
-     *
-     * Not supported in Pre-reboot Dexopt mode.
-     *
-     * Throws fatal errors. Logs and ignores non-fatal errors.
-     */
-    long deleteSdmSdcFiles(
-            in com.android.server.art.SecureDexMetadataWithCompanionPaths sdmSdcPaths);
-
-    /**
      * Deletes runtime artifacts and returns the released space, in bytes.
      *
      * Not supported in Pre-reboot Dexopt mode.
