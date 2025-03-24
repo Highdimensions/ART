@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bea6a15_541ca82f",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5485,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2df09a8_e9cc7c50",
+      "range": {
+        "startLine": 5485,
+        "startChar": 27,
+        "endLine": 5485,
+        "endChar": 48
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7ccbbf0f_16e8ea2c",
@@ -66,6 +90,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a6a07d3c_0765aae7",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5496,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "I’d prefer to fix `int` case and keep the transformation for `int` to avoid overcomplicating the code in `instruction_simplifier_riscv64.cc` excluding cases `bext/bset/binv` for `int`. The symmetric approach feels more natural and easier to understand.\n\nIt might also be worth adding a separate optimization for `HAnd` that checks whether the value is already within a certain range, like `[0, 31]` or narrower. There’s an existing [optimization](https://cs.android.com/android/platform/superproject/main/+/main:art/compiler/optimizing/instruction_simplifier.cc;drc\u003d9c843a66d11d85e1f69e944f1b37314d3e47aab1;bpv\u003d1;l\u003d3515) that simplifies patterns like `And(And(v, const), 0x1f)` into `And(v, min(const, 0x1f))`.\n\nGiven that, it seems like my optimization could still be beneficial even for int cases. What do you think—does that make sense?",
+      "parentUuid": "7ccbbf0f_16e8ea2c",
+      "range": {
+        "startLine": 5496,
+        "startChar": 4,
+        "endLine": 5496,
+        "endChar": 57
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7e443f2a_5061d306",
         "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
         "patchSetId": 1
@@ -77,6 +125,30 @@
       "writtenOn": "2025-03-21T17:35:41Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 100,
+        "startChar": 15,
+        "endLine": 100,
+        "endChar": 16
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "597ae81c_a05718fb",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e443f2a_5061d306",
       "range": {
         "startLine": 100,
         "startChar": 15,
@@ -112,6 +184,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f90681bc_e070df1f",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "The pattern used by HAnd works for both `TryOptimizeWithBitManipulation` and `TryMergeNegatedInput`. However, `TryMergeNegatedInput` replaces 2 instructions with 1, while `TryOptimizeWithBitManipulation` replaces 3 instructions with 1. That\u0027s why we prioritize `TryOptimizeWithBitManipulation` for bit manipulation cases",
+      "parentUuid": "a5519f7a_ba95d927",
+      "range": {
+        "startLine": 282,
+        "startChar": 8,
+        "endLine": 282,
+        "endChar": 44
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "988d8c0c_2fa950e6",
         "filename": "compiler/optimizing/nodes_riscv64.h",
         "patchSetId": 1
@@ -123,6 +219,30 @@
       "writtenOn": "2025-03-21T17:35:41Z",
       "side": 1,
       "message": "Add `\u0026 kMaxIntShiftDistance`.\n\nSimilar for the 64-bit evaluation (`\u0026 kMaxLongShiftDistance`) and other instructions below.\n\n(I guess this code is currently unreachable because there is no constant folding pass after the `kInstructionSimplifierRiscv64`, except when explicitly specified using the experimental `--run-passes` command line option.)",
+      "range": {
+        "startLine": 74,
+        "startChar": 42,
+        "endLine": 74,
+        "endChar": 55
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "edf4826b_3a6546e9",
+        "filename": "compiler/optimizing/nodes_riscv64.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "988d8c0c_2fa950e6",
       "range": {
         "startLine": 74,
         "startChar": 42,
@@ -156,6 +276,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ba664b1_45fe8e0d",
+        "filename": "compiler/optimizing/nodes_riscv64.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1d585c4_09ced56f",
+      "range": {
+        "startLine": 79,
+        "startChar": 37,
+        "endLine": 79,
+        "endChar": 39
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed7ee045_d07662b8",
@@ -173,6 +317,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "629bd11c_89e24b6c",
+        "filename": "test/458-checker-riscv64-bit-manipulations/info.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed7ee045_d07662b8",
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4556291d_d172beff",
@@ -186,6 +348,30 @@
       "writtenOn": "2025-03-21T17:35:41Z",
       "side": 1,
       "message": "2025",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8582672c_75cba64e",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4556291d_d172beff",
       "range": {
         "startLine": 2,
         "startChar": 17,
@@ -219,6 +405,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b7ec316_d195a784",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0f9651d_64f1b0ee",
+      "range": {
+        "startLine": 47,
+        "startChar": 2,
+        "endLine": 47,
+        "endChar": 117
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "900bb0d5_862a6d53",
@@ -232,6 +442,30 @@
       "writtenOn": "2025-03-21T17:35:41Z",
       "side": 1,
       "message": "Missing checker statements. You don\u0027t verify that the optimization was actually used. Same below.",
+      "range": {
+        "startLine": 224,
+        "startChar": 2,
+        "endLine": 224,
+        "endChar": 59
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "630b346f_30e2858e",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "900bb0d5_862a6d53",
       "range": {
         "startLine": 224,
         "startChar": 2,
@@ -265,6 +499,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "87f81a58_afc193b2",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0aba0d50_d1b7191e",
+      "range": {
+        "startLine": 256,
+        "startChar": 2,
+        "endLine": 256,
+        "endChar": 4
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dda8c0ca_9837ca52",
@@ -278,6 +536,24 @@
       "writtenOn": "2025-03-21T17:35:41Z",
       "side": 1,
       "message": "We should have more tests here.\n\nIn particular, add tests with `(b \u0026 0x20) !\u003d 0`. For the `int` cases, these shall expose a difference between interpreted and compiled code results that need to be fixed.\n\nYou should also cover some cases where `a \u003d\u003d (1 \u003c\u003c b)` or `a \u003d\u003d ~(1 \u003c\u003c b)`.",
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58a2e7cb_5fb9a5e1",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-03-24T19:37:27Z",
+      "side": 1,
+      "message": "I have added tests for the cases you suggested, except for `int32` overflow. Do you think these tests are enough?\n\nP.S.\nI will add tests for `int32` overflow after solving the problem with operand truncation",
+      "parentUuid": "dda8c0ca_9837ca52",
       "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
