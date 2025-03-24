@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "622d0584_1d77ca34",
+        "filename": "openjdkjvmti/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-24T15:16:14Z",
+      "side": 1,
+      "message": "like i said, i\u0027d recomend against using it in a .bp file where the scope is unknown --- i think this macro should only be used in source file itself?",
+      "revId": "cb00daa2ef11bf57b2ccde493bf422a2074ab4bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
