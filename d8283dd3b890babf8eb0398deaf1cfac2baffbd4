@@ -16,6 +16,29 @@
       "message": "Thanks Vladimir, PTAL.",
       "revId": "d8283dd3b890babf8eb0398deaf1cfac2baffbd4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4307165c_9007cbba",
+        "filename": "compiler/optimizing/optimizing_compiler.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 1349,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-24T08:43:35Z",
+      "side": 1,
+      "message": "It would be nicer for use sites if this was constructing and returning a new `MethodDebugInfo`.\n\n    debug::MethodDebugInfo method_debug_info \u003d create_method_debug_info();\n\nBut feel free to leave this as is.",
+      "range": {
+        "startLine": 1349,
+        "startChar": 7,
+        "endLine": 1349,
+        "endChar": 29
+      },
+      "revId": "d8283dd3b890babf8eb0398deaf1cfac2baffbd4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
