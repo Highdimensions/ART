@@ -681,6 +681,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "94c2b3d9_605b7365",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 20
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-24T12:33:57Z",
+      "side": 1,
+      "message": "Done here: aosp/3557803.",
+      "parentUuid": "58bd5eef_e344b744",
+      "range": {
+        "startLine": 562,
+        "startChar": 2,
+        "endLine": 562,
+        "endChar": 18
+      },
+      "revId": "705809a6019ae118a8e4ec1efd40d62fd6844439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "34253f40_4c6a8266",
