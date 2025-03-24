@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03930f0f_539cbe81",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 5871,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-03-24T14:04:27Z",
+      "side": 1,
+      "message": "Shouldn\u0027t it be just `AddTemp(T0)`, like it is done in `LocationsBuilderRISCV64::VisitInvokeInterface` [1]?\n\n[1] http://aosc/art/compiler/optimizing/code_generator_riscv64.cc?l\u003d4147",
+      "range": {
+        "startLine": 5870,
+        "startChar": 4,
+        "endLine": 5871,
+        "endChar": 29
+      },
+      "revId": "7c89fa66f8c179cea2b18e8e68085919f8e84140",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
