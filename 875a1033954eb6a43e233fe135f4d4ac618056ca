@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00aaf36f_183b948c",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 5869,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-03-24T14:00:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eebbfeb6_52923f81",
+      "range": {
+        "startLine": 5869,
+        "startChar": 40,
+        "endLine": 5869,
+        "endChar": 41
+      },
+      "revId": "875a1033954eb6a43e233fe135f4d4ac618056ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fbd1210f_1583dff2",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-03-24T12:59:29Z",
       "side": 1,
       "message": "I missed the `w` in PS2. This should not be here. Why not use the `Mv()` function instead?",
+      "range": {
+        "startLine": 5874,
+        "startChar": 11,
+        "endLine": 5874,
+        "endChar": 12
+      },
+      "revId": "875a1033954eb6a43e233fe135f4d4ac618056ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d77a5169_e138fa53",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 5874,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-03-24T14:00:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbd1210f_1583dff2",
       "range": {
         "startLine": 5874,
         "startChar": 11,
