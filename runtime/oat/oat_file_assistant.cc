@@ -183,16 +183,6 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
     }
   }
 
-  if (!oat_file_name.empty() && !UseFdToReadFiles()) {
-    // The oat location. This is for apps on readonly filesystems (typically, system apps and
-    // incremental apps). This must be prioritized over the odex location, because the odex location
-    // probably has the dexpreopt artifacts for such apps.
-    info_list_.push_back(std::make_unique<OatFileInfoBackedByOat>(this,
-                                                                  oat_file_name,
-                                                                  /*is_oat_location=*/true,
-                                                                  /*use_fd=*/false));
-  }
-
   if (!odex_file_name.empty()) {
     // The odex location, which is the most common.
     info_list_.push_back(std::make_unique<OatFileInfoBackedByOat>(this,
@@ -206,14 +196,6 @@ OatFileAssistant::OatFileAssistant(const char* dex_location,
 
   // When there is no odex/oat available (e.g., they are both out of date), we look for a useable
   // vdex file.
-
-  if (!oat_file_name.empty() && !UseFdToReadFiles()) {
-    // The vdex-only file next to 'oat_`.
-    info_list_.push_back(std::make_unique<OatFileInfoBackedByVdex>(this,
-                                                                   GetVdexFilename(oat_file_name),
-                                                                   /*is_oat_location=*/true,
-                                                                   /*use_fd=*/false));
-  }
 
   if (!odex_file_name.empty()) {
     // The vdex-only file next to `odex_`.
