@@ -57,9 +57,9 @@ namespace collector {
 class ConcurrentCopying : public GarbageCollector {
  public:
   // Enable the no-from-space-refs verification at the pause.
-  static constexpr bool kEnableNoFromSpaceRefsVerification = kIsDebugBuild;
+  static constexpr bool kEnableNoFromSpaceRefsVerification = true;
   // Enable the from-space bytes/objects check.
-  static constexpr bool kEnableFromSpaceAccountingCheck = kIsDebugBuild;
+  static constexpr bool kEnableFromSpaceAccountingCheck = true;
   // Enable verbose mode.
   static constexpr bool kVerboseMode = false;
   // If kGrayDirtyImmuneObjects is true then we gray dirty objects in the GC pause to prevent dirty

@@ -332,13 +332,13 @@ namespace collector {
 // Turn off kCheckLocks when profiling the GC as it slows down the GC
 // significantly.
 static constexpr bool kCheckLocks = kDebugLocking;
-static constexpr bool kVerifyRootsMarked = kIsDebugBuild;
+static constexpr bool kVerifyRootsMarked = true;
 // Verify that there are no missing card marks.
-static constexpr bool kVerifyNoMissingCardMarks = kIsDebugBuild;
+static constexpr bool kVerifyNoMissingCardMarks = true;
 // Verify that all references in post-GC objects are valid.
-static constexpr bool kVerifyPostGCObjects = kIsDebugBuild;
+static constexpr bool kVerifyPostGCObjects = true;
 // Assert during marking that GC-roots are valid.
-static constexpr bool kVerifyGcRootDuringMarking = kIsDebugBuild;
+static constexpr bool kVerifyGcRootDuringMarking = true;
 // Number of compaction buffers reserved for mutator threads in SIGBUS feature
 // case. It's extremely unlikely that we will ever have more than these number
 // of mutator threads trying to access the moving-space during one compaction

@@ -2245,6 +2245,7 @@ HomogeneousSpaceCompactResult Heap::PerformHomogeneousSpaceCompact() {
       return kErrorUnsupported;
     }
     collector_type_running_ = kCollectorTypeHomogeneousSpaceCompact;
+    thread_running_gc_ = self;
   }
   if (Runtime::Current()->IsShuttingDown(self)) {
     // Don't allow heap transitions to happen if the runtime is shutting down since these can
@@ -2848,6 +2849,7 @@ collector::GcType Heap::CollectGarbageInternal(collector::GcType gc_type,
       }
       collector_type_running_ = collector_type_;
       last_gc_cause_ = gc_cause;
+      thread_running_gc_ = self;
     }
     if (gc_cause == kGcCauseForAlloc && runtime->HasStatsEnabled()) {
       ++runtime->GetStats()->gc_for_alloc_count;
