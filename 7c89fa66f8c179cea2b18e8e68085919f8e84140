@@ -22,6 +22,30 @@
       },
       "revId": "7c89fa66f8c179cea2b18e8e68085919f8e84140",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78d81ab2_49682b55",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 5871,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-24T15:05:53Z",
+      "side": 1,
+      "message": "The hidden argument is not actually needed for the other dispatch kinds, so I\u0027m fine with keeping the `T0` allocation local to the interface dispatch.\n\n(And I also prefer to keep this code in sync with arm64 implementation.)",
+      "parentUuid": "03930f0f_539cbe81",
+      "range": {
+        "startLine": 5870,
+        "startChar": 4,
+        "endLine": 5871,
+        "endChar": 29
+      },
+      "revId": "7c89fa66f8c179cea2b18e8e68085919f8e84140",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
