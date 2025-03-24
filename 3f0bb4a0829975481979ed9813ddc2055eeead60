@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3efbb650_01ea7033",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5870,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-24T08:50:47Z",
+      "side": 1,
+      "message": "Similar to arm64, we need to avoid T0 being clobbered by macro instructions below. (`Loadhu()` and `Loadd()` can theoretically clobber T0.)",
+      "range": {
+        "startLine": 5870,
+        "startChar": 13,
+        "endLine": 5870,
+        "endChar": 15
+      },
+      "revId": "3f0bb4a0829975481979ed9813ddc2055eeead60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
