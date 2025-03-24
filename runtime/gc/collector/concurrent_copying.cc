@@ -63,7 +63,7 @@ static constexpr bool kDisallowReadBarrierDuringScan = kIsDebugBuild;
 // performance problems.
 static constexpr size_t kReadBarrierMarkStackSize = 512 * KB;
 // Verify that there are no missing card marks.
-static constexpr bool kVerifyNoMissingCardMarks = kIsDebugBuild;
+static constexpr bool kVerifyNoMissingCardMarks = true;
 
 ConcurrentCopying::ConcurrentCopying(Heap* heap,
                                      bool young_gen,
