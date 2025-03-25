@@ -46,6 +46,7 @@ export ART_TEST_SSH_USER=ubuntu
 export ART_TEST_SSH_HOST=localhost
 export ART_TEST_SSH_PORT=10001
 export ART_TEST_ON_VM=true
+export ART_TEST_CHROOT=/home/ubuntu/art-test-chroot
 
 . ./build/envsetup.sh
 lunch armv8-trunk_staging-eng  # or aosp_riscv64-trunk_staging-userdebug, etc.
