@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4494df94_a0d2d10d",
+        "filename": "runtime/oat/oat_file_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-25T10:43:11Z",
+      "side": 1,
+      "message": "I find this obfuscating readability of the test. Do you really need it?",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 46
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "db31260a_c0245460",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/oat_file_test.cc",
+              "range": {
+                "startLine": 41,
+                "startChar": 0,
+                "endLine": 43,
+                "endChar": 0
+              },
+              "replacement": ""
+            },
+            {
+              "path": "runtime/oat/oat_file_test.cc",
+              "range": {
+                "startLine": 190,
+                "startChar": 0,
+                "endLine": 191,
+                "endChar": 0
+              },
+              "replacement": "    constexpr std::string_view kCdexMagic \u003d \"cdex001\\0\";\n"
+            }
+          ]
+        }
+      ],
+      "revId": "419b3011757010c3425ccc00a8057148bea3b206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58d4d57d_6f5950f9",
+        "filename": "runtime/oat/oat_file_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-03-25T10:43:11Z",
+      "side": 1,
+      "message": "Could you move this out of the ASSERT ? I always prefer non-side effects asserts as asserts look like optionally executed.",
+      "range": {
+        "startLine": 192,
+        "startChar": 17,
+        "endLine": 192,
+        "endChar": 88
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "59d40212_3f530eea",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/oat/oat_file_test.cc",
+              "range": {
+                "startLine": 192,
+                "startChar": 0,
+                "endLine": 194,
+                "endChar": 0
+              },
+              "replacement": "    bool success \u003d vdex_file-\u003ePwriteFully(kCdexMagic.data(), kCdexMagic.size(), dex_offset);\n    ASSERT_TRUE(success) \u003c\u003c strerror(errno);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "419b3011757010c3425ccc00a8057148bea3b206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
