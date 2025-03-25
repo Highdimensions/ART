@@ -70,6 +70,24 @@
       "parentUuid": "ae72b3f6_3c560ce8",
       "revId": "cb00daa2ef11bf57b2ccde493bf422a2074ab4bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdcaa507_bca3d899",
+        "filename": "openjdkjvmti/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-03-25T20:09:48Z",
+      "side": 1,
+      "message": "yeah, modules have been promising to fix this kind of thing for \u003cchecks calendar\u003e ... about two decades now. but _until_ that fine day, this will remain a useful trick :-)",
+      "parentUuid": "66ac5971_daee4a40",
+      "revId": "cb00daa2ef11bf57b2ccde493bf422a2074ab4bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
