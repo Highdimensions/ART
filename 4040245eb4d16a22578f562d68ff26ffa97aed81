@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb36e4d1_8673c6da",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-25T14:02:53Z",
+      "side": 1,
+      "message": "It seems the only issue is a confusing graph visualizer output. Maybe we should follow up with a graph checker change.",
+      "parentUuid": "b7a9b708_5b058d90",
+      "range": {
+        "startLine": 9,
+        "startChar": 18,
+        "endLine": 9,
+        "endChar": 29
+      },
+      "revId": "4040245eb4d16a22578f562d68ff26ffa97aed81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eabd25e2_a75c0b08",
@@ -37,6 +61,24 @@
       "writtenOn": "2025-03-25T13:18:15Z",
       "side": 1,
       "message": "Add \"when it should have been `void`\" ?",
+      "revId": "4040245eb4d16a22578f562d68ff26ffa97aed81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42a7cb30_bf06eb4b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-03-25T14:02:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eabd25e2_a75c0b08",
       "revId": "4040245eb4d16a22578f562d68ff26ffa97aed81",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
