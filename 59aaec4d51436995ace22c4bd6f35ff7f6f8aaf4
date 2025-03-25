@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cb19850_71349924",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-03-25T14:10:11Z",
+      "side": 1,
+      "message": "@mingaleev@google.com what about `riscv64`?",
+      "revId": "59aaec4d51436995ace22c4bd6f35ff7f6f8aaf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
