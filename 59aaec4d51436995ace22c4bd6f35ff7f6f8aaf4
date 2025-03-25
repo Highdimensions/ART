@@ -16,6 +16,24 @@
       "message": "@mingaleev@google.com what about `riscv64`?",
       "revId": "59aaec4d51436995ace22c4bd6f35ff7f6f8aaf4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9efd63c3_e6299d77",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1793992
+      },
+      "writtenOn": "2025-03-25T14:18:38Z",
+      "side": 1,
+      "message": "If your question is whether anything special is needed for riscv - nope, adopting intrisics changes should be enough.\n\nIf it\u0027s \"why riscv was not updated\" - currently I am focused on x64 and arm64 only and I do really appreciate you doing backports.",
+      "parentUuid": "2cb19850_71349924",
+      "revId": "59aaec4d51436995ace22c4bd6f35ff7f6f8aaf4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
