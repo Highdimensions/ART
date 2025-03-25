@@ -52,6 +52,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40794807_2541c154",
+        "filename": "runtime/oat/oat_file_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-25T15:18:55Z",
+      "side": 1,
+      "message": "Yes, this is needed for creating a string with \"\\0\" in it. It will be cumbersome to achieve the same without this operator.",
+      "parentUuid": "4494df94_a0d2d10d",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 46
+      },
+      "revId": "419b3011757010c3425ccc00a8057148bea3b206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "58d4d57d_6f5950f9",
@@ -89,6 +113,30 @@
           ]
         }
       ],
+      "revId": "419b3011757010c3425ccc00a8057148bea3b206",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72cb9083_413bc57b",
+        "filename": "runtime/oat/oat_file_test.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-03-25T15:18:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58d4d57d_6f5950f9",
+      "range": {
+        "startLine": 192,
+        "startChar": 17,
+        "endLine": 192,
+        "endChar": 88
+      },
       "revId": "419b3011757010c3425ccc00a8057148bea3b206",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
