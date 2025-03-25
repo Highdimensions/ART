@@ -95,6 +95,7 @@ ArtMethod* WellKnownClasses::java_lang_ThreadGroup_add;
 ArtMethod* WellKnownClasses::java_lang_ThreadGroup_threadTerminated;
 ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandle_asType;
 ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandle_invokeExact;
+ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandleImpl_fieldInit;
 ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandleImpl_init;
 ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandles_lookup;
 ArtMethod* WellKnownClasses::java_lang_invoke_MethodHandles_makeIdentity;
@@ -136,8 +137,9 @@ ArtField* WellKnownClasses::java_lang_Thread_daemon;
 ArtField* WellKnownClasses::java_lang_Thread_group;
 ArtField* WellKnownClasses::java_lang_Thread_lock;
 ArtField* WellKnownClasses::java_lang_Thread_name;
-ArtField* WellKnownClasses::java_lang_Thread_priority;
+ArtField* WellKnownClasses::java_lang_Thread_niceness;
 ArtField* WellKnownClasses::java_lang_Thread_nativePeer;
+ArtField* WellKnownClasses::java_lang_Thread_priority;
 ArtField* WellKnownClasses::java_lang_Thread_systemDaemon;
 ArtField* WellKnownClasses::java_lang_Thread_unparkedBeforeStart;
 ArtField* WellKnownClasses::java_lang_ThreadGroup_groups;
@@ -645,6 +647,12 @@ void WellKnownClasses::InitFieldsAndMethodsOnly(JNIEnv* env) {
       "invokeExact",
       "([Ljava/lang/Object;)Ljava/lang/Object;",
       pointer_size);
+  java_lang_invoke_MethodHandleImpl_fieldInit = CacheMethod(
+    j_l_i_MethodHandleImpl.Get(),
+    /*is_static=*/ false,
+    "<init>",
+    "(Ljava/lang/reflect/Field;ILjava/lang/invoke/MethodType;)V",
+    pointer_size);
   java_lang_invoke_MethodHandleImpl_init = CacheMethod(
       j_l_i_MethodHandleImpl.Get(),
       /*is_static=*/ false,
@@ -800,9 +808,10 @@ void WellKnownClasses::InitFieldsAndMethodsOnly(JNIEnv* env) {
       CacheField(j_l_Thread.Get(), /*is_static=*/ false, "lock", "Ljava/lang/Object;");
   java_lang_Thread_name =
       CacheField(j_l_Thread.Get(), /*is_static=*/ false, "name", "Ljava/lang/String;");
-  java_lang_Thread_priority = CacheField(j_l_Thread.Get(), /*is_static=*/ false, "priority", "I");
+  java_lang_Thread_niceness = CacheField(j_l_Thread.Get(), /*is_static=*/false, "niceness", "I");
   java_lang_Thread_nativePeer =
       CacheField(j_l_Thread.Get(), /*is_static=*/ false, "nativePeer", "J");
+  java_lang_Thread_priority = CacheField(j_l_Thread.Get(), /*is_static=*/false, "priority", "I");
   java_lang_Thread_systemDaemon =
       CacheField(j_l_Thread.Get(), /*is_static=*/ false, "systemDaemon", "Z");
   java_lang_Thread_unparkedBeforeStart =
@@ -955,6 +964,7 @@ void WellKnownClasses::Clear() {
   java_lang_invoke_MethodHandle_asType = nullptr;
   java_lang_invoke_MethodHandle_invokeExact = nullptr;
   java_lang_invoke_MethodHandleImpl_init = nullptr;
+  java_lang_invoke_MethodHandleImpl_fieldInit = nullptr;
   java_lang_invoke_MethodHandles_lookup = nullptr;
   java_lang_invoke_MethodHandles_makeIdentity = nullptr;
   java_lang_invoke_MethodHandles_Lookup_findConstructor = nullptr;
@@ -991,8 +1001,9 @@ void WellKnownClasses::Clear() {
   java_lang_Thread_group = nullptr;
   java_lang_Thread_lock = nullptr;
   java_lang_Thread_name = nullptr;
-  java_lang_Thread_priority = nullptr;
+  java_lang_Thread_niceness = nullptr;
   java_lang_Thread_nativePeer = nullptr;
+  java_lang_Thread_priority = nullptr;
   java_lang_ThreadGroup_groups = nullptr;
   java_lang_ThreadGroup_ngroups = nullptr;
   java_lang_ThreadGroup_mainThreadGroup = nullptr;

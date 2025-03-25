@@ -141,6 +141,7 @@ struct EXPORT WellKnownClasses {
   static ArtMethod* java_lang_ThreadGroup_threadTerminated;
   static ArtMethod* java_lang_invoke_MethodHandle_asType;
   static ArtMethod* java_lang_invoke_MethodHandle_invokeExact;
+  static ArtMethod* java_lang_invoke_MethodHandleImpl_fieldInit;
   static ArtMethod* java_lang_invoke_MethodHandleImpl_init;
   static ArtMethod* java_lang_invoke_MethodHandles_lookup;
   static ArtMethod* java_lang_invoke_MethodHandles_makeIdentity;
@@ -182,8 +183,9 @@ struct EXPORT WellKnownClasses {
   static ArtField* java_lang_Thread_group;
   static ArtField* java_lang_Thread_lock;
   static ArtField* java_lang_Thread_name;
-  static ArtField* java_lang_Thread_priority;
+  static ArtField* java_lang_Thread_niceness;
   static ArtField* java_lang_Thread_nativePeer;
+  static ArtField* java_lang_Thread_priority;
   static ArtField* java_lang_Thread_systemDaemon;
   static ArtField* java_lang_Thread_unparkedBeforeStart;
   static ArtField* java_lang_ThreadGroup_groups;
