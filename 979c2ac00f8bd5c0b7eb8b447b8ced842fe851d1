@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4b5a97b_8e3aca2c",
+        "filename": "compiler/optimizing/load_store_elimination.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 2755,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-25T17:20:54Z",
+      "side": 1,
+      "message": "FYI the `if` doesn\u0027t have to change because you are DCHECKing the `NeedsConvertedLoopPhi` case. Fine to keep as-is",
+      "revId": "979c2ac00f8bd5c0b7eb8b447b8ced842fe851d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
