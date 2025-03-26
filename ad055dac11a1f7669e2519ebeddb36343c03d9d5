@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93d8bb74_7dc2e417",
+        "filename": "runtime/gc/collector/concurrent_copying.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 3756,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-26T21:00:59Z",
+      "side": 1,
+      "message": "Can\u0027t we simply do `CasStrongRelaxed(from_ref, to_ref)` without the loop?",
+      "range": {
+        "startLine": 3751,
+        "startChar": 3,
+        "endLine": 3756,
+        "endChar": 5
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "b87284f8_809bea4d",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/concurrent_copying.cc",
+              "range": {
+                "startLine": 3739,
+                "startChar": 0,
+                "endLine": 3740,
+                "endChar": 0
+              },
+              "replacement": "bool ConcurrentCopying::IsNullOrMarkedHeapReference(mirror::HeapReference\u003cmirror::Object\u003e* field,\n                                                   bool from_gc_thread) {\n"
+            },
+            {
+              "path": "runtime/gc/collector/concurrent_copying.cc",
+              "range": {
+                "startLine": 3751,
+                "startChar": 0,
+                "endLine": 3757,
+                "endChar": 0
+              },
+              "replacement": "    bool success \u003d from_gc_thread ?\n        field-\u003eCasStrongRelaxed(from_ref, to_ref) :\n        field-\u003eCasWeakRelaxed(from_ref, to_ref);\n    DCHECK(success);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ad055dac11a1f7669e2519ebeddb36343c03d9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
