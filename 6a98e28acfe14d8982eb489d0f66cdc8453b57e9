@@ -1,0 +1,108 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f1e5eec_7a49a35f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-26T03:21:46Z",
+      "side": 1,
+      "message": "them?",
+      "range": {
+        "startLine": 15,
+        "startChar": 29,
+        "endLine": 15,
+        "endChar": 31
+      },
+      "revId": "6a98e28acfe14d8982eb489d0f66cdc8453b57e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2bb312d7_0af8fab7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-26T03:21:46Z",
+      "side": 1,
+      "message": "A few nits. Otherwise looks good to me.",
+      "revId": "6a98e28acfe14d8982eb489d0f66cdc8453b57e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec8202f3_ffcca5ea",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 4267,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-26T03:21:46Z",
+      "side": 1,
+      "message": "And we claim that at this point, nobody else can concurrently be pushing anything? Given the \"Atomic\" here, that may be worth another comment.",
+      "range": {
+        "startLine": 4267,
+        "startChar": 38,
+        "endLine": 4267,
+        "endChar": 53
+      },
+      "revId": "6a98e28acfe14d8982eb489d0f66cdc8453b57e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9dfa3d1_bf9f9190",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 4379,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-26T03:21:46Z",
+      "side": 1,
+      "message": "std::move? It just saves a small allocation.",
+      "range": {
+        "startLine": 4379,
+        "startChar": 12,
+        "endLine": 4379,
+        "endChar": 28
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "7b65010c_26279341",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 4379,
+                "startChar": 0,
+                "endLine": 4380,
+                "endChar": 0
+              },
+              "replacement": "      vec \u003d std::move(overflow_arrays_);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "6a98e28acfe14d8982eb489d0f66cdc8453b57e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
