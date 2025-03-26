@@ -139,6 +139,30 @@
       },
       "revId": "6601a7394e55209f3d0d58987513b4dfe8da58e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94b59880_efe568ce",
+        "filename": "runtime/thread.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2458,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-26T18:23:37Z",
+      "side": 1,
+      "message": "Makes sense. I wasn\u0027t aware of this pthread_key behavior; it\u0027s very much ta odds with C++ destructor behavior.",
+      "parentUuid": "a6fa286d_4e8fa8ad",
+      "range": {
+        "startLine": 2458,
+        "startChar": 4,
+        "endLine": 2458,
+        "endChar": 96
+      },
+      "revId": "6601a7394e55209f3d0d58987513b4dfe8da58e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
