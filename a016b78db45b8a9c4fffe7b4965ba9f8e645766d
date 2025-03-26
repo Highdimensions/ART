@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7f9da95_a54ae312",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 948,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-26T22:35:57Z",
+      "side": 1,
+      "message": "Should this be initialized somewhere?",
+      "range": {
+        "startLine": 948,
+        "startChar": 2,
+        "endLine": 948,
+        "endChar": 45
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "26e154d0_a5356af0",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.h",
+              "range": {
+                "startLine": 948,
+                "startChar": 0,
+                "endLine": 949,
+                "endChar": 0
+              },
+              "replacement": "  void* prev_moving_space_end_at_compaction_ \u003d nullptr;\n"
+            }
+          ]
+        }
+      ],
+      "revId": "a016b78db45b8a9c4fffe7b4965ba9f8e645766d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
