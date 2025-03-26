@@ -175,6 +175,30 @@
       },
       "revId": "6a98e28acfe14d8982eb489d0f66cdc8453b57e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a2a48c7_59db198b",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 4379,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-26T05:20:45Z",
+      "side": 1,
+      "message": "I missed the asterisk. Should they be pointers to vectors or just vectors? The latter probably simplifies memory management?",
+      "parentUuid": "2f196cbd_83fda943",
+      "range": {
+        "startLine": 4379,
+        "startChar": 12,
+        "endLine": 4379,
+        "endChar": 28
+      },
+      "revId": "6a98e28acfe14d8982eb489d0f66cdc8453b57e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
