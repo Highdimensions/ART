@@ -223,6 +223,30 @@
       },
       "revId": "6a98e28acfe14d8982eb489d0f66cdc8453b57e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56cc5ee4_8afddd7d",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 4379,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-26T05:30:32Z",
+      "side": 1,
+      "message": "I guess. Though an empty vector shouldn\u0027t really take much space either. Either way is OK.",
+      "parentUuid": "68235ccc_25775c04",
+      "range": {
+        "startLine": 4379,
+        "startChar": 12,
+        "endLine": 4379,
+        "endChar": 28
+      },
+      "revId": "6a98e28acfe14d8982eb489d0f66cdc8453b57e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
