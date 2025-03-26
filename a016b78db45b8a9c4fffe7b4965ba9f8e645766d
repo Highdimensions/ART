@@ -40,6 +40,30 @@
       ],
       "revId": "a016b78db45b8a9c4fffe7b4965ba9f8e645766d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c90fc02_2ed1b22f",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 948,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-03-26T22:56:30Z",
+      "side": 1,
+      "message": "It isn\u0027t necessary because I anyways added the initialization in the constructor. PTAL.",
+      "parentUuid": "a7f9da95_a54ae312",
+      "range": {
+        "startLine": 948,
+        "startChar": 2,
+        "endLine": 948,
+        "endChar": 45
+      },
+      "revId": "a016b78db45b8a9c4fffe7b4965ba9f8e645766d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
