@@ -50,6 +50,30 @@
       ],
       "revId": "ad055dac11a1f7669e2519ebeddb36343c03d9d5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd81e7f9_e69dd80a",
+        "filename": "runtime/gc/collector/concurrent_copying.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 3756,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-03-26T22:52:58Z",
+      "side": 1,
+      "message": "We could, if we had it. We may want to add it in a later CL.",
+      "parentUuid": "93d8bb74_7dc2e417",
+      "range": {
+        "startLine": 3751,
+        "startChar": 3,
+        "endLine": 3756,
+        "endChar": 5
+      },
+      "revId": "ad055dac11a1f7669e2519ebeddb36343c03d9d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
