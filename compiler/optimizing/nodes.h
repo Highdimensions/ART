@@ -400,6 +400,8 @@ class HGraph : public ArenaObject<kArenaAllocGraph> {
     return number_of_vregs_ - number_of_in_vregs_;
   }
 
+  void LinearizeGraph();
+
   const ArenaVector<HBasicBlock*>& GetReversePostOrder() const {
     return reverse_post_order_;
   }

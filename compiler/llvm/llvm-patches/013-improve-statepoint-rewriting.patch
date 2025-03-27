@@ -1,0 +1,164 @@
+diff --git a/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp b/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp
+index c7b55c2fb4..e20ad9b940 100644
+--- a/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp
++++ b/llvm/lib/Transforms/Scalar/RewriteStatepointsForGC.cpp
+@@ -684,6 +684,11 @@ static void setKnownBase(Value *V, bool IsKnownBase,
+   KnownBases[V] = IsKnownBase;
+ }
+ 
++static void updateKnownBase(Value *V, bool IsKnownBase,
++                            IsKnownBaseMapTy &KnownBases) {
++  KnownBases[V] = IsKnownBase;
++}
++
+ // Returns true if First and Second values are both scalar or both vector.
+ static bool areBothVectorOrScalar(Value *First, Value *Second) {
+   return isa<VectorType>(First->getType()) ==
+@@ -805,6 +810,42 @@ static raw_ostream &operator<<(raw_ostream &OS, const BDVState &State) {
+ }
+ #endif
+ 
++template<typename Visitor>
++static bool isConflictedBaseImpl(Value *I, Visitor VisitBDVOperands, DefiningValueMapTy &Cache, IsKnownBaseMapTy &KnownBases, SmallDenseMap<Value *, bool> &Visited) {
++  Value *BDV = findBaseOrBDV(I, Cache, KnownBases);
++  if (I != BDV) {
++    return false;
++  }
++  if (isKnownBase(I, KnownBases)) {
++    return true;
++  }
++  if (auto it = Visited.find(I); it != Visited.end()) {
++    return it->second;
++  }
++  // Initially assume that I is a base value.
++  Visited.insert({ I, true });
++
++  bool IsBase = true;
++  VisitBDVOperands(I, [&](Value *Op) {
++    if (!IsBase) {
++      // We have already determined that the value is not a base value.
++      return;
++    }
++
++    if (!isConflictedBaseImpl(Op, VisitBDVOperands, Cache, KnownBases, Visited)) {
++      IsBase = false;
++      Visited[I] = false;
++    }
++  });
++  return IsBase;
++}
++
++template<typename Visitor>
++static bool isConflictedBase(Value *I, Visitor visitBDVOperands, DefiningValueMapTy &Cache, IsKnownBaseMapTy &KnownBases) {
++  SmallDenseMap<Value *, bool> Visited;
++  return isConflictedBaseImpl(I, visitBDVOperands, Cache, KnownBases, Visited);
++}
++
+ /// For a given value or instruction, figure out what base ptr its derived from.
+ /// For gc objects, this is simply itself.  On success, returns a value which is
+ /// the base pointer.  (This is reliable and can be used for relocation.)  On
+@@ -1100,27 +1141,32 @@ static Value *findBasePointer(Value *I, DefiningValueMapTy &Cache,
+     if (!State.isConflict())
+       continue;
+ 
+-    auto getMangledName = [](Instruction *I) -> std::string {
+-      if (isa<PHINode>(I)) {
+-        return suffixed_name_or(I, ".base", "base_phi");
+-      } else if (isa<SelectInst>(I)) {
+-        return suffixed_name_or(I, ".base", "base_select");
+-      } else if (isa<ExtractElementInst>(I)) {
+-        return suffixed_name_or(I, ".base", "base_ee");
+-      } else if (isa<InsertElementInst>(I)) {
+-        return suffixed_name_or(I, ".base", "base_ie");
+-      } else {
+-        return suffixed_name_or(I, ".base", "base_sv");
+-      }
+-    };
++    Instruction *BaseInst = I;
++    BDVState::StatusTy Status = BDVState::Base;
++    if (!isConflictedBase(I, visitBDVOperands, Cache, KnownBases)) {
++      auto getMangledName = [](Instruction *I) -> std::string {
++        if (isa<PHINode>(I)) {
++          return suffixed_name_or(I, ".base", "base_phi");
++        } else if (isa<SelectInst>(I)) {
++          return suffixed_name_or(I, ".base", "base_select");
++        } else if (isa<ExtractElementInst>(I)) {
++          return suffixed_name_or(I, ".base", "base_ee");
++        } else if (isa<InsertElementInst>(I)) {
++          return suffixed_name_or(I, ".base", "base_ie");
++        } else {
++          return suffixed_name_or(I, ".base", "base_sv");
++        }
++      };
+ 
+-    Instruction *BaseInst = I->clone();
+-    BaseInst->insertBefore(I->getIterator());
+-    BaseInst->setName(getMangledName(I));
++      BaseInst = I->clone();
++      BaseInst->insertBefore(I->getIterator());
++      BaseInst->setName(getMangledName(I));
++      Status = BDVState::Conflict;
++    }
+     // Add metadata marking this as a base value
+     BaseInst->setMetadata("is_base_value", MDNode::get(I->getContext(), {}));
+-    States[I] = BDVState(I, BDVState::Conflict, BaseInst);
+-    setKnownBase(BaseInst, /* IsKnownBase */true, KnownBases);
++    States[I] = BDVState(I, Status, BaseInst);
++    updateKnownBase(BaseInst, /* IsKnownBase */true, KnownBases);
+   }
+ 
+ #ifndef NDEBUG
+@@ -1164,7 +1210,7 @@ static Value *findBasePointer(Value *I, DefiningValueMapTy &Cache,
+     // Only values that do not have known bases or those that have differing
+     // type (scalar versus vector) from a possible known base should be in the
+     // lattice.
+-    assert((!isKnownBase(BDV, KnownBases) ||
++    assert((State.getBaseValue() == BDV || !isKnownBase(BDV, KnownBases) ||
+             !areBothVectorOrScalar(BDV, State.getBaseValue())) &&
+            "why did it get added?");
+     assert(!State.isUnknown() && "Optimistic algorithm didn't complete!");
+@@ -1275,7 +1321,7 @@ static Value *findBasePointer(Value *I, DefiningValueMapTy &Cache,
+     // type (scalar versus vector) from a possible known base should be in the
+     // lattice.
+     assert(
+-        (!isKnownBase(BDV, KnownBases) || !areBothVectorOrScalar(BDV, Base)) &&
++        (Base == BDV || !isKnownBase(BDV, KnownBases) || !areBothVectorOrScalar(BDV, Base)) &&
+         "why did it get added?");
+ 
+     LLVM_DEBUG(
+diff --git a/llvm/test/Transforms/RewriteStatepointsForGC/base-pointers-14.ll b/llvm/test/Transforms/RewriteStatepointsForGC/base-pointers-14.ll
+index af2e96fa02..d70f2409bf 100644
+--- a/llvm/test/Transforms/RewriteStatepointsForGC/base-pointers-14.ll
++++ b/llvm/test/Transforms/RewriteStatepointsForGC/base-pointers-14.ll
+@@ -78,15 +78,12 @@ define ptr addrspace(1) @test3(i1 %c, ptr addrspace(1) %b1, ptr addrspace(1) %b2
+ ; CHECK-NEXT:  left:
+ ; CHECK-NEXT:    br i1 [[C:%.*]], label [[LOOP:%.*]], label [[MERGE2:%.*]]
+ ; CHECK:       loop:
+-; CHECK-NEXT:    [[B5_BASE:%.*]] = phi ptr addrspace(1) [ [[B2:%.*]], [[LEFT:%.*]] ], [ [[B5_BASE]], [[LOOP]] ], [ [[B6_BASE_RELOCATED:%.*]], [[MERGE2]] ], !is_base_value !0
+ ; CHECK-NEXT:    [[B5:%.*]] = phi ptr addrspace(1) [ [[B2]], [[LEFT]] ], [ [[B5]], [[LOOP]] ], [ [[B6_RELOCATED:%.*]], [[MERGE2]] ]
+ ; CHECK-NEXT:    br i1 [[C]], label [[LOOP]], label [[MERGE2]]
+ ; CHECK:       merge2:
+-; CHECK-NEXT:    [[B6_BASE:%.*]] = phi ptr addrspace(1) [ [[B1:%.*]], [[LEFT]] ], [ [[B5_BASE]], [[LOOP]] ], !is_base_value !0
+ ; CHECK-NEXT:    [[B6:%.*]] = phi ptr addrspace(1) [ [[B1]], [[LEFT]] ], [ [[B5]], [[LOOP]] ]
+-; CHECK-NEXT:    [[STATEPOINT_TOKEN:%.*]] = call token (i64, i32, ptr, i32, i32, ...) @llvm.experimental.gc.statepoint.p0(i64 2882400000, i32 0, ptr elementtype(void ()) @foo, i32 0, i32 0, i32 0, i32 0) [ "deopt"(), "gc-live"(ptr addrspace(1) [[B6_BASE]], ptr addrspace(1) [[B6]]) ]
+-; CHECK-NEXT:    [[B6_BASE_RELOCATED]] = call coldcc ptr addrspace(1) @llvm.experimental.gc.relocate.p1(token [[STATEPOINT_TOKEN]], i32 0, i32 0)
+-; CHECK-NEXT:    [[B6_RELOCATED]] = call coldcc ptr addrspace(1) @llvm.experimental.gc.relocate.p1(token [[STATEPOINT_TOKEN]], i32 0, i32 1)
++; CHECK-NEXT:    [[STATEPOINT_TOKEN:%.*]] = call token (i64, i32, ptr, i32, i32, ...) @llvm.experimental.gc.statepoint.p0(i64 2882400000, i32 0, ptr elementtype(void ()) @foo, i32 0, i32 0, i32 0, i32 0) [ "deopt"(), "gc-live"(ptr addrspace(1) [[B6]]) ]
++; CHECK-NEXT:    [[B6_RELOCATED]] = call coldcc ptr addrspace(1) @llvm.experimental.gc.relocate.p1(token [[STATEPOINT_TOKEN]], i32 0, i32 0)
+ ; CHECK-NEXT:    br i1 [[C]], label [[LOOP]], label [[EXIT:%.*]]
+ ; CHECK:       exit:
+ ; CHECK-NEXT:    ret ptr addrspace(1) [[B6_RELOCATED]]
+@@ -215,11 +212,9 @@ define ptr addrspace(1) @test7(i1 %c1, i1 %c2, ptr addrspace(1) %b1, ptr addrspa
+ ; CHECK-NEXT:    [[B3_RELOCATED:%.*]] = call coldcc ptr addrspace(1) @llvm.experimental.gc.relocate.p1(token [[STATEPOINT_TOKEN]], i32 0, i32 0)
+ ; CHECK-NEXT:    br i1 [[C2:%.*]], label [[LOOP]], label [[MERGE2]]
+ ; CHECK:       merge2:
+-; CHECK-NEXT:    [[B6_BASE:%.*]] = phi ptr addrspace(1) [ [[B1:%.*]], [[ENTRY]] ], [ [[B3]], [[LOOP]] ], [ [[B41]], [[LEFT]] ], !is_base_value !0
+ ; CHECK-NEXT:    [[B6:%.*]] = phi ptr addrspace(1) [ [[B1]], [[ENTRY]] ], [ [[B3]], [[LOOP]] ], [ [[B41]], [[LEFT]] ]
+-; CHECK-NEXT:    [[STATEPOINT_TOKEN2:%.*]] = call token (i64, i32, ptr, i32, i32, ...) @llvm.experimental.gc.statepoint.p0(i64 2882400000, i32 0, ptr elementtype(void ()) @foo, i32 0, i32 0, i32 0, i32 0) [ "deopt"(), "gc-live"(ptr addrspace(1) [[B6]], ptr addrspace(1) [[B6_BASE]]) ]
+-; CHECK-NEXT:    [[B6_RELOCATED:%.*]] = call coldcc ptr addrspace(1) @llvm.experimental.gc.relocate.p1(token [[STATEPOINT_TOKEN2]], i32 1, i32 0)
+-; CHECK-NEXT:    [[B6_BASE_RELOCATED:%.*]] = call coldcc ptr addrspace(1) @llvm.experimental.gc.relocate.p1(token [[STATEPOINT_TOKEN2]], i32 1, i32 1)
++; CHECK-NEXT:    [[STATEPOINT_TOKEN2:%.*]] = call token (i64, i32, ptr, i32, i32, ...) @llvm.experimental.gc.statepoint.p0(i64 2882400000, i32 0, ptr elementtype(void ()) @foo, i32 0, i32 0, i32 0, i32 0) [ "deopt"(), "gc-live"(ptr addrspace(1) [[B6]]) ]
++; CHECK-NEXT:    [[B6_RELOCATED:%.*]] = call coldcc ptr addrspace(1) @llvm.experimental.gc.relocate.p1(token [[STATEPOINT_TOKEN2]], i32 0, i32 0)
+ ; CHECK-NEXT:    ret ptr addrspace(1) [[B6_RELOCATED]]
+ ;
+ entry:

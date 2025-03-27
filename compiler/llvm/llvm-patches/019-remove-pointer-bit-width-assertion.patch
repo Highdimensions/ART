@@ -1,0 +1,15 @@
+diff --git a/llvm/lib/IR/Value.cpp b/llvm/lib/IR/Value.cpp
+index eddb67282f..70cc0098ce 100644
+--- a/llvm/lib/IR/Value.cpp
++++ b/llvm/lib/IR/Value.cpp
+@@ -719,8 +719,10 @@ const Value *Value::stripAndAccumulateConstantOffsets(
+     return this;
+ 
+   unsigned BitWidth = Offset.getBitWidth();
++  /*
+   assert(BitWidth == DL.getIndexTypeSizeInBits(getType()) &&
+          "The offset bit width does not match the DL specification.");
++  */
+ 
+   // Even though we don't look through PHI nodes, we could be called on an
+   // instruction in an unreachable block, which may be on a cycle.

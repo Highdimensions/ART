@@ -1,0 +1,16 @@
+diff --git a/llvm/lib/CodeGen/MachineFunction.cpp b/llvm/lib/CodeGen/MachineFunction.cpp
+index 7d504ef5a0..8beba4afb3 100644
+--- a/llvm/lib/CodeGen/MachineFunction.cpp
++++ b/llvm/lib/CodeGen/MachineFunction.cpp
+@@ -243,9 +243,11 @@ void MachineFunction::init() {
+     WasmEHInfo = new (Allocator) WasmEHFuncInfo();
+   }
+ 
++  /*
+   assert(Target.isCompatibleDataLayout(getDataLayout()) &&
+          "Can't create a MachineFunction using a Module with a "
+          "Target-incompatible DataLayout attached\n");
++  */
+ 
+   PSVManager = std::make_unique<PseudoSourceValueManager>(getTarget());
+ }

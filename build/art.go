@@ -154,7 +154,7 @@ func deviceFlags(ctx android.LoadHookContext) []string {
 	var cflags []string
 	deviceFrameSizeLimit := 1744
 	if len(ctx.Config().SanitizeDevice()) > 0 {
-		deviceFrameSizeLimit = 7400
+		deviceFrameSizeLimit = 10000
 	}
 	cflags = append(cflags,
 		fmt.Sprintf("-Wframe-larger-than=%d", deviceFrameSizeLimit),

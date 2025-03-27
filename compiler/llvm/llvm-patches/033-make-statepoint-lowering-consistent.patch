@@ -1,0 +1,38 @@
+diff --git a/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp b/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp
+index 07465a877b..e5839dc495 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp
+@@ -1071,13 +1071,28 @@ SelectionDAGBuilder::LowerStatepoint(const GCStatepointInst &I,
+   // separately with half the space. This would require a format rev and a
+   // fairly major rework of the STATEPOINT node though.
+   SmallSet<SDValue, 8> Seen;
++  SmallSet<const GCRelocateInst *, 8> SeenRelocates;
++  SmallDenseMap<Value *, SmallVector<const GCRelocateInst *>, 8> RelocatesMap;
+   for (const GCRelocateInst *Relocate : I.getGCRelocates()) {
+-    SI.GCRelocates.push_back(Relocate);
++    RelocatesMap[Relocate->getDerivedPtr()].push_back(Relocate);
++  }
++  for (Value *Ptr : I.gc_live()) {
++    if (!RelocatesMap.count(Ptr)) {
++      continue;
++    }
+ 
+-    SDValue DerivedSD = getValue(Relocate->getDerivedPtr());
+-    if (Seen.insert(DerivedSD).second) {
+-      SI.Bases.push_back(Relocate->getBasePtr());
+-      SI.Ptrs.push_back(Relocate->getDerivedPtr());
++    for (const GCRelocateInst *Relocate : RelocatesMap[Ptr]) {
++      if (SeenRelocates.count(Relocate)) {
++        continue;
++      }
++      SeenRelocates.insert(Relocate);
++      SI.GCRelocates.push_back(Relocate);
++
++      SDValue DerivedSD = getValue(Relocate->getDerivedPtr());
++      if (Seen.insert(DerivedSD).second) {
++        SI.Bases.push_back(Relocate->getBasePtr());
++        SI.Ptrs.push_back(Relocate->getDerivedPtr());
++      }
+     }
+   }
+ 

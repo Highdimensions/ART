@@ -102,7 +102,7 @@ class PassObserver : public ValueObject {
       }
       if (visualizer_enabled_) {
         visualizer_.PrintHeader(GetMethodName());
-        codegen->SetDisassemblyInformation(&disasm_info_);
+        codegen->SetDisassemblyInformation(compiler_options.UseLLVM() ? nullptr : &disasm_info_);
       }
     }
   }
@@ -739,11 +739,12 @@ CompiledMethod* OptimizingCompiler::Emit(ArenaAllocator* allocator,
   ScopedArenaVector<uint8_t> stack_map = codegen->BuildStackMaps(code_item_for_osr_check);
 
   CompiledCodeStorage* storage = GetCompiledCodeStorage();
+  ArrayRef<const uint8_t> cfi_data = codegen->GetCfiData();
   CompiledMethod* compiled_method = storage->CreateCompiledMethod(
       codegen->GetInstructionSet(),
       codegen->GetCode(),
       ArrayRef<const uint8_t>(stack_map),
-      ArrayRef<const uint8_t>(*codegen->GetAssembler()->cfi().data()),
+      cfi_data,
       ArrayRef<const linker::LinkerPatch>(linker_patches),
       is_intrinsic);
 
@@ -897,7 +898,9 @@ CodeGenerator* OptimizingCompiler::TryCompile(ArenaAllocator* allocator,
     MaybeRecordStat(compilation_stats_.get(), MethodCompilationStat::kNotCompiledNoCodegen);
     return nullptr;
   }
-  codegen->GetAssembler()->cfi().SetEnabled(compiler_options.GenerateAnyDebugInfo());
+  if (Assembler *assembler = codegen->GetAssembler()) {
+    assembler->cfi().SetEnabled(compiler_options.GenerateAnyDebugInfo());
+  }
 
   PassObserver pass_observer(graph,
                              codegen.get(),
@@ -989,18 +992,32 @@ CodeGenerator* OptimizingCompiler::TryCompile(ArenaAllocator* allocator,
     }
   }
 
-  AllocateRegisters(graph,
-                    codegen.get(),
-                    &pass_observer,
-                    compilation_stats_.get());
+  // LLVM uses its own register allocator, so we can skip this step.
+  if (compiler_options.UseLLVM()) {
+    // Run the PrepareForRegisterAllocation pass, since it does some more optimizations,
+    // which could be useful.
+    {
+      PassScope scope(PrepareForRegisterAllocation::kPrepareForRegisterAllocationPassName,
+                      &pass_observer);
+      PrepareForRegisterAllocation(graph, codegen->GetCompilerOptions(), compilation_stats_.get()).Run();
+    }
+    // The register allocator calls `CodeGenerator::InitializeCodeGeneration`, which initializes
+    // some members of `codegen`. We have to make sure this initialization happens here as well.
+    codegen->InitializeDefaultBlockOrder();
+  } else {
+    AllocateRegisters(graph,
+                      codegen.get(),
+                      &pass_observer,
+                      compilation_stats_.get());
 
-  if (UNLIKELY(codegen->GetFrameSize() > codegen->GetMaximumFrameSize())) {
-    SCOPED_TRACE << "Not compiling because of stack frame too large";
-    LOG(WARNING) << "Stack frame size is " << codegen->GetFrameSize()
-                 << " which is larger than the maximum of " << codegen->GetMaximumFrameSize()
-                 << " bytes. Method: " << graph->PrettyMethod();
-    MaybeRecordStat(compilation_stats_.get(), MethodCompilationStat::kNotCompiledFrameTooBig);
-    return nullptr;
+    if (UNLIKELY(codegen->GetFrameSize() > codegen->GetMaximumFrameSize())) {
+      SCOPED_TRACE << "Not compiling because of stack frame too large";
+      LOG(WARNING) << "Stack frame size is " << codegen->GetFrameSize()
+                  << " which is larger than the maximum of " << codegen->GetMaximumFrameSize()
+                  << " bytes. Method: " << graph->PrettyMethod();
+      MaybeRecordStat(compilation_stats_.get(), MethodCompilationStat::kNotCompiledFrameTooBig);
+      return nullptr;
+    }
   }
 
 #ifdef ART_USE_RESTRICTED_MODE
@@ -1060,6 +1077,7 @@ CodeGenerator* OptimizingCompiler::TryCompileIntrinsic(
       CompilationKind::kOptimized);
 
   DCHECK(Runtime::Current()->IsAotCompiler());
+  DCHECK(graph != nullptr);
   DCHECK(method != nullptr);
   graph->SetArtMethod(method);
 
@@ -1070,7 +1088,9 @@ CodeGenerator* OptimizingCompiler::TryCompileIntrinsic(
   if (codegen.get() == nullptr) {
     return nullptr;
   }
-  codegen->GetAssembler()->cfi().SetEnabled(compiler_options.GenerateAnyDebugInfo());
+  if (Assembler *assembler = codegen->GetAssembler()) {
+    assembler->cfi().SetEnabled(compiler_options.GenerateAnyDebugInfo());
+  }
 
   PassObserver pass_observer(graph,
                              codegen.get(),
@@ -1106,13 +1126,35 @@ CodeGenerator* OptimizingCompiler::TryCompileIntrinsic(
     WriteBarrierElimination(graph, compilation_stats_.get()).Run();
   }
 
-  AllocateRegisters(graph,
-                    codegen.get(),
-                    &pass_observer,
-                    compilation_stats_.get());
+  // LLVM uses its own register allocator, so we can skip this step.
+  if (compiler_options.UseLLVM()) {
+    // Run the PrepareForRegisterAllocation pass, since it does some more optimizations,
+    // which could be useful.
+    {
+      PassScope scope(PrepareForRegisterAllocation::kPrepareForRegisterAllocationPassName,
+                      &pass_observer);
+      PrepareForRegisterAllocation(graph, codegen->GetCompilerOptions(), compilation_stats_.get())
+          .Run();
+    }
+    // The register allocator calls `CodeGenerator::InitializeCodeGeneration`, which initializes
+    // some members of `codegen`. We have to make sure this initialization happens here as well.
+    codegen->InitializeDefaultBlockOrder();
+    ScopedArenaAllocator local_allocator(graph->GetArenaStack());
+    SsaLivenessAnalysis liveness(graph, codegen.get(), &local_allocator);
+    {
+      PassScope scope(SsaLivenessAnalysis::kLivenessPassName, &pass_observer);
+      liveness.Analyze();
+    }
+  } else {
+    AllocateRegisters(graph,
+                      codegen.get(),
+                      &pass_observer,
+                      compilation_stats_.get());
+  }
+
   if (!codegen->IsLeafMethod()) {
-    VLOG(compiler) << "Intrinsic method is not leaf: " << method->GetIntrinsic()
-        << " " << graph->PrettyMethod();
+    VLOG(compiler) << "Intrinsic method is not leaf: " << method->GetIntrinsic() << " "
+                   << graph->PrettyMethod();
     return nullptr;
   }
 

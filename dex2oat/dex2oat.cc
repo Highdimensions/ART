@@ -1122,6 +1122,30 @@ class Dex2Oat final {
       compiler_options_->instruction_set_ = InstructionSet::kThumb2;
     }
 
+    AssignTrueIfExists(args, M::UseLLVM, &compiler_options_->use_llvm_);
+    if (compiler_options_->use_llvm_ &&
+        compiler_options_->instruction_set_ != InstructionSet::kArm64) {
+      LOG(WARNING) << "Flag --use-llvm ignored: the LLVM code generator can only be used for arm64";
+      compiler_options_->use_llvm_ = false;
+    }
+    if (compiler_options_->use_llvm_ && args.Exists(M::LLVMOptLevel)) {
+      const std::string& opt_level = *args.Get(M::LLVMOptLevel);
+
+      if (opt_level == "0" || opt_level == "1" || opt_level == "2" || opt_level == "3" ||
+          opt_level == "s" || opt_level == "z") {
+        compiler_options_->llvm_opt_level_ = opt_level[0];
+      } else {
+        LOG(WARNING) << "Invalid value '" << opt_level
+                     << "' for flag --llvm-opt-level: expected either '0', '1', '2', '3', 's', or 'z'";
+      }
+    }
+    if (compiler_options_->use_llvm_ && args.Exists(M::LLVMCPUTarget)) {
+      compiler_options_->llvm_cpu_target_ = *args.Get(M::LLVMCPUTarget);
+    }
+    AssignTrueIfExists(
+        args, M::LLVMDuplicateOptPipeline, &compiler_options_->llvm_duplicate_opt_pipeline_);
+    AssignIfExists(args, M::LLVMArgs, &compiler_options_->llvm_args_);
+
     AssignTrueIfExists(args, M::Host, &is_host_);
     AssignTrueIfExists(args, M::AvoidStoringInvocation, &avoid_storing_invocation_);
     if (args.Exists(M::InvocationFile)) {

@@ -1,0 +1,86 @@
+diff --git a/llvm/include/llvm/CodeGen/SelectionDAGNodes.h b/llvm/include/llvm/CodeGen/SelectionDAGNodes.h
+index 49467ce0a5..afbbc54869 100644
+--- a/llvm/include/llvm/CodeGen/SelectionDAGNodes.h
++++ b/llvm/include/llvm/CodeGen/SelectionDAGNodes.h
+@@ -416,6 +416,9 @@ public:
+     // Compare instructions which may carry the samesign flag.
+     SameSign = 1 << 14,
+ 
++    ZeroExt = 1 << 15,
++    SignExt = 1 << 16,
++
+     // NOTE: Please update LargestValue in LLVM_DECLARE_ENUM_AS_BITMASK below
+     // the class definition when adding new flags.
+ 
+@@ -453,6 +456,8 @@ public:
+   void setAllowReassociation(bool b) { setFlag<AllowReassociation>(b); }
+   void setNoFPExcept(bool b) { setFlag<NoFPExcept>(b); }
+   void setUnpredictable(bool b) { setFlag<Unpredictable>(b); }
++  void setZeroExt(bool b) { setFlag<ZeroExt>(b); }
++  void setSignExt(bool b) { setFlag<SignExt>(b); }
+ 
+   // These are accessors for each flag.
+   bool hasNoUnsignedWrap() const { return Flags & NoUnsignedWrap; }
+@@ -470,6 +475,8 @@ public:
+   bool hasAllowReassociation() const { return Flags & AllowReassociation; }
+   bool hasNoFPExcept() const { return Flags & NoFPExcept; }
+   bool hasUnpredictable() const { return Flags & Unpredictable; }
++  bool hasZeroExt() const { return Flags & ZeroExt; }
++  bool hasSignExt() const { return Flags & SignExt; }
+ 
+   bool operator==(const SDNodeFlags &Other) const {
+     return Flags == Other.Flags;
+@@ -479,7 +486,7 @@ public:
+ };
+ 
+ LLVM_DECLARE_ENUM_AS_BITMASK(decltype(SDNodeFlags::None),
+-                             SDNodeFlags::SameSign);
++                             SDNodeFlags::SignExt);
+ 
+ inline SDNodeFlags operator|(SDNodeFlags LHS, SDNodeFlags RHS) {
+   LHS |= RHS;
+diff --git a/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp b/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
+index 625052be65..ca1ae9d3bc 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
+@@ -6188,7 +6188,17 @@ SDValue DAGTypeLegalizer::PromoteIntRes_PATCHPOINT(SDNode *N) {
+   SDValue To[] = {Res.getValue(1), Res.getValue(2)};
+   DAG.ReplaceAllUsesOfValuesWith(From, To, 2);
+ 
+-  return Res.getValue(0);
++  Res = Res.getValue(0);
++  if (N->getFlags().hasZeroExt()) {
++    Res = DAG.getNode(ISD::AssertZext, dl, NVT, Res,
++                      DAG.getValueType(N->getValueType(0).getScalarType()));
++  }
++  if (N->getFlags().hasSignExt()) {
++    Res = DAG.getNode(ISD::AssertSext, dl, NVT, Res,
++                      DAG.getValueType(N->getValueType(0).getScalarType()));
++  }
++
++  return Res;
+ }
+ 
+ SDValue DAGTypeLegalizer::PromoteIntOp_EXTRACT_VECTOR_ELT(SDNode *N) {
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+index 1d62cf2733..7c5caf5e05 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+@@ -10843,6 +10843,17 @@ void SelectionDAGBuilder::visitPatchpoint(const CallBase &CB,
+   // Replace the target specific call node with a PATCHPOINT node.
+   SDValue PPV = DAG.getNode(ISD::PATCHPOINT, dl, NodeTys, Ops);
+ 
++  if (CB.hasRetAttr(Attribute::ZExt)) {
++    SDNodeFlags Flags = PPV->getFlags();
++    Flags.setZeroExt(true);
++    PPV->setFlags(Flags);
++  }
++  if (CB.hasRetAttr(Attribute::SExt)) {
++    SDNodeFlags Flags = PPV->getFlags();
++    Flags.setSignExt(true);
++    PPV->setFlags(Flags);
++  }
++
+   // Update the NodeMap.
+   if (HasDef) {
+     if (IsAnyRegCC)

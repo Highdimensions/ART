@@ -1,0 +1,6 @@
+llvm/*
+cmake/*
+build-*/*
+install-*/*
+android_*/*
+linux_*/*

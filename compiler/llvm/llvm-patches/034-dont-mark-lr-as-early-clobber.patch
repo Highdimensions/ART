@@ -1,0 +1,39 @@
+diff --git a/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp b/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
+index 984c453305..30ae43e128 100644
+--- a/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
++++ b/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
+@@ -3343,14 +3343,15 @@ MachineBasicBlock *AArch64TargetLowering::EmitInstrWithCustomInserter(
+   case TargetOpcode::STATEPOINT:
+     // STATEPOINT is a pseudo instruction which has no implicit defs/uses
+     // while bl call instruction (where statepoint will be lowered at the end)
+-    // has implicit def. This def is early-clobber as it will be set at
+-    // the moment of the call and earlier than any use is read.
+-    // Add this implicit dead def here as a workaround.
++    // has implicit def. This def shouldn't be marked as early-clobber as its
++    // value can be read before the call instruction, e.g. by placing the called
++    // function pointer into LR and doing the call as 'blr LR'. Add this implicit
++    // dead def here as a workaround.
+     MI.addOperand(*MI.getMF(),
+                   MachineOperand::CreateReg(
+                       AArch64::LR, /*isDef*/ true,
+                       /*isImp*/ true, /*isKill*/ false, /*isDead*/ true,
+-                      /*isUndef*/ false, /*isEarlyClobber*/ true));
++                      /*isUndef*/ false, /*isEarlyClobber*/ false));
+     [[fallthrough]];
+   case TargetOpcode::STACKMAP:
+   case TargetOpcode::PATCHPOINT:
+@@ -17923,7 +17924,13 @@ bool AArch64TargetLowering::generateFMAsInMachineCombiner(
+ }
+ 
+ const MCPhysReg *
+-AArch64TargetLowering::getScratchRegisters(CallingConv::ID) const {
++AArch64TargetLowering::getScratchRegisters(CallingConv::ID CC) const {
++  if (CC == CallingConv::AnyReg) {
++    static const MCPhysReg AnyRegScratchRegs[] = {
++      AArch64::X16, AArch64::X17, 0
++    };
++    return AnyRegScratchRegs;
++  }
+   // LR is a callee-save register, but we must treat it as clobbered by any call
+   // site. Hence we include LR in the scratch registers, which are in turn added
+   // as implicit-defs for stackmaps and patchpoints.

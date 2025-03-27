@@ -137,7 +137,7 @@ art_cc_binary {
     ],
 }
 
-cc_defaults {
+art_cc_defaults {
     name: "oatdumps-defaults",
     device_supported: false,
     static_executable: true,
@@ -158,6 +158,11 @@ cc_defaults {
         "-z muldefs",
     ],
     static_libs: ["libsigchain_fake"],
+    codegen: {
+        arm64: {
+            static_libs: ["libLLVM_ART"],
+        },
+    },
 }
 
 art_cc_binary {

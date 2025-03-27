@@ -281,6 +281,25 @@ class CompilerOptions final {
     return instruction_set_features_.get();
   }
 
+  bool UseLLVM() const {
+    return use_llvm_;
+  }
+
+  char LLVMOptLevel() const {
+    return llvm_opt_level_;
+  }
+
+  bool LLVMDuplicateOptPipeline() const {
+    return llvm_duplicate_opt_pipeline_;
+  }
+
+  const std::string& LLVMCPUTarget() const {
+    return llvm_cpu_target_;
+  }
+
+  const std::vector<std::string>& LLVMArgs() const {
+    return llvm_args_;
+  }
 
   const std::vector<const DexFile*>& GetNoInlineFromDexFile() const {
     return no_inline_from_;
@@ -392,6 +411,11 @@ class CompilerOptions final {
 
   InstructionSet instruction_set_;
   std::unique_ptr<const InstructionSetFeatures> instruction_set_features_;
+  bool use_llvm_;
+  char llvm_opt_level_;
+  bool llvm_duplicate_opt_pipeline_;
+  std::string llvm_cpu_target_;
+  std::vector<std::string> llvm_args_;
 
   // Dex files from which we should not inline code. Does not own the dex files.
   // This is usually a very short list (i.e. a single dex file), so we

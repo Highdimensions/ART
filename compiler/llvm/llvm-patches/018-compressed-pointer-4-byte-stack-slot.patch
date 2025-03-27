@@ -1,0 +1,138 @@
+diff --git a/llvm/include/llvm/IR/GCStrategy.h b/llvm/include/llvm/IR/GCStrategy.h
+index cbfbe23aaa..8c7e53a9ec 100644
+--- a/llvm/include/llvm/IR/GCStrategy.h
++++ b/llvm/include/llvm/IR/GCStrategy.h
+@@ -76,6 +76,10 @@ protected:
+                          /// this function's calls.
+                          /// This should only be set if UseStatepoints is set.
+ 
++  bool UseCompressedPointers = false; /// If UseStatepoints is set, this determines
++                                      /// whether to use 4-byte pointers for saving
++                                      /// GC pointers to the stack.
++
+   bool NeededSafePoints = false;    ///< if set, calls are inferred to be safepoints
+   bool UsesMetadata = false;     ///< If set, backend must emit metadata tables.
+ 
+@@ -110,6 +114,12 @@ public:
+     return UseRS4GC;
+   }
+ 
++  bool useCompressedPointers() const {
++    assert((!UseCompressedPointers || useStatepoints()) &&
++           "GC strategy has useCompressedPointers but not useStatepoints set");
++    return UseCompressedPointers;
++  }
++
+   ///@}
+ 
+   /// If set, appropriate metadata tables must be emitted by the back-end
+diff --git a/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp b/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp
+index 987ea826f7..14aae939e8 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/StatepointLowering.cpp
+@@ -373,15 +373,17 @@ static MachineMemOperand* getMachineMemOperand(MachineFunction &MF,
+ /// containing saved value and second element with outgoing chain from the
+ /// emitted store
+ static std::tuple<SDValue, SDValue, MachineMemOperand*>
+-spillIncomingStatepointValue(SDValue Incoming, SDValue Chain,
++spillIncomingStatepointValue(SDValue Incoming, bool IsPointer, SDValue Chain,
+                              SelectionDAGBuilder &Builder) {
+   SDValue Loc = Builder.StatepointLowering.getLocation(Incoming);
+   MachineMemOperand* MMO = nullptr;
+ 
+   // Emit new store if we didn't do it for this ptr before
+   if (!Loc.getNode()) {
+-    Loc = Builder.StatepointLowering.allocateStackSlot(Incoming.getValueType(),
+-                                                       Builder);
++    GCStrategy &Strategy = Builder.GFI->getStrategy();
++    EVT ValueVT = Incoming.getValueType();
++    EVT MemVT = IsPointer && Strategy.useCompressedPointers() ? MVT::i32 : ValueVT;
++    Loc = Builder.StatepointLowering.allocateStackSlot(MemVT, Builder);
+     int Index = cast<FrameIndexSDNode>(Loc)->getIndex();
+     // We use TargetFrameIndex so that isel will not select it into LEA
+     Loc = Builder.DAG.getTargetFrameIndex(Index, Builder.getFrameIndexTy());
+@@ -394,7 +396,7 @@ spillIncomingStatepointValue(SDValue Incoming, SDValue Chain,
+     MachineFrameInfo &MFI = Builder.DAG.getMachineFunction().getFrameInfo();
+     assert((MFI.getObjectSize(Index) * 8) ==
+                (-8 & (7 + // Round up modulo 8.
+-                      (int64_t)Incoming.getValueSizeInBits())) &&
++                      (int64_t)MemVT.getSizeInBits())) &&
+            "Bad spill:  stack slot does not match!");
+ 
+     // Note: Using the alignment of the spill slot (rather than the abi or
+@@ -405,7 +407,12 @@ spillIncomingStatepointValue(SDValue Incoming, SDValue Chain,
+     auto *StoreMMO = MF.getMachineMemOperand(
+         PtrInfo, MachineMemOperand::MOStore, MFI.getObjectSize(Index),
+         MFI.getObjectAlign(Index));
+-    Chain = Builder.DAG.getStore(Chain, Builder.getCurSDLoc(), Incoming, Loc,
++    SDValue StoredValue = Incoming;
++    if (ValueVT != MemVT) {
++      StoredValue =
++          Builder.DAG.getPtrExtOrTrunc(Incoming, Builder.getCurSDLoc(), MemVT);
++    }
++    Chain = Builder.DAG.getStore(Chain, Builder.getCurSDLoc(), StoredValue, Loc,
+                                  StoreMMO);
+ 
+     MMO = getMachineMemOperand(MF, *cast<FrameIndexSDNode>(Loc));
+@@ -421,7 +428,8 @@ spillIncomingStatepointValue(SDValue Incoming, SDValue Chain,
+ /// either a deopt value or a gc value, the handling is the same.  We special
+ /// case constants and allocas, then fall back to spilling if required.
+ static void
+-lowerIncomingStatepointValue(SDValue Incoming, bool RequireSpillSlot,
++lowerIncomingStatepointValue(SDValue Incoming, bool IsPointer,
++                             bool RequireSpillSlot,
+                              SmallVectorImpl<SDValue> &Ops,
+                              SmallVectorImpl<MachineMemOperand *> &MemRefs,
+                              SelectionDAGBuilder &Builder) {
+@@ -487,7 +495,7 @@ lowerIncomingStatepointValue(SDValue Incoming, bool RequireSpillSlot,
+     // will happily do so as needed, so doing it here would be a small compile
+     // time win at most. 
+     SDValue Chain = Builder.getRoot();
+-    auto Res = spillIncomingStatepointValue(Incoming, Chain, Builder);
++    auto Res = spillIncomingStatepointValue(Incoming, IsPointer, Chain, Builder);
+     Ops.push_back(std::get<0>(Res));
+     if (auto *MMO = std::get<2>(Res))
+       MemRefs.push_back(MMO);
+@@ -653,15 +661,15 @@ lowerStatepointMetaArgs(SmallVectorImpl<SDValue> &Ops,
+       Incoming = Builder.getValue(V);
+     LLVM_DEBUG(dbgs() << "Value " << *V
+                       << " requireSpillSlot = " << requireSpillSlot(V) << "\n");
+-    lowerIncomingStatepointValue(Incoming, requireSpillSlot(V), Ops, MemRefs,
+-                                 Builder);
++    lowerIncomingStatepointValue(Incoming, isGCValue(V, Builder),
++                                 requireSpillSlot(V), Ops, MemRefs, Builder);
+   }
+ 
+   // Finally, go ahead and lower all the gc arguments.
+   pushStackMapConstant(Ops, Builder, LoweredGCPtrs.size());
+   for (SDValue SDV : LoweredGCPtrs)
+-    lowerIncomingStatepointValue(SDV, !LowerAsVReg.count(SDV), Ops, MemRefs,
+-                                 Builder);
++    lowerIncomingStatepointValue(SDV, true, !LowerAsVReg.count(SDV), Ops,
++                                 MemRefs, Builder);
+ 
+   // Copy to out vector. LoweredGCPtrs will be empty after this point.
+   GCPtrs = LoweredGCPtrs.takeVector();
+@@ -1272,13 +1280,19 @@ void SelectionDAGBuilder::visitGCRelocate(const GCRelocateInst &Relocate) {
+                                             MFI.getObjectSize(Index),
+                                             MFI.getObjectAlign(Index));
+ 
+-    auto LoadVT = DAG.getTargetLoweringInfo().getValueType(DAG.getDataLayout(),
+-                                                           Relocate.getType());
++    auto ValueVT = DAG.getTargetLoweringInfo().getValueType(DAG.getDataLayout(),
++                                                            Relocate.getType());
++    auto MemVT =
++        GFI->getStrategy().useCompressedPointers() ? MVT::i32 : ValueVT;
+ 
+     SDValue SpillLoad =
+-        DAG.getLoad(LoadVT, getCurSDLoc(), Chain, SpillSlot, LoadMMO);
++        DAG.getLoad(MemVT, getCurSDLoc(), Chain, SpillSlot, LoadMMO);
+     PendingLoads.push_back(SpillLoad.getValue(1));
+ 
++    if (ValueVT != MemVT) {
++      SpillLoad = DAG.getPtrExtOrTrunc(SpillLoad, getCurSDLoc(), ValueVT);
++    }
++
+     assert(SpillLoad.getNode());
+     setValue(&Relocate, SpillLoad);
+     return;
