@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e90737c_59b551ba",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2025-03-27T14:25:58Z",
+      "side": 1,
+      "message": "Pre-submit testing does not run MTS; could you add something like this (or a subset of it):\n\n```\nTest: m mts \u0026\u0026 mts-tradefed run commandAndExit mts-art\nTest: m mts \u0026\u0026 mts-tradefed run commandAndExit mts-art-shard-03\nTest: m mts \\\n        \u0026\u0026 mts-tradefed run commandAndExit mts-art \\\n             --module libnativebridge-tests\n```\n\n?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "509f96a5767110696ba92779a23156dfe097183f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
