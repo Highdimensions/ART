@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec83f0b8_c7d0f906",
+        "filename": "runtime/runtime.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1518,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-03-27T16:52:34Z",
+      "side": 1,
+      "message": "FTR, this fallback came about in https://r.android.com/1763168 to fix a crash on S where it wasn\u0027t populated, probably shortly after the support for `lastUpdateMillis` was added in apexd. From the discussion in b/193374411#comment4 ff I gather that it ought never happen in S and later, but the fallback was still added to comply with the schema since the field by necessity is optional.\n\nStill, in the end your description here seems plausible as to how it\u0027d actually happen in practice.",
+      "range": {
+        "startLine": 1517,
+        "startChar": 78,
+        "endLine": 1518,
+        "endChar": 79
+      },
+      "revId": "9e45a7c20cb52e374994aa549b2001e948d79c51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
