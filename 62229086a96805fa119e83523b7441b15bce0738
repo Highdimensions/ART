@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4cafa02b_3d824080",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-03-27T10:54:33Z",
+      "side": 1,
+      "message": "Adding Ulya who wrote this tutorial. Not sure if we want `/home/ubuntu/art-test-chroot` or something like `\u003cLOCAL_PATH\u003e/art-test-chroot` and explain the ENV variable",
+      "revId": "62229086a96805fa119e83523b7441b15bce0738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
