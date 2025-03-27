@@ -16,6 +16,23 @@
       "message": "Adding Ulya who wrote this tutorial. Not sure if we want `/home/ubuntu/art-test-chroot` or something like `\u003cLOCAL_PATH\u003e/art-test-chroot` and explain the ENV variable",
       "revId": "62229086a96805fa119e83523b7441b15bce0738",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7c34d93_88fccde7",
+        "filename": "test/README.chroot_vm.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1550939
+      },
+      "writtenOn": "2025-03-27T11:06:19Z",
+      "side": 1,
+      "message": "This variable should be set by https://cs.android.com/android/platform/superproject/main/+/main:art/tools/buildbot-utils.sh;l\u003d82-83\n\nCan you try sourcing buildbot-utils instead? (If you use buildbot-build.sh script, it sources buildbot-utils, that is what we usually do.)",
+      "revId": "62229086a96805fa119e83523b7441b15bce0738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
