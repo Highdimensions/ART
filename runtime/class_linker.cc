@@ -2240,16 +2240,8 @@ bool ClassLinker::AddImageSpace(gc::space::ImageSpace* space,
         return false;
       }
 
-      const char* oat_apex_versions =
-          oat_header->GetStoreValueByKeyUnsafe(OatHeader::kApexVersionsKey);
-      if (oat_apex_versions == nullptr) {
-        *error_msg = StringPrintf("Missing apex versions in special root in runtime image '%s'",
-                                  space->GetImageLocation().c_str());
-        return false;
-      }
-
       // Validate the apex versions.
-      if (!gc::space::ImageSpace::ValidateApexVersions(oat_apex_versions,
+      if (!gc::space::ImageSpace::ValidateApexVersions(*oat_header,
                                                        runtime->GetApexVersions(),
                                                        space->GetImageLocation(),
                                                        error_msg)) {
