@@ -27,6 +27,7 @@
 #include <list>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "base/atomic.h"
 #include "base/bit_field.h"
@@ -1703,6 +1704,9 @@ class EXPORT Thread {
   // 'thread' can't get deallocated before we access it.
   NO_RETURN void AbortInThis(const std::string& message);
 
+  void TrackObjectLocked(mirror::Object& object) REQUIRES_SHARED(Locks::mutator_lock_);
+  void TrackObjectUnlocked(mirror::Object& object) REQUIRES_SHARED(Locks::mutator_lock_);
+
   // Returns true if StrictMode events are traced for the current thread.
   static bool IsSensitiveThread() {
     if (is_sensitive_thread_hook_ != nullptr) {
@@ -2495,6 +2499,9 @@ class EXPORT Thread {
 
     // Top of the linked-list for reflective-handle scopes or null if none.
     BaseReflectiveHandleScope* top_reflective_handle_scope;
+
+    // List of identity hashcodes of held Java mutexes.
+    std::vector<int32_t>* held_java_mutexes = nullptr;
 
     // Pointer to a thread-local buffer for method tracing.
     uintptr_t* method_trace_buffer;

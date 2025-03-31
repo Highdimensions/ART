@@ -1129,6 +1129,8 @@ class Runtime {
 
   bool AllowInMemoryCompilation() const { return allow_in_memory_compilation_; }
 
+  bool ShouldTrackLocks() const;
+
   // Used by plugin code to attach a hook for OOME.
   void SetOutOfMemoryErrorHook(void (*hook)()) {
     out_of_memory_error_hook_ = hook;

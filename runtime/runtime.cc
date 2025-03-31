@@ -3532,4 +3532,8 @@ void Runtime::DCheckNoTransactionCheckAllowed() {
   }
 }
 
+bool Runtime::ShouldTrackLocks() const {
+  return false;
+}
+
 }  // namespace art

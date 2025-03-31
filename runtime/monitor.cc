@@ -234,6 +234,10 @@ bool Monitor::Install(Thread* self) NO_THREAD_SAFETY_ANALYSIS {
   LockWord lw(GetObject()->GetLockWord(false));
   switch (lw.GetState()) {
     case LockWord::kThinLocked: {
+      if (UNLIKELY(Runtime::Current()->ShouldTrackLocks())) {
+        LOG(FATAL) << "Monitor::Install: thin locked with lockdep enabled";
+        UNREACHABLE();
+      }
       DCHECK(owner != nullptr);
       CHECK_EQ(owner->GetThreadId(), lw.ThinLockOwner());
       DCHECK_EQ(monitor_lock_.GetExclusiveOwnerTid(), 0) << " my tid = " << SafeGetTid(self);
@@ -1061,6 +1065,7 @@ void Monitor::InflateThinLocked(Thread* self,
                                 LockWord lock_word,
                                 uint32_t hash_code,
                                 int attempt_of_4) {
+  DCHECK(!Runtime::Current()->ShouldTrackLocks());
   DCHECK_EQ(lock_word.GetState(), LockWord::kThinLocked);
   uint32_t owner_thread_id = lock_word.ThinLockOwner();
   if (owner_thread_id == self->GetThreadId()) {
@@ -1130,15 +1135,26 @@ ObjPtr<mirror::Object> Monitor::MonitorEnter(Thread* self,
     LockWord lock_word = h_obj->GetLockWord(false);
     switch (lock_word.GetState()) {
       case LockWord::kUnlocked: {
-        // No ordering required for preceding lockword read, since we retest.
-        LockWord thin_locked(LockWord::FromThinLockId(thread_id, 0, lock_word.GCState()));
-        if (h_obj->CasLockWord(lock_word, thin_locked, CASMode::kWeak, std::memory_order_acquire)) {
-          AtraceMonitorLock(self, h_obj.Get(), /* is_wait= */ false);
-          return h_obj.Get();  // Success!
+        if (UNLIKELY(Runtime::Current()->ShouldTrackLocks())) {
+          // Generate the identity hashcode and inflate it to a monitor on the next go around.
+          int32_t hashcode = h_obj->IdentityHashCode();
+          Inflate(self, nullptr, h_obj.Get(), hashcode);
+        } else {
+          // No ordering required for preceding lockword read, since we retest.
+          LockWord thin_locked(LockWord::FromThinLockId(thread_id, 0, lock_word.GCState()));
+          if (h_obj->CasLockWord(lock_word, thin_locked, CASMode::kWeak, std::memory_order_acquire)) {
+            AtraceMonitorLock(self, h_obj.Get(), /* is_wait= */ false);
+            return h_obj.Get();  // Success!
+          }
         }
         continue;  // Go again.
       }
       case LockWord::kThinLocked: {
+        if (UNLIKELY(Runtime::Current()->ShouldTrackLocks())) {
+          LOG(FATAL) << "MonitorEnter: thin locked with lockdep enabled";
+          UNREACHABLE();
+        }
+
         uint32_t owner_thread_id = lock_word.ThinLockOwner();
         if (owner_thread_id == thread_id) {
           // No ordering required for initial lockword read.
@@ -1200,13 +1216,20 @@ ObjPtr<mirror::Object> Monitor::MonitorEnter(Thread* self,
         // visibility of the monitor data structure. Use an explicit fence instead.
         std::atomic_thread_fence(std::memory_order_acquire);
         Monitor* mon = lock_word.FatLockMonitor();
+        ObjPtr<mirror::Object> result = nullptr;
         if (trylock) {
-          return mon->TryLock(self) ? h_obj.Get() : nullptr;
+          result = mon->TryLock(self) ? h_obj.Get() : nullptr;
         } else {
           mon->Lock(self);
           DCHECK(mon->monitor_lock_.IsExclusiveHeld(self));
-          return h_obj.Get();  // Success!
+          result = h_obj.Get();  // Success!
         }
+        if (UNLIKELY(Runtime::Current()->ShouldTrackLocks())) {
+          if (!result.IsNull() && mon->lock_count_ == 0) {
+            Thread::Current()->TrackObjectLocked(*h_obj);
+          }
+        }
+        return result;
       }
       case LockWord::kHashCode:
         // Inflate with the existing hashcode.
@@ -1238,6 +1261,10 @@ bool Monitor::MonitorExit(Thread* self, ObjPtr<mirror::Object> obj) {
         FailedUnlock(h_obj.Get(), self->GetThreadId(), 0u, nullptr);
         return false;  // Failure.
       case LockWord::kThinLocked: {
+        if (UNLIKELY(Runtime::Current()->ShouldTrackLocks())) {
+          LOG(FATAL) << "MonitorExit: thin locked with lockdep enabled";
+          UNREACHABLE();
+        }
         uint32_t thread_id = self->GetThreadId();
         uint32_t owner_thread_id = lock_word.ThinLockOwner();
         if (owner_thread_id != thread_id) {
@@ -1274,7 +1301,16 @@ bool Monitor::MonitorExit(Thread* self, ObjPtr<mirror::Object> obj) {
       }
       case LockWord::kFatLocked: {
         Monitor* mon = lock_word.FatLockMonitor();
-        return mon->Unlock(self);
+        unsigned int last_count = mon->lock_count_;
+        bool result = mon->Unlock(self);
+
+        if (UNLIKELY(Runtime::Current()->ShouldTrackLocks())) {
+          if (result && last_count == 0) {
+            Thread::Current()->TrackObjectUnlocked(*h_obj);
+          }
+        }
+
+        return result;
       }
       default: {
         LOG(FATAL) << "Invalid monitor state " << lock_word.GetState();
@@ -1310,6 +1346,10 @@ void Monitor::Wait(Thread* self,
         ThrowIllegalMonitorStateExceptionF("object not locked by thread before wait()");
         return;  // Failure.
       case LockWord::kThinLocked: {
+        if (UNLIKELY(Runtime::Current()->ShouldTrackLocks())) {
+          LOG(FATAL) << "Wait: thin locked with lockdep enabled";
+          UNREACHABLE();
+        }
         uint32_t thread_id = self->GetThreadId();
         uint32_t owner_thread_id = lock_word.ThinLockOwner();
         if (owner_thread_id != thread_id) {
@@ -1345,14 +1385,19 @@ void Monitor::DoNotify(Thread* self, ObjPtr<mirror::Object> obj, bool notify_all
       ThrowIllegalMonitorStateExceptionF("object not locked by thread before notify()");
       return;  // Failure.
     case LockWord::kThinLocked: {
-      uint32_t thread_id = self->GetThreadId();
-      uint32_t owner_thread_id = lock_word.ThinLockOwner();
-      if (owner_thread_id != thread_id) {
-        ThrowIllegalMonitorStateExceptionF("object not locked by thread before notify()");
-        return;  // Failure.
+      if (UNLIKELY(Runtime::Current()->ShouldTrackLocks())) {
+        LOG(FATAL) << "DoNotify: thin locked with lockdep enabled";
+        UNREACHABLE();
       } else {
-        // We own the lock but there's no Monitor and therefore no waiters.
-        return;  // Success.
+        uint32_t thread_id = self->GetThreadId();
+        uint32_t owner_thread_id = lock_word.ThinLockOwner();
+        if (owner_thread_id != thread_id) {
+          ThrowIllegalMonitorStateExceptionF("object not locked by thread before notify()");
+          return;  // Failure.
+        } else {
+          // We own the lock but there's no Monitor and therefore no waiters.
+          return;  // Success.
+        }
       }
     }
     case LockWord::kFatLocked: {
@@ -1381,6 +1426,10 @@ uint32_t Monitor::GetLockOwnerThreadId(ObjPtr<mirror::Object> obj) {
     case LockWord::kUnlocked:
       return ThreadList::kInvalidThreadId;
     case LockWord::kThinLocked:
+      if (UNLIKELY(Runtime::Current()->ShouldTrackLocks())) {
+        LOG(FATAL) << "GetLockOwnerThreadId: thin locked with lockdep enabled";
+        UNREACHABLE();
+      }
       return lock_word.ThinLockOwner();
     case LockWord::kFatLocked: {
       Monitor* mon = lock_word.FatLockMonitor();
@@ -1571,6 +1620,7 @@ bool Monitor::IsValidLockWord(LockWord lock_word) {
       // Nothing to check.
       return true;
     case LockWord::kThinLocked:
+      DCHECK(!Runtime::Current()->ShouldTrackLocks());
       // Basic consistency check of owner.
       return lock_word.ThinLockOwner() != ThreadList::kInvalidThreadId;
     case LockWord::kFatLocked: {
@@ -1745,6 +1795,10 @@ MonitorInfo::MonitorInfo(ObjPtr<mirror::Object> obj) : owner_(nullptr), entry_co
     case LockWord::kHashCode:
       break;
     case LockWord::kThinLocked:
+      if (UNLIKELY(Runtime::Current()->ShouldTrackLocks())) {
+        LOG(FATAL) << "MonitorInfo: thin locked with lockdep enabled";
+        UNREACHABLE();
+      }
       owner_ = Runtime::Current()->GetThreadList()->FindThreadByThreadId(lock_word.ThinLockOwner());
       DCHECK(owner_ != nullptr) << "Thin-locked without owner!";
       entry_count_ = 1 + lock_word.ThinLockCount();

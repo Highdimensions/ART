@@ -138,7 +138,7 @@ namespace art_flags = com::android::art::flags;
 namespace art HIDDEN {
 
 static bool ShouldAlwaysSlowlock() {
-  return false;
+  return Runtime::Current()->ShouldTrackLocks();
 }
 
 using android::base::StringAppendV;
@@ -2790,6 +2790,8 @@ Thread::~Thread() {
 
   CHECK_EQ(tlsPtr_.method_trace_buffer, nullptr);
 
+  delete tlsPtr_.held_java_mutexes;
+
   Runtime::Current()->GetHeap()->AssertThreadLocalBuffersAreRevoked(this);
 
   TearDownAlternateSignalStack();
@@ -5152,6 +5154,42 @@ bool Thread::IsSystemDaemon() const {
     return false;
   }
   return WellKnownClasses::java_lang_Thread_systemDaemon->GetBoolean(GetPeer());
+}
+
+void Thread::TrackObjectLocked(mirror::Object& object) {
+  if (Runtime::Current()->ShouldTrackLocks()) {
+    if (!tlsPtr_.held_java_mutexes) {
+      tlsPtr_.held_java_mutexes = new std::vector<int32_t>();
+    }
+
+    int32_t hashcode = object.IdentityHashCode();
+
+    auto it =
+        std::find(tlsPtr_.held_java_mutexes->begin(), tlsPtr_.held_java_mutexes->end(), hashcode);
+    if (it != tlsPtr_.held_java_mutexes->end()) {
+      LOG(FATAL) << "TrackObjectLocked called twice on mutex " << hashcode;
+    }
+
+    tlsPtr_.held_java_mutexes->push_back(hashcode);
+  }
+}
+
+void Thread::TrackObjectUnlocked(mirror::Object& object) {
+  if (Runtime::Current()->ShouldTrackLocks()) {
+    if (!tlsPtr_.held_java_mutexes) {
+      LOG(FATAL) << "Thread::TrackObjectUnlocked without TrackObjectLocked having been called at "
+                    "least once";
+    }
+
+    int32_t hashcode = object.IdentityHashCode();
+
+    auto it =
+        std::find(tlsPtr_.held_java_mutexes->begin(), tlsPtr_.held_java_mutexes->end(), hashcode);
+    if (it == tlsPtr_.held_java_mutexes->end()) {
+      LOG(FATAL) << "TrackObjectUnlocked called on untracked mutex " << hashcode;
+    }
+    tlsPtr_.held_java_mutexes->erase(it);
+  }
 }
 
 std::string Thread::StateAndFlagsAsHexString() const {
