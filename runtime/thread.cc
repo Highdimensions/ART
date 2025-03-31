@@ -5170,6 +5170,7 @@ void Thread::TrackObjectLocked(mirror::Object& object) {
       LOG(FATAL) << "TrackObjectLocked called twice on mutex " << hashcode;
     }
 
+    Runtime::Current()->TrackObjectLocked(hashcode, *tlsPtr_.held_java_mutexes);
     tlsPtr_.held_java_mutexes->push_back(hashcode);
   }
 }

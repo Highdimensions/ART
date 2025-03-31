@@ -327,6 +327,7 @@ Runtime::Runtime()
       verifier_missing_kthrow_fatal_(false),
       perfetto_hprof_enabled_(false),
       perfetto_javaheapprof_enabled_(false),
+      lock_deps_mutex_("Runtime::lock_deps_mutex_"),
       out_of_memory_error_hook_(nullptr) {
   static_assert(Runtime::kCalleeSaveSize ==
                     static_cast<uint32_t>(CalleeSaveType::kLastCalleeSaveType), "Unexpected size");
@@ -2688,6 +2689,7 @@ void Runtime::VisitNonThreadRoots(RootVisitor* visitor) {
   pre_allocated_NoClassDefFoundError_.VisitRootIfNonNull(visitor, RootInfo(kRootVMInternal));
   VisitImageRoots(visitor);
   class_linker_->VisitTransactionRoots(visitor);
+  VisitLockdepRoots(visitor);
 }
 
 void Runtime::VisitNonConcurrentRoots(RootVisitor* visitor, VisitRootFlags flags) {
@@ -3533,7 +3535,7 @@ void Runtime::DCheckNoTransactionCheckAllowed() {
 }
 
 bool Runtime::ShouldTrackLocks() const {
-  return false;
+  return Runtime::IsLockdepEnabled();
 }
 
 }  // namespace art

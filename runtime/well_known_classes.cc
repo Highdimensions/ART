@@ -58,6 +58,7 @@ jclass WellKnownClasses::java_lang_Record;
 jclass WellKnownClasses::java_lang_reflect_Parameter__array;
 jclass WellKnownClasses::java_lang_StringFactory;
 jclass WellKnownClasses::java_lang_System;
+jclass WellKnownClasses::java_lang_Throwable;
 jclass WellKnownClasses::java_lang_Void;
 jclass WellKnownClasses::libcore_reflect_AnnotationMember__array;
 
@@ -67,6 +68,7 @@ ArtMethod* WellKnownClasses::dalvik_system_DexClassLoader_init;
 ArtMethod* WellKnownClasses::dalvik_system_InMemoryDexClassLoader_init;
 ArtMethod* WellKnownClasses::dalvik_system_PathClassLoader_init;
 ArtMethod* WellKnownClasses::dalvik_system_VMRuntime_hiddenApiUsed;
+ArtMethod* WellKnownClasses::dalvik_system_VMRuntime_lockOrderingViolated;
 ArtMethod* WellKnownClasses::java_lang_Boolean_valueOf;
 ArtMethod* WellKnownClasses::java_lang_BootClassLoader_init;
 ArtMethod* WellKnownClasses::java_lang_Byte_valueOf;
@@ -389,6 +391,7 @@ void WellKnownClasses::Init(JNIEnv* env) {
   java_lang_reflect_Parameter__array = CacheClass(env, "[Ljava/lang/reflect/Parameter;");
   java_lang_StringFactory = CacheClass(env, "java/lang/StringFactory");
   java_lang_System = CacheClass(env, "java/lang/System");
+  java_lang_Throwable = CacheClass(env, "java/lang/Throwable");
   java_lang_Void = CacheClass(env, "java/lang/Void");
   libcore_reflect_AnnotationMember__array = CacheClass(env, "[Llibcore/reflect/AnnotationMember;");
 
@@ -587,6 +590,13 @@ void WellKnownClasses::InitFieldsAndMethodsOnly(JNIEnv* env) {
       /*is_static=*/ true,
       "hiddenApiUsed",
       "(ILjava/lang/String;Ljava/lang/String;IZ)V",
+      pointer_size);
+
+  dalvik_system_VMRuntime_lockOrderingViolated = CacheMethod(
+      d_s_vmr.Get(),
+      /*is_static=*/ true,
+      "lockOrderingViolated",
+      "(IILjava/lang/Throwable;Ljava/lang/Throwable;)V",
       pointer_size);
 
   java_lang_BootClassLoader_init =

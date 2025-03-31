@@ -326,6 +326,7 @@ cc_defaults {
         "jni/jni_id_manager.cc",
         "jni/jni_internal.cc",
         "jni/local_reference_table.cc",
+        "lockdep.cc",
         "method_handles.cc",
         "metrics/reporter.cc",
         "mirror/array.cc",

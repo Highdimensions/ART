@@ -456,6 +456,7 @@ static void ClearDexFileCookies() REQUIRES_SHARED(Locks::mutator_lock_) {
 
 bool ImageWriter::PrepareImageAddressSpace(TimingLogger* timings) {
   Thread* const self = Thread::Current();
+  Runtime::Current()->ClearLockDeps();
 
   gc::Heap* const heap = Runtime::Current()->GetHeap();
   {

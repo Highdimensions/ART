@@ -102,6 +102,7 @@ struct EXPORT WellKnownClasses {
   static jclass java_lang_reflect_Parameter__array;
   static jclass java_lang_StringFactory;
   static jclass java_lang_System;
+  static jclass java_lang_Throwable;
   static jclass java_lang_Void;
   static jclass libcore_reflect_AnnotationMember__array;
 
@@ -111,6 +112,7 @@ struct EXPORT WellKnownClasses {
   static ArtMethod* dalvik_system_InMemoryDexClassLoader_init;  // Only for the declaring class.
   static ArtMethod* dalvik_system_PathClassLoader_init;  // Only for the declaring class.
   static ArtMethod* dalvik_system_VMRuntime_hiddenApiUsed;
+  static ArtMethod* dalvik_system_VMRuntime_lockOrderingViolated;
   static ArtMethod* java_lang_Boolean_valueOf;
   static ArtMethod* java_lang_BootClassLoader_init;  // Only for the declaring class.
   static ArtMethod* java_lang_Byte_valueOf;
