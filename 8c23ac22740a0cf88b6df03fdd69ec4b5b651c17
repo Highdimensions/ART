@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "170a6cec_05cec79a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-04-01T12:11:21Z",
+      "side": 1,
+      "message": "Folks, please take a look, cc vmarko@google.com",
+      "revId": "8c23ac22740a0cf88b6df03fdd69ec4b5b651c17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
