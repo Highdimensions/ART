@@ -1150,6 +1150,7 @@ class Runtime {
   LockDeps* GetLockDeps(int32_t held_mutex);
   LockDeps* CreateLockDeps(int32_t held_mutex);
   void ClearLockDeps();
+  void RegisterLockDependency(int32_t taken_before, int32_t taken_after);
 
   void TrackObjectLocked(int32_t mutex_hashcode, const std::vector<int32_t>& currently_locked)
       REQUIRES_SHARED(Locks::mutator_lock_);

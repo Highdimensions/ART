@@ -14,7 +14,7 @@
 
 namespace art {
 
-static bool IsDynamicLockdepEnabled() {
+static bool IsStaticLockdepEnabled() {
 #ifdef ART_TARGET_ANDROID
   static bool result = android::base::GetBoolProperty("debug.art.lockdep", false);
   return result;
@@ -23,7 +23,16 @@ static bool IsDynamicLockdepEnabled() {
 #endif
 }
 
-bool Runtime::IsLockdepEnabled() { return IsDynamicLockdepEnabled(); }
+static bool IsDynamicLockdepEnabled() {
+#ifdef ART_TARGET_ANDROID
+  static bool result = android::base::GetBoolProperty("debug.art.lockdep.dynamic", false);
+  return result;
+#else
+  return false;
+#endif
+}
+
+bool Runtime::IsLockdepEnabled() { return IsStaticLockdepEnabled() || IsDynamicLockdepEnabled(); }
 
 static bool ShouldRecordBacktrace() {
 #ifdef ART_TARGET_ANDROID
@@ -106,6 +115,15 @@ Runtime::LockDeps* Runtime::CreateLockDeps(int32_t mutex_hashcode) {
 void Runtime::ClearLockDeps() {
   WriterMutexLock lock(Thread::Current(), lock_deps_mutex_);
   lock_deps_.clear();
+}
+
+void Runtime::RegisterLockDependency(int32_t taken_before, int32_t taken_after) {
+  Runtime::LockDeps* deps = CreateLockDeps(taken_before);
+
+  deps->mutex.ExclusiveLock(Thread::Current());
+  auto record = std::make_unique<LockRecord>();
+  deps->deps.insert(std::make_pair(taken_after, std::move(record)));
+  deps->mutex.ExclusiveUnlock(Thread::Current());
 }
 
 void Runtime::TrackObjectLocked(int32_t mutex_hashcode,

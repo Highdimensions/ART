@@ -549,11 +549,20 @@ static jlong VMRuntime_getFullGcCount([[maybe_unused]] JNIEnv* env, [[maybe_unus
   return metrics->FullGcCount()->Value();
 }
 
+<<<<<<< HEAD
 static jboolean VMRuntime_isArtTestRwFlagEnabled([[maybe_unused]] JNIEnv* env,
                                                  [[maybe_unused]] jclass klass) {
   return is_test_rw_flag_enabled();
 }
 
+||||||| parent of 87422e161d (Support explicit specification of lock ordering)
+=======
+static void VMRuntime_registerLockOrdering(JNIEnv*, jclass, jint taken_before, jint taken_after) {
+  Runtime* runtime = Runtime::Current();
+  runtime->RegisterLockDependency(taken_before, taken_after);
+}
+
+>>>>>>> 87422e161d (Support explicit specification of lock ordering)
 static JNINativeMethod gMethods[] = {
     FAST_NATIVE_METHOD(VMRuntime, addressOf, "(Ljava/lang/Object;)J"),
     NATIVE_METHOD(VMRuntime, bootClassPath, "()Ljava/lang/String;"),
@@ -609,6 +618,7 @@ static JNINativeMethod gMethods[] = {
         VMRuntime, getBaseApkOptimizationInfo, "()Ldalvik/system/DexFile$OptimizationInfo;"),
     NATIVE_METHOD(VMRuntime, getFullGcCount, "()J"),
     NATIVE_METHOD(VMRuntime, isArtTestRwFlagEnabled, "()Z"),
+    NATIVE_METHOD(VMRuntime, registerLockOrdering, "(II)V"),
 };
 
 void register_dalvik_system_VMRuntime(JNIEnv* env) {
