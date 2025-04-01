@@ -114,6 +114,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bd351272_8b5f527c",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5496,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-01T15:34:37Z",
+      "side": 1,
+      "message": "Thinking about this again, I believe this is even worse. If we\u0027re clearing/setting/inverting the bit 31, we need to properly sign-extend the result. Otherwise we can end up with values that are typed as `int` but outside the `int` value range. And this is actually applicable to the constant case when `shamt \u003d\u003d 31`.",
+      "parentUuid": "a6a07d3c_0765aae7",
+      "range": {
+        "startLine": 5496,
+        "startChar": 4,
+        "endLine": 5496,
+        "endChar": 57
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7e443f2a_5061d306",
         "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
         "patchSetId": 1
@@ -196,6 +220,30 @@
       "side": 1,
       "message": "The pattern used by HAnd works for both `TryOptimizeWithBitManipulation` and `TryMergeNegatedInput`. However, `TryMergeNegatedInput` replaces 2 instructions with 1, while `TryOptimizeWithBitManipulation` replaces 3 instructions with 1. That\u0027s why we prioritize `TryOptimizeWithBitManipulation` for bit manipulation cases",
       "parentUuid": "a5519f7a_ba95d927",
+      "range": {
+        "startLine": 282,
+        "startChar": 8,
+        "endLine": 282,
+        "endChar": 44
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33ac7240_814f614b",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-01T15:34:37Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "f90681bc_e070df1f",
       "range": {
         "startLine": 282,
         "startChar": 8,
