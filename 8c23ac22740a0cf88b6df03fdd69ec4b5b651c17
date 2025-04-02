@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "10833a0b_041a746b",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-04-02T11:25:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5a65c04_62c253c2",
+      "range": {
+        "startLine": 70,
+        "startChar": 6,
+        "endLine": 70,
+        "endChar": 26
+      },
+      "revId": "8c23ac22740a0cf88b6df03fdd69ec4b5b651c17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2dd0bfc2_5e4bd363",
@@ -54,6 +78,30 @@
       "writtenOn": "2025-04-01T15:34:37Z",
       "side": 1,
       "message": "What about `assertIntEquals(0, $noinline$intRiscvBitClear(Integer.MIN_VALUE, 31));`? I guess it shall fail.",
+      "range": {
+        "startLine": 356,
+        "startChar": 4,
+        "endLine": 356,
+        "endChar": 76
+      },
+      "revId": "8c23ac22740a0cf88b6df03fdd69ec4b5b651c17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f7a0c92_dc14737a",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-04-02T11:25:52Z",
+      "side": 1,
+      "message": "Yes, you were right, it was a mistake. That\u0027s why I removed the optimization for `int`",
+      "parentUuid": "2dd0bfc2_5e4bd363",
       "range": {
         "startLine": 356,
         "startChar": 4,
