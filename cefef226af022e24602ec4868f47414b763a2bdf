@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7629ac9_1a93f897",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 23
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-04-02T00:58:08Z",
+      "side": 1,
+      "message": "How about \"Modes that affect MOVE ioctl operation. Input parameter for the ioctl.\" To me, that\u0027s a little clearer, though what you have is already pretty good.\n\nFor me, the most confusing part here was that a single struct is used bidirectionally, though that seems to be a regular feature of this whole API.",
+      "range": {
+        "startLine": 81,
+        "startChar": 5,
+        "endLine": 81,
+        "endChar": 84
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ebd57675_d1003f2f",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 23
+      },
+      "lineNbr": 1086,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-04-02T00:58:08Z",
+      "side": 1,
+      "message": "How about adding \nif (success) {\n  DCHECK_EQ(uffdio_move move_buf.move, gPageSize);\n}\n?\n\nThat\u0027s probably more useful as documentation than as an actual CHECK.\n\nYou\u0027re moving the second page into the first slot here, dropping what was the second page? What happens to the mapping for the second page here? That\u0027s now a copy-on-write zero page, so compaction_buffers_map_ remains usable?",
+      "range": {
+        "startLine": 1086,
+        "startChar": 2,
+        "endLine": 1086,
+        "endChar": 61
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81c564a0_c5203c82",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 23
+      },
+      "lineNbr": 1371,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-04-02T00:58:08Z",
+      "side": 1,
+      "message": "Can we factor out this whole code block into a separate function?",
+      "range": {
+        "startLine": 1371,
+        "startChar": 4,
+        "endLine": 1371,
+        "endChar": 74
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a001740_9e5d50e1",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 23
+      },
+      "lineNbr": 1396,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-04-02T00:58:08Z",
+      "side": 1,
+      "message": "Should be checked for \u003e\u003d 6 below.",
+      "range": {
+        "startLine": 1396,
+        "startChar": 50,
+        "endLine": 1396,
+        "endChar": 55
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd5a9bed_ecdc3c6e",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-04-02T00:58:08Z",
+      "side": 1,
+      "message": "\"ignores null entries\"? I can\u0027t reconcile the current version with the code.",
+      "range": {
+        "startLine": 704,
+        "startChar": 34,
+        "endLine": 705,
+        "endChar": 13
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ae5ce23_58c3175f",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 829,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-04-02T00:58:08Z",
+      "side": 1,
+      "message": "This doesn\u0027t immediately make sense to me. If it can\u0027t be updated while read, there is no reason to make it volatile. If it can be, it should be atomic. If you want to avoid the compiler combining atomic loads, it should arguably be both volatile and atomic, though it would be a bit strange to count on that for actual correctness. Normally things are just volatile if the value can change due to factors outside the standardized language (IO, changes through a separate memory mapping) or if you want the value to be stored naively for debugging purposes. Thread interactions generally require \"atomic\". That\u0027s really also the cleanest way to handle signal handler interactions, those those waters are muddied a bit by sig_atomic_t.",
+      "range": {
+        "startLine": 827,
+        "startChar": 2,
+        "endLine": 829,
+        "endChar": 75
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
