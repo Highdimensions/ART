@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0365f689_dc317d21",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 23
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-04-02T18:45:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7629ac9_1a93f897",
+      "range": {
+        "startLine": 81,
+        "startChar": 5,
+        "endLine": 81,
+        "endChar": 84
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ebd57675_d1003f2f",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-04-02T00:58:08Z",
       "side": 1,
       "message": "How about adding \nif (success) {\n  DCHECK_EQ(uffdio_move move_buf.move, gPageSize);\n}\n?\n\nThat\u0027s probably more useful as documentation than as an actual CHECK.\n\nYou\u0027re moving the second page into the first slot here, dropping what was the second page? What happens to the mapping for the second page here? That\u0027s now a copy-on-write zero page, so compaction_buffers_map_ remains usable?",
+      "range": {
+        "startLine": 1086,
+        "startChar": 2,
+        "endLine": 1086,
+        "endChar": 61
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66606b48_ff089a11",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 23
+      },
+      "lineNbr": 1086,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-04-02T18:45:18Z",
+      "side": 1,
+      "message": "Actually nothing happens as the second page isn\u0027t there either. The reason we use `UFFDIO_MOVE_MODE_ALLOW_SRC_HOLES` mode is because that makes the ioctl return success with move\u003dgPageSize even without really doing anything as there is no source page.\n\nBut even if we did the page, it would just work because, as you said, COW zero page will take care of the second page later.",
+      "parentUuid": "ebd57675_d1003f2f",
       "range": {
         "startLine": 1086,
         "startChar": 2,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "57f09f07_66f4b530",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 23
+      },
+      "lineNbr": 1371,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-04-02T18:45:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81c564a0_c5203c82",
+      "range": {
+        "startLine": 1371,
+        "startChar": 4,
+        "endLine": 1371,
+        "endChar": 74
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2a001740_9e5d50e1",
@@ -83,6 +155,30 @@
       "writtenOn": "2025-04-02T00:58:08Z",
       "side": 1,
       "message": "Should be checked for \u003e\u003d 6 below.",
+      "range": {
+        "startLine": 1396,
+        "startChar": 50,
+        "endLine": 1396,
+        "endChar": 55
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8dccf67_e28231ad",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 23
+      },
+      "lineNbr": 1396,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-04-02T18:45:18Z",
+      "side": 1,
+      "message": "I\u0027m asserting that it\u0027s 6 or higher major version above on line 1373. Adding another DCHECK on it.",
+      "parentUuid": "2a001740_9e5d50e1",
       "range": {
         "startLine": 1396,
         "startChar": 50,
@@ -116,6 +212,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9aff275e_723a7b2a",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-04-02T18:45:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd5a9bed_ecdc3c6e",
+      "range": {
+        "startLine": 704,
+        "startChar": 34,
+        "endLine": 705,
+        "endChar": 13
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ae5ce23_58c3175f",
@@ -129,6 +249,30 @@
       "writtenOn": "2025-04-02T00:58:08Z",
       "side": 1,
       "message": "This doesn\u0027t immediately make sense to me. If it can\u0027t be updated while read, there is no reason to make it volatile. If it can be, it should be atomic. If you want to avoid the compiler combining atomic loads, it should arguably be both volatile and atomic, though it would be a bit strange to count on that for actual correctness. Normally things are just volatile if the value can change due to factors outside the standardized language (IO, changes through a separate memory mapping) or if you want the value to be stored naively for debugging purposes. Thread interactions generally require \"atomic\". That\u0027s really also the cleanest way to handle signal handler interactions, those those waters are muddied a bit by sig_atomic_t.",
+      "range": {
+        "startLine": 827,
+        "startChar": 2,
+        "endLine": 829,
+        "endChar": 75
+      },
+      "revId": "cefef226af022e24602ec4868f47414b763a2bdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87c83921_cddd0163",
+        "filename": "runtime/gc/collector/mark_compact.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 829,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-04-02T18:45:18Z",
+      "side": 1,
+      "message": "As per our offline discussion, changed it to std::atomic",
+      "parentUuid": "6ae5ce23_58c3175f",
       "range": {
         "startLine": 827,
         "startChar": 2,

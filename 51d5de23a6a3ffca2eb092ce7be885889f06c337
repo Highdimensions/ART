@@ -522,6 +522,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "94d5db3d_ae48aa4d",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 21
+      },
+      "lineNbr": 2551,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-04-02T18:45:18Z",
+      "side": 1,
+      "message": "Changed to `weak`.",
+      "parentUuid": "1fb8657b_c361bab7",
+      "range": {
+        "startLine": 2545,
+        "startChar": 4,
+        "endLine": 2551,
+        "endChar": 7
+      },
+      "revId": "51d5de23a6a3ffca2eb092ce7be885889f06c337",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0499f8ca_4c722c40",
