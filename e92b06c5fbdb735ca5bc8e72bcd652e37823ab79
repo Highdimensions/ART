@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb139396_1ec5160a",
+        "filename": "runtime/Android.bp",
+        "patchSetId": 12
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-02T12:12:26Z",
+      "side": 1,
+      "message": "Is this is supposed to be `libartd-runtime_deps` and `libart_common_defaults`? If so then they are both used to try and keep the build command of the entrypoints as close to the non-simulator version (built as part of `libart-runtime_common_defaults`) as possible.\n\nWhile these additional arguments may not be used by the entrypoints, we\u0027d like to ensure that how we build the entrypoints for the simulator does not diverge from the regular non-simulator version. This would help if a build argument was added to `libartd-runtime_deps` or `libart_common_defaults` which did affect how the entrypoints were built.",
+      "parentUuid": "ac5c1579_d4fe4e91",
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc8a5f99_a385de0c",
@@ -31,6 +49,30 @@
       "writtenOn": "2025-03-20T08:36:30Z",
       "side": 1,
       "message": "Do we need both `ART_USE_RESTRICTED_MODE` and `ART_USE_SIMULATOR`?\nIs there a use case where `ART_USE_RESTRICTED_MODE\u003dtrue` and `ART_USE_SIMULATOR\u003dfalse`?",
+      "range": {
+        "startLine": 45,
+        "startChar": 7,
+        "endLine": 45,
+        "endChar": 30
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ae49215_01394937",
+        "filename": "runtime/arch/arm64/asm_support_arm64.S",
+        "patchSetId": 12
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-02T12:12:26Z",
+      "side": 1,
+      "message": "Generally speaking `ART_USE_RESTRICTED_MODE` is solely used to restrict ART features and is independent from the simulator which is enabled by `ART_USE_SIMULATOR`.\n\nWhile they are typically used together, it can often be useful to run the restricted mode without the simulator (ART_USE_RESTRICTED_MODE\u003dtrue and ART_USE_SIMULATOR\u003dfalse) to test and compare regular, restricted ART against a result from the simulator. This can massively help to debug the simulator by comparing results from restricted mode and simulator mode.\n\nI also think it helps to create a clear distinction in the code and highlights which areas are actually enabling the simulator and which are disabling ART features that the simulator cannot currently handle. Note that later patches in this chain remove a lot of the restricted mode as the simulator is exapnded.\n\nThis particular piece of code is a good example of why we want to keep the restricted mode separate to the simulator. Here we can run the restricted mode without the simulator and we can test/verify that our macros work don\u0027t alter the original behaviour of the code that we are replacing (the only difference between this and the simulator is the relocation type used).",
+      "parentUuid": "bc8a5f99_a385de0c",
       "range": {
         "startLine": 45,
         "startChar": 7,
@@ -64,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "03e48a71_7ec1a0e7",
+        "filename": "runtime/arch/arm64/asm_support_arm64.S",
+        "patchSetId": 12
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-02T12:12:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41c90d93_a2fb0b01",
+      "range": {
+        "startLine": 314,
+        "startChar": 45,
+        "endLine": 314,
+        "endChar": 70
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d07b88d3_056646d0",
@@ -77,6 +143,30 @@
       "writtenOn": "2025-03-20T08:36:30Z",
       "side": 1,
       "message": "We could move the `slice()` call to `get_elf_entry_tuple()` (and rename the latter to `get_elf_entry_slice()`.",
+      "range": {
+        "startLine": 65,
+        "startChar": 30,
+        "endLine": 65,
+        "endChar": 35
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7cf13fd_a0a10b2b",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-02T12:12:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d07b88d3_056646d0",
       "range": {
         "startLine": 65,
         "startChar": 30,
@@ -110,6 +200,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9d9f922_87290613",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-02T12:12:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd4b4d2f_bbe2b8c1",
+      "range": {
+        "startLine": 129,
+        "startChar": 53,
+        "endLine": 129,
+        "endChar": 57
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bb0db07d_d8473f41",
@@ -123,6 +237,30 @@
       "writtenOn": "2025-03-20T08:36:30Z",
       "side": 1,
       "message": "We could remove this copy and work on the final file, changing this function to `update_relocations_in_place(inout_file)`. The copying would be the responsibility of the caller which can actually avoid the extra copy by passing the final file name to `objcopy`.",
+      "range": {
+        "startLine": 159,
+        "startChar": 2,
+        "endLine": 159,
+        "endChar": 68
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3391945a_d6729a63",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-02T12:12:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb0db07d_d8473f41",
       "range": {
         "startLine": 159,
         "startChar": 2,
@@ -150,6 +288,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "860f9d56_8f71af7d",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-02T12:12:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "415ea16b_9b0c5ec1",
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa96680b_c36c5cb5",
@@ -173,6 +329,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f182b1e_bd69d9f1",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-02T12:12:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa96680b_c36c5cb5",
+      "range": {
+        "startLine": 191,
+        "startChar": 20,
+        "endLine": 191,
+        "endChar": 32
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "03d7a641_fabe8845",
@@ -186,6 +366,24 @@
       "writtenOn": "2025-03-20T08:36:30Z",
       "side": 1,
       "message": "Should we delete the `{in_file}-copied` and `{in_file}-stripped` after this? (Moot if we can merge the two `objcopy` invocations to one and avoid the last copy with `update_relocations_in_place()`.)",
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7452477c_cb89df38",
+        "filename": "tools/transform_arm64_to_x86_64.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-02T12:12:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03d7a641_fabe8845",
       "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
