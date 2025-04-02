@@ -4864,7 +4864,8 @@ ObjPtr<mirror::Class> ClassLinker::CreateArrayClass(Thread* self,
     const size_t component_hash = ComputeModifiedUtf8Hash(component_descriptor);
     component_type.Assign(
         LookupClass(self, component_descriptor, component_hash, class_loader.Get()));
-    if (component_type == nullptr || Runtime::Current()->IsAotCompiler()) {
+    if (component_type == nullptr || !component_type->IsErroneousUnresolved() ||
+        Runtime::Current()->IsAotCompiler()) {
       DCHECK(self->IsExceptionPending());
       return nullptr;
     } else {
