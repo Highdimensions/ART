@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac21a9ad_ad9886d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1013030
+      },
+      "writtenOn": "2025-04-03T06:55:02Z",
+      "side": 1,
+      "message": "Hi Hans - can you help point out the delta vs the previous change? I think b/406536943 might also have been related, though I\u0027m not sure I understood why,",
+      "revId": "cd718dcf45c5d0c12bdf164fac6c7955b23a3ced",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
