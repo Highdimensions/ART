@@ -16,6 +16,24 @@
       "message": "Hi Hans - can you help point out the delta vs the previous change? I think b/406536943 might also have been related, though I\u0027m not sure I understood why,",
       "revId": "cd718dcf45c5d0c12bdf164fac6c7955b23a3ced",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5530143b_d4af2a4d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-04-03T18:46:52Z",
+      "side": 1,
+      "message": "Sorry. This is just in preparation for re-landing elsewhere. Thank you for the pointer to that bug. I had also concluded from b/406285562 that this was the cause of the failure.",
+      "parentUuid": "ac21a9ad_ad9886d1",
+      "revId": "cd718dcf45c5d0c12bdf164fac6c7955b23a3ced",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
