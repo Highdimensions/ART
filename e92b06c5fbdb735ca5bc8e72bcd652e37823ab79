@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "01f33047_a7230a07",
+        "filename": "runtime/Android.bp",
+        "patchSetId": 12
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T15:02:12Z",
+      "side": 1,
+      "message": "I probably wanted to copy-paste `art_debug_defaults` and I didn\u0027t notice that ctrl-C was not picked up. I thought that `libartd-runtime_deps` should include `art_debug_defaults` but it does not.",
+      "parentUuid": "cb139396_1ec5160a",
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc8a5f99_a385de0c",
@@ -73,6 +91,30 @@
       "side": 1,
       "message": "Generally speaking `ART_USE_RESTRICTED_MODE` is solely used to restrict ART features and is independent from the simulator which is enabled by `ART_USE_SIMULATOR`.\n\nWhile they are typically used together, it can often be useful to run the restricted mode without the simulator (ART_USE_RESTRICTED_MODE\u003dtrue and ART_USE_SIMULATOR\u003dfalse) to test and compare regular, restricted ART against a result from the simulator. This can massively help to debug the simulator by comparing results from restricted mode and simulator mode.\n\nI also think it helps to create a clear distinction in the code and highlights which areas are actually enabling the simulator and which are disabling ART features that the simulator cannot currently handle. Note that later patches in this chain remove a lot of the restricted mode as the simulator is exapnded.\n\nThis particular piece of code is a good example of why we want to keep the restricted mode separate to the simulator. Here we can run the restricted mode without the simulator and we can test/verify that our macros work don\u0027t alter the original behaviour of the code that we are replacing (the only difference between this and the simulator is the relocation type used).",
       "parentUuid": "bc8a5f99_a385de0c",
+      "range": {
+        "startLine": 45,
+        "startChar": 7,
+        "endLine": 45,
+        "endChar": 30
+      },
+      "revId": "e92b06c5fbdb735ca5bc8e72bcd652e37823ab79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac9fdbd5_73c456fc",
+        "filename": "runtime/arch/arm64/asm_support_arm64.S",
+        "patchSetId": 12
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T15:02:12Z",
+      "side": 1,
+      "message": "Thanks for the explanation!",
+      "parentUuid": "7ae49215_01394937",
       "range": {
         "startLine": 45,
         "startChar": 7,
