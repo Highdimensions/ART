@@ -33,6 +33,345 @@
       "message": "Folks, please take a look, cc vmarko@google.com",
       "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7676de59_97fa4ae2",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1529,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "Can we use `LoadConst32()` and `LoadConst64()` instead? (In the then-block and else-block.)\n\nFor 32-bit, check the quotient value with `dchecked_integral_cast\u003cint32_t\u003e(quotient)`.",
+      "range": {
+        "startLine": 1529,
+        "startChar": 2,
+        "endLine": 1529,
+        "endChar": 22
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08181329_cd1a698c",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1530,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "Nit: I\u0027d prefer comparing with 64 and reordering the then/else blocks.",
+      "range": {
+        "startLine": 1530,
+        "startChar": 2,
+        "endLine": 1530,
+        "endChar": 24
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3cbb07bc_9520d7c4",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1549,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "`LoadConst64()`",
+      "range": {
+        "startLine": 1549,
+        "startChar": 5,
+        "endLine": 1549,
+        "endChar": 7
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "380f34bb_a7497466",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1573,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "Always true, see `DCHECK()` above.",
+      "range": {
+        "startLine": 1573,
+        "startChar": 24,
+        "endLine": 1573,
+        "endChar": 80
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5b77e39_2bd95316",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1593,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "Always true.",
+      "range": {
+        "startLine": 1593,
+        "startChar": 24,
+        "endLine": 1593,
+        "endChar": 80
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a20c8c05_1bcdfffd",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1611,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "`LoadConst64()`",
+      "range": {
+        "startLine": 1611,
+        "startChar": 5,
+        "endLine": 1611,
+        "endChar": 7
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "866a564d_7c86c40d",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1648,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "`LoadConst32()`",
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf38b900_472ef2d3",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1691,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "Always false.",
+      "range": {
+        "startLine": 1691,
+        "startChar": 24,
+        "endLine": 1691,
+        "endChar": 80
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05044fd3_3ae50019",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1702,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "This is not present on arm64. If this was always true, then we would not need the `imm \u003e 0` condition in line 1668.",
+      "range": {
+        "startLine": 1702,
+        "startChar": 2,
+        "endLine": 1702,
+        "endChar": 20
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "debebff9_74114f6c",
+        "filename": "compiler/optimizing/code_generator_riscv64.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "Nit: I\u0027d prefer `bit_size` instead of each `amount_bits`. You can do a bulk edit with this bash script:\n\n    git grep -cE \u0027amount_bits\u0027 | sed -es/:.*// | xargs sed \u0027-es/amount_bits/bit_size/g\u0027 --in-place",
+      "range": {
+        "startLine": 356,
+        "startChar": 86,
+        "endLine": 356,
+        "endChar": 97
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8e2249f_62e27f75",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "What if the divisor is a constant zero? We\u0027d still need to throw the exception. Maybe we should check for constant zero in `CreateUnsignedDivRemLocations()` and not create the `LocationSummary` in that case, deferring to a non-intrinsified call.",
+      "range": {
+        "startLine": 647,
+        "startChar": 6,
+        "endLine": 647,
+        "endChar": 37
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "806845a0_a060add3",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "Use `codegen-\u003eGetInstructionVisitor()` instead.",
+      "range": {
+        "startLine": 649,
+        "startChar": 36,
+        "endLine": 649,
+        "endChar": 55
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff153f61_c06327be",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "Are you sure this works for divisor/dividend in the range `[2^63, 2^64-1]`?\n\nNote that for divisor in `[2^63, 2^64-1]` we could simply use `sltu out, divisor, dividend; xor out, out, 1`.",
+      "range": {
+        "startLine": 653,
+        "startChar": 26,
+        "endLine": 653,
+        "endChar": 52
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3149d373_87956ffd",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "Are you sure this works for divisor/dividend in the range `[2^31, 2^32-1]`?\n\nNote that the `is_non_negative` is very weird in this contexts and makes me very concerned about the correctness (more concerned than the 64-bit case above).\n\nNote that we could just defer to the normal `divuw/remuw` implementation for the high divisor by requesting a register in `CreateUnsignedDivRemLocations()`. But we need to make sure that high dividend is handled correctly and I\u0027m not an expert on the constant division code - I\u0027m just trying to compare it with the arm64 code and we don\u0027t have this optimization for intrinsics there.",
+      "range": {
+        "startLine": 658,
+        "startChar": 26,
+        "endLine": 658,
+        "endChar": 49
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c80dabe3_fd6f73f3",
+        "filename": "test/411-checker-hdiv-hrem-const-riscv64/src/DivTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-09T08:17:42Z",
+      "side": 1,
+      "message": "Can we just add the riscv64 checker statements and comments to the existing run-test `411-checker-hdiv-hrem-const`, please? Maybe the comment could be rewritten to say that we test for optimized code on certain architectures (instead of referencing arm64/riscv64 instructions by name).",
+      "range": {
+        "startLine": 130,
+        "startChar": 6,
+        "endLine": 130,
+        "endChar": 25
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
