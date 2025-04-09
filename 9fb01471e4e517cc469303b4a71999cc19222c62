@@ -18,6 +18,46 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "112cf4b1_9f96ff3b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-09T16:42:17Z",
+      "side": 1,
+      "message": "Thanks for the review!\n\nJust to note that this patch has some dependencies so this will need to wait until those are merged.",
+      "revId": "9fb01471e4e517cc469303b4a71999cc19222c62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16c545d8_ce80aa68",
+        "filename": "runtime/Android.bp",
+        "patchSetId": 13
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-09T16:42:17Z",
+      "side": 1,
+      "message": "FYI this property is provided by this patch: https://android-review.googlesource.com/c/platform/build/soong/+/3530161?tab\u003dcomments which is not yet merged.",
+      "range": {
+        "startLine": 668,
+        "startChar": 4,
+        "endLine": 668,
+        "endChar": 15
+      },
+      "revId": "9fb01471e4e517cc469303b4a71999cc19222c62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "adbe040b_f65fa432",
@@ -36,6 +76,29 @@
         "startChar": 53,
         "endLine": 670,
         "endChar": 54
+      },
+      "revId": "9fb01471e4e517cc469303b4a71999cc19222c62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ebe62f8_8cf4a822",
+        "filename": "runtime/Android.bp",
+        "patchSetId": 13
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-04-09T16:42:17Z",
+      "side": 1,
+      "message": "FYI `llvm-objcopy` is not available in blueprints yet as it needs a small patch to `prebuilts/clang/host/linux-x86`. I have a patch for this internally and hope to have it upstreamed shortly.",
+      "range": {
+        "startLine": 701,
+        "startChar": 9,
+        "endLine": 701,
+        "endChar": 21
       },
       "revId": "9fb01471e4e517cc469303b4a71999cc19222c62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
