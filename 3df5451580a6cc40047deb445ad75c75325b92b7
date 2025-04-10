@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab180b27_fb5393d4",
+        "filename": "oatdump/oatdump.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1899498
+      },
+      "writtenOn": "2025-04-10T07:00:55Z",
+      "side": 1,
+      "message": "Hi Jiakai,the AdjustOffset must also be added at this position; otherwise, it will cause incorrect nativepc values in the stackmap dump results.",
+      "range": {
+        "startLine": 1564,
+        "startChar": 44,
+        "endLine": 1564,
+        "endChar": 70
+      },
+      "revId": "3df5451580a6cc40047deb445ad75c75325b92b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
