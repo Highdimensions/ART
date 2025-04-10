@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "89e75024_2e894997",
+        "filename": "oatdump/oatdump.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1388,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-04-10T09:42:04Z",
+      "side": 1,
+      "message": "Thank you for pointing it out! We\u0027ll look into it.",
+      "parentUuid": "95088fdb_b0cc98d8",
+      "range": {
+        "startLine": 1388,
+        "startChar": 19,
+        "endLine": 1388,
+        "endChar": 46
+      },
+      "revId": "3df5451580a6cc40047deb445ad75c75325b92b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ab180b27_fb5393d4",
         "filename": "oatdump/oatdump.cc",
         "patchSetId": 5
@@ -37,6 +61,30 @@
       "writtenOn": "2025-04-10T07:00:55Z",
       "side": 1,
       "message": "Hi Jiakai,the AdjustOffset must also be added at this position; otherwise, it will cause incorrect nativepc values in the stackmap dump results.",
+      "range": {
+        "startLine": 1564,
+        "startChar": 44,
+        "endLine": 1564,
+        "endChar": 70
+      },
+      "revId": "3df5451580a6cc40047deb445ad75c75325b92b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f2e7e5a_eceda7b9",
+        "filename": "oatdump/oatdump.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-04-10T09:42:04Z",
+      "side": 1,
+      "message": "Thank you for pointing it out! We\u0027ll look into it.",
+      "parentUuid": "ab180b27_fb5393d4",
       "range": {
         "startLine": 1564,
         "startChar": 44,
