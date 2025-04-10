@@ -330,6 +330,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9cd1c8ee_c430a5eb",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-10T16:13:15Z",
+      "side": 1,
+      "message": "Correction: The `xor` is wrong, the `sltu` already provides the correct result for high divisor.",
+      "parentUuid": "ff153f61_c06327be",
+      "range": {
+        "startLine": 653,
+        "startChar": 26,
+        "endLine": 653,
+        "endChar": 52
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3149d373_87956ffd",
         "filename": "compiler/optimizing/intrinsics_riscv64.cc",
         "patchSetId": 1
