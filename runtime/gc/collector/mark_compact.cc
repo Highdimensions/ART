@@ -4706,7 +4706,7 @@ template <bool kUpdateLiveWords>
 void MarkCompact::ScanObject(mirror::Object* obj) {
   mirror::Class* klass = obj->GetClass<kVerifyNone, kWithoutReadBarrier>();
   // TODO(lokeshgidra): Remove the following condition once b/373609505 is fixed.
-  if (UNLIKELY(klass == nullptr)) {
+  if (UNLIKELY(klass == nullptr || !heap_->GetVerification()->IsValidHeapObjectAddress(klass))) {
     // It was seen in ConcurrentCopying GC that after a small wait when we reload
     // the class pointer, it turns out to be a valid class object. So as a workaround,
     // we can continue execution and log an error that this happened.
@@ -4714,11 +4714,11 @@ void MarkCompact::ScanObject(mirror::Object* obj) {
       // Wait for 1ms at a time. Don't wait for more than 1 second in total.
       usleep(1000);
       klass = obj->GetClass<kVerifyNone, kWithoutReadBarrier>();
-      if (klass != nullptr) {
+      if (klass != nullptr && heap_->GetVerification()->IsValidHeapObjectAddress(klass)) {
         break;
       }
     }
-    if (klass == nullptr) {
+    if (klass == nullptr || !heap_->GetVerification()->IsValidClass(klass)) {
       // It must be heap corruption.
       LOG(FATAL_WITHOUT_ABORT) << "klass pointer for obj: " << obj << " found to be null."
                                << " black_dense_end: " << static_cast<void*>(black_dense_end_)
