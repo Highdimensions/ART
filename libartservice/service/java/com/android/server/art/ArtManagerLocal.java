@@ -202,8 +202,8 @@ public final class ArtManagerLocal {
     }
 
     /**
-     * Deletes dexopt artifacts (including cloud dexopt artifacts) of a package, for primary dex
-     * files and for secondary dex files. This includes VDEX, ODEX, ART, SDM, and SDC files.
+     * Deletes dexopt artifacts of a package, including the artifacts for primary dex files and the
+     * ones for secondary dex files. This includes VDEX, ODEX, and ART files.
      *
      * Also deletes runtime artifacts of the package, though they are not dexopt artifacts.
      *
@@ -231,9 +231,6 @@ public final class ArtManagerLocal {
             }
             for (RuntimeArtifactsPath runtimeArtifacts : list.runtimeArtifacts()) {
                 freedBytes += mInjector.getArtd().deleteRuntimeArtifacts(runtimeArtifacts);
-            }
-            for (SecureDexMetadataWithCompanionPaths sdmSdcFiles : list.sdmFiles()) {
-                freedBytes += mInjector.getArtd().deleteSdmSdcFiles(sdmSdcFiles);
             }
             return DeleteResult.create(freedBytes);
         } catch (RemoteException e) {
@@ -393,17 +390,13 @@ public final class ArtManagerLocal {
     }
 
     /**
-     * Resets the dexopt state of the package as if the package is newly installed without cloud
-     * dexopt artifacts (SDM files).
+     * Resets the dexopt state of the package as if the package is newly installed.
      *
-     * More specifically,
-     * - It clears current profiles, reference profiles, and all dexopt artifacts (including cloud
-     *   dexopt artifacts).
-     * - If there is an external profile (e.g., a cloud profile), the reference profile will be
-     *   re-created from that profile, and dexopt artifacts will be regenerated for that profile.
+     * More specifically, it clears reference profiles, current profiles, any code compiled from
+     * those local profiles, and runtime artifacts. If there is an external profile (e.g., a cloud
+     * profile), the code compiled from that profile will be kept.
      *
-     * For secondary dex files, it clears all profiles and dexopt artifacts without regeneration
-     * because secondary dex files are supposed to be unknown at install time.
+     * For secondary dex files, it also clears all dexopt artifacts.
      *
      * @hide
      */
