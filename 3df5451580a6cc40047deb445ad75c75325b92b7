@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "664387e8_4c12217d",
+        "filename": "oatdump/oatdump.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1388,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-04-14T11:16:21Z",
+      "side": 1,
+      "message": "We are fixing this in our internal branch. The fix will be released in the next release.",
+      "parentUuid": "89e75024_2e894997",
+      "range": {
+        "startLine": 1388,
+        "startChar": 19,
+        "endLine": 1388,
+        "endChar": 46
+      },
+      "revId": "3df5451580a6cc40047deb445ad75c75325b92b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ab180b27_fb5393d4",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "Thank you for pointing it out! We\u0027ll look into it.",
       "parentUuid": "ab180b27_fb5393d4",
+      "range": {
+        "startLine": 1564,
+        "startChar": 44,
+        "endLine": 1564,
+        "endChar": 70
+      },
+      "revId": "3df5451580a6cc40047deb445ad75c75325b92b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c47dc06_7d96e359",
+        "filename": "oatdump/oatdump.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-04-14T11:16:21Z",
+      "side": 1,
+      "message": "We are fixing this in our internal branch. The fix will be released in the next release.",
+      "parentUuid": "0f2e7e5a_eceda7b9",
       "range": {
         "startLine": 1564,
         "startChar": 44,
