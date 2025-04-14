@@ -45,6 +45,7 @@ import dalvik.system.DexFile;
 import com.google.auto.value.AutoValue;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -125,7 +126,7 @@ public class ArtFileManager {
             }
         }
 
-        return new WritableArtifactLists(artifacts, runtimeArtifacts);
+        return WritableArtifactLists.create(artifacts, runtimeArtifacts);
     }
 
     /** Returns artifacts that are usable, regardless of whether they are writable. */
@@ -134,7 +135,6 @@ public class ArtFileManager {
             @NonNull PackageState pkgState, @NonNull AndroidPackage pkg) throws RemoteException {
         List<ArtifactsPath> artifacts = new ArrayList<>();
         List<VdexPath> vdexFiles = new ArrayList<>();
-        List<SecureDexMetadataWithCompanionPaths> sdmFiles = new ArrayList<>();
         List<RuntimeArtifactsPath> runtimeArtifacts = new ArrayList<>();
 
         var options = ArtFileManager.Options.builder()
@@ -159,30 +159,9 @@ public class ArtFileManager {
                     } else {
                         artifacts.add(thisArtifacts);
                     }
-                } else if (result.artifactsLocation == ArtifactsLocation.SDM_DALVIK_CACHE
-                        || result.artifactsLocation == ArtifactsLocation.SDM_NEXT_TO_DEX) {
-                    sdmFiles.add(AidlUtils.buildSecureDexMetadataWithCompanionPaths(
-                            dexInfo.dexPath(), abi.isa(),
-                            result.artifactsLocation == ArtifactsLocation.SDM_DALVIK_CACHE));
-                }
-
-                if (result.artifactsLocation != ArtifactsLocation.NONE_OR_ERROR) {
                     // Runtime images are only generated for primary dex files.
                     if (dexInfo instanceof DetailedPrimaryDexInfo
                             && !DexFile.isOptimizedCompilerFilter(result.compilerFilter)) {
-                        // Those not added to the list are definitely unusable, but those added to
-                        // the list are not necessarily usable. For example, runtime artifacts can
-                        // be outdated when the corresponding dex file is updated, but they may
-                        // still show up in this list.
-                        //
-                        // However, this is not a severe problem. For `ArtManagerLocal.cleanup`, the
-                        // worst result is only that we are keeping more runtime artifacts than
-                        // needed. For `ArtManagerLocal.getArtManagedFileStats`, this is an edge
-                        // case because the API call is transitively initiated by the app itself,
-                        // and the runtime refreshes unusable runtime artifacts as soon as the app
-                        // starts.
-                        //
-                        // TODO(jiakaiz): Improve this.
                         runtimeArtifacts.add(AidlUtils.buildRuntimeArtifactsPath(
                                 pkgState.getPackageName(), dexInfo.dexPath(), abi.isa()));
                     }
@@ -197,7 +176,7 @@ public class ArtFileManager {
             }
         }
 
-        return new UsableArtifactLists(artifacts, vdexFiles, sdmFiles, runtimeArtifacts);
+        return UsableArtifactLists.create(artifacts, vdexFiles, runtimeArtifacts);
     }
 
     @NonNull
@@ -230,7 +209,7 @@ public class ArtFileManager {
             }
         }
 
-        return new ProfileLists(refProfiles, curProfiles);
+        return ProfileLists.create(refProfiles, curProfiles);
     }
 
     @NonNull
@@ -242,16 +221,71 @@ public class ArtFileManager {
                 : mInjector.getDexUseManager().getSecondaryDexInfo(pkgState.getPackageName());
     }
 
-    public record WritableArtifactLists(@NonNull List<ArtifactsPath> artifacts,
-            @NonNull List<RuntimeArtifactsPath> runtimeArtifacts) {}
+    @Immutable
+    @AutoValue
+    @SuppressWarnings("AutoValueImmutableFields") // Can't use ImmutableList because it's in Guava.
+    public abstract static class WritableArtifactLists {
+        protected WritableArtifactLists() {}
 
-    public record UsableArtifactLists(@NonNull List<ArtifactsPath> artifacts,
-            @NonNull List<VdexPath> vdexFiles,
-            @NonNull List<SecureDexMetadataWithCompanionPaths> sdmFiles,
-            @NonNull List<RuntimeArtifactsPath> runtimeArtifacts) {}
+        public static @NonNull WritableArtifactLists create(@NonNull List<ArtifactsPath> artifacts,
+                @NonNull List<RuntimeArtifactsPath> runtimeArtifacts) {
+            return new AutoValue_ArtFileManager_WritableArtifactLists(
+                    Collections.unmodifiableList(artifacts),
+                    Collections.unmodifiableList(runtimeArtifacts));
+        }
 
-    public record ProfileLists(
-            @NonNull List<ProfilePath> refProfiles, @NonNull List<ProfilePath> curProfiles) {
+        public abstract @NonNull List<ArtifactsPath> artifacts();
+        public abstract @NonNull List<RuntimeArtifactsPath> runtimeArtifacts();
+    }
+
+    @Immutable
+    @AutoValue
+    @SuppressWarnings("AutoValueImmutableFields") // Can't use ImmutableList because it's in Guava.
+    public abstract static class UsableArtifactLists {
+        protected UsableArtifactLists() {}
+
+        public static @NonNull UsableArtifactLists create(@NonNull List<ArtifactsPath> artifacts,
+                @NonNull List<VdexPath> vdexFiles,
+                @NonNull List<RuntimeArtifactsPath> runtimeArtifacts) {
+            return new AutoValue_ArtFileManager_UsableArtifactLists(
+                    Collections.unmodifiableList(artifacts),
+                    Collections.unmodifiableList(vdexFiles),
+                    Collections.unmodifiableList(runtimeArtifacts));
+        }
+
+        public abstract @NonNull List<ArtifactsPath> artifacts();
+        public abstract @NonNull List<VdexPath> vdexFiles();
+
+        // Those not added to the list are definitely unusable, but those added to the list are not
+        // necessarily usable. For example, runtime artifacts can be outdated when the corresponding
+        // dex file is updated, but they may still show up in this list.
+        //
+        // However, this is not a severe problem. For `ArtManagerLocal.cleanup`, the worst result is
+        // only that we are keeping more runtime artifacts than needed. For
+        // `ArtManagerLocal.getArtManagedFileStats`, this is an edge case because the API call is
+        // transitively initiated by the app itself, and the runtime refreshes unusable runtime
+        // artifacts as soon as the app starts.
+        //
+        // TODO(jiakaiz): Improve this.
+        public abstract @NonNull List<RuntimeArtifactsPath> runtimeArtifacts();
+    }
+
+    @Immutable
+    @AutoValue
+    @SuppressWarnings("AutoValueImmutableFields") // Can't use ImmutableList because it's in Guava.
+    public abstract static class ProfileLists {
+        protected ProfileLists() {}
+
+        public static @NonNull ProfileLists create(
+                @NonNull List<ProfilePath> refProfiles, @NonNull List<ProfilePath> curProfiles) {
+            return new AutoValue_ArtFileManager_ProfileLists(
+                    Collections.unmodifiableList(refProfiles),
+                    Collections.unmodifiableList(curProfiles));
+        }
+
+        public abstract @NonNull List<ProfilePath> refProfiles();
+        public abstract @NonNull List<ProfilePath> curProfiles();
+
         public @NonNull List<ProfilePath> allProfiles() {
             List<ProfilePath> profiles = new ArrayList<>();
             profiles.addAll(refProfiles());
