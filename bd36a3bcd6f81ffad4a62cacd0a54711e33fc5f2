@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63a4a262_bf36ae8a",
+        "filename": "test/knownfailures.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 1447,
+      "author": {
+        "id": 1993961
+      },
+      "writtenOn": "2025-04-15T06:24:03Z",
+      "side": 0,
+      "message": "Hi, this case failed in my chroot environment as below for \"libnativehelper.so\" not found, do you know why?\n\nart/test/testrunner/testrunner.py --target --64 817\n tee -a /data/run-test/f7b72b6d/test-stderr.txt) 3\u003e\u00261 1\u003e\u00262 2\u003e\u00263\nJNI_OnLoad called\nException in thread \"main\" java.lang.reflect.InvocationTargetException\n        at java.lang.reflect.Method.invoke(Native Method)\n        at Main.main(Main.java:46)\nCaused by: java.lang.UnsatisfiedLinkError: dlopen failed: library \"libnativehelper.so\" not found: needed by /data/run-test/f7b72b6d/libhiddenapitest.so in namespace clns-2\n        at java.lang.Runtime.load0(Runtime.java:941)\n        at java.lang.System.load(System.java:1729)\n        at TestCase.testNative(TestCase.java:43)\n        ... 2 more\n817-hiddenapi FAILED: [default_run.py:1048] DalvikVM returned exit code 1.\n817-hiddenapi FAILED: [run-test:945] Runner /data/local/art-test-chroot/data/run-test/f7b72b6d/run.sh failed\n$ adb shell rm -rf /data/local/art-test-chroot/data/run-test/f7b72b6d\n817-hiddenapi files deleted from host and from target",
+      "range": {
+        "startLine": 1447,
+        "startChar": 18,
+        "endLine": 1447,
+        "endChar": 33
+      },
+      "revId": "bd36a3bcd6f81ffad4a62cacd0a54711e33fc5f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
