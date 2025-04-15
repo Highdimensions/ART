@@ -58,6 +58,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ffba26c_353be4cf",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5804,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-04-15T17:50:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6782b18f_c90bd387",
+      "range": {
+        "startLine": 5804,
+        "startChar": 16,
+        "endLine": 5804,
+        "endChar": 25
+      },
+      "revId": "4b21414628b87ee8ccf6c0deb699b920cb4a5d60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bdc3dbfb_4b442365",
@@ -71,6 +95,30 @@
       "writtenOn": "2025-04-15T08:38:40Z",
       "side": 1,
       "message": "Style: Add one space to align arguments.",
+      "range": {
+        "startLine": 5835,
+        "startChar": 10,
+        "endLine": 5835,
+        "endChar": 11
+      },
+      "revId": "4b21414628b87ee8ccf6c0deb699b920cb4a5d60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c9b3f56_97d64e96",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5835,
+      "author": {
+        "id": 3270422
+      },
+      "writtenOn": "2025-04-15T17:50:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bdc3dbfb_4b442365",
       "range": {
         "startLine": 5835,
         "startChar": 10,
