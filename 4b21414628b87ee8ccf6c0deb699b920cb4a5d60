@@ -33,6 +33,52 @@
       "message": "@solanes@google.com @vmarko@google.com please take a look.",
       "revId": "4b21414628b87ee8ccf6c0deb699b920cb4a5d60",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6782b18f_c90bd387",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5804,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-15T08:38:40Z",
+      "side": 1,
+      "message": "This is the \"last temp\" index only `if (!receiver_mh_loc.IsRegister())`. As such, the name is misleading.\n\nI\u0027d prefer to have the number directly in the `GetTemp(3)` for now. It\u0027s not very nice but it would correspond to the arm64 code.",
+      "range": {
+        "startLine": 5804,
+        "startChar": 16,
+        "endLine": 5804,
+        "endChar": 25
+      },
+      "revId": "4b21414628b87ee8ccf6c0deb699b920cb4a5d60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdc3dbfb_4b442365",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5835,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-15T08:38:40Z",
+      "side": 1,
+      "message": "Style: Add one space to align arguments.",
+      "range": {
+        "startLine": 5835,
+        "startChar": 10,
+        "endLine": 5835,
+        "endChar": 11
+      },
+      "revId": "4b21414628b87ee8ccf6c0deb699b920cb4a5d60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
