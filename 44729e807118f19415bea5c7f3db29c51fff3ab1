@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9870e616_81a65169",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-17T08:40:06Z",
+      "side": 1,
+      "message": "Patch Set 2 was cleanly cherry-picked and submitted to internal branch. It was then reverted because it broke run-test 956-methodhandles (SIGSEGV). Please fix.",
+      "revId": "44729e807118f19415bea5c7f3db29c51fff3ab1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
