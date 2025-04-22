@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8d8fe9e_ef17f3b7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-04-22T08:46:26Z",
+      "side": 1,
+      "message": "FYI there\u0027s also the JDK variant https://source.corp.google.com/h/android/platform/superproject/main/+/main:art/runtime/native/jdk_internal_misc_Unsafe.cc;l\u003d582-585;drc\u003d8b9c4525fc21da49aae58c6ec552c97848cfa9cf. We should keep them in sync.\n\nThe JDK one is the only one that will exist in the future, and the sun misc one will be deprecated as soon as we can.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 52
+      },
+      "revId": "3bb4a0bea5e2915f4278f600f4a1732a59f56f50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2c912b1_dd798ae1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-04-22T08:46:26Z",
+      "side": 1,
+      "message": "nit: lines too long",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 386
+      },
+      "revId": "3bb4a0bea5e2915f4278f600f4a1732a59f56f50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61189582_46394c28",
+        "filename": "runtime/native/sun_misc_Unsafe.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-04-22T08:46:26Z",
+      "side": 1,
+      "message": "This method requires the mutator lock (https://source.corp.google.com/h/android/platform/superproject/main/+/main:art/runtime/thread.h;l\u003d870;drc\u003d90d0f71fde6da6382d27d008644e02e60fbe9942) that ScopedObjectAccess acquires.\n\n@vmarko@google.com, do you know if the JNI macros are somehow hiding the fact that we are acquiring the mutator lock for `Unsafe_park`? Do you think we could make this a critical native/fast native as the commit message suggests?",
+      "range": {
+        "startLine": 522,
+        "startChar": 0,
+        "endLine": 522,
+        "endChar": 44
+      },
+      "revId": "3bb4a0bea5e2915f4278f600f4a1732a59f56f50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
