@@ -518,8 +518,7 @@ static void Unsafe_fullFence(JNIEnv*, jobject) {
   std::atomic_thread_fence(std::memory_order_seq_cst);
 }
 
-static void Unsafe_park(JNIEnv* env, jobject, jboolean isAbsolute, jlong time) {
-  ScopedObjectAccess soa(env);
+static void Unsafe_park(JNIEnv*, jobject, jboolean isAbsolute, jlong time) {
   Thread::Current()->Park(isAbsolute, time);
 }
 
