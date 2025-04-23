@@ -46,6 +46,30 @@
       },
       "revId": "bd36a3bcd6f81ffad4a62cacd0a54711e33fc5f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a441fbc0_dcaf9cd2",
+        "filename": "test/knownfailures.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 1447,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-04-23T17:47:32Z",
+      "side": 0,
+      "message": "Thanks for the report and analysis.\n\nI think it stopped working after https://r.android.com/3343126, which introduced a new `partition` attribute in apex-info-list.xml, and that file is [generated as a fake](https://cs.android.com/android/platform/superproject/main/+/main:art/tools/buildbot-build.sh;l\u003d353-369;drc\u003d4ea9dbdd63aa1baeac3003e6e9db6a254ac3ca8d) in buildbot-build.sh still without that attribute.\n\nI\u0027m creating a CL to add `partition\u003d\"SYSTEM\"` to the XML snippet on line 363 in buildbot-build.sh. With that the test works for me.\n\n\u003e why your CI can pass the run-test test? would you help identify?\n\nThis was because we\u0027re testing using a reduced manifest (see the `master-art` instructions in [README.chroot.md](https://cs.android.com/android/platform/superproject/main/+/main:art/test/README.chroot.md), and that manifest uses a [prebuilt linkerconfig binary](https://cs.android.com/android/platform/superproject/main/+/main:prebuilts/runtime/mainline/runtime/host-exports/linux_glibc/x86_64/bin/linkerconfig) that didn\u0027t have https://r.android.com/3343126. I\u0027ll open a ticket to address that test gap.",
+      "parentUuid": "5168e39d_d6b7e168",
+      "range": {
+        "startLine": 1447,
+        "startChar": 18,
+        "endLine": 1447,
+        "endChar": 33
+      },
+      "revId": "bd36a3bcd6f81ffad4a62cacd0a54711e33fc5f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
