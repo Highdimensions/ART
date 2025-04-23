@@ -27,12 +27,15 @@
 // against bionic on the host, also.
 
 #if !defined(__BIONIC__) && !defined(__APPLE__) && !defined(ANDROID_HOST_MUSL)
+// glibc 2.38 has a strlcpy implementation
+#if !defined(__GLIBC__) || (__GLIBC__ == 2 && __GLIBC_MINOR__ < 38)
 
 static inline size_t strlcpy(char* dst, const char* src, size_t size) {
   // Extra-lazy implementation: this is only a host shim, and we don't have to call this often.
   return snprintf(dst, size, "%s", src);
 }
 
-#endif
+#endif // !__GLIBC__ || (__GLIBC__ == 2 && __GLIBC_MINOR__ < 38)
+#endif // !__BIONIC__ && !__APPLE__ && !ANDROID_HOST_MUSL
 
 #endif  // ART_LIBARTBASE_BASE_STRLCPY_H_
