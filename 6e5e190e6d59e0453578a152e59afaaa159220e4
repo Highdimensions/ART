@@ -33,6 +33,190 @@
       "message": "Folks, please take a look, cc vmarko@google.com",
       "revId": "6e5e190e6d59e0453578a152e59afaaa159220e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1be0dec8_de280c43",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-25T13:55:56Z",
+      "side": 1,
+      "message": "Style: This is shared for the three operations. What about\n\n    ArenaAllocator* allocator \u003d GetGraph()-\u003eGetAllocator();\n    HInstruction* replacement;\n    if (op-\u003eIsOr) {\n      replacement \u003d new (allocator) HRiscv64BitSet(...);\n    } else if (op-\u003eIsXor()) {\n      replacement \u003d new (allocator) HRiscv64BitInvert(...);\n    } else {\n      DCHECK(op-\u003eIsAnd());\n      replacement \u003d new (allocator) HRiscv64BitClear(...);\n    }\n    op-\u003eGetBlock()-\u003eReplaceAndRemoveInstructionWith(op, replacement);",
+      "range": {
+        "startLine": 174,
+        "startChar": 6,
+        "endLine": 174,
+        "endChar": 69
+      },
+      "revId": "6e5e190e6d59e0453578a152e59afaaa159220e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "586fc450_f7ca1d00",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-25T13:55:56Z",
+      "side": 1,
+      "message": "You need to check that `hnot \u003d\u003d nullptr`. Same for `Xor`.\n\nOr, you can refactor the code above that checks `Not` to first check `And`.\n\n    if (op-\u003eIsAnd()) {\n      if (!left-\u003eIsNot() \u0026\u0026 !right-\u003eIsNot()) {\n        return false;\n      }\n      hnot \u003d (left-\u003eIsNot()) ? left-\u003eAsNot() : right-\u003eAsNot();\n      [...]",
+      "range": {
+        "startLine": 255,
+        "startChar": 22,
+        "endLine": 255,
+        "endChar": 29
+      },
+      "revId": "6e5e190e6d59e0453578a152e59afaaa159220e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fe3f770_6a6fc973",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-25T13:55:56Z",
+      "side": 1,
+      "message": "Style: This is shared for the three operations. But unlike `TryReplaceShrAndWithBitExtract()` we have the `hnot` processing here, which we\u0027d need to do later, adding an extra condition (either `hnot !\u003d nullptr` or `op-\u003eIsAnd()`).",
+      "range": {
+        "startLine": 272,
+        "startChar": 6,
+        "endLine": 272,
+        "endChar": 69
+      },
+      "revId": "6e5e190e6d59e0453578a152e59afaaa159220e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28b93c16_ec0a0fb5",
+        "filename": "compiler/optimizing/nodes_riscv64.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-25T13:55:56Z",
+      "side": 1,
+      "message": "Enclose in `(`, `)`. Bitwise `\u0026` has lower priority than `\u003c\u003c`.\n\nSame for other instructions below. (The `HRiscv64BitClear` does have these but in  the wrong places.)",
+      "range": {
+        "startLine": 74,
+        "startChar": 52,
+        "endLine": 74,
+        "endChar": 89
+      },
+      "revId": "6e5e190e6d59e0453578a152e59afaaa159220e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4398d39a_487f4568",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-25T13:55:56Z",
+      "side": 1,
+      "message": "Add tests with `|` and `^` to check that these are not erroneously optimized.",
+      "range": {
+        "startLine": 44,
+        "startChar": 11,
+        "endLine": 44,
+        "endChar": 25
+      },
+      "revId": "6e5e190e6d59e0453578a152e59afaaa159220e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7a19fae_a25adc38",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-25T13:55:56Z",
+      "side": 1,
+      "message": "These would be easier to understand with numbers using the hexadecimal representation.",
+      "range": {
+        "startLine": 192,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 94
+      },
+      "revId": "6e5e190e6d59e0453578a152e59afaaa159220e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2673925c_2e8d1251",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-25T13:55:56Z",
+      "side": 1,
+      "message": "Hexadecimal representation?",
+      "range": {
+        "startLine": 211,
+        "startChar": 4,
+        "endLine": 213,
+        "endChar": 90
+      },
+      "revId": "6e5e190e6d59e0453578a152e59afaaa159220e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b2c63b9_7743475a",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-25T13:55:56Z",
+      "side": 1,
+      "message": "Hexadecimal representation?",
+      "range": {
+        "startLine": 222,
+        "startChar": 4,
+        "endLine": 224,
+        "endChar": 80
+      },
+      "revId": "6e5e190e6d59e0453578a152e59afaaa159220e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

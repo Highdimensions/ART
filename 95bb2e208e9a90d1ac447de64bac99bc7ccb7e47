@@ -160,6 +160,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4962ad2_63527df3",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 5496,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-25T13:55:56Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "777d4614_961d71f3",
+      "range": {
+        "startLine": 5496,
+        "startChar": 4,
+        "endLine": 5496,
+        "endChar": 57
+      },
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7e443f2a_5061d306",
@@ -644,6 +668,24 @@
       "side": 1,
       "message": "Due to the cancellation of `int` optimization, I removed the tests for them. Also, just in case, I added tests for the sign bit for `long`",
       "parentUuid": "58a2e7cb_5fb9a5e1",
+      "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59e1c7bc_182b670b",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-25T13:55:56Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ff6466a5_7fde4812",
       "revId": "95bb2e208e9a90d1ac447de64bac99bc7ccb7e47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
