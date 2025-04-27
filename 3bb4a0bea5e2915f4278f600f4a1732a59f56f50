@@ -116,6 +116,30 @@
       },
       "revId": "3bb4a0bea5e2915f4278f600f4a1732a59f56f50",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe6efe6e_3ee96a04",
+        "filename": "runtime/native/sun_misc_Unsafe.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1272573
+      },
+      "writtenOn": "2025-04-27T23:18:47Z",
+      "side": 1,
+      "message": "No, I thought the presubmit would do the build. What is TH? I\u0027m guessing the thread annotation checking? If disabled in AOSP that explains why it didn\u0027t catch, thanks",
+      "parentUuid": "8740edb2_0f2ba9e4",
+      "range": {
+        "startLine": 522,
+        "startChar": 0,
+        "endLine": 522,
+        "endChar": 44
+      },
+      "revId": "3bb4a0bea5e2915f4278f600f4a1732a59f56f50",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
