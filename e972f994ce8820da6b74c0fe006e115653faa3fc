@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad77eca4_77cf84de",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 4867,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T15:29:05Z",
+      "side": 1,
+      "message": "I think it would be nice to have a separate `else if` for this where we can add some comments and assert that `self-\u003eIsRuntimeThread()`. But maybe we can merge this to internal as is and do the cleanup afterwards.\n\nWhat do you think Nicolas?",
+      "range": {
+        "startLine": 4867,
+        "startChar": 37,
+        "endLine": 4867,
+        "endChar": 77
+      },
+      "revId": "e972f994ce8820da6b74c0fe006e115653faa3fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
