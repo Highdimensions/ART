@@ -1,0 +1,439 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "962898c1_ae5bab51",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Full review.",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3308969c_e3613294",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Why not `bool is_twobyte_form \u003d !(dst.NeedsRex() \u0026\u0026 src2.NeedsRex());` as in `vmovss()`?\n\n(And why not have a helper function that can handle both `vmovss()` and `vmovsd()`?)",
+      "range": {
+        "startLine": 1203,
+        "startChar": 2,
+        "endLine": 1205,
+        "endChar": 3
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f1804d8_8dce730e",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 1707,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Should this be part of `GetEncodedVexLen()`? (Requires making `GetEncodedVexLen()` a member function of the assembler.)",
+      "range": {
+        "startLine": 1707,
+        "startChar": 2,
+        "endLine": 1707,
+        "endChar": 78
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4ecc4c3_93d05bd3",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3391,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Should this be commutative? Or do we deliberately avoid treating this as commutative because we\u0027ll still emit the same number of bytes? If so, please add a comment here and to the disassembler test as well.\n\nSame for `vpmaxsb()`, `vp{min,max}sd()`, `vp{min,max}u{w,d}()`.",
+      "range": {
+        "startLine": 3391,
+        "startChar": 2,
+        "endLine": 3391,
+        "endChar": 24
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78046d15_dacf754b",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3498,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Line too long. (Break after `(`.)",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ca32af7_d91282e1",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3504,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Line too long. (Break after `(`.)",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ad93629_a291823d",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3637,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "`bool is_twobyte_form \u003d !src2.NeedsRex()`",
+      "range": {
+        "startLine": 3635,
+        "startChar": 2,
+        "endLine": 3637,
+        "endChar": 3
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7aba33d9_bc72aeda",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 5910,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "`bool is_twobyte_form \u003d !src.NeedsRex();`",
+      "range": {
+        "startLine": 5908,
+        "startChar": 2,
+        "endLine": 5910,
+        "endChar": 3
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78ebb388_61d797d5",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2634,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Note: We could add extra tests for `pcmpeqw`-`pcmpgtd` but those instructions are not added in this CL, so I\u0027m fine with leaving this as is.",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eea0a9ee_70b67fe5",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2985,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Remove `v` here and in other non-V tests below.",
+      "range": {
+        "startLine": 2985,
+        "startChar": 26,
+        "endLine": 2985,
+        "endChar": 27
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce546e87_533cdc69",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2992,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Add `TEST_F(AssemblerX86_64AVXTest, DisassMovss)` for auto-forwarding.\n\nSame below: `TEST_F(AssemblerX86_64AVXTest, DisassMovapd)`, `TEST_F(AssemblerX86_64AVXTest, DisassMovsd)`, `TEST_F(AssemblerX86_64AVXTest, DisassMovdqa)`, `TEST_F(AssemblerX86_64AVXTest, DisassMov{q,d}{1,2})`, `TEST_F(AssemblerX86_64AVXTest, DisassCvtdq2ps)`.",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b28ec6f2_9daf9a67",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3071,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Remove.",
+      "range": {
+        "startLine": 3071,
+        "startChar": 26,
+        "endLine": 3071,
+        "endChar": 30
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "849d3c0f_54ab8374",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3172,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Note: Test name shall not have the first letter of instruction name capitalized as other tests. I\u0027m fine with that.",
+      "range": {
+        "startLine": 3172,
+        "startChar": 38,
+        "endLine": 3172,
+        "endChar": 42
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "650151d0_0815f72f",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3182,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Add `TEST_F(AssemblerX86_64AVXTest, Disass##inst)` for auto-forwarding.",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ace96fbc_c643c394",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3202,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "How come we can test these? Are they not commutative?",
+      "range": {
+        "startLine": 3201,
+        "startChar": 40,
+        "endLine": 3202,
+        "endChar": 46
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e1ff950_eb0d868c",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3207,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 3206,
+        "startChar": 40,
+        "endLine": 3207,
+        "endChar": 46
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b70392e1_f95323f0",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3214,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 3211,
+        "startChar": 40,
+        "endLine": 3214,
+        "endChar": 46
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91789ae1_3993f8e0",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3218,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "These are floating-point operations, right? So I guess they are not commutative because of how they handle +-0.0 and/or +-NaN, right?",
+      "range": {
+        "startLine": 3215,
+        "startChar": 40,
+        "endLine": 3218,
+        "endChar": 45
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d66c6297_fe077778",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3259,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Add `TEST_F(AssemblerX86_64AVXTest, Disass##inst)` for auto-forwarding.",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f54dd65_b72e9d84",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3340,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Add `TEST_F(AssemblerX86_64AVXTest, DisassPabs{b,w,d})` for auto-forwarding and reorder to keep the same size together.",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68377661_168b0ea2",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3344,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "Is this space needed?",
+      "range": {
+        "startLine": 3344,
+        "startChar": 36,
+        "endLine": 3344,
+        "endChar": 37
+      },
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

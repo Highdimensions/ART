@@ -1527,6 +1527,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "886976ff_0b921722",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 1794,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-04-29T11:22:30Z",
+      "side": 1,
+      "message": "You added a `DCHECK_GT` but we need an actual check at runtime. There is no guarantee that there are enough bytes left to read.\n\nI think you can actually leave this as is for now. I\u0027m planning to address the general out-of-bounds-read bug after I merge this CL to internal. I\u0027m leaving this comment unresolved as a reminder for myself.",
+      "parentUuid": "aacec31f_b3559801",
+      "revId": "b172417b760204437d8b5a543e54ee3b752fb6a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b962e182_cdabc832",
         "filename": "disassembler/disassembler_x86.h",
         "patchSetId": 7
