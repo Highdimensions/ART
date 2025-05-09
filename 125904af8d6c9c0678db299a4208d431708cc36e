@@ -34,6 +34,23 @@
       "parentUuid": "812b06f0_040ab63d",
       "revId": "125904af8d6c9c0678db299a4208d431708cc36e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ca83390_37b8459b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-05-09T00:52:42Z",
+      "side": 1,
+      "message": "Note that the specific oat_file_manager issue was fixed in aosp/3298411.\n\nI\u0027ll cherrypick the rest of this to a new CL. I\u0027ll find a new initial poster child application for this.",
+      "revId": "125904af8d6c9c0678db299a4208d431708cc36e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
