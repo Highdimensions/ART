@@ -16,6 +16,46 @@
       "message": "It\u0027s a large CL to review, Thanks for your patience with this. Done with most of the suggested changes. Left comments for few. Please review again.",
       "revId": "8fa59bed5e2e6621fd1ec75211a82ebb604b863f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76eec046_d1c6ea4c",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 3448,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-12T07:17:27Z",
+      "side": 1,
+      "message": "Style: +2 spaces. Same for `vmaxps`.",
+      "range": {
+        "startLine": 3448,
+        "startChar": 2,
+        "endLine": 3448,
+        "endChar": 4
+      },
+      "revId": "8fa59bed5e2e6621fd1ec75211a82ebb604b863f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4938a76d_75a32628",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 10
+      },
+      "lineNbr": 3169,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-12T07:17:27Z",
+      "side": 1,
+      "message": "Please add a comment that some integral min/max operations are not treated as commutative because it does not affect encoding length and therefore they can be tested here.",
+      "revId": "8fa59bed5e2e6621fd1ec75211a82ebb604b863f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

@@ -422,6 +422,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3e000f9_c15681b9",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 2992,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-12T07:17:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "bfc94da1_b9fd796f",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b28ec6f2_9daf9a67",
@@ -523,6 +541,24 @@
       "side": 1,
       "message": "Same as above comment #2992",
       "parentUuid": "650151d0_0815f72f",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "146374cb_bdc299f0",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3182,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-12T07:17:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "af026fad_ad420190",
       "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -750,6 +786,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "21614db4_3b2eb15d",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3259,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-12T07:17:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "b901f25a_859d6a2d",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f54dd65_b72e9d84",
@@ -781,6 +835,24 @@
       "side": 1,
       "message": "Reordered the tests. Auto-forwarding test may not be necessary? Same as above comment #2992",
       "parentUuid": "7f54dd65_b72e9d84",
+      "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffe1e68f_839ea49c",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 9
+      },
+      "lineNbr": 3340,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-12T07:17:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "312f6136_8d1af06f",
       "revId": "cf38f21984792653d7beb64ec73cdea68dcaa573",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
