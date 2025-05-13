@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e444249_063ca26c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1272943
+      },
+      "writtenOn": "2025-05-13T17:42:53Z",
+      "side": 1,
+      "message": "Hi Mythri! Hope all is good.\n\nI was wondering if you would be up for taking a look at this patch.\n\nThe issues are best explained in these two links:\n- https://github.com/supervacuus/invalid_pthread_repro\n- https://github.com/getsentry/sentry-java/issues/2604\n\nThe apps are doing something obviously wrong but profiling triggers it so\nprofiling gets blamed and it is quite hard to find the real culprit.\n\nI\u0027m not sure if what I proposed is the best fix, I couldn\u0027t think of a cheap way to tell if the pthread is gone and I\u0027m not that familiar with ART -\nhowever it does at least resolve the specific case given in the repro.\n\nCheers!\nHector",
+      "revId": "aee3782ff97be45122b4f967d9afd3f4bbaefac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
