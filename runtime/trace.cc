@@ -466,6 +466,21 @@ void Trace::CompareAndUpdateStackTrace(Thread* thread,
                                        std::vector<ArtMethod*>* stack_trace) {
   CHECK_EQ(pthread_self(), sampling_pthread_);
   std::vector<ArtMethod*>* old_stack_trace = thread->GetStackTraceSample();
+
+  // ReadClocks below calls pthread_getcpuclockid which aborts if the
+  // pthread is invalid (e.g. because the thread already exited). This
+  // should not happen since dead threads should not remain in the
+  // thread_list however it can happen if an app:
+  // - Starts a native thread (via std::thread for example)
+  // - Calls AttachCurrentThread from that thread
+  // - ...and never calls DetachCurrentThread().
+  // - and ends.
+  // The check below handles a common case where the thread is
+  // 'zombie' in the thread list and will never have a stack.
+  if (old_stack_trace == nullptr && stack_trace->size() == 0) {
+    return;
+  }
+
   // Update the thread's stack trace sample.
   thread->SetStackTraceSample(stack_trace);
   // Read timer clocks to use for all events in this trace.
