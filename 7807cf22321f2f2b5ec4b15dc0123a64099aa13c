@@ -16,6 +16,459 @@
       "message": "Implemented and resolved all the suggestions.",
       "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba980d9b_ccefd056",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "LGTM, only minor changes suggested. Fine if we do them after cherry picking",
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5b52f89_b9906052",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "nit: parenthesis not needed",
+      "range": {
+        "startLine": 28,
+        "startChar": 9,
+        "endLine": 28,
+        "endChar": 10
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01ae3448_859ff1ca",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 438,
+        "startChar": 15,
+        "endLine": 438,
+        "endChar": 16
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16fc55cd_1a3c5ebc",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "This can be in the declaration i.e. `bool is_twobyte_form \u003d !src.NeedsRex();`",
+      "range": {
+        "startLine": 2065,
+        "startChar": 0,
+        "endLine": 2067,
+        "endChar": 3
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3df4240_47079418",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 3310,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "Same here, this can be one in the declaration",
+      "range": {
+        "startLine": 3305,
+        "startChar": 0,
+        "endLine": 3310,
+        "endChar": 70
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1eb1bb74_2bc78ef9",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 5682,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "not for this CL but uppercase here is confusing as the style is not to use that for parameters. For example `SET_VEX_W` vs `SET_VEX_L` one is a parameter and the other one is a constant defined value but from a first glance they look to be the same category.",
+      "range": {
+        "startLine": 5682,
+        "startChar": 46,
+        "endLine": 5682,
+        "endChar": 59
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "104bc6e9_77246ed5",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 5758,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "Suggestion: `bool is_twobyte_form \u003d !is64bit \u0026\u0026 !cpu_reg.NeedsRex();`",
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad70ed95_5613af88",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 5791,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "ditto here",
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "533fa93c_90d60ab3",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "nit: `code_mem`",
+      "range": {
+        "startLine": 165,
+        "startChar": 17,
+        "endLine": 165,
+        "endChar": 24
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a49912a_6087a887",
+        "filename": "compiler/utils/x86_64/constants_x86_64.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "To avoid duplication you can make one constructor call another. This would also make it easier if in the future the constructors are updated as you have less places where you need to update it.",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 64
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "43a8a144_91b0d057",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/utils/x86_64/constants_x86_64.h",
+              "range": {
+                "startLine": 54,
+                "startChar": 0,
+                "endLine": 56,
+                "endChar": 0
+              },
+              "replacement": "  explicit constexpr XmmRegister(FloatRegister r) : XmmRegister(r, 0) {}\n  explicit constexpr XmmRegister(int r) : XmmRegister(FloatRegister(r), 0) {}\n"
+            }
+          ]
+        }
+      ],
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ed53fb3_c5ad917e",
+        "filename": "compiler/utils/x86_64/constants_x86_64.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "Is this used?",
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b349bff8_fb45ba6d",
+        "filename": "compiler/utils/x86_64/constants_x86_64.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "You can make it an enum class instead of `size_t`. This would help to avoid checking that we have a valid value. Are we expecting other numbers besides 32?\n\nAlso, this should be const.",
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f425c1f_2b5a96d6",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 1753,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "nit: parenthesis not needed",
+      "range": {
+        "startLine": 1753,
+        "startChar": 12,
+        "endLine": 1753,
+        "endChar": 13
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75e7fd54_b70c86fb",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 1760,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "What is this removing? Can you add a comment about it?",
+      "range": {
+        "startLine": 1758,
+        "startChar": 0,
+        "endLine": 1760,
+        "endChar": 3
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da5c8d9c_2a09b8eb",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 1780,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "`In order`",
+      "range": {
+        "startLine": 1780,
+        "startChar": 5,
+        "endLine": 1780,
+        "endChar": 12
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7371673d_1d840c11",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 1806,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "Nit: these can be initialized on definition",
+      "range": {
+        "startLine": 1805,
+        "startChar": 0,
+        "endLine": 1806,
+        "endChar": 22
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "cd196ced_4407c10c",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "disassembler/disassembler_x86.cc",
+              "range": {
+                "startLine": 1803,
+                "startChar": 0,
+                "endLine": 1804,
+                "endChar": 0
+              },
+              "replacement": "  uint8_t byte_zero \u003d instr[0], byte_one \u003d instr[1], byte_two \u003d 0;\n"
+            },
+            {
+              "path": "disassembler/disassembler_x86.cc",
+              "range": {
+                "startLine": 1805,
+                "startChar": 0,
+                "endLine": 1807,
+                "endChar": 0
+              },
+              "replacement": ""
+            }
+          ]
+        }
+      ],
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12ced29d_393a5851",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 1837,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "nit: double parenthesis",
+      "range": {
+        "startLine": 1837,
+        "startChar": 11,
+        "endLine": 1837,
+        "endChar": 13
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b4cf07b_3f04b553",
+        "filename": "disassembler/disassembler_x86.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "not for this CL, but this seems like a good case for `enum class`",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 4
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "778b44fb_b86617ed",
+        "filename": "disassembler/disassembler_x86.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-15T14:31:06Z",
+      "side": 1,
+      "message": "Is `struct` needed here?",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 10
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
