@@ -330,6 +330,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d6335f2c_317d3391",
+        "filename": "disassembler/disassembler_x86.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 1760,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-15T15:25:42Z",
+      "side": 1,
+      "message": "We could remove the `\" \"` from the `args` initialization and instead add `\u003c\u003c (args.view().empty() ? \"\" : \" \")` below.\n\n(You can also replace `args.str()` with `args.view()` below even though we don\u0027t really care about the performance of the disassembler.)",
+      "parentUuid": "75e7fd54_b70c86fb",
+      "range": {
+        "startLine": 1758,
+        "startChar": 0,
+        "endLine": 1760,
+        "endChar": 3
+      },
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "da5c8d9c_2a09b8eb",
         "filename": "disassembler/disassembler_x86.cc",
         "patchSetId": 11
