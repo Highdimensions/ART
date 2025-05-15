@@ -35,6 +35,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a456cc1_681b449a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2025-05-15T18:34:31Z",
+      "side": 1,
+      "message": "A note for Intel. AOSP is read-only now (https://source.android.com/docs/whatsnew/site-updates) and this CL cannot be submitted here anymore. The plan is that after you address all the comments, we\u0027ll cherry-pick it to our internal repo. So it\u0027ll be available in the internal and partner repos. Then it\u0027ll be publically released in `aosp/android-latest-release` within a quarter.",
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d5b52f89_b9906052",
