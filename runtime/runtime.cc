@@ -49,6 +49,7 @@
 #include "arch/instruction_set_features.h"
 #include "arch/x86/registers_x86.h"
 #include "arch/x86_64/registers_x86_64.h"
+#include "arch/x86_64/x86_cache.h"
 #include "art_field-inl.h"
 #include "art_method-inl.h"
 #include "asm_support.h"
@@ -1888,6 +1889,11 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
       // Keep the defaults.
       break;
   }
+
+  // Initialize the cache info for the x86 architecture.
+  #if defined(__i386__) || defined(__x86_64__)
+  init_x86_cache_info();
+  #endif
 
   fault_manager.Init(!no_sig_chain_);
   if (!no_sig_chain_) {

@@ -449,6 +449,7 @@ cc_defaults {
         "arch/x86/instruction_set_features_x86.cc",
         "arch/x86/registers_x86.cc",
         "arch/x86_64/registers_x86_64.cc",
+        "arch/x86_64/x86_cache.cc",
         "entrypoints/entrypoint_utils.cc",
         "entrypoints/jni/jni_entrypoints.cc",
         "entrypoints/math_entrypoints.cc",
