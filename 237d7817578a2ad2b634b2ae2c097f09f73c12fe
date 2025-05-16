@@ -45,6 +45,29 @@
       },
       "revId": "237d7817578a2ad2b634b2ae2c097f09f73c12fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "115ab714_8a3c94c4",
+        "filename": "compiler/utils/x86_64/constants_x86_64.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-16T07:25:54Z",
+      "side": 1,
+      "message": "0 is a valid value too. No need to update the comment though",
+      "range": {
+        "startLine": 79,
+        "startChar": 71,
+        "endLine": 79,
+        "endChar": 75
+      },
+      "revId": "237d7817578a2ad2b634b2ae2c097f09f73c12fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

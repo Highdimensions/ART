@@ -498,6 +498,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ee53793_90ba1504",
+        "filename": "compiler/utils/x86_64/constants_x86_64.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-16T07:25:54Z",
+      "side": 1,
+      "message": "Ack, we can keep it",
+      "parentUuid": "a974589d_a1a9e1b2",
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b349bff8_fb45ba6d",
@@ -529,6 +547,24 @@
       "side": 1,
       "message": "In the context of this CL, it only takes 32. In subsequent CLs, this is constructed from Location and can take values based on the vector length of the loop. We could make it an enum to have control on valid values, but such an enum should be global across archs and visible to Location as well. I added a TODO, Can we keep it as size_t for now? It should be const though, updated.",
       "parentUuid": "b349bff8_fb45ba6d",
+      "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30e0b122_fd217498",
+        "filename": "compiler/utils/x86_64/constants_x86_64.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-05-16T07:25:54Z",
+      "side": 1,
+      "message": "Ack, let\u0027s leave it like this and see what\u0027s best when we have values different than 0 and 32.",
+      "parentUuid": "e3e267b7_d2158dc9",
       "revId": "7807cf22321f2f2b5ec4b15dc0123a64099aa13c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
