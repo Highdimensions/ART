@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f07475d_0254a686",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 3300,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-16T06:42:42Z",
+      "side": 1,
+      "message": "Please fix this WARNING reported by Check Contents: Please remove the trailing whitespace.\n\nAnalyzer Description: Validates that changes do not have discouraged expressions in them.\nOwner: ayeaye-team@google.com\n\nPlease remove the trailing whitespace.\n\nTo rerun the analyzer locally, run: `alint -- -c CheckContents`\n\nFor more information, see go/alint.",
+      "range": {
+        "startLine": 3300,
+        "startChar": 42,
+        "endLine": 3300,
+        "endChar": 44
+      },
+      "revId": "237d7817578a2ad2b634b2ae2c097f09f73c12fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a48fe4e_e1ade444",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 3303,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-16T06:42:42Z",
+      "side": 1,
+      "message": "Fix indentation.",
+      "range": {
+        "startLine": 3303,
+        "startChar": 34,
+        "endLine": 3303,
+        "endChar": 35
+      },
+      "revId": "237d7817578a2ad2b634b2ae2c097f09f73c12fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
