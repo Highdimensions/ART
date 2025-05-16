@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ced7c5f9_4d9b819f",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 3300,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-16T11:41:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f07475d_0254a686",
+      "range": {
+        "startLine": 3300,
+        "startChar": 42,
+        "endLine": 3300,
+        "endChar": 44
+      },
+      "revId": "237d7817578a2ad2b634b2ae2c097f09f73c12fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4a48fe4e_e1ade444",
@@ -82,6 +106,30 @@
         "id": 1514166
       },
       "writtenOn": "2025-05-16T11:40:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a48fe4e_e1ade444",
+      "range": {
+        "startLine": 3303,
+        "startChar": 34,
+        "endLine": 3303,
+        "endChar": 35
+      },
+      "revId": "237d7817578a2ad2b634b2ae2c097f09f73c12fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e242ac9_34d4b01c",
+        "filename": "compiler/utils/x86_64/assembler_x86_64.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 3303,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-16T11:41:29Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "4a48fe4e_e1ade444",
