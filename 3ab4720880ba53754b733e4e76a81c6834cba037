@@ -16,6 +16,29 @@
       "message": "I\u0027m going to cherry-pick this to internal now.",
       "revId": "3ab4720880ba53754b733e4e76a81c6834cba037",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dd619e2_a25f13ec",
+        "filename": "compiler/utils/x86_64/assembler_x86_64_test.cc",
+        "patchSetId": 13
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-05-19T09:03:13Z",
+      "side": 1,
+      "message": "Note: I added a blank line before `protected:` in the internal cherry-pick to appease `cpplint`. I don\u0027t know why it complains about a pre-existing issue.",
+      "range": {
+        "startLine": 377,
+        "startChar": 0,
+        "endLine": 377,
+        "endChar": 11
+      },
+      "revId": "3ab4720880ba53754b733e4e76a81c6834cba037",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
