@@ -16,6 +16,24 @@
       "message": "there\u0027s no need to do this yourself in ART --- you can just call `sysconf(_SC_LEVEL1_DCACHE_SIZE) / 2` and get it from bionic.",
       "revId": "4171a63039000166fa54eeb00f7339367bf31258",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6459a9a2_f5dfb491",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-05-20T04:10:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6d9196a_0e9715aa",
+      "revId": "4171a63039000166fa54eeb00f7339367bf31258",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
