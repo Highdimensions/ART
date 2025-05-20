@@ -33,6 +33,24 @@
       "message": "Hi Mythri! Hope all is good.\n\nI was wondering if you would be up for taking a look at this patch.\n\nThe issues are best explained in these two links:\n\nhttps://github.com/supervacuus/invalid_pthread_repro\nhttps://github.com/getsentry/sentry-java/issues/2604\nThe apps are doing something obviously wrong but profiling triggers it so\nprofiling gets blamed and it is quite hard to find the real culprit.\n\nI\u0027m not sure if what I proposed is the best fix, I couldn\u0027t think of a cheap way to tell if the pthread is gone and I\u0027m not that familiar with ART -\nhowever it does at least resolve the specific case given in the repro.\n\nCheers!\nHector",
       "revId": "aee3782ff97be45122b4f967d9afd3f4bbaefac2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e9e628a_3624ad6f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1894735
+      },
+      "writtenOn": "2025-05-20T12:48:25Z",
+      "side": 1,
+      "message": "Hi Hector, Nice to see a CL from you! Sorry I missed this CL earlier.\n\nUnfortunately, there\u0027s no easy way to see if the thread is gone and the pthread_t we are holding is no longer valid. The check you added isn\u0027t really expensive but it still leaves some window where we might crash. For example, let\u0027s say the thread has died after executing a couple of methods after the last snapshot. Then the check won\u0027t be sufficient since it appears as if the two methods were executed but the thread is dead and it isn\u0027t safe to access pthread_t structure.\n\nIf we do want to support cases where the thread dies before detaching then I was wondering if avoiding the use of pthread_t might be a better fix. It can be done but it isn\u0027t very clean. We basically need pthread_t to calculate the `clockid_t` in `Thread::GetCpuNanoTime()`. We can compute the clockid_t using the cached thread id. If we do that, we might still get incorrect results but we at least won\u0027t crash. However, that solution is not very clean and could break if bionic changes how it is computed. Unlikely that bionic would change but still not a clean solution. That\u0027s why I haven\u0027t implemented that.\n\nLet me think a bit more. If your fix works in most cases then maybe we can go with it.",
+      "parentUuid": "ae721f4f_fd081634",
+      "revId": "aee3782ff97be45122b4f967d9afd3f4bbaefac2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
