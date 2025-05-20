@@ -1,0 +1,163 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "358d4cf2_3f256607",
+        "filename": "runtime/arch/x86_64/memcmp16_x86_64.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-05-20T20:19:49Z",
+      "side": 1,
+      "message": "(i don\u0027t think this comment adds any value. we have git history.)",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7f04153_b91f8196",
+        "filename": "runtime/arch/x86_64/memcmp16_x86_64.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-05-20T20:19:49Z",
+      "side": 1,
+      "message": "(same)",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5748782_de19b385",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-05-20T20:19:49Z",
+      "side": 1,
+      "message": "missing apache header\n\nunused #include",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "296468d7_4020178a",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-05-20T20:19:49Z",
+      "side": 1,
+      "message": "unnecessary in x86-only code",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9586e3fa_11c1bcd7",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-05-20T20:19:49Z",
+      "side": 1,
+      "message": "unused variable",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e48760ac_3bfc1081",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-05-20T20:19:49Z",
+      "side": 1,
+      "message": "misleading comment",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 62
+      },
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4922683_53bf553a",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-05-20T20:19:49Z",
+      "side": 1,
+      "message": "you may as well just assign directly, since this can\u0027t fail for ART?\n\ndid you consider just dropping the function entirely and letting the global be initialized directly?",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b434c076_1dfa41b9",
+        "filename": "runtime/arch/x86_64/x86_cache.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-05-20T20:19:49Z",
+      "side": 1,
+      "message": "missing apache header and\n```\n#pragma once\n```",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbd32942_90f68b4e",
+        "filename": "runtime/arch/x86_64/x86_cache.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-05-20T20:19:49Z",
+      "side": 1,
+      "message": "(given that this is in an x86-only directory, i think it\u0027s fine without this.)",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
