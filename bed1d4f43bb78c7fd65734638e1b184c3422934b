@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "85c0363a_1b1705ec",
+        "filename": "runtime/arch/x86_64/memcmp16_x86_64.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-05-22T05:35:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "358d4cf2_3f256607",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e7f04153_b91f8196",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-05-20T20:19:49Z",
       "side": 1,
       "message": "(same)",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "425cd065_9692257e",
+        "filename": "runtime/arch/x86_64/memcmp16_x86_64.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-05-22T05:35:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7f04153_b91f8196",
       "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -52,6 +88,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbe525cb_60fb89e4",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-05-22T05:35:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5748782_de19b385",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "296468d7_4020178a",
@@ -69,6 +123,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a046704d_be970a40",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-05-22T05:35:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "296468d7_4020178a",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9586e3fa_11c1bcd7",
@@ -82,6 +154,24 @@
       "writtenOn": "2025-05-20T20:19:49Z",
       "side": 1,
       "message": "unused variable",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3671e28_d9c1ae06",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-05-22T05:35:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9586e3fa_11c1bcd7",
       "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -109,6 +199,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ff81232_724dff73",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-05-22T05:35:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e48760ac_3bfc1081",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 62
+      },
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e4922683_53bf553a",
@@ -122,6 +236,24 @@
       "writtenOn": "2025-05-20T20:19:49Z",
       "side": 1,
       "message": "you may as well just assign directly, since this can\u0027t fail for ART?\n\ndid you consider just dropping the function entirely and letting the global be initialized directly?",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "092fc540_251dd32b",
+        "filename": "runtime/arch/x86_64/x86_cache.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-05-22T05:35:37Z",
+      "side": 1,
+      "message": "removed function entirely.",
+      "parentUuid": "e4922683_53bf553a",
       "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -143,6 +275,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f06c5389_8cbbf71d",
+        "filename": "runtime/arch/x86_64/x86_cache.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-05-22T05:35:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b434c076_1dfa41b9",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fbd32942_90f68b4e",
@@ -156,6 +306,24 @@
       "writtenOn": "2025-05-20T20:19:49Z",
       "side": 1,
       "message": "(given that this is in an x86-only directory, i think it\u0027s fine without this.)",
+      "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15e8be05_66d10609",
+        "filename": "runtime/arch/x86_64/x86_cache.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-05-22T05:35:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbd32942_90f68b4e",
       "revId": "bed1d4f43bb78c7fd65734638e1b184c3422934b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
