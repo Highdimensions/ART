@@ -469,6 +469,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "25bc5fb0_03fece7c",
+        "filename": "compiler/optimizing/code_generator_riscv64.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:15:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "debebff9_74114f6c",
+      "range": {
+        "startLine": 356,
+        "startChar": 86,
+        "endLine": 356,
+        "endChar": 97
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f8e2249f_62e27f75",
