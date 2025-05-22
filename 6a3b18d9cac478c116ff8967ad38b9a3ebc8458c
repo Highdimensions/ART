@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b0f2ae57_8399dc36",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1529,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "I am using it now.\nBut I\u0027m not sure about the possibility of such a check `dchecked_integral_cast\u003cint32_t\u003e(quotient)`, because `quotient` is a register",
+      "parentUuid": "7676de59_97fa4ae2",
+      "range": {
+        "startLine": 1529,
+        "startChar": 2,
+        "endLine": 1529,
+        "endChar": 22
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "08181329_cd1a698c",
         "filename": "compiler/optimizing/code_generator_riscv64.cc",
         "patchSetId": 1
@@ -71,6 +95,30 @@
       "writtenOn": "2025-04-09T08:17:42Z",
       "side": 1,
       "message": "Nit: I\u0027d prefer comparing with 64 and reordering the then/else blocks.",
+      "range": {
+        "startLine": 1530,
+        "startChar": 2,
+        "endLine": 1530,
+        "endChar": 24
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4cd0c94_2c86995a",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1530,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08181329_cd1a698c",
       "range": {
         "startLine": 1530,
         "startChar": 2,
@@ -104,6 +152,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f6062d2_7799b255",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1549,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cbb07bc_9520d7c4",
+      "range": {
+        "startLine": 1549,
+        "startChar": 5,
+        "endLine": 1549,
+        "endChar": 7
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "380f34bb_a7497466",
@@ -117,6 +189,30 @@
       "writtenOn": "2025-04-09T08:17:42Z",
       "side": 1,
       "message": "Always true, see `DCHECK()` above.",
+      "range": {
+        "startLine": 1573,
+        "startChar": 24,
+        "endLine": 1573,
+        "endChar": 80
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea32aaa7_267a84c9",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1573,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "380f34bb_a7497466",
       "range": {
         "startLine": 1573,
         "startChar": 24,
@@ -150,6 +246,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fc528b1_9b123e2a",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1593,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5b77e39_2bd95316",
+      "range": {
+        "startLine": 1593,
+        "startChar": 24,
+        "endLine": 1593,
+        "endChar": 80
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a20c8c05_1bcdfffd",
@@ -163,6 +283,30 @@
       "writtenOn": "2025-04-09T08:17:42Z",
       "side": 1,
       "message": "`LoadConst64()`",
+      "range": {
+        "startLine": 1611,
+        "startChar": 5,
+        "endLine": 1611,
+        "endChar": 7
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19a569e6_00039dc8",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1611,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a20c8c05_1bcdfffd",
       "range": {
         "startLine": 1611,
         "startChar": 5,
@@ -190,6 +334,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c72a2c82_ad345e59",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1648,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "866a564d_7c86c40d",
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bf38b900_472ef2d3",
@@ -213,6 +375,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6080da2_6ab52bf2",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1691,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf38b900_472ef2d3",
+      "range": {
+        "startLine": 1691,
+        "startChar": 24,
+        "endLine": 1691,
+        "endChar": 80
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "05044fd3_3ae50019",
@@ -226,6 +412,30 @@
       "writtenOn": "2025-04-09T08:17:42Z",
       "side": 1,
       "message": "This is not present on arm64. If this was always true, then we would not need the `imm \u003e 0` condition in line 1668.",
+      "range": {
+        "startLine": 1702,
+        "startChar": 2,
+        "endLine": 1702,
+        "endChar": 20
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ac2fa48_bcad899d",
+        "filename": "compiler/optimizing/code_generator_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1702,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05044fd3_3ae50019",
       "range": {
         "startLine": 1702,
         "startChar": 2,
@@ -284,6 +494,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a133abc0_77db9e5a",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "I added handling of zero divisor to the function `GenerateDivRemUnsigned`",
+      "parentUuid": "f8e2249f_62e27f75",
+      "range": {
+        "startLine": 647,
+        "startChar": 6,
+        "endLine": 647,
+        "endChar": 37
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "806845a0_a060add3",
         "filename": "compiler/optimizing/intrinsics_riscv64.cc",
         "patchSetId": 1
@@ -295,6 +529,30 @@
       "writtenOn": "2025-04-09T08:17:42Z",
       "side": 1,
       "message": "Use `codegen-\u003eGetInstructionVisitor()` instead.",
+      "range": {
+        "startLine": 649,
+        "startChar": 36,
+        "endLine": 649,
+        "endChar": 55
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5752de7_4d3e6f79",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "806845a0_a060add3",
       "range": {
         "startLine": 649,
         "startChar": 36,
@@ -354,6 +612,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ec0339bb_f165a86d",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Yes, you were right, it didn\u0027t work for this segment. Now I\u0027ve added correct support for unsigned type",
+      "parentUuid": "9cd1c8ee_c430a5eb",
+      "range": {
+        "startLine": 653,
+        "startChar": 26,
+        "endLine": 653,
+        "endChar": 52
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3149d373_87956ffd",
         "filename": "compiler/optimizing/intrinsics_riscv64.cc",
         "patchSetId": 1
@@ -377,6 +659,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ceae6b3c_48952190",
+        "filename": "compiler/optimizing/intrinsics_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Yes, you were right, it didn\u0027t work for this segment. Now I\u0027ve added correct support for unsigned type",
+      "parentUuid": "3149d373_87956ffd",
+      "range": {
+        "startLine": 658,
+        "startChar": 26,
+        "endLine": 658,
+        "endChar": 49
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c80dabe3_fd6f73f3",
         "filename": "test/411-checker-hdiv-hrem-const-riscv64/src/DivTest.java",
         "patchSetId": 1
@@ -388,6 +694,30 @@
       "writtenOn": "2025-04-09T08:17:42Z",
       "side": 1,
       "message": "Can we just add the riscv64 checker statements and comments to the existing run-test `411-checker-hdiv-hrem-const`, please? Maybe the comment could be rewritten to say that we test for optimized code on certain architectures (instead of referencing arm64/riscv64 instructions by name).",
+      "range": {
+        "startLine": 130,
+        "startChar": 6,
+        "endLine": 130,
+        "endChar": 25
+      },
+      "revId": "6a3b18d9cac478c116ff8967ad38b9a3ebc8458c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fe26258_1792cca5",
+        "filename": "test/411-checker-hdiv-hrem-const-riscv64/src/DivTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-05-22T14:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c80dabe3_fd6f73f3",
       "range": {
         "startLine": 130,
         "startChar": 6,
