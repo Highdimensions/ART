@@ -145,7 +145,7 @@ class BitTableAccessor {
 // Template meta-programming helper.
 template<typename Accessor, size_t... Columns>
 static const char* const* GetBitTableColumnNamesImpl(std::index_sequence<Columns...>) {
-  static const char* names[] = { Accessor::template ColumnName<Columns, 0>::Value... };
+  static const char* const names[] = { Accessor::template ColumnName<Columns, 0>::Value... };
   return names;
 }
 
