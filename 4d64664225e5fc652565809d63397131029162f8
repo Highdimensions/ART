@@ -22,6 +22,30 @@
       },
       "revId": "4d64664225e5fc652565809d63397131029162f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4b82045_7e0c7d43",
+        "filename": "compiler/optimizing/fast_compiler_arm64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-06-04T15:25:46Z",
+      "side": 1,
+      "message": "Yes, we hit it with libcore tests.",
+      "parentUuid": "0096fa09_9fb628d2",
+      "range": {
+        "startLine": 867,
+        "startChar": 6,
+        "endLine": 872,
+        "endChar": 7
+      },
+      "revId": "4d64664225e5fc652565809d63397131029162f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
