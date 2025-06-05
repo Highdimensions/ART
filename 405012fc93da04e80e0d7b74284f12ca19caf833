@@ -39,6 +39,30 @@
       },
       "revId": "405012fc93da04e80e0d7b74284f12ca19caf833",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b71d8460_9b6e7a03",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 3575424
+      },
+      "writtenOn": "2025-06-05T12:12:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c96d4174_670e47a5",
+      "range": {
+        "startLine": 196,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 37
+      },
+      "revId": "405012fc93da04e80e0d7b74284f12ca19caf833",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
