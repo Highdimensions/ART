@@ -40,7 +40,7 @@ def parse_args():
       help="selects the dex2oat to use.")
   parser.add_argument(
       "--debug",
-      action="store_true",
+      action='store_true',
       default=False,
       help="launches dex2oatd with lldb-server g :5039. Connect using vscode or remote lldb"
   )
