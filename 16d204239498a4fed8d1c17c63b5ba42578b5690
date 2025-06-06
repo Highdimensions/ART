@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "489de008_b433d4fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-06-06T17:23:08Z",
+      "side": 1,
+      "message": "Forwarding to @dimitry@google.com and @levarum@google.com FYI, but note ag/33651150 and that the associated ticket is closed as infeasible.\n\n(Sorry, I cannot prune the excessive reviewer list.)",
+      "revId": "16d204239498a4fed8d1c17c63b5ba42578b5690",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
