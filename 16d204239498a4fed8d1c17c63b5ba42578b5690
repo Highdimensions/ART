@@ -39,6 +39,30 @@
       },
       "revId": "16d204239498a4fed8d1c17c63b5ba42578b5690",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8c5e768_faa6e377",
+        "filename": "libnativebridge/native_bridge.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1459710
+      },
+      "writtenOn": "2025-06-07T05:18:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "235ee012_a3a1c111",
+      "range": {
+        "startLine": 309,
+        "startChar": 6,
+        "endLine": 309,
+        "endChar": 41
+      },
+      "revId": "16d204239498a4fed8d1c17c63b5ba42578b5690",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
