@@ -1,0 +1,193 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b8bbdf1_786423d2",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-06-09T14:04:37Z",
+      "side": 1,
+      "message": "Adding to the other comments, you can change this to `HAnd` to be extra sure we are passing the right HInstruction",
+      "range": {
+        "startLine": 100,
+        "startChar": 38,
+        "endLine": 100,
+        "endChar": 54
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab19f05e_c3933243",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-06-09T14:04:37Z",
+      "side": 1,
+      "message": "Suggestion: This can be:\n```\nif (op-\u003eIsAnd()) {\n  imm \u003d ~imm;\n}\nif (!IsPowerOfTwo(imm)) {\n  return false;\n}\n\nint32_t power \u003d WhichPowerOf2(imm);\n\n```\nwith an explanation regarding the negation with `HAnd`",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 5
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f13429b4_e8f0f238",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-06-09T14:04:37Z",
+      "side": 1,
+      "message": "You are not checking that `op` is an `And` so you might be doing this for `Or` and `Xor` too",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 5
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "221351f3_a4185822",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-06-09T14:04:37Z",
+      "side": 1,
+      "message": "Was it an intended change to move this inside the method?",
+      "range": {
+        "startLine": 302,
+        "startChar": 0,
+        "endLine": 306,
+        "endChar": 35
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f567b63b_bc335c6b",
+        "filename": "compiler/optimizing/nodes_riscv64.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-06-09T14:04:37Z",
+      "side": 1,
+      "message": "Is this expecting a `result_type` of int64?\n  If so, we shouldn\u0027t make it a parameter. \n  If not, is the `Evaluate` done correctly? i.e. shouldn\u0027t we add a truncation in some cases?\n\nSame for other classes",
+      "range": {
+        "startLine": 63,
+        "startChar": 6,
+        "endLine": 63,
+        "endChar": 20
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ac1b1fd_bef1b8b3",
+        "filename": "test/458-checker-riscv64-bit-manipulations/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-06-09T14:04:37Z",
+      "side": 1,
+      "message": "FYI these kind of Android.bp files are created routinely and are not needed to submit CLs. They are fine to include but not a necessity.",
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3aed1e16_ed0cbea2",
+        "filename": "test/458-checker-riscv64-bit-manipulations/info.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-06-09T14:04:37Z",
+      "side": 1,
+      "message": "WDYT about `Tests that InstructionSimplifierRiscv64 correctly optimizes bit manipulation operations e.g. clearing and setting individual bits.`",
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "108aeb32_f93d890a",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-06-09T14:04:37Z",
+      "side": 1,
+      "message": "Can you add tests showing that if you use `|` or `^` then we don\u0027t have a `Riscv64BitExtract`? Something like:\n```\n  /// CHECK-START-RISCV64: long Main.$noinline$longIntOrWithExtract(long, int) instruction_simplifier_riscv64 (before)\n  /// CHECK-NOT:          Riscv64BitExtract\n\n  public static long $noinline$longIntOrWithExtract(long a, int b) {\n    return (a \u003e\u003e b) | 1L;\n  }\n\n  /// CHECK-START-RISCV64: long Main.$noinline$longIntXorWithExtract(long, int) instruction_simplifier_riscv64 (before)\n  /// CHECK-NOT:          Riscv64BitExtract\n\n  public static long $noinline$longIntXorWithExtract(long a, int b) {\n    return (a \u003e\u003e b) ^ 1L;\n  }\n```\n\nThis is related to a comment above",
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a8c7e7e_f3b2e0a7",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-06-09T14:04:37Z",
+      "side": 1,
+      "message": "nit: add extra space for formatting so that both `ParameterValue` and `Riscv64BitInvert` start in the same column. Same for below",
+      "range": {
+        "startLine": 135,
+        "startChar": 39,
+        "endLine": 135,
+        "endChar": 40
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
