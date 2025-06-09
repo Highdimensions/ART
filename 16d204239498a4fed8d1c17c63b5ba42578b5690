@@ -63,6 +63,30 @@
       },
       "revId": "16d204239498a4fed8d1c17c63b5ba42578b5690",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28547c44_efb6e086",
+        "filename": "libnativebridge/native_bridge.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-06-09T17:49:35Z",
+      "side": 1,
+      "message": "Looking more closely, this doesn\u0027t code doesn\u0027t seem to be current. I\u0027ll defer to those who worked on it recently.",
+      "parentUuid": "c8c5e768_faa6e377",
+      "range": {
+        "startLine": 309,
+        "startChar": 6,
+        "endLine": 309,
+        "endChar": 41
+      },
+      "revId": "16d204239498a4fed8d1c17c63b5ba42578b5690",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
