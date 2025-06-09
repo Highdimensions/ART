@@ -16,6 +16,47 @@
       "message": "Sorry for being late I think now its all work",
       "revId": "cee756888a8e9a2f23cdc2d03d512124bf97027c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48b36b4b_b711d1f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-06-09T18:26:49Z",
+      "side": 1,
+      "message": "Unfortunately we\u0027re no longer able to merge patches in AOSP. I did a CL equivalent to this and https://r.android.com/3522790 (but without the off-by-one errors) internally and it\u0027ll appear as commit f465de8 in the next AOSP push. Thanks.",
+      "parentUuid": "3a0297ac_4403ad4f",
+      "revId": "cee756888a8e9a2f23cdc2d03d512124bf97027c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef5d60b9_b56e71a1",
+        "filename": "tools/jvmti-agents/field-null-percent/fieldnull.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2025-06-09T18:26:49Z",
+      "side": 1,
+      "message": "This doesn\u0027t allocate space for the NUL terminator.",
+      "range": {
+        "startLine": 188,
+        "startChar": 32,
+        "endLine": 188,
+        "endChar": 46
+      },
+      "revId": "cee756888a8e9a2f23cdc2d03d512124bf97027c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
