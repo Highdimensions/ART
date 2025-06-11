@@ -220,6 +220,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "628ceeee_f70cf438",
+        "filename": "runtime/gc/space/large_object_space.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-06-11T00:37:46Z",
+      "side": 1,
+      "message": "Thanks! I now see what you\u0027re doing.",
+      "parentUuid": "67f19409_5a4d6c06",
+      "range": {
+        "startLine": 547,
+        "startChar": 4,
+        "endLine": 550,
+        "endChar": 5
+      },
+      "revId": "980dd9ea18df071bd6d2050d3273146e0a8c943c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a190e619_0ac35fc8",
