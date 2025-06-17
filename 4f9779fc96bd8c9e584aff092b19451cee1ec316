@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40f59a48_c23aa3a4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2025-06-17T13:34:06Z",
+      "side": 1,
+      "message": "This bind-mount doesn\u0027t exist (is removed) on tip-of-tree. It\u0027s native-bridge\u0027s responsibility now to properly emulate `/proc/cpuinfo` if it\u0027s being read.",
+      "revId": "4f9779fc96bd8c9e584aff092b19451cee1ec316",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
