@@ -96,34 +96,9 @@ TEST_F(PaletteClientTest, Ashmem) {
 class PaletteClientJniTest : public art::CommonArtTest {};
 
 TEST_F(PaletteClientJniTest, JniInvocation) {
-  bool enabled;
-  EXPECT_EQ(PALETTE_STATUS_OK, PaletteShouldReportJniInvocations(&enabled));
-
-  std::string boot_class_path_string =
-      GetClassPathOption("-Xbootclasspath:", GetLibCoreDexFileNames());
-  std::string boot_class_path_locations_string =
-      GetClassPathOption("-Xbootclasspath-locations:", GetLibCoreDexLocations());
-
-  JavaVMOption options[] = {
-      {.optionString = boot_class_path_string.c_str(), .extraInfo = nullptr},
-      {.optionString = boot_class_path_locations_string.c_str(), .extraInfo = nullptr},
-  };
-  JavaVMInitArgs vm_args = {
-      .version = JNI_VERSION_1_6,
-      .nOptions = std::size(options),
-      .options = options,
-      .ignoreUnrecognized = JNI_TRUE,
-  };
-
-  JavaVM* jvm = nullptr;
-  JNIEnv* env = nullptr;
-  EXPECT_EQ(JNI_OK, JNI_CreateJavaVM(&jvm, &env, &vm_args));
-  ASSERT_NE(nullptr, env);
-
-  PaletteNotifyBeginJniInvocation(env);
-  PaletteNotifyEndJniInvocation(env);
-
-  EXPECT_EQ(JNI_OK, jvm->DestroyJavaVM());
+  // This test is fixed properly in the next version with
+  // https://r.android.com/3545400, but it's not feasible to backport it.
+  GTEST_SKIP() << "Test disabled due to b/423050250";
 }
 
 TEST_F(PaletteClientTest, SetTaskProfiles) {
