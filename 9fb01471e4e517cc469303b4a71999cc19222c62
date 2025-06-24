@@ -81,6 +81,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "213d070a_8094d3cb",
+        "filename": "runtime/Android.bp",
+        "patchSetId": 13
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1989777
+      },
+      "writtenOn": "2025-06-24T14:58:30Z",
+      "side": 1,
+      "message": "No, I think this is already correct. This module should only be used when building for the simulator, otherwise it should be disabled.",
+      "parentUuid": "adbe040b_f65fa432",
+      "range": {
+        "startLine": 670,
+        "startChar": 53,
+        "endLine": 670,
+        "endChar": 54
+      },
+      "revId": "9fb01471e4e517cc469303b4a71999cc19222c62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4ebe62f8_8cf4a822",
