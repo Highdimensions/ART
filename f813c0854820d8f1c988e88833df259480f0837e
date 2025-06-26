@@ -1,0 +1,138 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3201f8f0_c694208b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-06-26T10:53:22Z",
+      "side": 1,
+      "message": "Thank you!",
+      "revId": "f813c0854820d8f1c988e88833df259480f0837e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "605374bf_d38f33ca",
+        "filename": "libartservice/service/native/service.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-06-26T10:53:22Z",
+      "side": 1,
+      "message": "Remove the space.",
+      "range": {
+        "startLine": 50,
+        "startChar": 11,
+        "endLine": 50,
+        "endChar": 12
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "39aa3149_c388d5bc",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/native/service.cc",
+              "range": {
+                "startLine": 50,
+                "startChar": 0,
+                "endLine": 51,
+                "endChar": 0
+              },
+              "replacement": "  // The \u0027\\u0000\u0027 in Java will be encoded as\u0027 0xC0 0x80 \u0027, and this situation needs to be\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f813c0854820d8f1c988e88833df259480f0837e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8d7b512_684c90c3",
+        "filename": "libartservice/service/native/service.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-06-26T10:53:22Z",
+      "side": 1,
+      "message": "The naming convention for constants is kCamelCase.",
+      "range": {
+        "startLine": 52,
+        "startChar": 20,
+        "endLine": 52,
+        "endChar": 35
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "a04ab44d_c4b35fa0",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/native/service.cc",
+              "range": {
+                "startLine": 52,
+                "startChar": 0,
+                "endLine": 54,
+                "endChar": 0
+              },
+              "replacement": "  const std::string kOverlongNull \u003d std::string(\"\\xC0\\x80\", 2);\n  if (path_str.find(kOverlongNull) !\u003d std::string::npos) {\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f813c0854820d8f1c988e88833df259480f0837e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39bec48c_22aa3bb2",
+        "filename": "libartservice/service/native/service.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-06-26T10:53:22Z",
+      "side": 1,
+      "message": "According to https://en.cppreference.com/w/cpp/string/basic_string/find, `std::string::find` also accepts `const char*` and `std::string_view`. Please make this `constexpr const char*` or `constexpr std::string_view` to avoid unnecessary string construction.",
+      "fixSuggestions": [
+        {
+          "fixId": "b4e24bd8_2dbcdf70",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "libartservice/service/native/service.cc",
+              "range": {
+                "startLine": 52,
+                "startChar": 0,
+                "endLine": 53,
+                "endChar": 0
+              },
+              "replacement": "  constexpr const char* k_overlong_null \u003d \"\\xC0\\x80\";\n"
+            }
+          ]
+        }
+      ],
+      "revId": "f813c0854820d8f1c988e88833df259480f0837e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
