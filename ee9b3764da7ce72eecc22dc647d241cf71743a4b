@@ -16,6 +16,47 @@
       "message": "Seems reasonable to me but I will let Nicolas +1 this one.",
       "revId": "ee9b3764da7ce72eecc22dc647d241cf71743a4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15d5763f_922f7047",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 8718,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-06-26T14:15:08Z",
+      "side": 1,
+      "message": "Call ClearAllBits instead?",
+      "range": {
+        "startLine": 8718,
+        "startChar": 22,
+        "endLine": 8718,
+        "endChar": 36
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "96712663_9cade3f7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/class_linker.cc",
+              "range": {
+                "startLine": 8718,
+                "startChar": 0,
+                "endLine": 8719,
+                "endChar": 0
+              },
+              "replacement": "  initialized_methods.ClearAllBits();\n"
+            }
+          ]
+        }
+      ],
+      "revId": "ee9b3764da7ce72eecc22dc647d241cf71743a4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
