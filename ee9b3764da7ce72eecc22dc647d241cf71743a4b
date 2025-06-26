@@ -57,6 +57,30 @@
       ],
       "revId": "ee9b3764da7ce72eecc22dc647d241cf71743a4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf504201_0977c2af",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 8718,
+      "author": {
+        "id": 1890471
+      },
+      "writtenOn": "2025-06-26T14:32:51Z",
+      "side": 1,
+      "message": "ClearAllBits is implemented inline in bit_vector-inl.h, which may be hidden in libartbase symbols, so I choose to use the SetInitialBits. If we still want to use ClearAllBits here then we will need to move it into bit_vector.h inside.",
+      "parentUuid": "15d5763f_922f7047",
+      "range": {
+        "startLine": 8718,
+        "startChar": 22,
+        "endLine": 8718,
+        "endChar": 36
+      },
+      "revId": "ee9b3764da7ce72eecc22dc647d241cf71743a4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
