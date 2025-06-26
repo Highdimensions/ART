@@ -46,6 +46,30 @@
       },
       "revId": "e972f994ce8820da6b74c0fe006e115653faa3fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c6ddd5c_0d822800",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 4867,
+      "author": {
+        "id": 3991400
+      },
+      "writtenOn": "2025-06-26T17:30:31Z",
+      "side": 1,
+      "message": "I added a separate branch and a comment explaining risks of accepting a non-erroneous class here. How does it look now?",
+      "parentUuid": "1bf56807_93a96fd8",
+      "range": {
+        "startLine": 4867,
+        "startChar": 37,
+        "endLine": 4867,
+        "endChar": 77
+      },
+      "revId": "e972f994ce8820da6b74c0fe006e115653faa3fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
