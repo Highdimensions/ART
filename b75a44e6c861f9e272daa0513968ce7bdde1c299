@@ -16,6 +16,23 @@
       "message": "Thank you again for the contribution! I\u0027ll merge this change and include it in the M-2025-09 Mainline train.\n\nAs our workflow has changed recently, I cannot merge any CLs into AOSP directly. Instead, I\u0027ll merge this change into our internal branch with your name on it. You should be able to see it on the partner branch as soon as it\u0027s merged. Later, when the next Android version is publicly released, the change will be pushed to AOSP along with all the other changes.",
       "revId": "b75a44e6c861f9e272daa0513968ce7bdde1c299",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "090d6b26_d792d9d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-06-27T12:54:50Z",
+      "side": 1,
+      "message": "The change has been merged with commit hash a0848ad2f546d14f97fc70afa78970684c17456a. You can now abandon this CL.",
+      "revId": "b75a44e6c861f9e272daa0513968ce7bdde1c299",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
