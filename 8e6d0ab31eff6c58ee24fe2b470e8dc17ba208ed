@@ -1,0 +1,65 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2a1fced_d166a29a",
+        "filename": "runtime/gc/collector/mark_compact.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 961,
+      "author": {
+        "id": 1258954
+      },
+      "writtenOn": "2025-07-07T13:44:33Z",
+      "side": 1,
+      "message": "Unforunattely, the cost of SizeOf() is not cheap. I don\u0027t think this change wins us any performance improvement.",
+      "range": {
+        "startLine": 961,
+        "startChar": 40,
+        "endLine": 961,
+        "endChar": 46
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "18d0f94b_cdecdb0a",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 960,
+                "startChar": 0,
+                "endLine": 962,
+                "endChar": 0
+              },
+              "replacement": "    uintptr_t obj_end \u003d reinterpret_cast\u003cuintptr_t\u003e(obj) +\n                        RoundUp(obj-\u003eSizeSlow(), kAlignment);\n    if (visit_begin \u003e\u003d obj_end) {\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 999,
+                "startChar": 0,
+                "endLine": 1000,
+                "endChar": 0
+              },
+              "replacement": "                           + RoundUp(prev_obj-\u003eSizeSlow(), kAlignment);\n"
+            },
+            {
+              "path": "runtime/gc/collector/mark_compact.cc",
+              "range": {
+                "startLine": 1019,
+                "startChar": 0,
+                "endLine": 1020,
+                "endChar": 0
+              },
+              "replacement": "                        + RoundUp(prev_obj-\u003eSizeSlow(), kAlignment);\n"
+            }
+          ]
+        }
+      ],
+      "revId": "8e6d0ab31eff6c58ee24fe2b470e8dc17ba208ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
