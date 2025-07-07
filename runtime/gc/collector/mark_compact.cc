@@ -927,6 +927,7 @@ void MarkCompact::InitMovingSpaceFirstObjects(size_t vec_len, size_t to_space_pa
   to_space_page_idx++;
 
   uint32_t page_live_bytes = 0;
+  uintptr_t visit_begin = 0;
   while (true) {
     for (; page_live_bytes <= gPageSize; chunk_idx++) {
       if (chunk_idx >= vec_len) {
@@ -953,13 +954,16 @@ void MarkCompact::InitMovingSpaceFirstObjects(size_t vec_len, size_t to_space_pa
         << " N=" << ((chunk_info_vec_[chunk_idx] - page_live_bytes) / kAlignment)
         << " offset_in_word=" << offset_in_chunk_word
         << " word=" << std::hex << live_words_bitmap_->GetWord(chunk_idx);
-    // TODO: Can we optimize this for large objects? If we are continuing a
-    // large object that spans multiple pages, then we may be able to do without
-    // calling FindPrecedingObject().
-    //
-    // Find the object which encapsulates offset in it, which could be
-    // starting at offset itself.
-    obj = moving_space_bitmap_->FindPrecedingObject(heap_begin + offset * kAlignment);
+
+    visit_begin = heap_begin + offset * kAlignment;
+    // Large objects may span multiple pages.
+    if (visit_begin >= reinterpret_cast<uintptr_t>(obj) +
+                           RoundUp(obj->SizeOf<kDefaultVerifyFlags>(), kAlignment)) {
+      // Find the object which encapsulates offset in it, which could be
+      // starting at offset itself.
+      obj = moving_space_bitmap_->FindPrecedingObject(visit_begin);
+    }
+
     // TODO: add a check to validate the object.
     pre_compact_offset_moving_space_[to_space_page_idx] = offset;
     first_objs_moving_space_[to_space_page_idx].Assign(obj);
