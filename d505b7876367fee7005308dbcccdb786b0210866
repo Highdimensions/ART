@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8e22c46_1ad34693",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-11T11:05:35Z",
+      "side": 1,
+      "message": "Folks, if possible let continue in this CR\nhttps://android-review.googlesource.com/c/platform/art/+/3693991",
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4b8bbdf1_786423d2",
@@ -14,6 +31,30 @@
       "writtenOn": "2025-06-09T14:04:37Z",
       "side": 1,
       "message": "Adding to the other comments, you can change this to `HAnd` to be extra sure we are passing the right HInstruction",
+      "range": {
+        "startLine": 100,
+        "startChar": 38,
+        "endLine": 100,
+        "endChar": 54
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ea99ad7_a446df13",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-11T11:05:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b8bbdf1_786423d2",
       "range": {
         "startLine": 100,
         "startChar": 38,
@@ -47,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e456b337_d987e621",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-11T11:05:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab19f05e_c3933243",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 5
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f13429b4_e8f0f238",
@@ -60,6 +125,30 @@
       "writtenOn": "2025-06-09T14:04:37Z",
       "side": 1,
       "message": "You are not checking that `op` is an `And` so you might be doing this for `Or` and `Xor` too",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 5
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7365df27_3b923519",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-11T11:05:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f13429b4_e8f0f238",
       "range": {
         "startLine": 209,
         "startChar": 0,
@@ -93,6 +182,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5fac1f8_35e95b7e",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-11T11:05:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "221351f3_a4185822",
+      "range": {
+        "startLine": 302,
+        "startChar": 0,
+        "endLine": 306,
+        "endChar": 35
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f567b63b_bc335c6b",
@@ -106,6 +219,30 @@
       "writtenOn": "2025-06-09T14:04:37Z",
       "side": 1,
       "message": "Is this expecting a `result_type` of int64?\n  If so, we shouldn\u0027t make it a parameter. \n  If not, is the `Evaluate` done correctly? i.e. shouldn\u0027t we add a truncation in some cases?\n\nSame for other classes",
+      "range": {
+        "startLine": 63,
+        "startChar": 6,
+        "endLine": 63,
+        "endChar": 20
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e1e31b4_302de2c9",
+        "filename": "compiler/optimizing/nodes_riscv64.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-11T11:05:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f567b63b_bc335c6b",
       "range": {
         "startLine": 63,
         "startChar": 6,
@@ -150,6 +287,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "102dcb6b_d7b3de01",
+        "filename": "test/458-checker-riscv64-bit-manipulations/info.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-11T11:05:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3aed1e16_ed0cbea2",
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "108aeb32_f93d890a",
@@ -167,6 +322,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "28dd1683_e4e99208",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-11T11:05:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "108aeb32_f93d890a",
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a8c7e7e_f3b2e0a7",
@@ -180,6 +353,30 @@
       "writtenOn": "2025-06-09T14:04:37Z",
       "side": 1,
       "message": "nit: add extra space for formatting so that both `ParameterValue` and `Riscv64BitInvert` start in the same column. Same for below",
+      "range": {
+        "startLine": 135,
+        "startChar": 39,
+        "endLine": 135,
+        "endChar": 40
+      },
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "046fd6a4_3ab57a13",
+        "filename": "test/458-checker-riscv64-bit-manipulations/src/Main.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-11T11:05:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a8c7e7e_f3b2e0a7",
       "range": {
         "startLine": 135,
         "startChar": 39,
