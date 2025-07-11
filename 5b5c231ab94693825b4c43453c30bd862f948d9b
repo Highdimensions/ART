@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2aaeaecd_2baedfbe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-11T11:00:55Z",
+      "side": 1,
+      "message": "Folks, this is a continuation of the original CR: https://android-review.googlesource.com/c/platform/art/+/3556506\n\nUnfortunately, Sergey is no longer able to continue working on it, and I can\u0027t submit another iteration under the same Change-ID. If possible, let’s continue the discussion here. Apologies for the hiccup!",
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
