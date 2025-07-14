@@ -86,6 +86,24 @@
       "message": "The code LGTM. But why is this in `android15-qpr2-release`?",
       "revId": "cf89bd8464f475fa03e132bb77ac1632a10c0b64",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38922b31_e6dbb03c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3227152
+      },
+      "writtenOn": "2025-07-14T10:51:33Z",
+      "side": 1,
+      "message": "It was first pushed in May using \"android-latest-release\" manifest. Is it possible that latest-release then meant android15-qpr2-release?\nShould I push again? or can the same CL be taken to the latest branch",
+      "parentUuid": "e339e529_c373a322",
+      "revId": "cf89bd8464f475fa03e132bb77ac1632a10c0b64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
