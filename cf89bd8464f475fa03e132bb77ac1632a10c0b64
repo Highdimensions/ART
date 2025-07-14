@@ -104,6 +104,24 @@
       "parentUuid": "e339e529_c373a322",
       "revId": "cf89bd8464f475fa03e132bb77ac1632a10c0b64",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3581a369_ec1345e7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-07-14T11:35:37Z",
+      "side": 1,
+      "message": "I see, so the `android-latest-release` must be just a tag pointing to a real branch. And whenever you locally rebase after a new release, you\u0027ll be pushing to a new branch, creating a new CL in gerrit. This is really ugly.\n\nIn the future you should probably work in the partner gerrit to avoid this issue. But for this CL, we can just review it here. If Santiago has no other comments, we\u0027ll cherry-pick to internal.",
+      "parentUuid": "38922b31_e6dbb03c",
+      "revId": "cf89bd8464f475fa03e132bb77ac1632a10c0b64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
