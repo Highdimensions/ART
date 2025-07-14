@@ -69,6 +69,23 @@
       "parentUuid": "a8d0f483_4e024df3",
       "revId": "cf89bd8464f475fa03e132bb77ac1632a10c0b64",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e339e529_c373a322",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-07-14T08:04:41Z",
+      "side": 1,
+      "message": "The code LGTM. But why is this in `android15-qpr2-release`?",
+      "revId": "cf89bd8464f475fa03e132bb77ac1632a10c0b64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
