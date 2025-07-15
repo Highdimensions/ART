@@ -16,6 +16,110 @@
       "message": "Folks, this is a continuation of the original CR: https://android-review.googlesource.com/c/platform/art/+/3556506\n\nUnfortunately, Sergey is no longer able to continue working on it, and I can\u0027t submit another iteration under the same Change-ID. If possible, let’s continue the discussion here. Apologies for the hiccup!",
       "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7920cf29_febba9e3",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-07-15T13:36:38Z",
+      "side": 1,
+      "message": "nit: DCHECK_EQ would give more information in the case of a crash",
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11e94caa_c998b81a",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-07-15T13:36:38Z",
+      "side": 1,
+      "message": "style: since you are returning false in 107, there\u0027s no need to be an `else if` and it can be just an if.",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 5
+      },
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "649a21b1_2ef88847",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-07-15T13:36:38Z",
+      "side": 1,
+      "message": "Can you explain in a comment why this negation is needed for `HAnd` and only `HAnd`?",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 146,
+        "endChar": 5
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "f4499f99_88e906c4",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+              "range": {
+                "startLine": 144,
+                "startChar": 0,
+                "endLine": 144,
+                "endChar": 0
+              },
+              "replacement": "    // In case of AND operation, to match the pattern of bit clear, we need to\n    // invert the constant value. For example, to clear bit 3, we need to have\n    // AND with 0xFFFFFFF7, which is ~0x8.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aec63cb8_30cb7036",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2025-07-15T13:36:38Z",
+      "side": 1,
+      "message": "Is this to not do any work because it is dead? I\u0027d be surprised if we have dead instructions at this point but since dead code elimination doesn\u0027t run after this so we could eliminate it here with `op-\u003eGetBlock()-\u003eRemoveInstruction(op);`. We can `DCHECK(IsDeadAndRemovable())` which is what DCE does https://cs.android.com/android/platform/superproject/main/+/main:art/compiler/optimizing/dead_code_elimination.cc;l\u003d927-930;drc\u003d225ed9282e8676f13ec0b69786052684881596c3",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 5
+      },
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
