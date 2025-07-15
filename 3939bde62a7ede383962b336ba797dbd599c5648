@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f77b804d_d06dd082",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4222555
+      },
+      "writtenOn": "2025-07-15T04:34:38Z",
+      "side": 1,
+      "message": "https://source.android.com/docs/setup/about/faqs#request-accept",
+      "revId": "3939bde62a7ede383962b336ba797dbd599c5648",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
