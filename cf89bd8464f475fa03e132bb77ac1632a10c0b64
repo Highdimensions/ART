@@ -139,6 +139,24 @@
       "message": "Submitted to internal with Change-ID I8ed602cceddf4a91528a370359a9c57e32a3cfdb .",
       "revId": "cf89bd8464f475fa03e132bb77ac1632a10c0b64",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a5fba79_930b2202",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-07-17T16:07:27Z",
+      "side": 1,
+      "message": "Change was reverted in internal because some targets build with musl libc which does not provide `_SC_LEVEL1_DCACHE_SIZE`.",
+      "parentUuid": "95f7bada_f8e31310",
+      "revId": "cf89bd8464f475fa03e132bb77ac1632a10c0b64",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
