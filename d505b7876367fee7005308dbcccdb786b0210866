@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "19c88be3_d6943cdd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-07-18T07:02:14Z",
+      "side": 1,
+      "message": "When you switch to a new CL in gerrit, I need to use `git` CLI to look at the diff. This is not ideal but if you really need a new CL (changing Owner?), we can accommodate that.\n\nI\u0027ve reviewed the diff for the new CL and I assume Santiago also did given his new comments on the new Cl, so this CL can now be abandoned.",
+      "parentUuid": "a8e22c46_1ad34693",
+      "revId": "d505b7876367fee7005308dbcccdb786b0210866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4b8bbdf1_786423d2",
