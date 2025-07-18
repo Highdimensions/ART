@@ -120,6 +120,23 @@
       },
       "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ca7bb32_e89cf3f5",
+        "filename": "test/458-checker-riscv64-bit-manipulations/info.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-07-18T07:04:14Z",
+      "side": 1,
+      "message": "Split across two lines.",
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
