@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e5f536b_346c8b7c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-07-19T18:54:00Z",
+      "side": 1,
+      "message": "As I recall, the core problem here is that WeakGlobalRefs and the like:\na) Are not cleared until they are no longer reachable from anything including finalizers, but\nb) Unlike PhantomReferences, dereferencing them creates new strong references that would require additional marking.\nAs a result, we cannot tell whether a WeakGlobalRef should be null while marking through finalizers, and producing a non-null dereference result would invalidate prior marking and identification of finalizable objects.\nI only looked at this fairly quickly, but I couldn\u0027t see either problem being addressed. In fact, this issue seems fairly fundamental to me. The best solution at the moment is to either minimize finalizer use or, in some cases, avoid JNI WeakGlobalRefs in favor of other mechanisms. But other system weak references have similar issues.\nIf I\u0027m misinterpreting the CL, please include a description of how these issues are addressed.",
+      "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
