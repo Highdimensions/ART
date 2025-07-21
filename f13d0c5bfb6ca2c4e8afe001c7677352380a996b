@@ -52,6 +52,24 @@
       "parentUuid": "cedf6f6f_31d853e6",
       "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbbcb261_11f58cf9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-07-21T21:13:19Z",
+      "side": 1,
+      "message": "I think \"After processing FinalizerReference and clearing MarkStack, process WeakReference that can only be reached from FinalizerReference\" should say \"WeakGlobalReference\" instead of \"WeakReference\".\n\nI also disagree on \"processing of GlobalWeakReference should refer to stage 1 in ProcessReferences(), since there should be no GlobalWeakReference that can only be reached from FinalizerReference.\"\n\nThe first sentence contradicts recent versions of the JNI spec:\n\n\"Weak global references are related to Java phan tom references (java.lang.ref.PhantomReference). A weak global reference to a specific object is treated as a phan tom reference referring to that object when determining whether the object is phan tom reachable (see java.lang.ref). Such a weak global reference will become functionally equivalent to NULL at the same time as a PhantomReference referring to that same object would be cleared by the garbage collector.\"\n\nPhantomReferences may refer to objects that are also referenced by FinalizerReferences, because they have finalizers, or are referenced by an object that does. Thus we cannot determine whether a WeakGlobalReference should be cleared until finishing marking through finalizers.\n\nNote that a number of ART internal references effectively have to be treated like WeakGlobalReferences. Weak references to interned strings cannot be cleared before marking through finalizers; we can otherwise end up with two identical interned strings that are stored in separate String objects. When we\u0027ve seen jank introduced by reference processing these internal references are often the cause. For actual JNI WeakGlobalRefs, it may work to instead use a (strong) GlobalRef to a WeakReference, and I believe some frameworks code now does that.",
+      "parentUuid": "d1f28dac_c49190b1",
+      "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
