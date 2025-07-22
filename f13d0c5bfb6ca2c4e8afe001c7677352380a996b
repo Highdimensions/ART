@@ -70,6 +70,23 @@
       "parentUuid": "d1f28dac_c49190b1",
       "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29ac492b_bbfdcecb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4190082
+      },
+      "writtenOn": "2025-07-22T11:53:40Z",
+      "side": 1,
+      "message": "Thanks for pointing out the difference between WeakReference and WeakGlobalReference. We do not know enough about the spec of Java and JNI. However, our design which allows returning to-space address in the DisableWeakReferenceAccess phase may be enough to obtain most of the performance benefits. Taking Douyin as an example, we profiled the relevant information of WeakGlobalReference in the DisableWeakReferenceAccess phase of hundreds of CC GCs within 30 minutes today, and made the following two observations.\n1. In 742 DisableWeakReferenceAccess phases, 946 WeakGlobalReference accessses occurred, all of which returned to-space pointers.\n2. Count the referent status change in WeakGlobalTable (Indirect Table) before process FinalizerReference and at the beginning of SweepSystemWeaks. We observed two referent status changes of WeakGlobalReferences (at the start of the application), which may be consistent with the process of FinalizerReference changing the referent status of WeakGlobalReference. But this number is too small compared to hundreds of GCs and hundreds of references in the WeakGlobalTable. In addition, we found that the referent of Douyin\u0027s WeakGlobalReference is rarely invalid (\u003c1%).\nObservation 1 indicates that during the DisableWeakReferenceAccess phase, returning marked referent referenced by a WeakGlobalReference, and blocking otherwise, can significantly reduce most of the BlockOnWeakGlobalAccess occurrences. Observation 2 suggests that the application\u0027s use of JNI combined with WeakGlobalReference may involve some issues worthy of further investigation.\nI also have an additional question: regarding \"Weak references to interned strings cannot be cleared before marking through finalizers,\" does this category of weak references include those handled in SweepSystemWeaks such as MonitorList, JNIWeakGlobal, and etc.? Has Google provided any documentation about this? It seems that no relevant academic papers have described this so far.",
+      "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
