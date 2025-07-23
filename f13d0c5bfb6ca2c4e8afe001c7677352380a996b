@@ -123,6 +123,24 @@
       "parentUuid": "29ac492b_bbfdcecb",
       "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f77f9fe_ed998feb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4161832
+      },
+      "writtenOn": "2025-07-23T02:09:03Z",
+      "side": 1,
+      "message": "yuan1zhe@gmail.com – this is my email address. Could you please add permissions for me?",
+      "parentUuid": "bcfbc91f_4c98711a",
+      "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
