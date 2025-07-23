@@ -105,6 +105,24 @@
       "parentUuid": "fbbcb261_11f58cf9",
       "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bcfbc91f_4c98711a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-07-23T00:57:52Z",
+      "side": 1,
+      "message": "I am somewhat surprised by your statistics. You are saying that very few of these accesses ever return null? I do not have statistics to contradict that, but I recall seeing use cases for weak references of some kind that referred to primarily short-lived objects. This may be application dependent.\n\nUnfortunately, it turns out that returning early in the case of a marked object is also unsafe, though for more subtle reasons that could possibly be worked around. But I\u0027m not currently convinced it\u0027s worth the effort, though it\u0027s hard to tell.\n\nWe did not previously discuss this except in \ndiscussions that were hard to extract into a document. I finally did so, and will probably eventually check this into our source tree. For now, there is a draft at https://docs.google.com/document/d/1fbTYBSqBN0flFt9j1IKVeLM3gqVev4ijBG5ijO8fLcc/edit?usp\u003dsharing\u0026resourcekey\u003d0-D7vX3NoCd1EUOEdgn7t5Mg\n\n(I shared the above document with the \"Owner\" gmail address. Let me know if you need it shared with other non-Google addresses.)",
+      "parentUuid": "29ac492b_bbfdcecb",
+      "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
