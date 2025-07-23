@@ -141,6 +141,24 @@
       "parentUuid": "bcfbc91f_4c98711a",
       "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b011490b_2e68b8c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4190082
+      },
+      "writtenOn": "2025-07-23T07:55:45Z",
+      "side": 1,
+      "message": "Thanks again for your highly insightful response. We understand the issue you raised regarding creating strong references from an object marked as part of finalizer marking while its referents may not yet have been traced. ART seems not support mutators pushing objects to the MarkStack during the disableWeakGlobalAccess phase, which may lead to crashes. According to our profiling, returning the to-space addresses of live objects that are not under finalizer marking through a snapshot-like method could potentially reduce most occurrences of BlockingOnWeakGlobalAccess. We plan to revise and test the patch following your suggestion. Please kindly notify us if Google decides to check this into the source tree.\n\nAdditionally, the email address of our Prof. Chenxi Wang, is wangchenxi7@gmail.com. Please grant access to the documentation.",
+      "parentUuid": "29ac492b_bbfdcecb",
+      "revId": "f13d0c5bfb6ca2c4e8afe001c7677352380a996b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
