@@ -4,7 +4,13 @@ class java.lang.Object
 Max locals: 3
 Argument size: 1
 Location start: 0
+<<<<<<< HEAD   (1989aa4b393d8442e2d6b347443da56983782dad Update Test924 to filter for messages related to test thread)
 Location end: 36
+||||||| BASE
+Location end: 39
+=======
+Location end: ok
+>>>>>>> CHANGE (565eb87ddaceb789696c93ed5fb5597d866c62fc Update some run tests to work when either D8 or R8 is used o)
 Is native: false
 Is obsolete: false
 Is synthetic: false
@@ -53,7 +59,7 @@ class art.Test910$NestedSynthetic
 Max locals: 1
 Argument size: 0
 Location start: 0
-Location end: 2
+Location end: ok
 Is native: false
 Is obsolete: false
 Is synthetic: true
