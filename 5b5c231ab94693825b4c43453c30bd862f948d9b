@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "12b78b48_a481cc4a",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-28T13:21:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7920cf29_febba9e3",
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "11e94caa_c998b81a",
@@ -48,6 +66,30 @@
       "writtenOn": "2025-07-15T13:36:38Z",
       "side": 1,
       "message": "style: since you are returning false in 107, there\u0027s no need to be an `else if` and it can be just an if.",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 5
+      },
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2366006d_43a0baa9",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-28T13:21:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11e94caa_c998b81a",
       "range": {
         "startLine": 108,
         "startChar": 0,
@@ -99,6 +141,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fb276d5_f85191e0",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-28T13:21:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "649a21b1_2ef88847",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 146,
+        "endChar": 5
+      },
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aec63cb8_30cb7036",
@@ -122,6 +188,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5d773ad_9bdad3da",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-28T13:21:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aec63cb8_30cb7036",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 5
+      },
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ca7bb32_e89cf3f5",
@@ -135,6 +225,24 @@
       "writtenOn": "2025-07-18T07:04:14Z",
       "side": 1,
       "message": "Split across two lines.",
+      "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b4b3b54_5e656f8d",
+        "filename": "test/458-checker-riscv64-bit-manipulations/info.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3190653
+      },
+      "writtenOn": "2025-07-28T13:21:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ca7bb32_e89cf3f5",
       "revId": "5b5c231ab94693825b4c43453c30bd862f948d9b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
