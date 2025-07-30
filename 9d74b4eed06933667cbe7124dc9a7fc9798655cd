@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fa901dd_f87427c5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-07-30T12:04:59Z",
+      "side": 1,
+      "message": "Note: Internal cherry-pick needs some adjustments due to recent refactorings.",
+      "revId": "9d74b4eed06933667cbe7124dc9a7fc9798655cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
