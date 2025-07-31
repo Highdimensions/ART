@@ -16,6 +16,24 @@
       "message": "Note: Internal cherry-pick needs some adjustments due to recent refactorings.",
       "revId": "9d74b4eed06933667cbe7124dc9a7fc9798655cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d810084_32c22934",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-07-31T09:43:52Z",
+      "side": 1,
+      "message": "Submitted the modified cherry-pick to internal with the same Change-Id.",
+      "parentUuid": "9fa901dd_f87427c5",
+      "revId": "9d74b4eed06933667cbe7124dc9a7fc9798655cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
