@@ -3942,7 +3942,8 @@ void Heap::ClampGrowthLimit() {
 void Heap::ClearGrowthLimit() {
   if (target_footprint_.load(std::memory_order_relaxed) == growth_limit_
       && growth_limit_ < capacity_) {
-    target_footprint_.store(capacity_, std::memory_order_relaxed);
+    //set target_footprint_ in the cold start phase to 0.75 of the maximum allocatable memory.
+    target_footprint_.store(capacity_ * 0.75, std::memory_order_relaxed);
     SetDefaultConcurrentStartBytes();
   }
   growth_limit_ = capacity_;
