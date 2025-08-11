@@ -34,6 +34,29 @@
       "parentUuid": "9fa901dd_f87427c5",
       "revId": "9d74b4eed06933667cbe7124dc9a7fc9798655cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b903671_5e243046",
+        "filename": "compiler/optimizing/instruction_simplifier_riscv64.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-08-11T13:27:34Z",
+      "side": 1,
+      "message": "This test lets `imm \u003d\u003d 0` through and that crashes in the `WhichPowerOf2()` below. The internal CL was reverted and resubmitted with an additional `imm !\u003d 0 \u0026\u0026` here with Change-Id I8ebb7ae8cbec6bf50cea0eb55cbff81125ddbec1 and a separate CL has been submitted with a regression test (gtest).\n\nI did not investigate how `imm \u003d\u003d 0` made it here without being optimized away by other passes.",
+      "range": {
+        "startLine": 158,
+        "startChar": 9,
+        "endLine": 158,
+        "endChar": 21
+      },
+      "revId": "9d74b4eed06933667cbe7124dc9a7fc9798655cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
