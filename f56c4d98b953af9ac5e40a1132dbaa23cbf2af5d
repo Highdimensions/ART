@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14bacc7f_c6f552ce",
+        "filename": "test/2287-no-temp-component-class/src/RaceCoordinator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-08-12T09:11:58Z",
+      "side": 1,
+      "message": "I\u0027ve submitted a cherry-pick to internal with this replaced by `assertStateIs(from)`, plus a blank line before `sThreadRole` and typo fix for `ClassLoadr`. I also moved `Main.java` to `src-art/` and updated `knownfailures.json` to avoid building/testing on RI (`--jvm`).\n\nThe submitted CL has the same `Change-Id` as this one.",
+      "range": {
+        "startLine": 90,
+        "startChar": 8,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "f56c4d98b953af9ac5e40a1132dbaa23cbf2af5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

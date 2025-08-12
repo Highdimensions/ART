@@ -70,6 +70,30 @@
       },
       "revId": "e972f994ce8820da6b74c0fe006e115653faa3fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5dccd84_cc95ff02",
+        "filename": "runtime/class_linker.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 4867,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-08-12T09:11:58Z",
+      "side": 1,
+      "message": "LGTM.",
+      "parentUuid": "3c6ddd5c_0d822800",
+      "range": {
+        "startLine": 4867,
+        "startChar": 37,
+        "endLine": 4867,
+        "endChar": 77
+      },
+      "revId": "e972f994ce8820da6b74c0fe006e115653faa3fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
