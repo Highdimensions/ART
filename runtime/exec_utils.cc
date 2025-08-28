@@ -64,6 +64,7 @@ std::string ToCommandLine(const std::vector<std::string>& args) {
 // Returns the process id of the child process on success, -1 otherwise.
 pid_t ExecWithoutWait(const std::vector<std::string>& arg_vector,
                       bool new_process_group,
+                      ChildSetupPipeProvider& sync_pipe,
                       std::string* error_msg) {
   // Convert the args to char pointers.
   const char* program = arg_vector[0].c_str();
@@ -74,6 +75,12 @@ pid_t ExecWithoutWait(const std::vector<std::string>& arg_vector,
   }
   args.push_back(nullptr);
 
+  // Use a pipe to notify parent process only if a new process group is
+  // used in the child process to handle a cancellation signal correctly.
+  if (new_process_group && !sync_pipe.create()) {
+    PLOG(WARNING) << "Failed to create a pipe, skip waiting for setpgid";
+  }
+
   // fork and exec
   pid_t pid = fork();
   if (pid == 0) {
@@ -81,6 +88,7 @@ pid_t ExecWithoutWait(const std::vector<std::string>& arg_vector,
 
     if (new_process_group) {
       setpgid(0, 0);
+      sync_pipe.childWriteSetupCompletion();
     }
 
     // (b/30160149): protect subprocesses from modifications to LD_LIBRARY_PATH, etc.
@@ -264,14 +272,21 @@ ExecResult ExecUtils::ExecAndReturnResult(const std::vector<std::string>& arg_ve
     return {.status = ExecResult::kStartFailed};
   }
 
+  ChildSetupPipeProvider sync_pipe;
   // Start subprocess.
-  pid_t pid = ExecWithoutWait(arg_vector, new_process_group, error_msg);
+  pid_t pid = ExecWithoutWait(arg_vector, new_process_group, sync_pipe, error_msg);
   if (pid == -1) {
     return {.status = ExecResult::kStartFailed};
   }
 
   std::string stat_error_msg;
   std::optional<int64_t> start_time = GetUptimeMs(&stat_error_msg);
+
+  if (new_process_group && !sync_pipe.parentReadSetupCompletion()) {
+    PLOG(WARNING) << "Process sync failed";
+    // Child is started, so try to perform callbacks with no pgid sync anyway.
+  }
+
   callbacks.on_start(pid);
 
   // Wait for subprocess to finish.
@@ -364,6 +379,47 @@ bool ExecUtils::GetStat(pid_t pid,
   }
   stat->wall_time_ms = uptime_ms.value() - start_time;
   return true;
+}
+
+bool ChildSetupPipeProvider::create() {
+  if (ready_) {
+    return true;
+  }
+  ready_ = pipe(pipefd_) == 0;
+  return ready_;
+}
+
+bool ChildSetupPipeProvider::childWriteSetupCompletion() {
+  if (!ready_) {
+    return false;
+  }
+
+  close(pipefd_[0]);
+  char setup_byte = 'c';
+  int n_written = TEMP_FAILURE_RETRY(write(pipefd_[1], &setup_byte, sizeof(setup_byte)));
+  close(pipefd_[1]);
+  ready_ = false;
+  return n_written == sizeof(setup_byte);
+}
+
+bool ChildSetupPipeProvider::parentReadSetupCompletion() {
+  if (!ready_) {
+    return false;
+  }
+
+  close(pipefd_[1]);
+  char out;
+  int n_read = TEMP_FAILURE_RETRY(read(pipefd_[0], &out, sizeof(out)));
+  close(pipefd_[0]);
+  ready_ = false;
+  return n_read == sizeof(out);
+}
+
+ChildSetupPipeProvider::~ChildSetupPipeProvider() {
+  if (ready_) {
+    close(pipefd_[0]);
+    close(pipefd_[1]);
+  }
 }
 
 }  // namespace art

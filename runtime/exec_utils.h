@@ -133,6 +133,29 @@ inline int ExecAndReturnCode(const std::vector<std::string>& arg_vector,
   return ExecUtils().ExecAndReturnCode(arg_vector, error_msg);
 }
 
+// A helper class to make sure a new process group is set for child to perform operations on the
+// whole process group correctly.
+class EXPORT ChildSetupPipeProvider final {
+ public:
+  ChildSetupPipeProvider() {}
+
+  ChildSetupPipeProvider(const ChildSetupPipeProvider&) = delete;
+
+  ChildSetupPipeProvider& operator=(const ChildSetupPipeProvider&) = delete;
+
+  bool create();
+
+  bool childWriteSetupCompletion();
+
+  bool parentReadSetupCompletion();
+
+  ~ChildSetupPipeProvider();
+
+ private:
+  pid_t pipefd_[2];
+  bool ready_ = false;
+};
+
 }  // namespace art
 
 #endif  // ART_RUNTIME_EXEC_UTILS_H_
