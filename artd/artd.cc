@@ -1297,9 +1297,10 @@ ScopedAStatus ArtdCancellationSignal::cancel() {
   std::lock_guard<std::mutex> lock(mu_);
   is_cancelled_ = true;
   for (pid_t pid : pids_) {
-    // Kill the whole process group.
-    int res = kill_(-pid, SIGKILL);
+    int res = kill_(pid, SIGKILL);
     DCHECK_EQ(res, 0);
+    // Kill the whole process group.
+    kill_(-pid, SIGKILL);
   }
   return ScopedAStatus::ok();
 }
@@ -1317,8 +1318,11 @@ ExecCallbacks ArtdCancellationSignal::CreateExecCallbacks() {
             pids_.insert(pid);
             // Handle cancellation signals sent before the process starts.
             if (is_cancelled_) {
-              int res = kill_(-pid, SIGKILL);
+              // Kill the whole process and then kill process group since there is no knowledge if
+              // there yet exist one forked process or already created process group.
+              int res = kill_(pid, SIGKILL);
               DCHECK_EQ(res, 0);
+              kill_(-pid, SIGKILL);
             }
           },
       .on_end =
