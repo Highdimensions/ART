@@ -1285,6 +1285,7 @@ TEST_F(ArtdTest, dexoptCancelledBeforeDex2oat) {
         callbacks.on_end(kPid);
         return Error();
       });
+  EXPECT_CALL(mock_kill_, Call(kPid, SIGKILL));
   EXPECT_CALL(mock_kill_, Call(-kPid, SIGKILL));
 
   cancellation_signal->cancel();
@@ -1294,6 +1295,34 @@ TEST_F(ArtdTest, dexoptCancelledBeforeDex2oat) {
   CheckContent(scratch_path_ + "/a/oat/arm64/b.odex", "old_oat");
   CheckContent(scratch_path_ + "/a/oat/arm64/b.vdex", "old_vdex");
   CheckContent(scratch_path_ + "/a/oat/arm64/b.art", "old_art");
+}
+
+TEST_F(ArtdTest, cancelRightBeforeForkTest) {
+  std::shared_ptr<IArtdCancellationSignal> input_cancellation_signal;
+  auto artd = ndk::SharedRefBase::make<art::artd::Artd>(Options{.is_pre_reboot = false});
+  ASSERT_TRUE(artd->createCancellationSignal(&input_cancellation_signal).isOk());
+  // Assume cancelled in Java.
+  input_cancellation_signal->cancel();
+
+  ArtdCancellationSignal* cancellation_signal =
+      static_cast<ArtdCancellationSignal*>(input_cancellation_signal.get());
+  ASSERT_TRUE(cancellation_signal->IsCancelled());
+
+  std::string error_msg;
+  const std::vector<std::string> args = {"/system/bin/dex2oat"};
+  constexpr int kTimeoutSeconds = 10;
+  constexpr bool kIsNewProccessGroup = true;
+  constexpr ProcessStat* kProcessStat = nullptr;
+
+  std::unique_ptr<ExecUtils> exec_utils = std::make_unique<ExecUtils>();
+  ExecResult result = exec_utils->ExecAndReturnResult(args,
+                                                      kTimeoutSeconds,
+                                                      cancellation_signal->CreateExecCallbacks(),
+                                                      kIsNewProccessGroup,
+                                                      kProcessStat,
+                                                      &error_msg);
+
+  EXPECT_EQ(result.status, ExecResult::kSignaled) << error_msg;
 }
 
 TEST_F(ArtdTest, dexoptCancelledDuringDex2oat) {
@@ -1318,6 +1347,7 @@ TEST_F(ArtdTest, dexoptCancelledDuringDex2oat) {
         return Error();
       });
 
+  EXPECT_CALL(mock_kill_, Call(kPid, SIGKILL));
   EXPECT_CALL(mock_kill_, Call(-kPid, SIGKILL)).WillOnce([&](auto, auto) {
     // Step 4.
     process_killed_cv.notify_one();
@@ -3185,6 +3215,7 @@ TEST_F(ArtdPreRebootTest, preRebootInitCancelled) {
         return Error();
       });
 
+  EXPECT_CALL(mock_kill_, Call(kPid, SIGKILL));
   EXPECT_CALL(mock_kill_, Call(-kPid, SIGKILL)).WillOnce([&](auto, auto) {
     // Step 4.
     process_killed_cv.notify_one();
