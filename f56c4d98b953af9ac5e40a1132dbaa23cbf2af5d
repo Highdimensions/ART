@@ -22,6 +22,30 @@
       },
       "revId": "f56c4d98b953af9ac5e40a1132dbaa23cbf2af5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a07eaec8_cbb3098a",
+        "filename": "test/2287-no-temp-component-class/src/RaceCoordinator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 3991400
+      },
+      "writtenOn": "2025-09-02T14:28:07Z",
+      "side": 1,
+      "message": "Thank you! Should I now abandon this cl?",
+      "parentUuid": "14bacc7f_c6f552ce",
+      "range": {
+        "startLine": 90,
+        "startChar": 8,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "f56c4d98b953af9ac5e40a1132dbaa23cbf2af5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
