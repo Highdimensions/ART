@@ -46,6 +46,30 @@
       },
       "revId": "f56c4d98b953af9ac5e40a1132dbaa23cbf2af5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee3b3619_e55ebbce",
+        "filename": "test/2287-no-temp-component-class/src/RaceCoordinator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2025-09-02T14:40:44Z",
+      "side": 1,
+      "message": "Up to you. It\u0027s reasonable to abandon either now or when the internal change reaches AOSP.",
+      "parentUuid": "a07eaec8_cbb3098a",
+      "range": {
+        "startLine": 90,
+        "startChar": 8,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "f56c4d98b953af9ac5e40a1132dbaa23cbf2af5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
