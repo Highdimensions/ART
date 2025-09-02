@@ -499,7 +499,7 @@ class HScheduler {
  public:
   explicit HScheduler(SchedulingNodeSelector* selector)
       : selector_(selector),
-        only_optimize_loop_blocks_(true),
+        only_optimize_loop_blocks_(false),
         cursor_(nullptr) {}
   virtual ~HScheduler() {}
 
@@ -578,7 +578,7 @@ class HInstructionScheduling : public HOptimization {
         instruction_set_(instruction_set) {}
 
   bool Run() override {
-    return Run(/*only_optimize_loop_blocks*/ true, /*schedule_randomly*/ false);
+    return Run(/*only_optimize_loop_blocks*/ false, /*schedule_randomly*/ false);
   }
 
   bool Run(bool only_optimize_loop_blocks, bool schedule_randomly);
