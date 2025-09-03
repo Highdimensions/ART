@@ -271,7 +271,8 @@ JitCodeCache::JitCodeCache()
       number_of_collections_(0),
       histogram_stack_map_memory_use_("Memory used for stack maps", 16),
       histogram_code_memory_use_("Memory used for compiled code", 16),
-      histogram_profiling_info_memory_use_("Memory used for profiling info", 16) {
+      histogram_profiling_info_memory_use_("Memory used for profiling info", 16),
+      pc_cache_enabled_(true) {
 }
 
 JitCodeCache::~JitCodeCache() {
@@ -841,6 +842,11 @@ bool JitCodeCache::Commit(Thread* self,
         << reinterpret_cast<const void*>(method_header->GetEntryPoint()) << ","
         << reinterpret_cast<const void*>(method_header->GetEntryPoint() +
                                          method_header->GetCodeSize());
+    // Add successful compilation to PC cache (except for OSR methods)
+    if (compilation_kind != CompilationKind::kOsr &&
+        pc_cache_enabled_.load(std::memory_order_relaxed)) {
+        AddToPCRangeCache(code_ptr, method);
+    }
   }
 
   if (kIsDebugBuild) {
@@ -1178,6 +1184,11 @@ void JitCodeCache::RemoveUnmarkedCode(Thread* self) {
 
         if (method_it != method_code_map_.end()) {
           ArtMethod* method = method_it->second;
+          // Invalidate PC cache entry for this method
+          if (pc_cache_enabled_.load(std::memory_order_relaxed)) {
+            // Note: We already hold jit_lock_ at this point
+            InvalidateFromPCRangeCache(method);
+          }
           auto code_ptrs_it = method_code_map_reversed_.find(method);
 
           if (code_ptrs_it != method_code_map_reversed_.end()) {
@@ -1387,6 +1398,23 @@ OatQuickMethodHeader* JitCodeCache::LookupMethodHeader(uintptr_t pc, ArtMethod* 
 
   Thread* self = Thread::Current();
   ScopedDebugDisallowReadBarriers sddrb(self);
+
+  // Fast path: try PC range cache first if enabled
+  if (pc_cache_enabled_.load(std::memory_order_relaxed) && method != nullptr && !method->IsNative()) {
+    OatQuickMethodHeader* cached_header = nullptr;
+    {
+      MutexLock mu(self, *Locks::jit_lock_);
+      cached_header = pc_range_cache_.FastLookup(pc);
+    }
+    if (cached_header != nullptr) {
+      // Verify the cached result in debug builds
+      if (kIsDebugBuild) {
+        DCHECK(cached_header->Contains(pc)) << "PC cache returned invalid header";
+      }
+      return cached_header;
+    }
+  }
+
   OatQuickMethodHeader* method_header = nullptr;
   ArtMethod* found_method = nullptr;  // Only for DCHECK(), not for JNI stubs.
   if (method != nullptr && UNLIKELY(method->IsNative())) {
@@ -1411,7 +1439,13 @@ OatQuickMethodHeader* JitCodeCache::LookupMethodHeader(uintptr_t pc, ArtMethod* 
     if (shared_region_.IsInExecSpace(pc_ptr)) {
       const void* code_ptr = zygote_map_.GetCodeFor(method, pc);
       if (code_ptr != nullptr) {
-        return OatQuickMethodHeader::FromCodePointer(code_ptr);
+        method_header = OatQuickMethodHeader::FromCodePointer(code_ptr);
+        // Add to PC cache for future lookups
+        if (pc_cache_enabled_.load(std::memory_order_relaxed) && method != nullptr) {
+          MutexLock mu(self, *Locks::jit_lock_);
+          AddToPCRangeCache(code_ptr, method);
+        }
+        return method_header;
       }
     }
     {
@@ -1426,6 +1460,12 @@ OatQuickMethodHeader* JitCodeCache::LookupMethodHeader(uintptr_t pc, ArtMethod* 
         if (OatQuickMethodHeader::FromCodePointer(code_ptr)->Contains(pc)) {
           method_header = OatQuickMethodHeader::FromCodePointer(code_ptr);
           found_method = it->second;
+
+          // Add successful lookup to PC cache for future fast access
+          if (pc_cache_enabled_.load(std::memory_order_relaxed) && found_method != nullptr) {
+            MutexLock mu2(self, *Locks::jit_lock_);
+            AddToPCRangeCache(code_ptr, found_method);
+          }
         }
       }
     }
@@ -1836,34 +1876,38 @@ void JitCodeCache::InvalidateCompiledCodeFor(ArtMethod* method,
 }
 
 void JitCodeCache::Dump(std::ostream& os) {
-  MutexLock mu(Thread::Current(), *Locks::jit_lock_);
-  os << "Current JIT code cache size (used / resident): "
-     << GetCurrentRegion()->GetUsedMemoryForCode() / KB << "KB / "
-     << GetCurrentRegion()->GetResidentMemoryForCode() / KB << "KB\n"
-     << "Current JIT data cache size (used / resident): "
-     << GetCurrentRegion()->GetUsedMemoryForData() / KB << "KB / "
-     << GetCurrentRegion()->GetResidentMemoryForData() / KB << "KB\n";
-  if (!Runtime::Current()->IsZygote()) {
-    os << "Zygote JIT code cache size (at point of fork): "
-       << shared_region_.GetUsedMemoryForCode() / KB << "KB / "
-       << shared_region_.GetResidentMemoryForCode() / KB << "KB\n"
-       << "Zygote JIT data cache size (at point of fork): "
-       << shared_region_.GetUsedMemoryForData() / KB << "KB / "
-       << shared_region_.GetResidentMemoryForData() / KB << "KB\n";
+  {
+    MutexLock mu(Thread::Current(), *Locks::jit_lock_);
+    os << "Current JIT code cache size (used / resident): "
+       << GetCurrentRegion()->GetUsedMemoryForCode() / KB << "KB / "
+       << GetCurrentRegion()->GetResidentMemoryForCode() / KB << "KB\n"
+       << "Current JIT data cache size (used / resident): "
+       << GetCurrentRegion()->GetUsedMemoryForData() / KB << "KB / "
+       << GetCurrentRegion()->GetResidentMemoryForData() / KB << "KB\n";
+    if (!Runtime::Current()->IsZygote()) {
+      os << "Zygote JIT code cache size (at point of fork): "
+         << shared_region_.GetUsedMemoryForCode() / KB << "KB / "
+         << shared_region_.GetResidentMemoryForCode() / KB << "KB\n"
+         << "Zygote JIT data cache size (at point of fork): "
+         << shared_region_.GetUsedMemoryForData() / KB << "KB / "
+         << shared_region_.GetResidentMemoryForData() / KB << "KB\n";
+    }
+    ReaderMutexLock mu2(Thread::Current(), *Locks::jit_mutator_lock_);
+    os << "Current JIT mini-debug-info size: " << PrettySize(GetJitMiniDebugInfoMemUsage()) << "\n"
+       << "Current JIT capacity: " << PrettySize(GetCurrentRegion()->GetCurrentCapacity()) << "\n"
+       << "Current number of JIT JNI stub entries: " << jni_stubs_map_.size() << "\n"
+       << "Current number of JIT code cache entries: " << method_code_map_.size() << "\n"
+       << "Total number of JIT baseline compilations: " << number_of_baseline_compilations_ << "\n"
+       << "Total number of JIT optimized compilations: " << number_of_optimized_compilations_ << "\n"
+       << "Total number of JIT compilations for on stack replacement: "
+          << number_of_osr_compilations_ << "\n"
+       << "Total number of JIT code cache collections: " << number_of_collections_ << std::endl;
+    histogram_stack_map_memory_use_.PrintMemoryUse(os);
+    histogram_code_memory_use_.PrintMemoryUse(os);
+    histogram_profiling_info_memory_use_.PrintMemoryUse(os);
   }
-  ReaderMutexLock mu2(Thread::Current(), *Locks::jit_mutator_lock_);
-  os << "Current JIT mini-debug-info size: " << PrettySize(GetJitMiniDebugInfoMemUsage()) << "\n"
-     << "Current JIT capacity: " << PrettySize(GetCurrentRegion()->GetCurrentCapacity()) << "\n"
-     << "Current number of JIT JNI stub entries: " << jni_stubs_map_.size() << "\n"
-     << "Current number of JIT code cache entries: " << method_code_map_.size() << "\n"
-     << "Total number of JIT baseline compilations: " << number_of_baseline_compilations_ << "\n"
-     << "Total number of JIT optimized compilations: " << number_of_optimized_compilations_ << "\n"
-     << "Total number of JIT compilations for on stack replacement: "
-        << number_of_osr_compilations_ << "\n"
-     << "Total number of JIT code cache collections: " << number_of_collections_ << std::endl;
-  histogram_stack_map_memory_use_.PrintMemoryUse(os);
-  histogram_code_memory_use_.PrintMemoryUse(os);
-  histogram_profiling_info_memory_use_.PrintMemoryUse(os);
+  // Add PC Range Cache statistics
+  DumpPCRangeCacheStats(os);
 }
 
 void JitCodeCache::DumpAllCompiledMethods(std::ostream& os) {
@@ -2056,6 +2100,65 @@ void ZygoteMap::Put(const void* code, ArtMethod* method) {
     DCHECK_NE(original_index, index);
   }
   DCHECK_EQ(GetCodeFor(method), code);
+}
+
+void JitCodeCache::AddToPCRangeCache(const void* code_ptr, ArtMethod* method) {
+  if (pc_cache_enabled_.load(std::memory_order_relaxed) &&
+      method != nullptr && !method->IsNative()) {
+    pc_range_cache_.AddEntry(code_ptr, method);
+  }
+}
+
+void JitCodeCache::InvalidateFromPCRangeCache(ArtMethod* method) {
+  if (pc_cache_enabled_.load(std::memory_order_relaxed)) {
+    pc_range_cache_.InvalidateMethod(method);
+  }
+}
+
+void JitCodeCache::SetPCRangeCacheEnabled(bool enabled) {
+  MutexLock mu(Thread::Current(), *Locks::jit_lock_);
+  pc_cache_enabled_.store(enabled, std::memory_order_relaxed);
+  if (!enabled) {
+    pc_range_cache_.Clear();
+  }
+}
+
+bool JitCodeCache::IsPCRangeCacheEnabled() const {
+  return pc_cache_enabled_.load(std::memory_order_relaxed);
+}
+
+PCRangeCache::Stats JitCodeCache::GetPCRangeCacheStats() const {
+  MutexLock mu(Thread::Current(), *Locks::jit_lock_);
+  return pc_range_cache_.GetStats();
+}
+
+void JitCodeCache::DumpPCRangeCacheStats(std::ostream& os) {
+  if (!pc_cache_enabled_.load(std::memory_order_relaxed)) {
+    os << "PC Range Cache: DISABLED\n";
+    return;
+  }
+
+  PCRangeCache::Stats stats;
+  {
+    MutexLock mu(Thread::Current(), *Locks::jit_lock_);
+    stats = pc_range_cache_.GetStats();
+  }
+  os << "PC Range Cache Statistics:\n"
+     << "  Total lookups: " << stats.total_lookups << "\n"
+     << "  Cache hits: " << stats.cache_hits << "\n"
+     << "  Cache misses: " << stats.cache_misses << "\n"
+     << "  Hit rate: " << std::fixed << std::setprecision(2)
+     << (stats.hit_rate() * 100.0) << "%\n";
+
+#if defined(__aarch64__)
+  os << "  Architecture: ARM64 (optimized)\n";
+#elif defined(__arm__)
+  os << "  Architecture: ARM32 (memory optimized)\n";
+#elif defined(__riscv)
+  os << "  Architecture: RISC-V (balanced)\n";
+#elif defined(__x86_64__) || defined(__i386__)
+  os << "  Architecture: x86/x86_64\n";
+#endif
 }
 
 }  // namespace jit
