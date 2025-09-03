@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": false,
       "key": {
         "uuid": "06b8fac8_cecffb9b",
         "filename": "/COMMIT_MSG",
@@ -20,10 +21,10 @@
         "endChar": 4
       },
       "revId": "21fbd78b3eba63ed4cc99cb0a80c0e42bf35f615",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "21b85a54_f33ba8a3",
         "filename": "/COMMIT_MSG",
@@ -44,10 +45,27 @@
         "endChar": 4
       },
       "revId": "21fbd78b3eba63ed4cc99cb0a80c0e42bf35f615",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c7821c0_e573d4db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3667002
+      },
+      "writtenOn": "2025-09-03T04:40:39Z",
+      "side": 1,
+      "message": "Just wondering?",
+      "revId": "21fbd78b3eba63ed4cc99cb0a80c0e42bf35f615",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "a18c49c5_bdac6e22",
         "filename": "OWNERS",
@@ -61,10 +79,10 @@
       "side": 1,
       "message": "Why not art-team@google.com ?",
       "revId": "21fbd78b3eba63ed4cc99cb0a80c0e42bf35f615",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "7f0b9bc3_000dedc5",
         "filename": "OWNERS",
@@ -79,8 +97,7 @@
       "message": "That won\u0027t work until 2018, apparently.",
       "parentUuid": "a18c49c5_bdac6e22",
       "revId": "21fbd78b3eba63ed4cc99cb0a80c0e42bf35f615",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
