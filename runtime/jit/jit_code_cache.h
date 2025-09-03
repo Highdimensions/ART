@@ -36,6 +36,7 @@
 #include "base/safe_map.h"
 #include "compilation_kind.h"
 #include "jit_memory_region.h"
+#include "pc_range_cache.h"
 #include "profiling_info.h"
 
 namespace art HIDDEN {
@@ -435,7 +436,28 @@ class JitCodeCache {
   EXPORT void DoCollection(Thread* self)
       REQUIRES(!Locks::jit_lock_);
 
+  void SetPCRangeCacheEnabled(bool enabled) REQUIRES(!Locks::jit_lock_);
+
+  bool IsPCRangeCacheEnabled() const REQUIRES(!Locks::jit_lock_);
+
+  PCRangeCache::Stats GetPCRangeCacheStats() const REQUIRES(!Locks::jit_lock_);
+
+  void DumpPCRangeCacheStats(std::ostream& os) REQUIRES(!Locks::jit_lock_);
+
  private:
+  // PC range cache for fast method lookup
+  mutable PCRangeCache pc_range_cache_ GUARDED_BY(Locks::jit_lock_);
+
+  // Configuration flag for PC range cache
+  std::atomic<bool> pc_cache_enabled_{true};
+
+  void AddToPCRangeCache(const void* code_ptr, ArtMethod* method)
+      REQUIRES(Locks::jit_lock_)
+      REQUIRES_SHARED(Locks::mutator_lock_);
+
+  void InvalidateFromPCRangeCache(ArtMethod* method)
+      REQUIRES(Locks::jit_lock_);
+
   JitCodeCache();
 
   void AddZombieCodeInternal(ArtMethod* method, const void* code_ptr)
