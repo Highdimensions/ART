@@ -950,6 +950,56 @@ class MarkCompact final : public GarbageCollector {
   // TODO: Must be replaced with an efficient mechanism eventually. Or ensure
   // that double updation doesn't happen in the first place.
   std::unique_ptr<std::unordered_set<void*>> updated_roots_ GUARDED_BY(lock_);
+  // Prefetch related constants
+  static constexpr size_t kPrefetchPageCount = 4;  // Default prefetch page count
+  static constexpr size_t kMaxBatchSize = 8;       // Maximum batch processing size
+  static constexpr size_t kMaxConsecutiveFailures = 2;  // Early exit threshold
+
+  // Performance statistics using thread-local storage to avoid contention
+  // Global statistics are updated periodically from thread-local counters
+  std::atomic<uint32_t> global_prefetch_hits_{0};
+  std::atomic<uint32_t> global_prefetch_total_{0};
+  std::atomic<uint64_t> last_stats_update_time_{0};
+
+  // New function declarations
+  size_t PrefetchAdjacentPages(size_t center_page_idx,
+                               uint8_t* buf,
+                               bool tolerate_enoent) REQUIRES_SHARED(Locks::mutator_lock_);
+
+  bool ShouldPrefetchPage(size_t page_idx, size_t start_range, size_t end_range) const;
+
+  size_t GetOptimalPrefetchCount(size_t center_page_idx) const;
+
+  // Performance monitoring and adaptive tuning
+  void UpdatePrefetchStats(size_t hit_count, size_t total_count);
+  size_t GetDynamicBatchSize(size_t center_page_idx) const;
+
+  // Optimized TLAB zero page batch processing
+  void OptimizedTlabZeroPageBatch(uint8_t* fault_page,
+                                  Thread* self,
+                                  size_t page_idx,
+                                  bool tolerate_enoent);
+
+  // Smart backoff strategy based on thread priority and contention history
+  static void SmartBackOff(uint32_t iteration, Thread* self);
+
+  // Get adaptive backoff parameters based on thread characteristics
+  static std::pair<uint32_t, uint64_t> GetBackOffParams(Thread* self);
+
+  // Track contention patterns for adaptive optimization
+  void UpdateContentionStats(bool succeeded, uint32_t iterations);
+
+  // Thread-local contention tracking
+  struct ContentionStats {
+    uint32_t recent_failures;
+    uint32_t total_attempts;
+    uint64_t avg_contention_time;
+    uint64_t last_update_time;
+  };
+
+  // Global contention statistics for system-wide optimization
+  std::atomic<uint32_t> global_contention_level_{0};
+  std::atomic<uint64_t> global_high_prio_waits_{0};
   // TODO: Remove once an efficient mechanism to deal with double root updation
   // is incorporated.
   void* stack_high_addr_;
