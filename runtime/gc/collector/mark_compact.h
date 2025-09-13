@@ -231,6 +231,14 @@ class MarkCompact final : public GarbageCollector {
     kClampInfoFinished
   };
 
+  // Thread-local contention tracking to avoid atomic overhead
+  // Made public for thread_local declaration access
+  struct ContentionStats {
+    uint32_t recent_failures;
+    uint32_t total_attempts;
+    uint64_t last_update_time;
+  };
+
   friend void YoungMarkCompact::RunPhases();
 
  private:
@@ -950,6 +958,36 @@ class MarkCompact final : public GarbageCollector {
   // TODO: Must be replaced with an efficient mechanism eventually. Or ensure
   // that double updation doesn't happen in the first place.
   std::unique_ptr<std::unordered_set<void*>> updated_roots_ GUARDED_BY(lock_);
+  // Prefetch related constants
+  static constexpr size_t kPrefetchPageCount = 4;  // Default prefetch page count
+  static constexpr size_t kMaxBatchSize = 8;       // Maximum batch processing size
+  static constexpr size_t kMaxConsecutiveFailures = 2;  // Early exit threshold
+
+  // Global contention statistics for system-wide optimization
+  std::atomic<uint32_t> global_contention_level_{0};
+
+  size_t PrefetchAdjacentPages(size_t center_page_idx,
+                               uint8_t* buf,
+                               bool tolerate_enoent) REQUIRES_SHARED(Locks::mutator_lock_);
+
+  bool ShouldAttemptPrefetch(size_t page_idx, size_t total_pages) const;
+
+  size_t GetSimpleBatchSize() const;
+
+  // Smart backoff strategy based on thread priority and contention history
+  void SmartBackOff(uint32_t iteration, Thread* self);
+
+  // Get adaptive backoff parameters based on thread characteristics
+  std::pair<uint32_t, uint64_t> GetBackOffParams(Thread* self, uint32_t contention_level);
+
+  // Track contention patterns for adaptive optimization
+  void UpdateContentionStats(bool succeeded);
+
+  // Optimized TLAB zero page batch processing
+  void OptimizedTlabZeroPageBatch(uint8_t* fault_page,
+                                  Thread* self,
+                                  size_t page_idx,
+                                  bool tolerate_enoent);
   // TODO: Remove once an efficient mechanism to deal with double root updation
   // is incorporated.
   void* stack_high_addr_;

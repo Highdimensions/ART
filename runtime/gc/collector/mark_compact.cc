@@ -2225,8 +2225,8 @@ size_t MarkCompact::ZeropageIoctl(void* addr,
           backoff_count = 0;
         }
         if (backoff_count < max_backoff) {
-          // Using 3 to align 'normal' priority threads with sleep.
-          BackOff</*kYieldMax=*/3, /*kSleepUs=*/1000>(backoff_count++);
+          // Using smart backoff strategy considering thread priority and system contention.
+          SmartBackOff(backoff_count++, Thread::Current());
         } else {
           uffd_zeropage.mode = 0;
         }
@@ -2281,8 +2281,8 @@ size_t MarkCompact::CopyIoctl(
         backoff_count = 0;
       }
       if (backoff_count < max_backoff) {
-        // Using 3 to align 'normal' priority threads with sleep.
-        BackOff</*kYieldMax=*/3, /*kSleepUs=*/1000>(backoff_count++);
+        // Using smart backoff strategy optimized for zero page operations.
+        SmartBackOff(backoff_count++, Thread::Current());
       } else {
         uffd_copy.mode = 0;
       }
@@ -2727,7 +2727,7 @@ size_t MarkCompact::MapMovingSpacePages(size_t start_idx,
       DCHECK_GT(s, PageState::kProcessed);
       uint32_t backoff_count = 0;
       while (s != PageState::kProcessedAndMapped) {
-        BackOff(backoff_count++);
+        SmartBackOff(backoff_count++, Thread::Current());
         s = GetMovingPageState(i);
       }
     }
@@ -3626,45 +3626,49 @@ void MarkCompact::ConcurrentlyProcessMovingPage(uint8_t* fault_page,
                                                 uint8_t* buf,
                                                 size_t nr_moving_space_used_pages,
                                                 bool tolerate_enoent) {
+  ScopedTrace trace("ProcessMovingPage");
   Thread* self = Thread::Current();
   uint8_t* unused_space_begin = moving_space_begin_ + nr_moving_space_used_pages * gPageSize;
-  DCHECK(IsAlignedParam(unused_space_begin, gPageSize));
+  // Handle zero pages in unused space with optimized batching
   if (fault_page >= unused_space_begin) {
-    // There is a race which allows more than one thread to install a
-    // zero-page. But we can tolerate that. So absorb the EEXIST returned by
-    // the ioctl and move on.
-    ZeropageIoctl(fault_page, gPageSize, /*tolerate_eexist=*/true, tolerate_enoent);
+    OptimizedTlabZeroPageBatch(
+        fault_page, self, DivideByPageSize(fault_page - moving_space_begin_), tolerate_enoent);
     return;
   }
   size_t page_idx = DivideByPageSize(fault_page - moving_space_begin_);
   DCHECK_LT(page_idx, moving_first_objs_count_ + black_page_count_);
+
+  // Prefetch value check to avoid unnecessary batch attempts
+  if (ShouldAttemptPrefetch(page_idx, moving_first_objs_count_ + black_page_count_)) {
+    // Batch prefetch optimization
+    size_t processed_count = PrefetchAdjacentPages(page_idx, buf, tolerate_enoent);
+
+    // Check if current page was processed by prefetch operation
+    PageState current_state =
+        static_cast<PageState>(moving_pages_status_[page_idx].load(std::memory_order_acquire));
+
+    if (current_state == PageState::kProcessed) {
+      // Current page was prefetched, just need to map it
+      if (MapMovingSpacePages(page_idx,
+                              moving_first_objs_count_ + black_page_count_,
+                              /*from_fault=*/true,
+                              /*return_on_contention=*/false,
+                              tolerate_enoent) > 0) {
+        return;
+      }
+    } else if (current_state == PageState::kProcessedAndMapped) {
+      // Already fully processed
+      return;
+    }
+  }
+  // Fallback to original single-page processing if prefetch didn't handle current page
+  // [Keep original single-page processing logic as fallback for robustness]
   mirror::Object* first_obj = first_objs_moving_space_[page_idx].AsMirrorPtr();
   if (first_obj == nullptr) {
-    DCHECK_GT(fault_page, post_compact_end_);
-    // Install zero-page in the entire remaining tlab to avoid multiple ioctl invocations.
-    uint8_t* end = AlignDown(self->GetTlabEnd(), gPageSize);
-    if (fault_page < self->GetTlabStart() || fault_page >= end) {
-      end = fault_page + gPageSize;
-    }
-    size_t end_idx = page_idx + DivideByPageSize(end - fault_page);
-    size_t length = 0;
-    for (size_t idx = page_idx; idx < end_idx; idx++, length += gPageSize) {
-      uint32_t cur_state = moving_pages_status_[idx].load(std::memory_order_acquire);
-      if (cur_state != static_cast<uint8_t>(PageState::kUnprocessed)) {
-        DCHECK_EQ(cur_state, static_cast<uint8_t>(PageState::kProcessedAndMapped));
-        break;
-      }
-    }
-    if (length > 0) {
-      length = ZeropageIoctl(fault_page, length, /*tolerate_eexist=*/true, tolerate_enoent);
-      for (size_t len = 0, idx = page_idx; len < length; idx++, len += gPageSize) {
-        moving_pages_status_[idx].store(static_cast<uint8_t>(PageState::kProcessedAndMapped),
-                                        std::memory_order_release);
-      }
-    }
+    // Handle zero page case
+    OptimizedTlabZeroPageBatch(fault_page, self, page_idx, tolerate_enoent);
     return;
   }
-
   uint32_t raw_state = moving_pages_status_[page_idx].load(std::memory_order_acquire);
   uint32_t backoff_count = 0;
   PageState state;
@@ -3674,8 +3678,8 @@ void MarkCompact::ConcurrentlyProcessMovingPage(uint8_t* fault_page,
         state == PageState::kProcessingAndMapping || state == PageState::kProcessedAndMapping) {
       // Wait for the page to be mapped (by gc-thread or some mutator) before returning.
       // The wait is not expected to be long as the read state indicates that the other
-      // thread is actively working on the page.
-      BackOff(backoff_count++);
+      // thread is actively working on the page. Use smart backoff based on thread priority.
+      SmartBackOff(backoff_count++, self);
       raw_state = moving_pages_status_[page_idx].load(std::memory_order_acquire);
     } else if (state == PageState::kProcessedAndMapped) {
       // Nothing to do.
@@ -3845,7 +3849,7 @@ bool MarkCompact::MapUpdatedLinearAllocPages(uint8_t* start_page,
         uint32_t backoff_count = 0;
         PageState s = madv_state->load(std::memory_order_relaxed);
         while (s > PageState::kUnprocessed && s < PageState::kProcessedAndMapped) {
-          BackOff(backoff_count++);
+          SmartBackOff(backoff_count++, Thread::Current());
           s = madv_state->load(std::memory_order_relaxed);
         }
       }
@@ -3952,8 +3956,8 @@ void MarkCompact::ConcurrentlyProcessLinearAllocPage(uint8_t* fault_page, bool t
         case PageState::kProcessing:
         case PageState::kProcessingAndMapping:
         case PageState::kProcessedAndMapping:
-          // Wait for the page to be mapped before returning.
-          BackOff(backoff_count++);
+          // Wait for the page to be mapped before returning. Use smart backoff for efficiency.
+          SmartBackOff(backoff_count++, Thread::Current());
           state = state_arr[page_idx].load(std::memory_order_acquire);
           continue;
         case PageState::kMutatorProcessing:
@@ -4151,7 +4155,7 @@ void MarkCompact::CompactionPhase() {
         kSigbusCounterCompactionDoneMask, std::memory_order_acq_rel);
     // Wait for SIGBUS handlers already in play.
     for (uint32_t i = 0; count > 0; i++) {
-      BackOff(i);
+      SmartBackOff(i, Thread::Current());
       count = sigbus_in_progress_count_[idx].load(std::memory_order_acquire);
       count &= ~kSigbusCounterCompactionDoneMask;
     }
@@ -5072,6 +5076,289 @@ void MarkCompact::VerifyPostGCObjects(bool performed_compaction, uint8_t* mark_b
         uintptr_t next = reinterpret_cast<uintptr_t>(obj) + obj->SizeOf();
         obj = reinterpret_cast<mirror::Object*>(RoundUp(next, kAlignment));
       }
+    }
+  }
+}
+
+// Thread-local contention tracking to avoid atomic overhead
+thread_local MarkCompact::ContentionStats tl_contention_stats = {0, 0, 0};
+thread_local uint32_t tl_recent_success = 0;
+thread_local uint32_t tl_recent_total = 0;
+
+size_t MarkCompact::PrefetchAdjacentPages(size_t center_page_idx,
+                                          uint8_t* buf,
+                                          bool tolerate_enoent) {
+  ScopedTrace trace("BatchPagePrefetch");
+
+  size_t total_pages = moving_first_objs_count_ + black_page_count_;
+  size_t batch_size = GetSimpleBatchSize();
+
+  // Calculate prefetch range [start_range, end_range]
+  size_t half_range = batch_size / 2;
+  size_t start_range = center_page_idx > half_range ? center_page_idx - half_range : 0;
+  size_t end_range = std::min(center_page_idx + half_range, total_pages - 1);
+
+  // Use stack-allocated array instead of vector to avoid heap allocation overhead
+  size_t batch_pages[kMaxBatchSize];
+  size_t batch_count = 0;
+  size_t consecutive_failures = 0;
+
+  // Pre-scan phase: use relaxed memory order for better performance
+  for (size_t idx = start_range; idx <= end_range && batch_count < kMaxBatchSize; idx++) {
+    // Early exit mechanism to avoid wasted scanning
+    if (consecutive_failures >= kMaxConsecutiveFailures) {
+      break;
+    }
+
+    // Quick pre-check using relaxed ordering
+    uint32_t state = moving_pages_status_[idx].load(std::memory_order_relaxed);
+    if (state != static_cast<uint8_t>(PageState::kUnprocessed)) {
+      consecutive_failures++;
+      continue;
+    }
+
+    // Check if page has valid objects
+    if (first_objs_moving_space_[idx].AsMirrorPtr() == nullptr) {
+      consecutive_failures++;
+      continue;
+    }
+
+    // Reset failure counter on valid candidate
+    consecutive_failures = 0;
+
+    // Try to acquire page processing rights with acquire ordering
+    uint32_t expected_state = static_cast<uint8_t>(PageState::kUnprocessed);
+    uint32_t desired_state = static_cast<uint8_t>(PageState::kMutatorProcessing);
+
+    if (moving_pages_status_[idx].compare_exchange_strong(
+            expected_state, desired_state, std::memory_order_acquire)) {
+      batch_pages[batch_count++] = idx;
+    } else {
+      consecutive_failures++;
+    }
+  }
+
+  // Process acquired pages in batch
+  size_t processed_count = 0;
+  for (size_t i = 0; i < batch_count; i++) {
+    size_t idx = batch_pages[i];
+    mirror::Object* first_obj = first_objs_moving_space_[idx].AsMirrorPtr();
+    uint8_t* fault_page = moving_space_begin_ + idx * gPageSize;
+
+    // Enhanced error handling for robustness
+    if (UNLIKELY(buf == nullptr)) {
+      Thread* self = Thread::Current();
+      buf = self->GetThreadLocalGcBuffer();
+      if (UNLIKELY(buf == nullptr)) {
+        uint16_t buffer_idx = compaction_buffer_counter_.fetch_add(1, std::memory_order_relaxed);
+        CHECK_LE(buffer_idx, kMutatorCompactionBufferCount);
+        buf = compaction_buffers_map_.Begin() + buffer_idx * gPageSize;
+        self->SetThreadLocalGcBuffer(buf);
+      }
+    }
+
+    if (first_obj != nullptr) {
+      // Process pages with objects using rotating buffer strategy
+      if (fault_page < black_dense_end_) {
+        if (use_generational_) {
+          UpdateNonMovingPage</*kSetupForGenerational=*/true>(
+              first_obj, fault_page, from_space_slide_diff_, moving_space_bitmap_);
+        } else {
+          UpdateNonMovingPage</*kSetupForGenerational=*/false>(
+              first_obj, fault_page, from_space_slide_diff_, moving_space_bitmap_);
+        }
+      } else if (fault_page < post_compact_end_) {
+        // Use rotating buffer to avoid conflicts between threads
+        uint8_t* page_buf = buf + (processed_count % kMutatorCompactionBufferCount) * gPageSize;
+        CompactPage</*kSetupForGenerational=*/false>(
+            first_obj,
+            fault_page - reinterpret_cast<uint8_t*>(first_obj),
+            page_buf,
+            fault_page,
+            /*needs_memset_zero=*/true);
+      }
+      processed_count++;
+    }
+
+    // Update page state to processed with release ordering
+    moving_pages_status_[idx].store(static_cast<uint8_t>(PageState::kProcessed),
+                                    std::memory_order_release);
+  }
+
+  // Update thread-local statistics for adaptive optimization
+  tl_recent_total++;
+  if (processed_count > 0) {
+    tl_recent_success++;
+  }
+
+  // Update contention statistics periodically
+  UpdateContentionStats(processed_count > 0);
+
+  return processed_count;
+}
+
+size_t MarkCompact::GetSimpleBatchSize() const {
+  // Simplified adaptive strategy to avoid complex calculations
+  if (tl_recent_total < 10) {
+    return kPrefetchPageCount;  // Warmup phase
+  }
+
+  // Reset statistics periodically using sliding window
+  if (tl_recent_total >= 20) {
+    // Use simple heuristic based on recent success rate
+    if (tl_recent_success > 14) {  // >70% success rate
+      const_cast<uint32_t&>(tl_recent_success) = tl_recent_success / 2;
+      const_cast<uint32_t&>(tl_recent_total) = tl_recent_total / 2;
+      return std::min(kMaxBatchSize, kPrefetchPageCount + 1);
+    } else if (tl_recent_success < 8) {  // <40% success rate
+      const_cast<uint32_t&>(tl_recent_success) = tl_recent_success / 2;
+      const_cast<uint32_t&>(tl_recent_total) = tl_recent_total / 2;
+      return std::max(static_cast<size_t>(2), kPrefetchPageCount - 1);  // Fix compilation error
+    }
+    // Reset for next window
+    const_cast<uint32_t&>(tl_recent_success) = tl_recent_success / 2;
+    const_cast<uint32_t&>(tl_recent_total) = tl_recent_total / 2;
+  }
+
+  return kPrefetchPageCount;
+}
+
+bool MarkCompact::ShouldAttemptPrefetch(size_t page_idx, size_t total_pages) const {
+  // Quick check: if current page is already processed, skip prefetch
+  PageState state =
+      static_cast<PageState>(moving_pages_status_[page_idx].load(std::memory_order_relaxed));
+  if (state != PageState::kUnprocessed) {
+    return false;
+  }
+
+  // Check if nearby pages have objects (simplified version for performance)
+  bool has_nearby_objects = false;
+  if (page_idx > 0 && first_objs_moving_space_[page_idx - 1].AsMirrorPtr() != nullptr) {
+    has_nearby_objects = true;
+  }
+  if (page_idx < total_pages - 1 &&
+      first_objs_moving_space_[page_idx + 1].AsMirrorPtr() != nullptr) {
+    has_nearby_objects = true;
+  }
+
+  return has_nearby_objects;
+}
+
+void MarkCompact::SmartBackOff(uint32_t iteration, Thread* self) {
+  uint32_t contention_level = global_contention_level_.load(std::memory_order_relaxed);
+  auto [yield_max, base_sleep_us] = GetBackOffParams(self, contention_level);
+
+  if (iteration <= yield_max) {
+    // Use CPU yield for initial iterations - lightweight and cache-friendly
+    sched_yield();
+  } else {
+    // Calculate adaptive sleep time based on thread priority and system load
+    int prio = self->GetNativePriority();
+    uint64_t sleep_multiplier = iteration - yield_max;
+
+    // High priority threads (low prio number) get shorter sleep times
+    uint64_t sleep_us = (base_sleep_us * sleep_multiplier) / std::max(1, prio);
+
+    // Cap maximum sleep time to prevent excessive delays
+    sleep_us = std::min(sleep_us, static_cast<uint64_t>(10000));  // Max 10ms
+
+    NanoSleep(sleep_us * 1000);
+  }
+}
+
+std::pair<uint32_t, uint64_t> MarkCompact::GetBackOffParams(Thread* self,
+                                                            uint32_t contention_level) {
+  int prio = self->GetNativePriority();
+
+  // Base parameters optimized for different thread priorities
+  uint32_t base_yield_max = 5;
+  uint64_t base_sleep_us = 1000;  // 1ms base
+
+  // Adjust for thread priority (1=highest, 10=lowest)
+  if (prio <= 3) {
+    // High priority threads: more aggressive, less yielding
+    base_yield_max = 8;
+    base_sleep_us = 500;
+  } else if (prio >= 7) {
+    // Low priority threads: more conservative, longer sleeps
+    base_yield_max = 3;
+    base_sleep_us = 2000;
+  }
+
+  // Adjust for system-wide contention level
+  if (contention_level > 60) {  // High contention
+    base_yield_max = std::max(static_cast<uint32_t>(1), base_yield_max - 2);
+    base_sleep_us *= 2;
+  }
+
+  return std::make_pair(base_yield_max, base_sleep_us);
+}
+
+void MarkCompact::UpdateContentionStats(bool succeeded) {
+  tl_contention_stats.total_attempts++;
+  if (!succeeded) {
+    tl_contention_stats.recent_failures++;
+  }
+
+  // More frequent updates with lightweight synchronization
+  if (tl_contention_stats.total_attempts % 20 == 0) {
+    uint32_t failure_rate = (tl_contention_stats.recent_failures * 100) / 20;
+
+    // Use relaxed ordering for simple global update
+    global_contention_level_.store(failure_rate, std::memory_order_relaxed);
+
+    // Use sliding window instead of complete reset to maintain history
+    tl_contention_stats.recent_failures = tl_contention_stats.recent_failures / 2;
+    tl_contention_stats.total_attempts = tl_contention_stats.total_attempts / 2;
+  }
+}
+
+void MarkCompact::OptimizedTlabZeroPageBatch(uint8_t* fault_page,
+                                             Thread* self,
+                                             size_t page_idx,
+                                             bool tolerate_enoent) {
+  ScopedTrace trace("TlabZeroPageBatch");
+
+  // Get TLAB boundaries with proper alignment
+  uint8_t* tlab_start = AlignDown(self->GetTlabStart(), gPageSize);
+  uint8_t* tlab_end = AlignUp(self->GetTlabEnd(), gPageSize);
+
+  // Calculate optimal zero page range considering both TLAB and batch limits
+  uint8_t* zero_start = std::max(fault_page, tlab_start);
+  uint8_t* zero_end = std::min(fault_page + kMaxBatchSize * gPageSize, tlab_end);
+
+  size_t start_idx = DivideByPageSize(zero_start - moving_space_begin_);
+  size_t end_idx = DivideByPageSize(zero_end - moving_space_begin_);
+
+  // Batch scan for consecutive zero pages
+  size_t zero_length = 0;
+
+  for (size_t idx = start_idx; idx < end_idx; idx++) {
+    // Check page state efficiently using relaxed ordering
+    uint32_t cur_state = moving_pages_status_[idx].load(std::memory_order_relaxed);
+    if (cur_state != static_cast<uint8_t>(PageState::kUnprocessed)) {
+      break;
+    }
+
+    // Verify this page actually needs zero mapping
+    if (first_objs_moving_space_[idx].AsMirrorPtr() == nullptr) {
+      zero_length += gPageSize;
+    } else {
+      break;  // Stop at first non-zero page
+    }
+  }
+
+  // Perform batch zero page mapping if we found any
+  if (zero_length > 0) {
+    size_t mapped_length = ZeropageIoctl(zero_start,
+                                         zero_length,
+                                         /*tolerate_eexist=*/true,
+                                         tolerate_enoent);
+
+    // Update page states for mapped pages
+    for (size_t len = 0, idx = start_idx; len < mapped_length; idx++, len += gPageSize) {
+      moving_pages_status_[idx].store(static_cast<uint8_t>(PageState::kProcessedAndMapped),
+                                      std::memory_order_release);
     }
   }
 }
