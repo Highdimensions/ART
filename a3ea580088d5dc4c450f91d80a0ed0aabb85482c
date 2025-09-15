@@ -33,6 +33,24 @@
       "message": "This gtest can only test the correctness of the current feature, but cannot quantify performance. I confirmed the improvement in actual use cases. I really want to create a test case under art/tests, but it has not been able to run successfully.",
       "revId": "a3ea580088d5dc4c450f91d80a0ed0aabb85482c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98dd9245_b59186fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1968012
+      },
+      "writtenOn": "2025-09-15T14:21:13Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "f6903e67_46c90506",
+      "revId": "a3ea580088d5dc4c450f91d80a0ed0aabb85482c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
