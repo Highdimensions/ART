@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6cdaf51e_28a6b264",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2025-09-16T09:22:58Z",
+      "side": 1,
+      "message": "Thanks, but do you have performance data to share? Like jank, startup, memory, traces, etc.",
+      "parentUuid": "d077413d_00988d5b",
+      "revId": "a3ea580088d5dc4c450f91d80a0ed0aabb85482c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f6903e67_46c90506",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 5
