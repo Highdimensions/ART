@@ -16,7 +16,8 @@ namespace art {
 
 static bool IsStaticLockdepEnabled() {
 #ifdef ART_TARGET_ANDROID
-  static bool result = android::base::GetBoolProperty("debug.art.lockdep", false);
+  static bool result =
+      android::base::GetBoolProperty({"debug.art.lockdep", "persist.debug.art.lockdep"}, false);
   return result;
 #else
   return false;
@@ -25,7 +26,8 @@ static bool IsStaticLockdepEnabled() {
 
 static bool IsDynamicLockdepEnabled() {
 #ifdef ART_TARGET_ANDROID
-  static bool result = android::base::GetBoolProperty("debug.art.lockdep.dynamic", false);
+  static bool result = android::base::GetBoolProperty(
+      {"debug.art.lockdep.dynamic", "persist.debug.art.lockdep.dynamic"}, false);
   return result;
 #else
   return false;
@@ -36,7 +38,8 @@ bool Runtime::IsLockdepEnabled() { return IsStaticLockdepEnabled() || IsDynamicL
 
 static bool ShouldRecordBacktrace() {
 #ifdef ART_TARGET_ANDROID
-  static bool result = android::base::GetBoolProperty("debug.art.lockdep.backtrace", false);
+  static bool result = android::base::GetBoolProperty(
+      {"debug.art.lockdep.backtrace", "persist.debug.art.lockdep.backtrace"}, false);
   return result;
 #else
   return false;
