@@ -502,6 +502,7 @@ bool OptimizingCompiler::RunArchOptimizations(HGraph* graph,
   switch (codegen->GetCompilerOptions().GetInstructionSet()) {
 #if defined(ART_ENABLE_CODEGEN_arm)
     case InstructionSet::kThumb2:
+<<<<<<< HEAD
     case InstructionSet::kArm: {
       OptimizationDef arm_optimizations[] = {
           OptDef(OptimizationPass::kInstructionSimplifierArm),
@@ -509,28 +510,72 @@ bool OptimizingCompiler::RunArchOptimizations(HGraph* graph,
           OptDef(OptimizationPass::kGlobalValueNumbering, "GVN$after_arch"),
           OptDef(OptimizationPass::kCriticalNativeAbiFixupArm),
           OptDef(OptimizationPass::kScheduling)
+=======
+    case InstructionSet::kArm: {
+      static constexpr OptimizationDef arm_optimizations[] = {
+          OptDef(OptimizationPass::kInstructionSimplifierArm),
+          OptDef(OptimizationPass::kGlobalValueNumbering, "GVN$after_arch"),
+          OptDef(OptimizationPass::kCriticalNativeAbiFixupArm),
+          OptDef(OptimizationPass::kScheduling)
+<<<<<<< HEAD
+>>>>>>> PATCH
       };
       return RunOptimizations(graph,
                               codegen,
                               dex_compilation_unit,
                               pass_observer,
                               arm_optimizations);
+=======
+    case InstructionSet::kArm64: {
+      static constexpr OptimizationDef arm64_optimizations[] = {
+          OptDef(OptimizationPass::kInstructionSimplifierArm64),
+          OptDef(OptimizationPass::kGlobalValueNumbering, "GVN$after_arch"),
+          OptDef(OptimizationPass::kScheduling)
+<<<<<<< HEAD
+      };
+>>>>>>> PATCH
     }
 #endif
 #ifdef ART_ENABLE_CODEGEN_arm64
     case InstructionSet::kArm64: {
       OptimizationDef arm64_optimizations[] = {
+=======
+    case InstructionSet::kRiscv64: {
+      static constexpr OptimizationDef riscv64_optimizations[] = {
+          OptDef(OptimizationPass::kInstructionSimplifierRiscv64),
+          OptDef(OptimizationPass::kGlobalValueNumbering, "GVN$after_arch"),
+          OptDef(OptimizationPass::kCriticalNativeAbiFixupRiscv64)
+<<<<<<< HEAD
+      };
+>>>>>>> PATCH
           OptDef(OptimizationPass::kInstructionSimplifierArm64),
           OptDef(OptimizationPass::kSideEffectsAnalysis),
           OptDef(OptimizationPass::kGlobalValueNumbering, "GVN$after_arch"),
           OptDef(OptimizationPass::kScheduling)
       };
+=======
+    case InstructionSet::kX86: {
+      static constexpr OptimizationDef x86_optimizations[] = {
+          OptDef(OptimizationPass::kInstructionSimplifierX86),
+          OptDef(OptimizationPass::kGlobalValueNumbering, "GVN$after_arch"),
+          OptDef(OptimizationPass::kPcRelativeFixupsX86),
+          OptDef(OptimizationPass::kX86MemoryOperandGeneration)
+<<<<<<< HEAD
+>>>>>>> PATCH
       return RunOptimizations(graph,
                               codegen,
                               dex_compilation_unit,
                               pass_observer,
                               arm64_optimizations);
     }
+=======
+    case InstructionSet::kX86_64: {
+      static constexpr OptimizationDef x86_64_optimizations[] = {
+          OptDef(OptimizationPass::kInstructionSimplifierX86_64),
+          OptDef(OptimizationPass::kGlobalValueNumbering, "GVN$after_arch"),
+          OptDef(OptimizationPass::kX86MemoryOperandGeneration)
+      };
+>>>>>>> PATCH
 #endif
 #if defined(ART_ENABLE_CODEGEN_riscv64)
     case InstructionSet::kRiscv64: {
@@ -661,8 +706,6 @@ void OptimizingCompiler::RunOptimizations(HGraph* graph,
              "dead_code_elimination$after_inlining",
              OptimizationPass::kInliner),
       // GVN.
-      OptDef(OptimizationPass::kSideEffectsAnalysis,
-             "side_effects$before_gvn"),
       OptDef(OptimizationPass::kGlobalValueNumbering),
       OptDef(OptimizationPass::kReferenceTypePropagation,
              "reference_type_propagation$after_gvn",
@@ -676,8 +719,6 @@ void OptimizingCompiler::RunOptimizations(HGraph* graph,
       OptDef(OptimizationPass::kDeadCodeElimination,
              "dead_code_elimination$after_gvn"),
       // High-level optimizations.
-      OptDef(OptimizationPass::kSideEffectsAnalysis,
-             "side_effects$before_licm"),
       OptDef(OptimizationPass::kInvariantCodeMotion),
       OptDef(OptimizationPass::kInductionVarAnalysis),
       OptDef(OptimizationPass::kBoundsCheckElimination),
