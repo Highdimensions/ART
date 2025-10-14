@@ -270,6 +270,9 @@ class OatWriter {
     return compiler_options_;
   }
 
+  template <typename KeyType>
+  using BssMap = std::unordered_map<KeyType, size_t>;
+
  private:
   struct BssMappingInfo;
   class ChecksumUpdatingOutputStream;
@@ -393,6 +396,14 @@ class OatWriter {
     return RoundUp(GetFileOffset(offset_from_oat_data), alignment) - oat_data_offset_;
   }
 
+  template <typename T, typename Compare>
+  void InitBssLayoutOffset(BssMap<T>& map, size_t entry_size, Compare comp);
+
+  template <typename T, typename Compare>
+  std::vector<typename BssMap<T>::iterator> InitDataImgRelRoLayoutOffset(BssMap<T>& map,
+                                                                         size_t entry_size,
+                                                                         Compare comp);
+
   enum class WriteState {
     kAddingDexFileSources,
     kStartRoData,
@@ -496,6 +507,7 @@ class OatWriter {
   SafeMap<const DexFile*, BitVector> bss_method_type_entry_references_;
 
   // Map for allocating app image ArtMethod entries in .data.img.rel.ro. Indexed by MethodReference
+<<<<<<< HEAD
   // for the target method in the dex file with the "method reference value comparator" for
   // deduplication. The value is the target offset for patching, starting at
   // `data_img_rel_ro_start_`.
@@ -551,6 +563,56 @@ class OatWriter {
   std::unique_ptr<const std::vector<uint8_t>> jni_dlsym_lookup_critical_trampoline_;
   std::unique_ptr<const std::vector<uint8_t>> quick_generic_jni_trampoline_;
   std::unique_ptr<const std::vector<uint8_t>> quick_imt_conflict_trampoline_;
+=======
+  // for the target method in the dex file with the "method reference value comparator" for
+  // deduplication. The value is the target offset for patching, starting at
+  // `data_img_rel_ro_start_`.
+  BssMap<MethodReference> app_image_rel_ro_method_entries_;
+  // Vector containing iterators to `app_image_rel_ro_method_entries_`, sorted using
+  // MethodReferenceValueComparator.
+  std::vector<BssMap<MethodReference>::iterator> app_image_rel_ro_method_entries_sorted_;
+
+  // Map for allocating ArtMethod entries in .bss. Indexed by MethodReference for the target
+  // method in the dex file with the "method reference value comparator" for deduplication.
+  // The value is the target offset for patching, starting at `bss_start_ + bss_methods_offset_`.
+  BssMap<MethodReference> bss_method_entries_;
+
+  // Map for allocating app image Class entries in .data.img.rel.ro. Indexed by TypeReference for
+  // the source type in the dex file with the "type value comparator" for deduplication. The value
+  // is the target offset for patching, starting at `data_img_rel_ro_start_`.
+  BssMap<TypeReference> app_image_rel_ro_type_entries_;
+  // Vector containing iterators to `app_image_rel_ro_type_entries_sorted_`, sorted using
+  // TypeReferenceValueComparator.
+  std::vector<BssMap<TypeReference>::iterator> app_image_rel_ro_type_entries_sorted_;
+
+  // Map for allocating Class entries in .bss. Indexed by TypeReference for the source
+  // type in the dex file with the "type value comparator" for deduplication. The value
+  // is the target offset for patching, starting at `bss_start_ + bss_roots_offset_`.
+  BssMap<TypeReference> bss_type_entries_;
+
+  // Map for allocating public Class entries in .bss. Indexed by TypeReference for the source
+  // type in the dex file with the "type value comparator" for deduplication. The value
+  // is the target offset for patching, starting at `bss_start_ + bss_roots_offset_`.
+  BssMap<TypeReference> bss_public_type_entries_;
+
+  // Map for allocating package Class entries in .bss. Indexed by TypeReference for the source
+  // type in the dex file with the "type value comparator" for deduplication. The value
+  // is the target offset for patching, starting at `bss_start_ + bss_roots_offset_`.
+  BssMap<TypeReference> bss_package_type_entries_;
+
+  // Map for allocating String entries in .bss. Indexed by StringReference for the source
+  // string in the dex file with the "string value comparator" for deduplication. The value
+  // is the target offset for patching, starting at `bss_start_ + bss_roots_offset_`.
+  BssMap<StringReference> bss_string_entries_;
+
+  // Map for allocating MethodType entries in .bss. Indexed by ProtoReference for the source
+  // proto in the dex file with the "proto value comparator" for deduplication. The value
+  // is the target offset for patching, starting at `bss_start_ + bss_roots_offset_`.
+  BssMap<ProtoReference> bss_method_type_entries_;
+
+  // Offset of the oat data from the start of the mmapped region of the elf file.
+  size_t oat_data_offset_;
+>>>>>>> PATCH
   std::unique_ptr<const std::vector<uint8_t>> quick_resolution_trampoline_;
   std::unique_ptr<const std::vector<uint8_t>> quick_to_interpreter_bridge_;
   std::unique_ptr<const std::vector<uint8_t>> nterp_trampoline_;
