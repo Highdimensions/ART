@@ -39,6 +39,7 @@ class InstructionSimplifierX86_64Visitor final : public HGraphVisitor {
   }
 
   void VisitBasicBlock(HBasicBlock* block) override {
+<<<<<<< HEAD
     for (HInstructionIterator it(block->GetInstructions()); !it.Done(); it.Advance()) {
       HInstruction* instruction = it.Current();
       if (instruction->IsInBlock()) {
@@ -46,6 +47,15 @@ class InstructionSimplifierX86_64Visitor final : public HGraphVisitor {
       }
     }
   }
+=======
+    for (HInstructionIteratorPrefetchNext it(block->GetInstructions()); !it.Done(); it.Advance()) {
+      HInstruction* instruction = it.Current();
+      if (instruction->IsInBlock()) {
+        Dispatch(instruction);
+      }
+    }
+  }
+>>>>>>> PATCH
 
   void VisitAnd(HAnd* instruction) override;
   void VisitXor(HXor* instruction) override;

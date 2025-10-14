@@ -33,6 +33,7 @@ class InstructionSimplifierRiscv64Visitor final : public HGraphVisitor {
   }
 
   void VisitBasicBlock(HBasicBlock* block) override {
+<<<<<<< HEAD
     for (HInstructionIterator it(block->GetInstructions()); !it.Done(); it.Advance()) {
       HInstruction* instruction = it.Current();
       if (instruction->IsInBlock()) {
@@ -40,6 +41,15 @@ class InstructionSimplifierRiscv64Visitor final : public HGraphVisitor {
       }
     }
   }
+=======
+    for (HInstructionIteratorPrefetchNext it(block->GetInstructions()); !it.Done(); it.Advance()) {
+      HInstruction* instruction = it.Current();
+      if (instruction->IsInBlock()) {
+        Dispatch(instruction);
+      }
+    }
+  }
+>>>>>>> PATCH
 
   // Replace Add which has Shl with distance of 1 or 2 or 3 with Riscv64ShiftAdd
   bool TryReplaceAddsWithShiftAdds(HShl* shl) {

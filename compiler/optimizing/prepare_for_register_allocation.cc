@@ -60,6 +60,7 @@ bool PrepareForRegisterAllocation::Run() {
   PrepareForRegisterAllocationVisitor visitor(graph_, compiler_options_, stats_);
   // Order does not matter.
   for (HBasicBlock* block : graph_->GetReversePostOrder()) {
+<<<<<<< HEAD
     // No need to visit the phis.
     for (HInstructionIteratorHandleChanges inst_it(block->GetInstructions()); !inst_it.Done();
          inst_it.Advance()) {
@@ -67,6 +68,15 @@ bool PrepareForRegisterAllocation::Run() {
     }
   }
   return true;
+=======
+    // No need to visit the phis.
+    for (HInstructionIterator inst_it(block->GetInstructions()); !inst_it.Done();
+         inst_it.Advance()) {
+      visitor.Dispatch(inst_it.Current());
+    }
+  }
+  return true;
+>>>>>>> PATCH
 }
 
 void PrepareForRegisterAllocationVisitor::VisitCheckCast(HCheckCast* check_cast) {

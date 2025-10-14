@@ -1519,8 +1519,7 @@ FOR_EACH_INSTRUCTION(FORWARD_DECLARATION)
   HInstruction* Clone(ArenaAllocator* arena) const override {             \
     DCHECK(IsClonable());                                                 \
     return new (arena) H##type(*this);                                    \
-  }                                                                       \
-  void Accept(HGraphVisitor* visitor) override
+  }
 
 #define DECLARE_ABSTRACT_INSTRUCTION(type)                              \
   private:                                                              \
@@ -2154,7 +2153,6 @@ class HInstruction : public ArenaObject<kArenaAllocInstruction> {
     SetRawInputRecordAt(index, HUserRecord<HInstruction*>(input));
   }
 
-  virtual void Accept(HGraphVisitor* visitor) = 0;
   virtual const char* DebugName() const = 0;
 
   DataType::Type GetType() const {
@@ -8414,16 +8412,50 @@ class HGraphVisitor : public ValueObject {
   void VisitNonPhiInstructions(HBasicBlock* block);
   void VisitNonPhiInstructionsHandleChanges(HBasicBlock* block);
 
+<<<<<<< HEAD
   OptimizingCompilerStats* stats_;
 
  private:
   HGraph* const graph_;
 
   DISALLOW_COPY_AND_ASSIGN(HGraphVisitor);
+=======
+  FOR_EACH_CONCRETE_INSTRUCTION(DECLARE_VISIT_INSTRUCTION)
+#undef DECLARE_VISIT_INSTRUCTION
+
+  ALWAYS_INLINE void Dispatch(HInstruction* insn) {
+    HInstruction::InstructionKind kind;
+    // Use `asm volatile` to prevent clang++ from optimizing the `kind = insn->GetKind()`
+    // together with the `switch`. The simple expression can somehow derail the
+    // `switch` optimization and result in a much worse compiled code. b/413605257
+    asm volatile("" : "=r"(kind) : "0"(insn->GetKind()));
+
+    switch (kind) {
+    #define DEFINE_DISPATCH_CASE(kind, super)                 \
+      case HInstruction::k##kind:                             \
+        Visit##kind(insn->As##kind());                        \
+        break;
+      FOR_EACH_CONCRETE_INSTRUCTION(DEFINE_DISPATCH_CASE)
+    #undef DEFINE_DISPATCH_CASE
+      default:
+        // Note: clang++ can optimize this `switch` to a virtual dispatch with indexed
+        // load from the vtable using an adjusted `invoke->GetKind()` as the index.
+        // However, a non-empty `default` or `case` causes clang++ to produce much
+        // worse code, so we want to limit this check to debug builds only.
+        DCHECK(false) << "UNREACHABLE";
+        UNREACHABLE();
+    }
+  }
+
+ protected:
+  void VisitPhis(HBasicBlock* block);
+  void VisitNonPhiInstructions(HBasicBlock* block);
+>>>>>>> PATCH
 };
 
 class HGraphDelegateVisitor : public HGraphVisitor {
  public:
+<<<<<<< HEAD
   explicit HGraphDelegateVisitor(HGraph* graph, OptimizingCompilerStats* stats = nullptr)
       : HGraphVisitor(graph, stats) {}
   virtual ~HGraphDelegateVisitor() {}
@@ -8431,6 +8463,15 @@ class HGraphDelegateVisitor : public HGraphVisitor {
   // Visit functions that delegate to to super class.
 #define DECLARE_VISIT_INSTRUCTION(name, super)                                        \
   void Visit##name(H##name* instr) override { Visit##super(instr); }
+=======
+      : HGraphVisitor(graph, stats) {}
+  virtual ~HGraphDelegateVisitor() {}
+
+  // Visit functions that delegate to super class.
+#define DECLARE_VISIT_ABSTRACT_INSTRUCTION(name, super)               \
+  virtual void Visit##name(H##name* instr) { Visit##super(instr); }
+  FOR_EACH_ABSTRACT_INSTRUCTION(DECLARE_VISIT_ABSTRACT_INSTRUCTION)
+>>>>>>> PATCH
 
   FOR_EACH_INSTRUCTION(DECLARE_VISIT_INSTRUCTION)
 

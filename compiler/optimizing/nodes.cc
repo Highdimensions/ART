@@ -1716,15 +1716,6 @@ HInstruction* HConstructorFence::GetAssociatedAllocation(bool ignore_inputs) {
   return nullptr;
 }
 
-#define DEFINE_ACCEPT(name, super)                                             \
-void H##name::Accept(HGraphVisitor* visitor) {                                 \
-  visitor->Visit##name(this);                                                  \
-}
-
-FOR_EACH_CONCRETE_INSTRUCTION(DEFINE_ACCEPT)
-
-#undef DEFINE_ACCEPT
-
 void HGraphVisitor::VisitInsertionOrder() {
   for (HBasicBlock* block : graph_->GetActiveBlocks()) {
     VisitBasicBlock(block);
@@ -1749,6 +1740,7 @@ void HGraphVisitor::VisitPhis(HBasicBlock* block) {
   }
 }
 
+<<<<<<< HEAD
 void HGraphVisitor::VisitNonPhiInstructions(HBasicBlock* block) {
   for (HInstructionIterator it(block->GetInstructions()); !it.Done(); it.Advance()) {
     DCHECK(!it.Current()->IsPhi());
@@ -1763,6 +1755,22 @@ void HGraphVisitor::VisitNonPhiInstructionsHandleChanges(HBasicBlock* block) {
   }
 }
 
+=======
+void HGraphVisitor::VisitNonPhiInstructions(HBasicBlock* block) {
+  for (HInstructionIteratorPrefetchNext it(block->GetInstructions()); !it.Done(); it.Advance()) {
+    DCHECK(!it.Current()->IsPhi());
+    Dispatch(it.Current());
+  }
+}
+
+void HGraphVisitor::VisitNonPhiInstructionsHandleChanges(HBasicBlock* block) {
+  for (HInstructionIterator it(block->GetInstructions()); !it.Done(); it.Advance()) {
+    DCHECK(!it.Current()->IsPhi());
+    Dispatch(it.Current());
+  }
+}
+
+>>>>>>> PATCH
 HConstant* HTypeConversion::TryStaticEvaluation() const { return TryStaticEvaluation(GetInput()); }
 
 HConstant* HTypeConversion::TryStaticEvaluation(HInstruction* input) const {

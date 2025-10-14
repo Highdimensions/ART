@@ -61,6 +61,7 @@ class InstructionSimplifierArmVisitor final : public HGraphVisitor {
    */
   void VisitBasicBlock(HBasicBlock* block) override {
     // TODO: fragile iteration, provide more robust iterators?
+<<<<<<< HEAD
     for (HInstructionIterator it(block->GetInstructions()); !it.Done(); it.Advance()) {
       HInstruction* instruction = it.Current();
       if (instruction->IsInBlock()) {
@@ -68,6 +69,15 @@ class InstructionSimplifierArmVisitor final : public HGraphVisitor {
       }
     }
   }
+=======
+    for (HInstructionIteratorPrefetchNext it(block->GetInstructions()); !it.Done(); it.Advance()) {
+      HInstruction* instruction = it.Current();
+      if (instruction->IsInBlock()) {
+        Dispatch(instruction);
+      }
+    }
+  }
+>>>>>>> PATCH
 
   void VisitAnd(HAnd* instruction) override;
   void VisitArrayGet(HArrayGet* instruction) override;
