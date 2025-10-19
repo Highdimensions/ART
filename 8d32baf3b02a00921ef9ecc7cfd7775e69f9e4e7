@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5f7fabb_d83e867d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1144321
+      },
+      "writtenOn": "2025-10-19T03:53:26Z",
+      "side": 1,
+      "message": "repo download platform/art 1675578",
+      "revId": "8d32baf3b02a00921ef9ecc7cfd7775e69f9e4e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
