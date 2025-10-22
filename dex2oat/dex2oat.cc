@@ -1249,17 +1249,20 @@ class Dex2Oat final {
     if (oat_fd_ == -1) {
       DCHECK(!oat_filenames_.empty());
       for (const std::string& oat_filename : oat_filenames_) {
-        std::unique_ptr<File> oat_file(OS::CreateEmptyFile(oat_filename.c_str()));
+        // Create temporary file first
+        std::string temp_oat_filename = oat_filename + ".tmp";
+        std::unique_ptr<File> oat_file(OS::CreateEmptyFile(temp_oat_filename.c_str()));
         if (oat_file == nullptr) {
-          PLOG(ERROR) << "Failed to create oat file: " << oat_filename;
+          PLOG(ERROR) << "Failed to create temporary oat file: " << temp_oat_filename;
           return false;
         }
         if (fchmod(oat_file->Fd(), 0644) != 0) {
-          PLOG(ERROR) << "Failed to make oat file world readable: " << oat_filename;
+          PLOG(ERROR) << "Failed to make temporary oat file world readable: " << temp_oat_filename;
           oat_file->Erase();
           return false;
         }
         oat_files_.push_back(std::move(oat_file));
+        oat_temp_filenames_.push_back(temp_oat_filename);
         DCHECK_EQ(input_vdex_fd_, -1);
         if (!input_vdex_.empty()) {
           std::string error_msg;
@@ -1273,24 +1276,28 @@ class Dex2Oat final {
                                         ReplaceFileExtension(oat_filename, kVdexExtension) :
                                         output_vdex_;
         if (vdex_filename == input_vdex_ && output_vdex_.empty()) {
+          // Read-only access to the vdex file, we don't need a temporary file.
           use_existing_vdex_ = true;
           std::unique_ptr<File> vdex_file(OS::OpenFileForReading(vdex_filename.c_str()));
           vdex_files_.push_back(std::move(vdex_file));
         } else {
-          std::unique_ptr<File> vdex_file(OS::CreateEmptyFile(vdex_filename.c_str()));
+          std::string temp_vdex_filename = vdex_filename + ".tmp";
+          std::unique_ptr<File> vdex_file(OS::CreateEmptyFile(temp_vdex_filename.c_str()));
           if (vdex_file == nullptr) {
-            PLOG(ERROR) << "Failed to open vdex file: " << vdex_filename;
+            PLOG(ERROR) << "Failed to open vdex file: " << temp_vdex_filename;
             return false;
           }
           if (fchmod(vdex_file->Fd(), 0644) != 0) {
-            PLOG(ERROR) << "Failed to make vdex file world readable: " << vdex_filename;
+            PLOG(ERROR) << "Failed to make vdex file world readable: " << temp_vdex_filename;
             vdex_file->Erase();
             return false;
           }
           vdex_files_.push_back(std::move(vdex_file));
+          vdex_temp_filenames_.push_back(temp_vdex_filename);
         }
       }
     } else {
+      // When using file descriptors, we assume the caller is handling the atomicity of the file.
       std::unique_ptr<File> oat_file(
           new File(DupCloexec(oat_fd_), oat_location_, /* check_usage */ true));
       if (!oat_file->IsOpened()) {
@@ -1408,6 +1415,14 @@ class Dex2Oat final {
             file->Erase();
           }
           file.reset();
+        }
+      }
+    }
+    // Also clean up temporary files if they exist
+    for (auto const& filenames : { &vdex_temp_filenames_, &oat_temp_filenames_ }) {
+      for (const std::string& temp_filename : *filenames) {
+        if (unlink(temp_filename.c_str()) != 0 && errno != ENOENT) {
+          PLOG(WARNING) << "Failed to remove temporary file: " << temp_filename;
         }
       }
     }
@@ -2124,7 +2139,9 @@ class Dex2Oat final {
         std::unique_ptr<linker::OatWriter>& oat_writer = oat_writers_[i];
 
         oat_writer->PrepareLayout(&patcher);
-        elf_writer->PrepareDynamicSection(oat_writer->GetOatHeader().GetExecutableOffset(),
+        DCHECK_LT(i, oat_filenames_.size());
+        elf_writer->PrepareDynamicSection(oat_filenames_[i],
+                                          oat_writer->GetOatHeader().GetExecutableOffset(),
                                           oat_writer->GetCodeSize(),
                                           oat_writer->GetDataImgRelRoSize(),
                                           oat_writer->GetDataImgRelRoAppImageOffset(),
@@ -2135,7 +2152,6 @@ class Dex2Oat final {
         if (IsImage()) {
           // Update oat layout.
           DCHECK(image_writer_ != nullptr);
-          DCHECK_LT(i, oat_filenames_.size());
           image_writer_->UpdateOatFileLayout(i,
                                              elf_writer->GetLoadedSize(),
                                              oat_writer->GetOatDataOffset(),
@@ -2212,7 +2228,7 @@ class Dex2Oat final {
           return false;
         }
 
-        VLOG(compiler) << "Oat file written successfully: " << oat_filenames_[i];
+        VLOG(compiler) << "Oat file written successfully: " << oat_file->GetPath();
 
         {
           TimingLogger::ScopedTiming t_dow("Destroy OatWriter", timings_);
@@ -2319,6 +2335,36 @@ class Dex2Oat final {
       }
     }
     return result;
+  }
+
+  bool RenameTemporaryFiles() {
+    // Only rename if we have temporary filenames
+    if (oat_temp_filenames_.empty() && vdex_temp_filenames_.empty()) {
+      return true;
+    }
+
+    for (size_t i = 0; i < oat_temp_filenames_.size(); ++i) {
+      const std::string& temp_filename = oat_temp_filenames_[i];
+      const std::string& final_filename = oat_filenames_[i];
+      if (rename(temp_filename.c_str(), final_filename.c_str()) != 0) {
+        PLOG(ERROR) << "Failed to rename temporary oat file " << temp_filename << " to "
+                    << final_filename;
+        return false;
+      }
+      VLOG(compiler) << "Successfully renamed " << temp_filename << " to " << final_filename;
+    }
+    for (size_t i = 0; i < vdex_temp_filenames_.size(); ++i) {
+      const std::string& temp_filename = vdex_temp_filenames_[i];
+      // Remove .tmp suffix.
+      const std::string& final_filename = temp_filename.substr(0, temp_filename.size() - 4);
+      if (rename(temp_filename.c_str(), final_filename.c_str()) != 0) {
+        PLOG(ERROR) << "Failed to rename temporary vdex file " << temp_filename << " to "
+                    << final_filename;
+        return false;
+      }
+      VLOG(compiler) << "Successfully renamed " << temp_filename << " to " << final_filename;
+    }
+    return true;
   }
 
   void DumpTiming() {
@@ -2933,6 +2979,8 @@ class Dex2Oat final {
   std::vector<std::unique_ptr<File>> vdex_files_;
   std::string oat_location_;
   std::vector<std::string> oat_filenames_;
+  std::vector<std::string> oat_temp_filenames_;
+  std::vector<std::string> vdex_temp_filenames_;
   std::vector<std::string> oat_unstripped_;
   bool strip_;
   int oat_fd_;
@@ -3091,6 +3139,11 @@ static dex2oat::ReturnCode DoCompilation(Dex2Oat& dex2oat) REQUIRES(!Locks::muta
 
   // FlushClose again, as stripping might have re-opened the oat files.
   if (!dex2oat.FlushCloseOutputFiles()) {
+    return dex2oat::ReturnCode::kOther;
+  }
+
+  // Rename temporary files to final names after successful completion
+  if (!dex2oat.RenameTemporaryFiles()) {
     return dex2oat::ReturnCode::kOther;
   }
 

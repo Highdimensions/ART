@@ -998,7 +998,7 @@ class Dex2oatWatchdogTest : public Dex2oatTest {
  protected:
   void RunTest(Status expect_status, const std::vector<std::string>& extra_args = {}) {
     std::string dex_location = GetScratchDir() + "/Dex2OatSwapTest.jar";
-    std::string odex_location = GetOdexDir() + "/Dex2OatSwapTest.odex";
+    std::string odex_location = GetOutputOdexFileName();
 
     Copy(GetTestDexFileName(), dex_location);
 
@@ -1010,6 +1010,8 @@ class Dex2oatWatchdogTest : public Dex2oatTest {
     ASSERT_TRUE(GenerateOdexForTest(
         dex_location, odex_location, CompilerFilter::kSpeed, copy, expect_status));
   }
+
+  std::string GetOutputOdexFileName() { return GetOdexDir() + "/Dex2OatSwapTest.odex"; }
 
   std::string GetTestDexFileName() { return GetDexSrc1(); }
 };
@@ -1034,6 +1036,48 @@ TEST_F(Dex2oatWatchdogTest, TestWatchdogTrigger) {
 
   // Check with ten milliseconds.
   RunTest(/*expect_status=*/Status::kFailCompile, {"--watchdog-timeout=10"});
+}
+
+// These tests are based on the watchdog tests in order to kill dex2oat partway through.
+class Dex2oatTempFileTest : public Dex2oatWatchdogTest {
+ protected:
+  std::string GetTempOdexFileName() { return GetOutputOdexFileName() + ".tmp"; }
+
+  std::string GetTempVdexFileName() {
+    std::string odex_location = GetOutputOdexFileName();
+    return odex_location.substr(0, odex_location.rfind(".odex")) + ".vdex.tmp";
+  }
+};
+
+TEST_F(Dex2oatTempFileTest, TestTempFileOnInterrupt) {
+  // Disabled due to b/121352534, see above.
+  TEST_DISABLED_FOR_X86();
+
+  // If the watchdog doesn't kill dex2oat in time we may have a valid output file.
+  test_accepts_odex_file_on_failure = true;
+
+  for (int i = 0; i < 5; i++) {
+    // Timeout after ten milliseconds, this should _almost_ always kill the process before writing.
+    RunTest(Status::kFailCompile, {"--watchdog-timeout=10"});
+    // Only check for the temp file if there's no normal output file. Otherwise, loop and try again.
+    if (!OS::FileExists(GetOutputOdexFileName().c_str())) {
+      EXPECT_TRUE(OS::FileExists(GetTempOdexFileName().c_str()));
+      EXPECT_TRUE(OS::FileExists(GetTempVdexFileName().c_str()));
+      break;
+    }
+  }
+}
+
+TEST_F(Dex2oatTempFileTest, TestOverwriteAndCleanTempFile) {
+  std::string temp_odex = GetTempOdexFileName(), temp_vdex = GetTempVdexFileName();
+  // Simulate existing temp files.
+  EXPECT_EQ(OS::CreateEmptyFile(temp_odex.c_str())->Close(), 0);
+  EXPECT_EQ(OS::CreateEmptyFile(temp_vdex.c_str())->Close(), 0);
+  // Existing files should not cause any issues.
+  RunTest(Status::kSuccess);
+  // Ensure temp files are cleaned up
+  EXPECT_FALSE(OS::FileExists(temp_odex.c_str()));
+  EXPECT_FALSE(OS::FileExists(temp_vdex.c_str()));
 }
 
 class Dex2oatClassLoaderContextTest : public Dex2oatTest {

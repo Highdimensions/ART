@@ -203,7 +203,8 @@ class OatTest : public CommonCompilerDriverTest {
       return false;
     }
     oat_writer.PrepareLayout(&patcher);
-    elf_writer->PrepareDynamicSection(oat_writer.GetOatHeader().GetExecutableOffset(),
+    elf_writer->PrepareDynamicSection(oat_file->GetPath(),
+                                      oat_writer.GetOatHeader().GetExecutableOffset(),
                                       oat_writer.GetCodeSize(),
                                       oat_writer.GetDataImgRelRoSize(),
                                       oat_writer.GetDataImgRelRoAppImageOffset(),

@@ -53,14 +53,14 @@ class ElfWriterTest : public CommonCompilerDriverTest {
                 size_t bss_methods_offset,
                 size_t bss_roots_offset,
                 size_t dex_section_size) {
-    std::unique_ptr<ElfWriter> elf_writer = CreateElfWriterQuick(
-      compiler_driver_->GetCompilerOptions(),
-      oat_file);
+    std::unique_ptr<ElfWriter> elf_writer =
+        CreateElfWriterQuick(compiler_driver_->GetCompilerOptions(), oat_file);
 
     elf_writer->Start();
     OutputStream* rodata_section = elf_writer->StartRoData();
 
-    elf_writer->PrepareDynamicSection(rodata.size(),
+    elf_writer->PrepareDynamicSection(oat_file->GetPath(),
+                                      rodata.size(),
                                       text.size(),
                                       data_img_rel_ro.size(),
                                       data_img_rel_ro_app_image_offset,
@@ -78,8 +78,8 @@ class ElfWriterTest : public CommonCompilerDriverTest {
 
     if (!data_img_rel_ro.empty()) {
       OutputStream* data_img_rel_ro_section = elf_writer->StartDataImgRelRo();
-      ASSERT_TRUE(data_img_rel_ro_section->WriteFully(data_img_rel_ro.data(),
-          data_img_rel_ro.size()));
+      ASSERT_TRUE(
+          data_img_rel_ro_section->WriteFully(data_img_rel_ro.data(), data_img_rel_ro.size()));
       elf_writer->EndDataImgRelRo(data_img_rel_ro_section);
     }
 
@@ -291,7 +291,7 @@ TEST_F(ElfWriterTest, CheckDynamicSection) {
           ef->FindDynamicSymbolAddress("oatdataimgrelrolastword");
       ASSERT_NE(oatdataimgrelrolastword_ptr, nullptr);
       EXPECT_EQ(static_cast<size_t>(oatdataimgrelrolastword_ptr - oatdataimgrelro_ptr),
-          data_img_rel_ro_size - elf_word_size);
+                data_img_rel_ro_size - elf_word_size);
 
       if (data_img_rel_ro_app_image_offset != data_img_rel_ro_size) {
         *number_of_dynamic_symbols += 1;
@@ -299,7 +299,7 @@ TEST_F(ElfWriterTest, CheckDynamicSection) {
             ef->FindDynamicSymbolAddress("oatdataimgrelroappimage");
         ASSERT_NE(oatdataimgrelroappimage_ptr, nullptr);
         EXPECT_EQ(static_cast<size_t>(oatdataimgrelroappimage_ptr - oatdataimgrelro_ptr),
-          data_img_rel_ro_app_image_offset);
+                  data_img_rel_ro_app_image_offset);
       }
 
       if (bss_size != 0u) {
@@ -335,7 +335,7 @@ TEST_F(ElfWriterTest, CheckDynamicSection) {
       ASSERT_TRUE(IsAlignedParam(dex_ptr, page_size));
       const uint8_t* oatdexlastword_ptr = ef->FindDynamicSymbolAddress("oatdexlastword");
       EXPECT_EQ(static_cast<size_t>(oatdexlastword_ptr - dex_ptr),
-          dex_section_size - elf_word_size);
+                dex_section_size - elf_word_size);
     }
   };
 
@@ -366,11 +366,11 @@ TEST_F(ElfWriterTest, CheckDynamicSection) {
   constexpr size_t kBssMethodsOffset = kSectionSize / 3;
   constexpr size_t kBssRootsOffset = 2 * kBssMethodsOffset;
 
-  auto exists = [](Symbol symbol, const std::bitset<kNumberOfSymbols> &symbols) {
+  auto exists = [](Symbol symbol, const std::bitset<kNumberOfSymbols>& symbols) {
     return symbols.test(static_cast<size_t>(symbol));
   };
 
-  auto get_size = [&](Symbol symbol, const std::bitset<kNumberOfSymbols> &symbols) -> size_t {
+  auto get_size = [&](Symbol symbol, const std::bitset<kNumberOfSymbols>& symbols) -> size_t {
     return exists(symbol, symbols) ? kSectionSize : 0;
   };
 
@@ -387,7 +387,7 @@ TEST_F(ElfWriterTest, CheckDynamicSection) {
   //  00000001 - only "oatdata" exists.
   while (symbols.any()) {
     DCHECK_IMPLIES(exists(Symbol::kDataImgRelRoAppImage, symbols),
-        exists(Symbol::kDataImgRelRo, symbols));
+                   exists(Symbol::kDataImgRelRo, symbols));
     DCHECK_IMPLIES(exists(Symbol::kBssMethods, symbols), exists(Symbol::kBss, symbols));
     DCHECK_IMPLIES(exists(Symbol::kBssRoots, symbols), exists(Symbol::kBss, symbols));
     DCHECK_IMPLIES(exists(Symbol::kBssRoots, symbols), exists(Symbol::kBssMethods, symbols));
@@ -398,17 +398,15 @@ TEST_F(ElfWriterTest, CheckDynamicSection) {
     verify(get_size(Symbol::kRodata, symbols),
            get_size(Symbol::kText, symbols),
            data_img_rel_ro_size,
-           exists(Symbol::kDataImgRelRoAppImage, symbols)
-              ? kDataImgRelRoAppImageOffset
-              : data_img_rel_ro_size,
+           exists(Symbol::kDataImgRelRoAppImage, symbols) ? kDataImgRelRoAppImageOffset
+                                                          : data_img_rel_ro_size,
            bss_size,
            exists(Symbol::kBssMethods, symbols) ? kBssMethodsOffset : bss_size,
            exists(Symbol::kBssRoots, symbols) ? kBssRootsOffset : bss_size,
            get_size(Symbol::kDex, symbols),
            &number_of_dynamic_symbols);
     EXPECT_EQ(number_of_dynamic_symbols, symbols.count())
-      << "number_of_dynamic_symbols: " << number_of_dynamic_symbols
-      << ", symbols: " << symbols;
+        << "number_of_dynamic_symbols: " << number_of_dynamic_symbols << ", symbols: " << symbols;
     symbols >>= 1;
   }
 }
