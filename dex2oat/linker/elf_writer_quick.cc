@@ -92,7 +92,8 @@ class ElfWriterQuick final : public ElfWriter {
   ~ElfWriterQuick();
 
   void Start() override;
-  void PrepareDynamicSection(size_t rodata_size,
+  void PrepareDynamicSection(const std::string& elf_path,
+                             size_t rodata_size,
                              size_t text_size,
                              size_t data_img_rel_ro_size,
                              size_t data_img_rel_ro_app_image_offset,
@@ -174,7 +175,8 @@ void ElfWriterQuick<ElfTypes>::Start() {
 }
 
 template <typename ElfTypes>
-void ElfWriterQuick<ElfTypes>::PrepareDynamicSection(size_t rodata_size,
+void ElfWriterQuick<ElfTypes>::PrepareDynamicSection(const std::string& elf_path,
+                                                     size_t rodata_size,
                                                      size_t text_size,
                                                      size_t data_img_rel_ro_size,
                                                      size_t data_img_rel_ro_app_image_offset,
@@ -192,7 +194,7 @@ void ElfWriterQuick<ElfTypes>::PrepareDynamicSection(size_t rodata_size,
   bss_size_ = bss_size;
   DCHECK_EQ(dex_section_size_, 0u);
   dex_section_size_ = dex_section_size;
-  builder_->PrepareDynamicSection(elf_file_->GetPath(),
+  builder_->PrepareDynamicSection(elf_path,
                                   rodata_size_,
                                   text_size_,
                                   data_img_rel_ro_size_,

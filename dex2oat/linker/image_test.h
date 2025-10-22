@@ -303,7 +303,8 @@ inline void ImageTest::DoCompile(ImageHeader::StorageMode storage_mode,
         oat_writer->FinishVdexFile(out_helper.vdex_files[i].GetFile(), /*verifier_deps=*/ nullptr);
 
         oat_writer->PrepareLayout(&patcher);
-        elf_writer->PrepareDynamicSection(oat_writer->GetOatHeader().GetExecutableOffset(),
+        elf_writer->PrepareDynamicSection(out_helper.oat_files[i].GetFilename(),
+                                          oat_writer->GetOatHeader().GetExecutableOffset(),
                                           oat_writer->GetCodeSize(),
                                           oat_writer->GetDataImgRelRoSize(),
                                           oat_writer->GetDataImgRelRoAppImageOffset(),

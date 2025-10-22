@@ -60,7 +60,8 @@ class ElfWriterTest : public CommonCompilerDriverTest {
     elf_writer->Start();
     OutputStream* rodata_section = elf_writer->StartRoData();
 
-    elf_writer->PrepareDynamicSection(rodata.size(),
+    elf_writer->PrepareDynamicSection(oat_file->GetPath(),
+                                      rodata.size(),
                                       text.size(),
                                       data_img_rel_ro.size(),
                                       data_img_rel_ro_app_image_offset,

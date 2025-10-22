@@ -51,7 +51,8 @@ class ElfWriter {
   // This is needed as multi-image needs to know the memory layout of all ELF
   // files, before starting to write them.
   // This method must be called before calling GetLoadedSize().
-  virtual void PrepareDynamicSection(size_t rodata_size,
+  virtual void PrepareDynamicSection(const std::string& elf_path,
+                                     size_t rodata_size,
                                      size_t text_size,
                                      size_t data_img_rel_ro_size,
                                      size_t data_img_rel_ro_app_image_offset,
