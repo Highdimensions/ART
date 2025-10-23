@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cb854b1_dad83f12",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-10-23T10:49:22Z",
+      "side": 1,
+      "message": "Thanks for the contribution. I\u0027d like to know more about the goal of this change.\n\nWhen you say \"corrupted oat files in the wild\", do you mean corrupted oat files of **Meta apps** on **Android** devices? If yes, on which Android release did you see them?\n\nI\u0027m not sure this change can help in reality. As far as I know, we always use --oat-fd for apps, so the code path for --oat-file is not never used for apps. Here\u0027s a breakdown of situations per Android release:\n\n1. **Android 8~11: Use FDs for apps, have no atomicity, ART not updatable.** On those early releases, we already use FDs for apps, so this change has no effect for apps. Plus, ART is not updatable through Mainline on those releases, so there\u0027s nothing we can do anyway.\n1. **Android 12: Use FDs for apps, have no atomicity, ART updatable.** This is the first release where ART is updatable through Mainline. However, as I said, we use FDs, so this change has no effect even if it\u0027s delivered through Mainline.\n1. **Android 13+: Use FDs for apps, have atomicity, ART updatable.** On these recent releases, we do ensure atomicity on the caller side (`installd` on Android 13 and `artd` on Android 14+), so we don\u0027t need this change.\n\nI might be missing something. Is there a specific case where you think this change may help?",
+      "revId": "a1304ce42e539a47923bf90b11321ce9f18ef299",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
