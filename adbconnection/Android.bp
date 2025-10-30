@@ -23,7 +23,7 @@ package {
     // to get the below license kinds:
     //   SPDX-license-identifier-Apache-2.0
     default_applicable_licenses: ["art_license"],
-    default_team: "trendy_team_art_performance",
+    default_team: "art_performance",
 }
 
 cc_defaults {
@@ -44,7 +44,7 @@ cc_defaults {
         "libadbconnection_client",
     ],
     header_libs: [
-        "libnativehelper_header_only",
+        "libhelper_header_only",
         "dt_fd_forward_export",
     ],
     runtime_libs: [
