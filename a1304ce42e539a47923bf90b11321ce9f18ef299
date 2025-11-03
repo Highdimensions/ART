@@ -16,6 +16,24 @@
       "message": "Thanks for the contribution. I\u0027d like to know more about the goal of this change.\n\nWhen you say \"corrupted oat files in the wild\", do you mean corrupted oat files of **Meta apps** on **Android** devices? If yes, on which Android release did you see them?\n\nI\u0027m not sure this change can help in reality. As far as I know, we always use --oat-fd for apps, so the code path for --oat-file is not never used for apps. Here\u0027s a breakdown of situations per Android release:\n\n1. **Android 8~11: Use FDs for apps, have no atomicity, ART not updatable.** On those early releases, we already use FDs for apps, so this change has no effect for apps. Plus, ART is not updatable through Mainline on those releases, so there\u0027s nothing we can do anyway.\n1. **Android 12: Use FDs for apps, have no atomicity, ART updatable.** This is the first release where ART is updatable through Mainline. However, as I said, we use FDs, so this change has no effect even if it\u0027s delivered through Mainline.\n1. **Android 13+: Use FDs for apps, have atomicity, ART updatable.** On these recent releases, we do ensure atomicity on the caller side (`installd` on Android 13 and `artd` on Android 14+), so we don\u0027t need this change.\n\nI might be missing something. Is there a specific case where you think this change may help?",
       "revId": "a1304ce42e539a47923bf90b11321ce9f18ef299",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6691388a_5078bd09",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4377130
+      },
+      "writtenOn": "2025-11-03T12:30:40Z",
+      "side": 1,
+      "message": "I should clarify, this is coming from the Oculus side where we\u0027re running Android 14 on our headsets. The corrupted oat files we\u0027re seeing are coming from many different unrelated apps (both 1st and 3rd party). We observed their hash changing vs when they were first installed so dex2oat was a suspect.\n\nI also didn\u0027t find any direct mechanism by which this was being called and the FD path looks safe to me. We\u0027re rolling this out as a precautionary step mostly to rule out dex2oat as the issue.\n\nIf you think the change is unnecessary for mainline AOSP that\u0027s definitely fair.",
+      "parentUuid": "8cb854b1_dad83f12",
+      "revId": "a1304ce42e539a47923bf90b11321ce9f18ef299",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
