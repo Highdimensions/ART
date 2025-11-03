@@ -581,7 +581,8 @@ void ReferenceTypePropagation::RTPVisitor::UpdateFieldAccessTypeInfo(HInstructio
 
   // The field is unknown only during tests.
   if (info.GetField() != nullptr) {
-    klass = info.GetField()->LookupResolvedType();
+    klass = info.GetField()->ResolveType();
+    soa.Self()->ClearException();  // Clean up the exception left by type resolution if any.
   }
 
   SetClassAsTypeInfo(instr, klass, /* is_exact= */ false);
@@ -870,7 +871,8 @@ void ReferenceTypePropagation::RTPVisitor::VisitInvoke(HInvoke* instr) {
   // FIXME: Treat InvokePolymorphic separately, as we can get a more specific return type from
   // protoId than the one obtained from the resolved method.
   ArtMethod* method = instr->GetResolvedMethod();
-  ObjPtr<mirror::Class> klass = (method == nullptr) ? nullptr : method->LookupResolvedReturnType();
+  ObjPtr<mirror::Class> klass = (method == nullptr) ? nullptr : method->ResolveReturnType();
+  soa.Self()->ClearException();
   SetClassAsTypeInfo(instr, klass, /* is_exact= */ false);
 }
 
