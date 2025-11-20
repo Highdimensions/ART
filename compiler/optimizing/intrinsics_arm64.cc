@@ -1455,25 +1455,85 @@ static void GenerateCompareAndSet(CodeGeneratorARM64* codegen,
       (order == std::memory_order_release) || (order == std::memory_order_seq_cst);
   DCHECK(use_load_acquire || use_store_release || order == std::memory_order_relaxed);
 
-  // repeat: {
-  //   old_value = [ptr];  // Load exclusive.
-  //   if (old_value != expected && old_value != expected2) goto cmp_failure;
-  //   store_result = failed([ptr] <- new_value);  // Store exclusive.
-  // }
-  // if (strong) {
-  //   if (store_result) goto repeat;  // Repeat until compare fails or store exclusive succeeds.
-  // } else {
-  //   store_result = store_result ^ 1;  // Report success as 1, failure as 0.
-  // }
+  // Compare-and-set, using LSE atomics if available.
   //
-  // Flag Z indicates whether `old_value == expected || old_value == expected2`.
-  // (If `expected2` is not valid, the `old_value == expected2` part is not emitted.)
+  // Without LSE, the code is a standard `ldxr`/`stxr` loop for strong CAS:
+  //   loop:
+  //     ldxr old_value, [ptr]
+  //     cmp old_value, expected
+  //     b.ne failure
+  //     stxr store_result, new_value, [ptr]
+  //     cbnz store_result, loop
+  // For weak CAS, there is no loop and the `stxr` result is returned.
+  //
+  // With LSE, the code is:
+  //   mov old_value, expected
+  //   cas old_value, new_value, [ptr]
+  //   cmp old_value, expected
+  //
+  // `expected2` is used for an additional comparison if valid.
+  // The final Z flag from the `cmp`/`cbnz` is used by the caller to determine the result for strong
+  // CAS.
 
   vixl::aarch64::Label loop_head;
-  if (strong) {
-    __ Bind(&loop_head);
+  const bool use_lse = codegen->ShouldUseLSE() && !expected2.IsValid();
+  if (use_lse) {
+    __ Mov(old_value, expected);
+    switch (type) {
+      case DataType::Type::kBool:
+      case DataType::Type::kUint8:
+      case DataType::Type::kInt8:
+        if (use_load_acquire && use_store_release) {
+          __ Casalb(old_value, new_value, MemOperand(ptr));
+        } else if (use_store_release) {
+          __ Caslb(old_value, new_value, MemOperand(ptr));
+        } else if (use_load_acquire) {
+          __ Casab(old_value, new_value, MemOperand(ptr));
+        } else {
+          __ Casb(old_value, new_value, MemOperand(ptr));
+        }
+        break;
+      case DataType::Type::kUint16:
+      case DataType::Type::kInt16:
+        if (use_load_acquire && use_store_release) {
+          __ Casalh(old_value, new_value, MemOperand(ptr));
+        } else if (use_store_release) {
+          __ Caslh(old_value, new_value, MemOperand(ptr));
+        } else if (use_load_acquire) {
+          __ Casah(old_value, new_value, MemOperand(ptr));
+        } else {
+          __ Cash(old_value, new_value, MemOperand(ptr));
+        }
+        break;
+      case DataType::Type::kReference:
+        assembler->MaybePoisonHeapReference(new_value);
+        FALLTHROUGH_INTENDED;
+      case DataType::Type::kInt32:
+      case DataType::Type::kInt64:
+        if (use_load_acquire && use_store_release) {
+          __ Casal(old_value, new_value, MemOperand(ptr));
+        } else if (use_store_release) {
+          __ Casl(old_value, new_value, MemOperand(ptr));
+        } else if (use_load_acquire) {
+          __ Casa(old_value, new_value, MemOperand(ptr));
+        } else {
+          __ Cas(old_value, new_value, MemOperand(ptr));
+        }
+        if (type == DataType::Type::kReference) {
+          assembler->MaybeUnpoisonHeapReference(new_value);
+        }
+        break;
+      default:
+        LOG(FATAL) << "Unexpected type: " << type;
+        UNREACHABLE();
+    }
+  } else {
+    if (strong) {
+      __ Bind(&loop_head);
+    }
+    EmitLoadExclusive(codegen, type, ptr, old_value, use_load_acquire);
   }
-  EmitLoadExclusive(codegen, type, ptr, old_value, use_load_acquire);
+
   __ Cmp(old_value, expected);
   if (expected2.IsValid()) {
     __ Ccmp(old_value, expected2, ZFlag, ne);
@@ -1482,12 +1542,19 @@ static void GenerateCompareAndSet(CodeGeneratorARM64* codegen,
   // If the comparison succeeded, the Z flag is set and remains set after the end of the
   // code emitted here, unless we retry the whole operation.
   __ B(cmp_failure, ne);
-  EmitStoreExclusive(codegen, type, ptr, store_result, new_value, use_store_release);
-  if (strong) {
-    __ Cbnz(store_result, &loop_head);
+
+  if (use_lse) {
+    if (!strong) {
+      __ Cset(store_result, eq);
+    }
   } else {
-    // Flip the `store_result` register to indicate success by 1 and failure by 0.
-    __ Eor(store_result, store_result, 1);
+    EmitStoreExclusive(codegen, type, ptr, store_result, new_value, use_store_release);
+    if (strong) {
+      __ Cbnz(store_result, &loop_head);
+    } else {
+      // Flip the `store_result` register to indicate success by 1 and failure by 0.
+      __ Eor(store_result, store_result, 1);
+    }
   }
 }
 
@@ -1841,44 +1908,90 @@ static void GenerateGetAndUpdate(CodeGeneratorARM64* codegen,
       (order == std::memory_order_release) || (order == std::memory_order_seq_cst);
   DCHECK(use_load_acquire || use_store_release);
 
-  vixl::aarch64::Label loop_label;
-  __ Bind(&loop_label);
-  EmitLoadExclusive(codegen, load_store_type, ptr, old_value_reg, use_load_acquire);
-  switch (get_and_update_op) {
-    case GetAndUpdateOp::kSet:
-      break;
-    case GetAndUpdateOp::kAddWithByteSwap:
-      // To avoid unnecessary sign extension before REV16, the caller must specify `kUint16`
-      // instead of `kInt16` and do the sign-extension explicitly afterwards.
-      DCHECK_NE(load_store_type, DataType::Type::kInt16);
-      GenerateReverseBytes(masm, load_store_type, old_value_reg, old_value_reg);
-      FALLTHROUGH_INTENDED;
-    case GetAndUpdateOp::kAdd:
-      if (arg.IsVRegister()) {
-        VRegister old_value_vreg = old_value.IsD() ? old_value.D() : old_value.S();
-        VRegister sum = temps.AcquireSameSizeAs(old_value_vreg);
-        __ Fmov(old_value_vreg, old_value_reg);
-        __ Fadd(sum, old_value_vreg, arg.IsD() ? arg.D() : arg.S());
-        __ Fmov(new_value, sum);
-      } else {
-        __ Add(new_value, old_value_reg, arg.IsX() ? arg.X() : arg.W());
-      }
-      if (get_and_update_op == GetAndUpdateOp::kAddWithByteSwap) {
-        GenerateReverseBytes(masm, load_store_type, new_value, new_value);
-      }
-      break;
-    case GetAndUpdateOp::kAnd:
-      __ And(new_value, old_value_reg, arg.IsX() ? arg.X() : arg.W());
-      break;
-    case GetAndUpdateOp::kOr:
-      __ Orr(new_value, old_value_reg, arg.IsX() ? arg.X() : arg.W());
-      break;
-    case GetAndUpdateOp::kXor:
-      __ Eor(new_value, old_value_reg, arg.IsX() ? arg.X() : arg.W());
-      break;
+  if (codegen->ShouldUseLSE() && get_and_update_op == GetAndUpdateOp::kAdd && !arg.IsVRegister()) {
+    DCHECK(arg.IsX() || arg.IsW());
+    Register arg_reg = arg.IsX() ? arg.X() : arg.W();
+    switch (load_store_type) {
+      case DataType::Type::kUint8:
+      case DataType::Type::kInt8:
+        if (use_load_acquire && use_store_release) {
+          __ Ldaddalb(arg_reg, old_value_reg, MemOperand(ptr));
+        } else if (use_load_acquire) {
+          __ Ldaddab(arg_reg, old_value_reg, MemOperand(ptr));
+        } else if (use_store_release) {
+          __ Ldaddlb(arg_reg, old_value_reg, MemOperand(ptr));
+        } else {
+          __ Ldaddb(arg_reg, old_value_reg, MemOperand(ptr));
+        }
+        break;
+      case DataType::Type::kUint16:
+      case DataType::Type::kInt16:
+        if (use_load_acquire && use_store_release) {
+          __ Ldaddalh(arg_reg, old_value_reg, MemOperand(ptr));
+        } else if (use_load_acquire) {
+          __ Ldaddah(arg_reg, old_value_reg, MemOperand(ptr));
+        } else if (use_store_release) {
+          __ Ldaddlh(arg_reg, old_value_reg, MemOperand(ptr));
+        } else {
+          __ Ldaddh(arg_reg, old_value_reg, MemOperand(ptr));
+        }
+        break;
+      case DataType::Type::kInt32:
+      case DataType::Type::kInt64:
+        if (use_load_acquire && use_store_release) {
+          __ Ldaddal(arg_reg, old_value_reg, MemOperand(ptr));
+        } else if (use_load_acquire) {
+          __ Ldadda(arg_reg, old_value_reg, MemOperand(ptr));
+        } else if (use_store_release) {
+          __ Ldaddl(arg_reg, old_value_reg, MemOperand(ptr));
+        } else {
+          __ Ldadd(arg_reg, old_value_reg, MemOperand(ptr));
+        }
+        break;
+      default:
+        LOG(FATAL) << "Unexpected type: " << load_store_type;
+        UNREACHABLE();
+    }
+  } else {
+    vixl::aarch64::Label loop_label;
+    __ Bind(&loop_label);
+    EmitLoadExclusive(codegen, load_store_type, ptr, old_value_reg, use_load_acquire);
+    switch (get_and_update_op) {
+      case GetAndUpdateOp::kSet:
+        break;
+      case GetAndUpdateOp::kAddWithByteSwap:
+        // To avoid unnecessary sign extension before REV16, the caller must specify `kUint16`
+        // instead of `kInt16` and do the sign-extension explicitly afterwards.
+        DCHECK_NE(load_store_type, DataType::Type::kInt16);
+        GenerateReverseBytes(masm, load_store_type, old_value_reg, old_value_reg);
+        FALLTHROUGH_INTENDED;
+      case GetAndUpdateOp::kAdd:
+        if (arg.IsVRegister()) {
+          VRegister old_value_vreg = old_value.IsD() ? old_value.D() : old_value.S();
+          VRegister sum = temps.AcquireSameSizeAs(old_value_vreg);
+          __ Fmov(old_value_vreg, old_value_reg);
+          __ Fadd(sum, old_value_vreg, arg.IsD() ? arg.D() : arg.S());
+          __ Fmov(new_value, sum);
+        } else {
+          __ Add(new_value, old_value_reg, arg.IsX() ? arg.X() : arg.W());
+        }
+        if (get_and_update_op == GetAndUpdateOp::kAddWithByteSwap) {
+          GenerateReverseBytes(masm, load_store_type, new_value, new_value);
+        }
+        break;
+      case GetAndUpdateOp::kAnd:
+        __ And(new_value, old_value_reg, arg.IsX() ? arg.X() : arg.W());
+        break;
+      case GetAndUpdateOp::kOr:
+        __ Orr(new_value, old_value_reg, arg.IsX() ? arg.X() : arg.W());
+        break;
+      case GetAndUpdateOp::kXor:
+        __ Eor(new_value, old_value_reg, arg.IsX() ? arg.X() : arg.W());
+        break;
+    }
+    EmitStoreExclusive(codegen, load_store_type, ptr, store_result, new_value, use_store_release);
+    __ Cbnz(store_result, &loop_label);
   }
-  EmitStoreExclusive(codegen, load_store_type, ptr, store_result, new_value, use_store_release);
-  __ Cbnz(store_result, &loop_label);
 }
 
 static void CreateUnsafeGetAndUpdateLocations(ArenaAllocator* allocator,
