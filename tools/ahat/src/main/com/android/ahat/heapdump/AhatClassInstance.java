@@ -248,7 +248,27 @@ public class AhatClassInstance extends AhatInstance {
   }
 
   @Override public String toString() {
-    return String.format("%s@%08x", getClassName(), getId());
+    final String cn = getClassName();
+    String result = String.format("%s@%08x", cn, getId());
+    if (cn.equals("android.os.Message")) {
+      final int what = getField("what").asInteger();
+      final long when = getField("when").asLong();
+      final int arg1 = getField("arg1").asInteger();
+      final int arg2 = getField("arg2").asInteger();
+      final Value target = getField("target");
+      final Value callback = getField("callback");
+      final Value obj = getField("obj");
+      result += " {"
+          + "what=" + what
+          + " when=" + when
+          + (arg1 != 0 ? " arg1=" + arg1 : "")
+          + (arg2 != 0 ? " arg1=" + arg1 : "")
+          + (target != null ? " target=" + target.toString() : "")
+          + (callback != null ? " callback=" + callback.toString() : "")
+          + (obj != null ? " obj=" + obj.toString() : "")
+      + "}";
+    }
+    return result;
   }
 
   /**
