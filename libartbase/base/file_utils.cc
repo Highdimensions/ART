@@ -373,6 +373,9 @@ std::string GetDefaultBootImageLocationSafe(const std::string& android_root,
     const std::string boot_image = GetApexDataDalvikCacheDirectory(InstructionSet::kNone) + "/" +
                                    kBootImageStem + kArtExtension;
     const std::string boot_image_filename = GetSystemImageFilename(boot_image.c_str(), kRuntimeISA);
+    const std::string framework_boot_image_extension =
+        GetApexDataDalvikCacheDirectory(InstructionSet::kNone) + "/" + kBootImageStem +
+        "-framework" + kArtExtension;
     if (OS::FileExists(boot_image_filename.c_str(), /*check_file_type=*/true)) {
       // Boot image consists of two parts:
       //  - the primary boot image (contains the Core Libraries and framework libraries)
@@ -381,10 +384,11 @@ std::string GetDefaultBootImageLocationSafe(const std::string& android_root,
       // "/data/misc/apexdata/com.android.art/dalvik-cache/boot.art!/apex/com.android.art
       // /etc/boot-image.prof!/system/etc/boot-image.prof:
       // /data/misc/apexdata/com.android.art/dalvik-cache/boot-framework-adservices.art".
-      std::string location = StringPrintf("%s!%s/%s!%s/%s",
+      std::string location = StringPrintf("%s!%s/%s:%s!%s/%s",
                                           boot_image.c_str(),
                                           kAndroidArtApexDefaultPath,
                                           kEtcBootImageProf,
+                                          framework_boot_image_extension.c_str(),
                                           android_root.c_str(),
                                           kEtcBootImageProf);
       if (!MaybeAppendBootImageMainlineExtension(android_root,

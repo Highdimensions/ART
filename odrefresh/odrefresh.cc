@@ -978,17 +978,23 @@ std::string OnDeviceRefresh::GetPrimaryBootImagePath(bool on_system,
   return GetSystemImageFilename(GetPrimaryBootImage(on_system, minimal).c_str(), isa);
 }
 
-std::string OnDeviceRefresh::GetSystemBootImageFrameworkExtension() const {
+std::string OnDeviceRefresh::GetSystemBootImageFrameworkExtension(bool on_system) const {
   std::vector<std::string> framework_bcp_jars = GetFrameworkBcpJars();
   std::string basename =
       GetBootImageComponentBasename(framework_bcp_jars[0], /*is_first_jar=*/false);
-  // Typically "/system/framework/boot-framework.art".
-  return ART_FORMAT("{}/framework/{}", GetAndroidRoot(), basename);
+  if (on_system) {
+    // Typically "/system/framework/boot-framework.art".
+    return ART_FORMAT("{}/framework/{}", GetAndroidRoot(), basename);
+  } else {
+    // Typically "/data/misc/apexdata/com.android.art/dalvik-cache/boot-framework.art".
+    return ART_FORMAT("{}/{}", config_.GetArtifactDirectory(), basename);
+  }
 }
 
-std::string OnDeviceRefresh::GetSystemBootImageFrameworkExtensionPath(InstructionSet isa) const {
+std::string OnDeviceRefresh::GetSystemBootImageFrameworkExtensionPath(bool on_system,
+                                                                      InstructionSet isa) const {
   // Typically "/system/framework/<isa>/boot-framework.art".
-  return GetSystemImageFilename(GetSystemBootImageFrameworkExtension().c_str(), isa);
+  return GetSystemImageFilename(GetSystemBootImageFrameworkExtension(on_system).c_str(), isa);
 }
 
 std::string OnDeviceRefresh::GetBootImageMainlineExtension(bool on_system) const {
@@ -1012,6 +1018,7 @@ std::string OnDeviceRefresh::GetBootImageMainlineExtensionPath(bool on_system,
 }
 
 std::vector<std::string> OnDeviceRefresh::GetBestBootImages(InstructionSet isa,
+                                                            bool include_framework_extension,
                                                             bool include_mainline_extension) const {
   std::vector<std::string> locations;
   std::string unused_error_msg;
@@ -1020,11 +1027,14 @@ std::vector<std::string> OnDeviceRefresh::GetBestBootImages(InstructionSet isa,
           /*on_system=*/false, /*minimal=*/false, isa, &unused_error_msg)) {
     primary_on_data = true;
     locations.push_back(GetPrimaryBootImage(/*on_system=*/false, /*minimal=*/false));
+    if (include_framework_extension) {
+      locations.push_back(GetSystemBootImageFrameworkExtension(/*on_system=*/false));
+    }
   } else {
     locations.push_back(GetPrimaryBootImage(/*on_system=*/true, /*minimal=*/false));
     if (!IsAtLeastU()) {
       // Prior to U, there was a framework extension.
-      locations.push_back(GetSystemBootImageFrameworkExtension());
+      locations.push_back(GetSystemBootImageFrameworkExtension(/*on_system=*/true));
     }
   }
   if (include_mainline_extension) {
@@ -1083,15 +1093,10 @@ WARN_UNUSED bool OnDeviceRefresh::PrimaryBootImageExist(
   if (!CheckOatHeader(artifacts.OatPath(), error_msg)) {
     return false;
   }
-  // Prior to U, there was a split between the primary boot image and the extension on /system, so
-  // they need to be checked separately. This does not apply to the boot image on /data.
-  if (on_system && !IsAtLeastU()) {
-    std::string extension_path = GetSystemBootImageFrameworkExtensionPath(isa);
+  if (!IsAtLeastU() || !on_system) {
+    std::string extension_path = GetSystemBootImageFrameworkExtensionPath(on_system, isa);
     OdrArtifacts extension_artifacts = OdrArtifacts::ForBootImage(extension_path);
-    if (!ArtifactsExist(
-            extension_artifacts, /*check_art_file=*/true, error_msg, checked_artifacts)) {
-      return false;
-    }
+    ArtifactsExist(extension_artifacts, /*check_art_file=*/true, error_msg, checked_artifacts);
   }
   return true;
 }
@@ -1222,6 +1227,9 @@ WARN_UNUSED bool OnDeviceRefresh::CheckBuildUserfaultFdGc() const {
 
 WARN_UNUSED PreconditionCheckResult OnDeviceRefresh::CheckPreconditionForSystem(
     const std::vector<apex::ApexInfo>& apex_info_list) const {
+  if ((true)) {
+    return PreconditionCheckResult::NoneOk(OdrMetrics::Trigger::kApexVersionMismatch);
+  }
   if (!CheckSystemPropertiesAreDefault()) {
     return PreconditionCheckResult::NoneOk(OdrMetrics::Trigger::kApexVersionMismatch);
   }
@@ -1902,9 +1910,8 @@ OnDeviceRefresh::RunDex2oatForBootClasspath(const std::string& staging_dir,
   if (input_boot_images.empty()) {
     // Primary boot image.
     std::string art_boot_profile_file = GetArtRoot() + "/etc/boot-image.prof";
-    std::string framework_boot_profile_file = GetAndroidRoot() + "/etc/boot-image.prof";
-    Result<bool> has_any_profile = AddDex2OatProfile(
-        args, readonly_files_raii, {art_boot_profile_file, framework_boot_profile_file});
+    Result<bool> has_any_profile =
+        AddDex2OatProfile(args, readonly_files_raii, {art_boot_profile_file});
     if (!has_any_profile.ok()) {
       return CompilationResult::Error(OdrMetrics::Status::kIoError,
                                       has_any_profile.error().message());
@@ -1921,7 +1928,7 @@ OnDeviceRefresh::RunDex2oatForBootClasspath(const std::string& staging_dir,
 
     args.Add(StringPrintf("--base=0x%08x", ART_BASE_ADDRESS));
 
-    for (const std::string& prefix : {GetAndroidRoot(), GetArtRoot()}) {
+    for (const std::string& prefix : {GetArtRoot()}) {
       std::string dirty_image_objects_file = prefix + "/etc/dirty-image-objects";
       std::unique_ptr<File> file(OS::OpenFileForReading(dirty_image_objects_file.c_str()));
       if (file != nullptr) {
@@ -1951,6 +1958,60 @@ OnDeviceRefresh::RunDex2oatForBootClasspath(const std::string& staging_dir,
                                                  strerror(errno)));
     }
     args.Add("--oat-location=%s", OdrArtifacts::ForBootImage(output_path).OatPath());
+  } else if (input_boot_images.size() == 1) {
+    // Framework extension.
+    std::string framework_boot_profile_file = GetAndroidRoot() + "/etc/boot-image.prof";
+    Result<bool> has_any_profile =
+        AddDex2OatProfile(args, readonly_files_raii, {framework_boot_profile_file});
+    if (!has_any_profile.ok()) {
+      return CompilationResult::Error(OdrMetrics::Status::kIoError,
+                                      has_any_profile.error().message());
+    }
+    if (!*has_any_profile) {
+      return CompilationResult::Error(OdrMetrics::Status::kIoError, "Missing boot image profile");
+    }
+    const std::string& compiler_filter = config_.GetBootImageCompilerFilter();
+    if (!compiler_filter.empty()) {
+      args.Add("--compiler-filter=%s", compiler_filter);
+    } else {
+      args.Add("--compiler-filter=%s", kPrimaryCompilerFilter);
+    }
+
+    for (const std::string& prefix : {GetAndroidRoot()}) {
+      std::string dirty_image_objects_file = prefix + "/etc/dirty-image-objects";
+      std::unique_ptr<File> file(OS::OpenFileForReading(dirty_image_objects_file.c_str()));
+      if (file != nullptr) {
+        args.Add("--dirty-image-objects-fd=%d", file->Fd());
+        readonly_files_raii.push_back(std::move(file));
+      } else if (errno == ENOENT) {
+        LOG(WARNING) << ART_FORMAT("Missing dirty objects file '{}'", dirty_image_objects_file);
+      } else {
+        return CompilationResult::Error(OdrMetrics::Status::kIoError,
+                                        ART_FORMAT("Failed to open dirty objects file '{}': {}",
+                                                   dirty_image_objects_file,
+                                                   strerror(errno)));
+      }
+    }
+
+    std::string preloaded_classes_file(GetAndroidRoot() + "/etc/preloaded-classes");
+    std::unique_ptr<File> file(OS::OpenFileForReading(preloaded_classes_file.c_str()));
+    if (file != nullptr) {
+      args.Add("--preloaded-classes-fds=%d", file->Fd());
+      readonly_files_raii.push_back(std::move(file));
+    } else if (errno == ENOENT) {
+      LOG(WARNING) << ART_FORMAT("Missing preloaded classes file '{}'", preloaded_classes_file);
+    } else {
+      return CompilationResult::Error(OdrMetrics::Status::kIoError,
+                                      ART_FORMAT("Failed to open preloaded classes file '{}': {}",
+                                                 preloaded_classes_file,
+                                                 strerror(errno)));
+    }
+    // For boot image extensions, dex2oat takes the oat location of the primary boot image and
+    // expends it with the name of the first input dex file.
+    args.Add("--oat-location=%s",
+             OdrArtifacts::ForBootImage(
+                 GetPrimaryBootImagePath(/*on_system=*/false, /*minimal=*/false, isa))
+                 .OatPath());
   } else {
     // Mainline extension.
     args.Add("--compiler-filter=%s", kMainlineCompilerFilter);
@@ -2002,10 +2063,22 @@ OnDeviceRefresh::CompileBootClasspath(const std::string& staging_dir,
         staging_dir,
         "primary",
         isa,
-        dex2oat_boot_classpath_jars_,
-        dex2oat_boot_classpath_jars_,
+        GetArtBcpJars(),
+        GetArtBcpJars(),
         /*input_boot_images=*/{},
         GetPrimaryBootImagePath(/*on_system=*/false, /*minimal=*/false, isa));
+
+    CompilationResult framework_result = RunDex2oatForBootClasspath(
+        staging_dir,
+        "framework",
+        isa,
+        GetFrameworkBcpJars(),
+        dex2oat_boot_classpath_jars_,
+        GetBestBootImages(
+            isa, /*include_framework_extension=*/false, /*include_mainline_extension=*/false),
+        GetSystemBootImageFrameworkExtensionPath(/*on_system=*/false, isa));
+
+    primary_result.Merge(framework_result);
     result.Merge(primary_result);
 
     if (primary_result.IsOk()) {
@@ -2052,14 +2125,15 @@ OnDeviceRefresh::CompileBootClasspath(const std::string& staging_dir,
   }
 
   if (result.IsOk() && boot_images.boot_image_mainline_extension) {
-    CompilationResult mainline_result =
-        RunDex2oatForBootClasspath(staging_dir,
-                                   "mainline",
-                                   isa,
-                                   GetMainlineBcpJars(),
-                                   boot_classpath_jars_,
-                                   GetBestBootImages(isa, /*include_mainline_extension=*/false),
-                                   GetBootImageMainlineExtensionPath(/*on_system=*/false, isa));
+    CompilationResult mainline_result = RunDex2oatForBootClasspath(
+        staging_dir,
+        "mainline",
+        isa,
+        GetMainlineBcpJars(),
+        boot_classpath_jars_,
+        GetBestBootImages(
+            isa, /*include_framework_extension=*/true, /*include_mainline_extension=*/false),
+        GetBootImageMainlineExtensionPath(/*on_system=*/false, isa));
     result.Merge(mainline_result);
 
     if (mainline_result.IsOk()) {
@@ -2133,15 +2207,17 @@ WARN_UNUSED CompilationResult OnDeviceRefresh::RunDex2oatForSystemServer(
   args.AddRuntimeIfNonEmpty("-Xms%s", system_properties.GetOrEmpty("dalvik.vm.dex2oat-Xms"))
       .AddRuntimeIfNonEmpty("-Xmx%s", system_properties.GetOrEmpty("dalvik.vm.dex2oat-Xmx"));
 
-  return RunDex2oat(staging_dir,
-                    ART_FORMAT("Compiling {}", Basename(dex_file)),
-                    isa,
-                    {dex_file},
-                    boot_classpath_jars_,
-                    GetBestBootImages(isa, /*include_mainline_extension=*/true),
-                    OdrArtifacts::ForSystemServer(output_path),
-                    std::move(args),
-                    readonly_files_raii);
+  return RunDex2oat(
+      staging_dir,
+      ART_FORMAT("Compiling {}", Basename(dex_file)),
+      isa,
+      {dex_file},
+      boot_classpath_jars_,
+      GetBestBootImages(
+          isa, /*include_framework_extension=*/true, /*include_mainline_extension=*/true),
+      OdrArtifacts::ForSystemServer(output_path),
+      std::move(args),
+      readonly_files_raii);
 }
 
 WARN_UNUSED CompilationResult

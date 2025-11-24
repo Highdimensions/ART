@@ -231,11 +231,11 @@ class OnDeviceRefresh final {
 
   // Returns the symbolic boot image framework extension location (without ISA). Note that this only
   // applies to boot images on /system.
-  std::string GetSystemBootImageFrameworkExtension() const;
+  std::string GetSystemBootImageFrameworkExtension(bool on_system) const;
 
   // Returns the real boot image framework extension location (with ISA). Note that this only
   // applies to boot images on /system.
-  std::string GetSystemBootImageFrameworkExtensionPath(InstructionSet isa) const;
+  std::string GetSystemBootImageFrameworkExtensionPath(bool on_system, InstructionSet isa) const;
 
   // Returns the symbolic boot image mainline extension location (without ISA).
   std::string GetBootImageMainlineExtension(bool on_system) const;
@@ -246,6 +246,7 @@ class OnDeviceRefresh final {
   // Returns the best combination of symbolic boot image locations (without ISA) based on file
   // existence.
   std::vector<std::string> GetBestBootImages(InstructionSet isa,
+                                             bool include_framework_extension,
                                              bool include_mainline_extension) const;
 
   std::string GetSystemServerImagePath(bool on_system, const std::string& jar_path) const;
