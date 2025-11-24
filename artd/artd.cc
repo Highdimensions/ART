@@ -1923,6 +1923,9 @@ Result<const std::vector<std::string>*> Artd::GetBootImageLocations() {
     }
 
     cached_boot_image_locations_ = Split(location_str, ":");
+    if (!cached_boot_image_locations_->empty()) {
+      cached_boot_image_locations_->resize(1);
+    }
   }
 
   return &cached_boot_image_locations_.value();
@@ -2051,7 +2054,7 @@ void Artd::AddBootImageFlags(/*out*/ CmdlineBuilder& args) {
   if (UseJitZygote()) {
     args.Add("--force-jit-zygote");
   } else {
-    args.AddIfNonEmpty("--boot-image=%s", GetUserDefinedBootImageLocations());
+    args.AddIfNonEmpty("--boot-image=%s", Join(*OR_FATAL(GetBootImageLocations()), ":"));
   }
 }
 
