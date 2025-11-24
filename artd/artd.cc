@@ -2053,6 +2053,7 @@ void Artd::AddBootImageFlags(/*out*/ CmdlineBuilder& args) {
   } else {
     args.AddIfNonEmpty("--boot-image=%s", GetUserDefinedBootImageLocations());
   }
+  args.Add("--no-inline-from=core-oj.jar");
 }
 
 void Artd::AddCompilerConfigFlags(const std::string& instruction_set,
