@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef773a84_be76f4ec",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-11-25T15:47:42Z",
+      "side": 1,
+      "message": "Thank you for raising the issue and providing a fix!\n\nSynchronizing through a pipe is an interesting idea, but I wonder if there\u0027s a simpler solution. Can we just `kill(pid, SIGKILL)` in addition to `kill(-pid, SIGKILL)`? If I\u0027m not mistaken, it\u0027s safe to do so because the pid solely belongs to the child process when `kill` is called. Here\u0027s why:\n\n1. Whoever calls `kill` needs to hold [the lock](https://cs.android.com/android/platform/superproject/+/android-latest-release:art/artd/artd.cc;l\u003d1316;drc\u003d422799315b0ac587c742e2365703878dae8be219).\n2. When the caller of `kill` holds the lock, `on_end` cannot finish because it [requires the lock](https://cs.android.com/android/platform/superproject/+/android-latest-release:art/artd/artd.cc;l\u003d1326;drc\u003d422799315b0ac587c742e2365703878dae8be219) too.\n3. Since [`on_end`](https://cs.android.com/android/platform/superproject/+/android-latest-release:art/runtime/exec_utils.cc;l\u003d299;drc\u003df9af3fa4d54f253bcb42cf571bd309dea60bffb1) cannot finish, [WaitChild](https://cs.android.com/android/platform/superproject/+/android-latest-release:art/runtime/exec_utils.cc;l\u003d303;drc\u003df9af3fa4d54f253bcb42cf571bd309dea60bffb1) cannot be called, so the process is not reaped at that time, and the pid cannot be reused.\n4. Therefore, the pid solely belongs to the child process.\n\nAm I right? What do you think?",
+      "range": {
+        "startLine": 12,
+        "startChar": 8,
+        "endLine": 14,
+        "endChar": 28
+      },
+      "revId": "36161263704916231b00821eec426bb19a53214e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
