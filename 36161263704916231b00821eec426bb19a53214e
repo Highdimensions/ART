@@ -46,6 +46,30 @@
       },
       "revId": "36161263704916231b00821eec426bb19a53214e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da56d50b_366e4ce9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-11-25T18:12:04Z",
+      "side": 1,
+      "message": "I think double `kill` is okay. It\u0027s simple and correct. Generally, we don\u0027t want to do too many things between `fork` and `exec` in a multi-threaded program because it can lead to deadlock issues [1]. Your code looks fine because you don\u0027t have things like `malloc`, `new`, and `make_unique` that either directly or indirectly touch a global lock, but this is hard to be thoroughly checked and is error-prone as the code evolves.\n\nIf you can upload a CL that uses the double `kill` approach, I\u0027m happy to take it.\n\n[1] https://www.evanjones.ca/fork-is-dangerous.html",
+      "parentUuid": "6d34cbb3_8b000075",
+      "range": {
+        "startLine": 12,
+        "startChar": 8,
+        "endLine": 14,
+        "endChar": 28
+      },
+      "revId": "36161263704916231b00821eec426bb19a53214e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
