@@ -22,6 +22,30 @@
       },
       "revId": "36161263704916231b00821eec426bb19a53214e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d34cbb3_8b000075",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 4475992
+      },
+      "writtenOn": "2025-11-25T17:45:39Z",
+      "side": 1,
+      "message": "Yes, you are right. The first fix that I prepared was a double ```kill``` as in your example. Despite its simplicity, it looked like a W/A to me, so I decided to rewrite it as synchronizing through a pipe. If it\u0027s OK I can upload a CS with additional ```kill``` calls.",
+      "parentUuid": "ef773a84_be76f4ec",
+      "range": {
+        "startLine": 12,
+        "startChar": 8,
+        "endLine": 14,
+        "endChar": 28
+      },
+      "revId": "36161263704916231b00821eec426bb19a53214e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
