@@ -70,6 +70,30 @@
       },
       "revId": "36161263704916231b00821eec426bb19a53214e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de6a39be_a0b228b1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 4475992
+      },
+      "writtenOn": "2025-11-26T13:20:07Z",
+      "side": 1,
+      "message": "Thank you for the clarification, the article is very interesting. I uploaded a new PS.",
+      "parentUuid": "da56d50b_366e4ce9",
+      "range": {
+        "startLine": 12,
+        "startChar": 8,
+        "endLine": 14,
+        "endChar": 28
+      },
+      "revId": "36161263704916231b00821eec426bb19a53214e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
