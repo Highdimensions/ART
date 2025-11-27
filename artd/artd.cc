@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <climits>
 #include <csignal>
 #include <cstddef>
@@ -1940,6 +1941,12 @@ Result<const std::vector<std::string>*> Artd::GetBootClassPath() {
       return Errorf("Failed to get environment variable 'BOOTCLASSPATH'");
     }
     cached_boot_class_path_ = Split(env_value, ":");
+    auto it = std::ranges::find_if(*cached_boot_class_path_, [](const std::string& path) {
+      return !path.starts_with("/apex/com.android.art/");
+    });
+    if (it != cached_boot_class_path_->end()) {
+      cached_boot_class_path_->resize(it - cached_boot_class_path_->begin());
+    }
   }
 
   return &cached_boot_class_path_.value();
@@ -2055,6 +2062,7 @@ void Artd::AddBootImageFlags(/*out*/ CmdlineBuilder& args) {
     args.Add("--force-jit-zygote");
   } else {
     args.AddIfNonEmpty("--boot-image=%s", Join(*OR_FATAL(GetBootImageLocations()), ":"));
+    args.AddRuntime("-Xbootclasspath:%s", Join(*OR_FATAL(GetBootClassPath()), ":"));
   }
 }
 
