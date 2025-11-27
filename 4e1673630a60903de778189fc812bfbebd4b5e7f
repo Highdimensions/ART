@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "870505d6_5271ed21",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1302,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-11-27T19:03:45Z",
+      "side": 1,
+      "message": "Why not use the `artd_` in the test fixture? If you just want a real `kill`, you can make the mock kill call into the real one.\n\n```\nEXPECT_CALL(mock_kill_, Call).WillRepeatedly(kill);\n```",
+      "revId": "4e1673630a60903de778189fc812bfbebd4b5e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9cbec54_058981f3",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1312,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-11-27T19:03:45Z",
+      "side": 1,
+      "message": "There\u0027s no dex2oat in `/system/bin`. Therefore, the process probably gets SIGABRT rather than SIGKILL.\n\nI recommend to test with something that exists in `/system/bin`, preferably long-running, so it has a chance to be killed. I would choose `sleep`.\n\nAlso, this test needs to pass on host as well, so you probably need a function like [this](https://cs.android.com/android/platform/superproject/+/android-latest-release:art/runtime/exec_utils_test.cc;l\u003d54-63;drc\u003d6f3beba5e01780c30364e34be15335da51c4e0e5) to find the right binary based on whether it\u0027s on device or host.\n\nIn addition, check `result.signal` at the end, to make sure it is indeed SIGKILL, not something else.",
+      "range": {
+        "startLine": 1312,
+        "startChar": 42,
+        "endLine": 1312,
+        "endChar": 61
+      },
+      "revId": "4e1673630a60903de778189fc812bfbebd4b5e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb34cf62_88380b70",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1314,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-11-27T19:03:45Z",
+      "side": 1,
+      "message": "Please fix this ERROR reported by Common Typos: Common typo found: \"Proccess\" -- should it be \"Process\"?\nNote: a line containing...\n\nCommon typo found: \"Proccess\" -- should it be \"Process\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 1314,
+        "startChar": 23,
+        "endLine": 1314,
+        "endChar": 31
+      },
+      "revId": "4e1673630a60903de778189fc812bfbebd4b5e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "442945cf_272f588d",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1321,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-11-27T19:03:45Z",
+      "side": 1,
+      "message": "Please fix this ERROR reported by Common Typos: Common typo found: \"Proccess\" -- should it be \"Process\"?\nNote: a line containing...\n\nCommon typo found: \"Proccess\" -- should it be \"Process\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line or include \u0027No-Typo-Check: \u003creason\u003e\u0027in the commit message.",
+      "range": {
+        "startLine": 1321,
+        "startChar": 60,
+        "endLine": 1321,
+        "endChar": 68
+      },
+      "revId": "4e1673630a60903de778189fc812bfbebd4b5e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
