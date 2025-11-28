@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "85067160_39f14d11",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1302,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-11-28T15:53:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2741c56_ecc5f740",
+      "revId": "4e1673630a60903de778189fc812bfbebd4b5e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d9cbec54_058981f3",
@@ -73,6 +91,30 @@
       "side": 1,
       "message": "Good catch! I initially tested with ```/system/bin/id``` on target and then changed it to ```dex2oat``` which, of course, is in art apex. Updated to use [art::tools::GetBin](https://cs.android.com/android/platform/superproject/+/android-latest-release:art/libarttools/include_testing/tools/testing.h;drc\u003d44dda682e05809b6e6118f17cbb19f75f1c27649;l\u003d51)",
       "parentUuid": "d9cbec54_058981f3",
+      "range": {
+        "startLine": 1312,
+        "startChar": 42,
+        "endLine": 1312,
+        "endChar": 61
+      },
+      "revId": "4e1673630a60903de778189fc812bfbebd4b5e7f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9a586af_a8d20237",
+        "filename": "artd/artd_test.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 1312,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-11-28T15:53:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d107439_6d7d475d",
       "range": {
         "startLine": 1312,
         "startChar": 42,
