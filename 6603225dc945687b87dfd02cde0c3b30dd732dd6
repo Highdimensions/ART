@@ -16,6 +16,24 @@
       "message": "This CL LGTM.\n\nDue to the recent AOSP policy change, we cannot merge the CL directly. Instead, I\u0027ll cherry-pick it to our internal codebase with your name as the author. As a partner, you\u0027ll be able to see the change through https://partner-android.git.corp.google.com once it has been merged, and it will be pushed to AOSP on the next release (26Q1, Android 16 QPR3).\n\nThis change will be rolled out through Mainline M-2026-05 and take effect on all supported Android releases (Android 14+). Let us know if you need it to be rolled out earlier.\n\nThanks again for your contribution!",
       "revId": "6603225dc945687b87dfd02cde0c3b30dd732dd6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fa349ef_bf8148f8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1884045
+      },
+      "writtenOn": "2025-12-02T12:52:26Z",
+      "side": 1,
+      "message": "The change has been merged into our internal codebase with your name as the author. You can now safely abandon this CL.",
+      "parentUuid": "7e2ca4db_84715e37",
+      "revId": "6603225dc945687b87dfd02cde0c3b30dd732dd6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
