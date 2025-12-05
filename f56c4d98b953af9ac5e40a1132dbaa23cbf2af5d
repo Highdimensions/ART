@@ -70,6 +70,30 @@
       },
       "revId": "f56c4d98b953af9ac5e40a1132dbaa23cbf2af5d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65443b4f_70502e1e",
+        "filename": "test/2287-no-temp-component-class/src/RaceCoordinator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 3991400
+      },
+      "writtenOn": "2025-12-05T15:00:31Z",
+      "side": 1,
+      "message": "The change is included in android-16.0.0_r4: https://cs.android.com/android/_/android/platform/art/+/b7ac935765ef37544e3528181b889d57d5fb632d. Thanks again! I am abandoning this cl now.",
+      "parentUuid": "ee3b3619_e55ebbce",
+      "range": {
+        "startLine": 90,
+        "startChar": 8,
+        "endLine": 90,
+        "endChar": 26
+      },
+      "revId": "f56c4d98b953af9ac5e40a1132dbaa23cbf2af5d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
