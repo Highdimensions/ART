@@ -956,6 +956,15 @@ void ThreadList::SuspendAllInternal(Thread* self, SuspendReason reason) {
         bool found_myself = false;
         // Update global suspend all state for attaching threads.
         ++suspend_all_count_;
+        for (const auto& thread : list_) {
+          int res = pthread_kill(thread->tlsPtr_.pthread_self, 0);
+            std::string thread_name;
+            thread->GetThreadName(thread_name);
+          if (res != 0) {
+            LOG(ERROR) << "Thread " << thread_name <<" is not alive so remove it";
+            list_.remove(thread);
+          }
+        }
         pending_threads.store(list_.size() - (self == nullptr ? 0 : 1), std::memory_order_relaxed);
         // Increment everybody else's suspend count.
         for (const auto& thread : list_) {
