@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e7c60dc_1641ff48",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-12-11T16:18:25Z",
+      "side": 1,
+      "message": "Why did FinalizerWatchdogDaemon die? I have not seen the failure mode before. And that seems to be the real problem here.\nIt is generally not safe to continue when a thread exited unexpectedly.",
+      "revId": "0e80e7195b0a7450ea39bd0199adbaed605e905e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
