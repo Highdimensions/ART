@@ -34,6 +34,23 @@
       "parentUuid": "1e7c60dc_1641ff48",
       "revId": "0e80e7195b0a7450ea39bd0199adbaed605e905e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f78eb7c_d15ff4d0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2025-12-12T17:59:23Z",
+      "side": 1,
+      "message": "On second thought, I think the main underlying bug here was fixed by aosp/2790760 and aosp/2790761. Zygote sometimes did not wait long enough for daemon threads to fully terminate, and hence the child ended up with a trace of an old one in addition to the new one.\nI would expect this CL largely works around the problem by fixing the damage after the fact. I\u0027m not sure that it catches all cases. If the accidentally unterminated thread holds a lock when we fork, we lose. This CL should not be merged into the current Android tree, since the underlying problem was fixed.",
+      "revId": "0e80e7195b0a7450ea39bd0199adbaed605e905e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
