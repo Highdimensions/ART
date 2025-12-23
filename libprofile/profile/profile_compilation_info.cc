@@ -349,7 +349,7 @@ ProfileCompilationInfo::FileHeader::InvalidHeaderMessage(/*out*/ std::string* er
     return ProfileLoadStatus::kBadMagic;
   }
   if (memcmp(version_, kProfileVersion, sizeof(kProfileVersion)) != 0 &&
-      memcmp(version_, kProfileVersion, sizeof(kProfileVersionForBootImage)) != 0) {
+      memcmp(version_, kProfileVersionForBootImage, sizeof(kProfileVersionForBootImage)) != 0) {
     *error_msg = "Profile version mismatch.";
     return ProfileLoadStatus::kVersionMismatch;
   }
@@ -623,7 +623,7 @@ std::string ProfileCompilationInfo::GetProfileDexFileAugmentedKey(
   std::string base_key = GetProfileDexFileBaseKey(dex_location);
   return annotation == ProfileSampleAnnotation::kNone
       ? base_key
-      : base_key + kSampleMetadataSeparator + annotation.GetOriginPackageName();;
+      : base_key + kSampleMetadataSeparator + annotation.GetOriginPackageName();
 }
 
 // Transform the actual dex location into a base profile key (represented as relative paths).
@@ -1179,7 +1179,7 @@ bool ProfileCompilationInfo::Save(int fd, bool flush) {
   if (lseek64(fd, sizeof(FileHeader), SEEK_SET) != sizeof(FileHeader)) {
     return false;
   }
-  SafeBuffer section_infos_buffer(section_index * 4u * sizeof(uint32_t));
+  SafeBuffer section_infos_buffer(section_index * sizeof(FileSectionInfo));
   for (size_t i = 0; i != section_index; ++i) {
     const FileSectionInfo& info = section_infos[i];
     section_infos_buffer.WriteUintAndAdvance(enum_cast<uint32_t>(info.GetType()));
@@ -1573,6 +1573,7 @@ ProfileCompilationInfo::ProfileLoadStatus ProfileCompilationInfo::ProfileSource:
   if (IsMemMap()) {
     DCHECK_LE(mem_map_cur_, mem_map_.Size());
     if (byte_count > mem_map_.Size() - mem_map_cur_) {
+      *error += "Profile EOF reached prematurely for " + debug_stage;
       return ProfileLoadStatus::kBadData;
     }
     memcpy(buffer, mem_map_.Begin() + mem_map_cur_, byte_count);
@@ -1666,7 +1667,7 @@ ProfileCompilationInfo::ProfileLoadStatus ProfileCompilationInfo::ReadDexFilesSe
     }
     std::string_view profile_key_view;
     if (!buffer.ReadStringAndAdvance(&profile_key_view)) {
-      *error += "Missing terminating null character for profile key.";
+      *error += "Error reading profile key string.";
       return ProfileLoadStatus::kBadData;
     }
     if (profile_key_view.size() == 0u || profile_key_view.size() > kMaxDexFileKeyLength) {
@@ -1726,7 +1727,7 @@ ProfileCompilationInfo::ProfileLoadStatus ProfileCompilationInfo::ReadExtraDescr
   for (uint16_t i = 0; i != num_extra_descriptors; ++i) {
     std::string_view extra_descriptor;
     if (!buffer.ReadStringAndAdvance(&extra_descriptor)) {
-      *error += "Missing terminating null character for extra descriptor.";
+      *error += "Error reading extra descriptor string.";
       return ProfileLoadStatus::kBadData;
     }
     if (!IsValidDescriptor(std::string(extra_descriptor).c_str())) {
