@@ -437,13 +437,19 @@ void ProfileSaver::GetClassesAndMethodsHelper::CollectInternal(
 
   // Move members to local variables to allow the compiler to optimize this properly.
   const bool startup = startup_;
+  ScopedArenaVector<ObjPtr<mirror::Class>> classes(allocator_.Adapter(kArenaAllocProfile));
   table->Visit([&](ObjPtr<mirror::Class> klass) REQUIRES_SHARED(Locks::mutator_lock_) {
+    classes.push_back(klass);
+    return true;
+  });
+
+  for (ObjPtr<mirror::Class> klass : classes) {
     if (kBootClassLoader ? (!klass->IsBootStrapClassLoaded())
                          : (klass->GetClassLoader() != class_loader)) {
       // To avoid processing a class more than once, we process each class only
       // when we encounter it in the defining class loader's class table.
       // This class has a different defining class loader, skip it.
-      return true;
+      continue;
     }
 
     uint16_t dim = 0u;
@@ -451,7 +457,7 @@ void ProfileSaver::GetClassesAndMethodsHelper::CollectInternal(
     if (klass->IsArrayClass()) {
       DCHECK_EQ(klass->NumMethods(), 0u);  // No methods to collect.
       if (!ShouldCollectClasses(startup)) {
-        return true;
+        continue;
       }
       do {
         DCHECK(k->IsResolved());  // Array classes are always resolved.
@@ -474,7 +480,7 @@ void ProfileSaver::GetClassesAndMethodsHelper::CollectInternal(
           max_primitive_array_dimensions_[index] =
               std::min<size_t>(dim, std::numeric_limits<uint8_t>::max());
         }
-        return true;
+        continue;
       }
 
       // Attribute the array class to the defining dex file of the element class.
@@ -486,12 +492,12 @@ void ProfileSaver::GetClassesAndMethodsHelper::CollectInternal(
       if (kBootClassLoader && UNLIKELY(klass->IsPrimitive())) {
         DCHECK(profile_boot_class_path_);
         DCHECK_EQ(klass->NumMethods(), 0u);  // No methods to collect.
-        return true;
+        continue;
       }
     }
 
     if (!k->IsResolved() || k->IsProxyClass()) {
-      return true;
+       continue;
     }
 
     const DexFile& dex_file = k->GetDexFile();
@@ -512,8 +518,7 @@ void ProfileSaver::GetClassesAndMethodsHelper::CollectInternal(
     }
     dex_file_records->class_records.push_back(
         ClassRecord{type_index, dim, copied_methods_start, methods});
-    return true;
-  });
+  }
 }
 
 void ProfileSaver::GetClassesAndMethodsHelper::CollectClasses(Thread* self) {
