@@ -120,6 +120,12 @@ void Verification::LogHeapCorruption(ObjPtr<mirror::Object> holder,
   Runtime::Current()->GetHeap()->DumpSpaces(oss);
   MemMap::DumpMaps(oss, /* terse= */ true);
 
+  if (holder != nullptr) {
+    oss << "\n holder path from roots: " << FirstPathFromRootSet(holder) << "\n";
+  } else {
+    oss << "\n ref path from roots (direct root corruption): " << FirstPathFromRootSet(ref) << "\n";
+  }
+
   if (fatal) {
     LOG(FATAL) << oss.str();
   } else {
@@ -193,6 +199,12 @@ class Verification::CollectRootVisitor : public SingleRootVisitor {
       override REQUIRES_SHARED(Locks::mutator_lock_) {
     if (obj != nullptr && visited_->insert(obj).second) {
       std::ostringstream oss;
+
+    if (info.GetType() == kRootJavaFrame) {
+         oss << "RootJavaFrame (tid=" << info.GetThreadId() << ", addr=" << obj << ")";
+     } else {
+         oss << info.ToString();
+     }
       oss << info.ToString() << " = " << obj << "(" << obj->PrettyTypeOf() << ")";
       work_->emplace_back(obj, oss.str());
     }
