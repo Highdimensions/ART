@@ -39,6 +39,30 @@
       },
       "revId": "f6313861e31d305c5f4a2b03344a3537aa45458a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b2ee179_16dedd9a",
+        "filename": "tools/host_bcp.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1018108
+      },
+      "writtenOn": "2026-02-02T14:59:12Z",
+      "side": 1,
+      "message": "Marking as resolved before abandoning old CL.",
+      "parentUuid": "1967da91_aff5bbd2",
+      "range": {
+        "startLine": 62,
+        "startChar": 14,
+        "endLine": 62,
+        "endChar": 90
+      },
+      "revId": "f6313861e31d305c5f4a2b03344a3537aa45458a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
