@@ -1286,6 +1286,10 @@ class ProfMan final {
       const dex::MethodId* cur_id =
           dex->FindMethodIdByIndex(cur_candidate, method_name, method_proto);
       if (cur_id != nullptr) {
+        if (dex->GetClassData(*cur_class_def) == nullptr) {
+          // Class has no fields or methods.
+          return std::nullopt;
+        }
         if (dex->GetCodeItemOffset(*cur_class_def, dex->GetIndexForMethodId(*cur_id)).has_value()) {
           return ClassMethodReference{TypeReference(dex, cur_candidate),
                                       dex->GetIndexForMethodId(*cur_id)};
