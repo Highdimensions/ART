@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49c557fd_18a514cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1889741
+      },
+      "writtenOn": "2026-03-20T13:52:38Z",
+      "side": 1,
+      "message": "Thanks for the contribution! This was merged with Change-Id: I73a4d1006fd1bd433ff2d9b8875fc8d462782479\nI\u0027ll abandon this CL to signal that we already merged it",
+      "revId": "51d96be58e085b075396c187fd2f0dcd5ce10e89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
